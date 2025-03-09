@@ -1,0 +1,4083 @@
+{
+"serverAddress": "/tmp%2Fmysql.sock",
+"serverVersion": "5.7.44 - MySQL Community Server (GPL)",
+"targetVersion": "8.0.32",
+"auroraServerVersion": "2.12.4",
+"auroraTargetVersion": "3.05.2",
+"outfilePath": "/rdsdbdata/tmp/PreChecker.log",
+"checksPerformed": [
+{
+"id": "oldTemporalCheck",
+"title": "Usage of old temporal type",
+"status": "OK",
+"description": "Error: Following table columns use a deprecated and no longer supported temporal disk storage format. They must be converted to the new format before upgrading. It can by done by rebuilding the table using 'ALTER TABLE <table_name> FORCE' command",
+"documentationLink": "https://mysqlserverteam.com/mysql-8-0-removing-support-for-old-temporal-datatypes/",
+"detectedProblems": [
+{
+"level": "Error",
+"dbObject": "portal.admin_notice_user_display_statuses.last_collapsed_at_time",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.admin_project_links.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.admin_project_links.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.admin_project_materials.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.admin_project_materials.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.admin_projects.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.admin_projects.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.admin_settings.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.admin_settings.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.admin_site_notice_users.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.admin_site_notice_users.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.admin_site_notices.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.admin_site_notices.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.admin_tags.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.admin_tags.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.authoring_sites.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.authoring_sites.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.clients.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.clients.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.commons_licenses.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.commons_licenses.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.delayed_jobs.run_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.delayed_jobs.locked_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.delayed_jobs.failed_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.delayed_jobs.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.delayed_jobs.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.favorites.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.favorites.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.firebase_apps.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.firebase_apps.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.images.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.images.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.images.image_updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.imports.job_finished_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.imports.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.imports.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.interactives.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.interactives.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.materials_collection_items.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.materials_collection_items.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.materials_collections.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.materials_collections.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.passwords.expiration_date",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.passwords.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.passwords.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_bookmark_visits.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_bookmark_visits.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_bookmarks.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_bookmarks.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_collaboration_memberships.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_collaboration_memberships.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_collaborations.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_collaborations.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_countries.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_countries.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_courses.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_courses.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_districts.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_districts.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_grades.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_grades.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_learners.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_learners.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_offerings.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_offerings.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_school_memberships.start_time",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_school_memberships.end_time",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_school_memberships.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_school_memberships.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_schools.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_schools.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_student_clazzes.start_time",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_student_clazzes.end_time",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_student_clazzes.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_student_clazzes.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_student_permission_forms.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_student_permission_forms.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_students.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_students.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_subjects.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_subjects.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_teacher_clazzes.start_time",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_teacher_clazzes.end_time",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_teacher_clazzes.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_teacher_clazzes.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_teachers.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_teachers.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.report_learners.last_run",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.report_learners.last_report",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.sessions.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.sessions.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.standard_documents.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.standard_documents.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.standard_statements.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.standard_statements.updated_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.teacher_project_views.created_at",
+"description": "datetime /* 5.5 binary format */"
+},
+{
+"level": "Error",
+"dbObject": "portal.teacher_project_views.updated_at",
+"description": "datetime /* 5.5 binary format */"
+}
+]
+},
+{
+"id": "routinesSyntaxCheck",
+"title": "MySQL 8.0 syntax check for routine-like objects",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "reservedKeywordsCheck",
+"title": "Check for usage of db objects with names conflicting with new reserved keywords and for deprecated usage of single dollar signs in object names",
+"status": "OK",
+"description": "Warning: The following objects have names with deprecated usage of dollar sign ($) at the begining of the identifier or conflict with new reserved keywords. Ensure that names starting with dollar sign, also end with it ($example$) and queries sent by your applications use `quotes` when referring to the reserved keywords.",
+"documentationLink": "https://dev.mysql.com/doc/refman/en/keywords.html",
+"detectedProblems": [
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.MEMBER",
+"description": "Column name is a reserved keyword"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.MEMBER",
+"description": "Column name is a reserved keyword"
+}
+]
+},
+{
+"id": "utf8mb3Check",
+"title": "Usage of utf8mb3 charset",
+"status": "OK",
+"description": "Warning: The following objects use the utf8mb3 character set. It is recommended to convert them to use utf8mb4 instead, for improved Unicode support.",
+"documentationLink": "https://dev.mysql.com/doc/refman/8.0/en/charset-unicode-utf8mb3.html",
+"detectedProblems": [
+{
+"level": "Warning",
+"dbObject": "portal",
+"description": "schema's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.access_grants.code",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.access_grants.access_token",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.access_grants.refresh_token",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.access_grants.state",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.admin_cohort_items.item_type",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.admin_cohorts.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.admin_project_links.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.admin_project_links.href",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.admin_project_links.link_id",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.admin_project_materials.material_type",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.admin_projects.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.admin_projects.landing_page_slug",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.admin_projects.landing_page_content",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.admin_projects.project_card_image_url",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.admin_projects.project_card_description",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.admin_settings.description",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.admin_settings.uuid",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.admin_settings.home_page_content",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.admin_settings.external_url",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.admin_settings.custom_help_page_html",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.admin_settings.help_type",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.admin_settings.enabled_bookmark_types",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.admin_settings.custom_search_path",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.admin_settings.teacher_home_path",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.admin_settings.about_page_content",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.admin_settings.sitewide_alert",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.admin_site_notices.notice_html",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.admin_tags.scope",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.admin_tags.tag",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.ar_internal_metadata.key",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.ar_internal_metadata.value",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.authentications.provider",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.authentications.uid",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.authoring_sites.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.authoring_sites.url",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.clients.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.clients.app_id",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.clients.app_secret",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.clients.site_url",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.clients.domain_matchers",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.clients.client_type",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.clients.redirect_uris",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.commons_licenses.code",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.commons_licenses.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.commons_licenses.description",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.commons_licenses.deed",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.commons_licenses.legal",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.commons_licenses.image",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.delayed_jobs.handler",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.delayed_jobs.last_error",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.delayed_jobs.locked_by",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.delayed_jobs.queue",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_activities.uuid",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_activities.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_activities.archived_description",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_activities.url",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_activities.publication_status",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_activities.save_path",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_activities.template_type",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_activities.long_description_for_teacher",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_activities.teacher_guide_url",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_activities.thumbnail_url",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_activities.short_description",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_activities.author_email",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_activities.author_url",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_activities.print_url",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_activities.credits",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_activities.license_code",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_activities.material_type",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_activities.rubric_url",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_activities.long_description",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_activities.keywords",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_activities.teacher_resources_url",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_activities.legacy_lara_url",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_activities.rubric_doc_url",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_reports.url",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_reports.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_reports.launch_text",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_reports.report_type",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_reports.default_report_for_source_type",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_reports.move_students_api_url",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.external_reports.move_students_api_token",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.favorites.favoritable_type",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.firebase_apps.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.firebase_apps.client_email",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.firebase_apps.private_key",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.images.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.images.attribution",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.images.publication_status",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.images.image_file_name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.images.image_content_type",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.images.license_code",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.import_duplicate_users.login",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.import_duplicate_users.email",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.import_duplicate_users.data",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.import_school_district_mappings.import_district_uuid",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.import_user_school_mappings.import_school_url",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.imported_users.user_url",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.imported_users.importing_domain",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.imports.upload_data",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.imports.import_data",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.interactives.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.interactives.description",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.interactives.url",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.interactives.image_url",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.interactives.credits",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.interactives.publication_status",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.interactives.license_code",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.materials_collection_items.material_type",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.materials_collections.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.materials_collections.description",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.passwords.reset_code",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_bookmarks.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_bookmarks.type",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_bookmarks.url",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_clazzes.uuid",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_clazzes.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_clazzes.description",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_clazzes.class_word",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_clazzes.status",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_clazzes.section",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_clazzes.class_hash",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_countries.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_countries.formal_name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_countries.capital",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_countries.two_letter",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_countries.three_letter",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_countries.tld",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_courses.uuid",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_courses.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_courses.description",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_courses.status",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_courses.course_number",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_districts.uuid",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_districts.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_districts.description",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_districts.state",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_districts.leaid",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_districts.zipcode",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_grade_levels.uuid",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_grade_levels.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_grade_levels.description",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_grade_levels.has_grade_levels_type",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_grades.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_grades.description",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_grades.uuid",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_learners.uuid",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_learners.secure_key",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.LEAID",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.FIPST",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.STID",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.NAME",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.PHONE",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.MSTREE",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.MCITY",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.MSTATE",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.MZIP",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.MZIP4",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.LSTREE",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.LCITY",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.LSTATE",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.LZIP",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.LZIP4",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.KIND",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.UNION",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.CONUM",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.CONAME",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.CSA",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.CBSA",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.METMIC",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.MSC",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.ULOCAL",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.CDCODE",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.BOUND",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.GSLO",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.GSHI",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.AGCHRT",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.IGSLO",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.IGSHI",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.ISCH",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.ITEACH",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.IUG",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.IPK12",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.IMEMB",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.IMIGRN",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.ISPEC",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.IELL",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.IPKTCH",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.IKGTCH",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.IELTCH",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.ISETCH",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.IUGTCH",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.ITOTCH",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.IAIDES",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.ICOSUP",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.IELGUI",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.ISEGUI",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.ITOGUI",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.ILISPE",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.ILISUP",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.ILEADM",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.ILESUP",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.ISCADM",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.ISCSUP",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.ISTSUP",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_districts.IOTSUP",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.NCESSCH",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.FIPST",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.LEAID",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.SCHNO",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.STID",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.SEASCH",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.LEANM",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.SCHNAM",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.PHONE",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.MSTREE",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.MCITY",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.MSTATE",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.MZIP",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.MZIP4",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.LSTREE",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.LCITY",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.LSTATE",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.LZIP",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.LZIP4",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.KIND",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.STATUS",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.ULOCAL",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.CDCODE",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.CONUM",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.CONAME",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.GSLO",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.GSHI",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.LEVEL",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.TITLEI",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.STITLI",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.MAGNET",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.CHARTR",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.SHARED",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IFTE",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IGSLO",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IGSHI",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.ITITLI",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.ISTITL",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IMAGNE",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.ICHART",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.ISHARE",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IFRELC",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IREDLC",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.ITOTFR",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IMIGRN",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IPK",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAMPKM",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAMPKF",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAMPKU",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IASPKM",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IASPKF",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IASPKU",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHIPKM",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHIPKF",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHIPKU",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBLPKM",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBLPKF",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBLPKU",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWHPKM",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWHPKF",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWHPKU",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IKG",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAMKGM",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAMKGF",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAMKGU",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IASKGM",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IASKGF",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IASKGU",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHIKGM",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHIKGF",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHIKGU",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBLKGM",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBLKGF",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBLKGU",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWHKGM",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWHKGF",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWHKGU",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IG01",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM01M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM01F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM01U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS01M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS01F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS01U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI01M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI01F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI01U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL01M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL01F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL01U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH01M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH01F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH01U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IG02",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM02M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM02F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM02U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS02M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS02F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS02U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI02M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI02F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI02U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL02M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL02F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL02U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH02M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH02F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH02U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IG03",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM03M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM03F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM03U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS03M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS03F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS03U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI03M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI03F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI03U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL03M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL03F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL03U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH03M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH03F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH03U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IG04",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM04M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM04F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM04U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS04M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS04F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS04U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI04M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI04F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI04U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL04M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL04F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL04U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH04M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH04F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH04U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IG05",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM05M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM05F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM05U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS05M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS05F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS05U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI05M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI05F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI05U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL05M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL05F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL05U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH05M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH05F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH05U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IG06",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM06M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM06F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM06U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS06M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS06F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS06U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI06M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI06F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI06U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL06M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL06F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL06U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH06M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH06F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH06U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IG07",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM07M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM07F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM07U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS07M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS07F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS07U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI07M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI07F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI07U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL07M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL07F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL07U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH07M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH07F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH07U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IG08",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM08M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM08F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM08U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS08M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS08F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS08U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI08M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI08F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI08U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL08M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL08F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL08U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH08M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH08F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH08U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IG09",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM09M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM09F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM09U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS09M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS09F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS09U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI09M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI09F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI09U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL09M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL09F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL09U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH09M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH09F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH09U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IG10",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM10M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM10F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM10U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS10M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS10F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS10U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI10M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI10F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI10U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL10M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL10F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL10U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH10M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH10F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH10U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IG11",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM11M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM11F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM11U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS11M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS11F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS11U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI11M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI11F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI11U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL11M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL11F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL11U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH11M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH11F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH11U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IG12",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM12M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM12F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM12U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS12M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS12F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAS12U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI12M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI12F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHI12U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL12M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL12F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBL12U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH12M",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH12F",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWH12U",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IUG",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAMUGM",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAMUGF",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAMUGU",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IASUGM",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IASUGF",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IASUGU",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHIUGM",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHIUGF",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHIUGU",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBLUGM",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBLUGF",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBLUGU",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWHUGM",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWHUGF",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWHUGU",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IMEMB",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAM",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAMALM",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAMALF",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IAMALU",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IASIAN",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IASALM",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IASALF",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IASALU",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHISP",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHIALM",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHIALF",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IHIALU",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBLACK",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBLALM",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBLALF",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IBLALU",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWHITE",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWHALM",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWHALF",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IWHALU",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IETH",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.IPUTCH",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_nces06_schools.ITOTGR",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_offerings.uuid",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_offerings.status",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_offerings.runnable_type",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_permission_forms.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_permission_forms.url",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_school_memberships.uuid",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_school_memberships.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_school_memberships.description",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_school_memberships.member_type",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_schools.uuid",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_schools.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_schools.description",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_schools.state",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_schools.zipcode",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_schools.ncessch",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_schools.city",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_student_clazzes.uuid",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_student_clazzes.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_student_clazzes.description",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_students.uuid",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_subjects.uuid",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_subjects.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_subjects.description",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_teacher_clazzes.uuid",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_teacher_clazzes.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_teacher_clazzes.description",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.portal_teachers.uuid",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.report_learners.offering_name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.report_learners.teachers_name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.report_learners.student_name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.report_learners.username",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.report_learners.school_name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.report_learners.class_name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.report_learners.runnable_name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.report_learners.runnable_type",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.report_learners.permission_forms",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.report_learners.teachers_district",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.report_learners.teachers_state",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.report_learners.teachers_email",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.report_learners.permission_forms_id",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.report_learners.teachers_id",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.report_learners.teachers_map",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.report_learners.permission_forms_map",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.roles.title",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.roles.uuid",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.schema_migrations.version",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.security_questions.question",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.security_questions.answer",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.sessions.session_id",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.sessions.data",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.standard_documents.uri",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.standard_documents.jurisdiction",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.standard_documents.title",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.standard_documents.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.standard_statements.uri",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.standard_statements.doc",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.standard_statements.statement_notation",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.standard_statements.statement_label",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.standard_statements.description",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.standard_statements.parents",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.standard_statements.material_type",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.standard_statements.education_level",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.taggings.tagger_type",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.taggings.taggable_type",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.taggings.context",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.tags.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.tools.name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.tools.source_type",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.tools.tool_id",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.tools.remote_duplicate_url",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.users.login",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.users.first_name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.users.last_name",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.users.email",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.users.encrypted_password",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.users.password_salt",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.users.remember_token",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.users.confirmation_token",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.users.state",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.users.uuid",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.users.external_id",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.users.reset_password_token",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.users.current_sign_in_ip",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.users.last_sign_in_ip",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.users.unconfirmed_email",
+"description": "column's default character set: utf8"
+},
+{
+"level": "Warning",
+"dbObject": "portal.users.sign_up_path",
+"description": "column's default character set: utf8"
+}
+]
+},
+{
+"id": "mysqlSchemaCheck",
+"title": "Table names in the mysql schema conflicting with new tables in 8.0",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "nonNativePartitioningCheck",
+"title": "Partitioned tables using engines with non native partitioning",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "foreignKeyLengthCheck",
+"title": "Foreign key constraint names longer than 64 characters",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "auroraUpgradeCheckForAllObsoleteSqlModeFlag",
+"title": "Usage of one or more obsolete sql_mode flags",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "enumSetElementLenghtCheck",
+"title": "ENUM/SET column definitions containing elements longer than 255 characters",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "partitionedTablesInSharedTablespaceCheck",
+"title": "Usage of partitioned tables in shared tablespaces",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "circularDirectoryCheck",
+"title": "Circular directory references in tablespace data file paths",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "groupByAscCheck",
+"title": "Usage of removed GROUP BY ASC/DESC syntax",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "depreciatedSyntaxCheck",
+"title": "Check for usage of depreciated keywords and functions removed from version 8.0 in definition",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "zeroDatesCheck",
+"title": "Zero Date, Datetime, and Timestamp values",
+"status": "OK",
+"description": "Warning: By default zero date/datetime/timestamp values are no longer allowed in MySQL, as of 5.7.8 NO_ZERO_IN_DATE and NO_ZERO_DATE are included in SQL_MODE by default. These modes should be used with strict mode as they will be merged with strict mode in a future release. If you do not include these modes in your SQL_MODE setting, you are able to insert date/datetime/timestamp values that contain zeros. It is strongly advised to replace zero values with valid ones, as they may not work correctly in the future.",
+"documentationLink": "https://lefred.be/content/mysql-8-0-and-wrong-dates/",
+"detectedProblems": [
+{
+"level": "Warning",
+"dbObject": "global.sql_mode",
+"description": "does not contain either NO_ZERO_DATE or NO_ZERO_IN_DATE which allows insertion of zero dates"
+}
+]
+},
+{
+"id": "schemaInconsistencyCheck",
+"title": "Schema inconsistencies resulting from file removal or corruption",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "engineMixupCheck",
+"title": "Tables recognized by InnoDB that belong to a different engine",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "auroraGetDanglingFulltextIndex",
+"title": "Tables with dangling FULLTEXT index reference",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "getMismatchedMetadata",
+"title": "Column definition mismatch between InnoDB Data Dictionary and actual table definition.",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "getEventsWithNullDefiner",
+"title": "The definer column for mysql.event cannot be null or blank.",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "getDuplicateTriggers",
+"title": "MySQL pre-checks that all trigger names in a database are unique or not.",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "getValueOfVariablelower_case_table_names",
+"title": "MySQL pre-checks that all database or table names are lowercase when the lower_case_table_names parameter is set to 1.",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "getTriggersWithNullDefiner",
+"title": "The definer column for information_schema.triggers cannot be null or blank.",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "checkTableOutput",
+"title": "Issues reported by 'check table x for upgrade' command",
+"status": "OK",
+"detectedProblems": [
+{
+"level": "Error",
+"dbObject": "portal.admin_notice_user_display_statuses",
+"description": "Table rebuild required. Please do \"ALTER TABLE `admin_notice_user_display_statuses` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.admin_project_links",
+"description": "Table rebuild required. Please do \"ALTER TABLE `admin_project_links` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.admin_project_materials",
+"description": "Table rebuild required. Please do \"ALTER TABLE `admin_project_materials` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.admin_projects",
+"description": "Table rebuild required. Please do \"ALTER TABLE `admin_projects` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.admin_settings",
+"description": "Table rebuild required. Please do \"ALTER TABLE `admin_settings` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.admin_site_notice_users",
+"description": "Table rebuild required. Please do \"ALTER TABLE `admin_site_notice_users` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.admin_site_notices",
+"description": "Table rebuild required. Please do \"ALTER TABLE `admin_site_notices` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.admin_tags",
+"description": "Table rebuild required. Please do \"ALTER TABLE `admin_tags` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.authoring_sites",
+"description": "Table rebuild required. Please do \"ALTER TABLE `authoring_sites` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.clients",
+"description": "Table rebuild required. Please do \"ALTER TABLE `clients` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.commons_licenses",
+"description": "Table rebuild required. Please do \"ALTER TABLE `commons_licenses` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.delayed_jobs",
+"description": "Table rebuild required. Please do \"ALTER TABLE `delayed_jobs` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.favorites",
+"description": "Table rebuild required. Please do \"ALTER TABLE `favorites` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.firebase_apps",
+"description": "Table rebuild required. Please do \"ALTER TABLE `firebase_apps` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.images",
+"description": "Table rebuild required. Please do \"ALTER TABLE `images` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.imports",
+"description": "Table rebuild required. Please do \"ALTER TABLE `imports` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.interactives",
+"description": "Table rebuild required. Please do \"ALTER TABLE `interactives` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.materials_collection_items",
+"description": "Table rebuild required. Please do \"ALTER TABLE `materials_collection_items` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.materials_collections",
+"description": "Table rebuild required. Please do \"ALTER TABLE `materials_collections` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.passwords",
+"description": "Table rebuild required. Please do \"ALTER TABLE `passwords` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_bookmark_visits",
+"description": "Table rebuild required. Please do \"ALTER TABLE `portal_bookmark_visits` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_bookmarks",
+"description": "Table rebuild required. Please do \"ALTER TABLE `portal_bookmarks` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_collaboration_memberships",
+"description": "Table rebuild required. Please do \"ALTER TABLE `portal_collaboration_memberships` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_collaborations",
+"description": "Table rebuild required. Please do \"ALTER TABLE `portal_collaborations` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_countries",
+"description": "Table rebuild required. Please do \"ALTER TABLE `portal_countries` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_courses",
+"description": "Table rebuild required. Please do \"ALTER TABLE `portal_courses` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_districts",
+"description": "Table rebuild required. Please do \"ALTER TABLE `portal_districts` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_grades",
+"description": "Table rebuild required. Please do \"ALTER TABLE `portal_grades` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_learners",
+"description": "Table rebuild required. Please do \"ALTER TABLE `portal_learners` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_offerings",
+"description": "Table rebuild required. Please do \"ALTER TABLE `portal_offerings` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_school_memberships",
+"description": "Table rebuild required. Please do \"ALTER TABLE `portal_school_memberships` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_schools",
+"description": "Table rebuild required. Please do \"ALTER TABLE `portal_schools` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_student_clazzes",
+"description": "Table rebuild required. Please do \"ALTER TABLE `portal_student_clazzes` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_student_permission_forms",
+"description": "Table rebuild required. Please do \"ALTER TABLE `portal_student_permission_forms` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_students",
+"description": "Table rebuild required. Please do \"ALTER TABLE `portal_students` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_subjects",
+"description": "Table rebuild required. Please do \"ALTER TABLE `portal_subjects` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_teacher_clazzes",
+"description": "Table rebuild required. Please do \"ALTER TABLE `portal_teacher_clazzes` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.portal_teachers",
+"description": "Table rebuild required. Please do \"ALTER TABLE `portal_teachers` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.report_learners",
+"description": "Table rebuild required. Please do \"ALTER TABLE `report_learners` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.sessions",
+"description": "Table rebuild required. Please do \"ALTER TABLE `sessions` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.standard_documents",
+"description": "Table rebuild required. Please do \"ALTER TABLE `standard_documents` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.standard_statements",
+"description": "Table rebuild required. Please do \"ALTER TABLE `standard_statements` FORCE\" or dump/reload to fix it!"
+},
+{
+"level": "Error",
+"dbObject": "portal.teacher_project_views",
+"description": "Table rebuild required. Please do \"ALTER TABLE `teacher_project_views` FORCE\" or dump/reload to fix it!"
+}
+]
+},
+{
+"id": "checkTableMysqlSchema",
+"title": "Issues reported by 'check table x for upgrade' command for mysql schema.",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "auroraCheckRdsUpgradePrechecksTable",
+"title": "Check existence of mysql.rds_upgrade_prechecks table",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "auroraCheckDDLRecovery",
+"title": "Check for artifacts related to Aurora DDL recovery feature",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "auroraUpgradeCheckForRewriterPlugin",
+"title": "Check if rewriter plugin exists",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "auroraUpgradeCheckForMasterUser",
+"title": "Check if master user exists",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "auroraUpgradeCheckForMasterUserAuthString",
+"title": "Check if master user authentication string is valid",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "auroraUpgradeCheckForSysSchemaObjectTypeMismatch",
+"title": "Check object type mismatch for sys schema.",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "auroraUpgradeCheckForReserveKeywordinPartitionName",
+"title": "Check reserve keyword in partition name",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "auroraFODUpgradeCheck",
+"title": "Check for artifacts related to Aurora fast DDL feature",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "auroraUpgradeCheckIndexLengthLimitOnTinyColumns",
+"title": "Check for the tables with indexes defined with prefix length greater than 255 bytes on tiny columns",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "auroraUpgradeCheckMissingInnodbMetadataForMysqlHostTable",
+"title": "Check missing innodb metadata inconsistency for mysql.host table",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "auroraUpgradeCheckForViewColumnNameLength",
+"title": "Check for upperbound limit related to column name in view.",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "auroraUpgradeCheckForIncompleteXATransactions",
+"title": "Pre-checks for XA Transactions in prepared state.",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "auroraUpgradeCheckForFtsSpaceIdZero",
+"title": "Check for fulltext index with space id as zero",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "auroraUpgradeCheckForPrefixIndexOnGeometryColumns",
+"title": "Check for geometry columns on prefix indexs",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "auroraUpgradeCheckForRollbackSegmentHistoryLength",
+"title": "Checks if the rollback segment history length for the cluster is high",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "auroraUpgradeCheckForInstanceLimit",
+"title": "Checks if upgrade is supported on the current instance class",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "auroraUpgradeCheckForUncommittedRowModifications",
+"title": "Checks if there are many uncommitted modifications to rows",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "auroraUpgradeCheckForSpecialCharactersInProcedures",
+"title": "Check for inconsistency related to special characters in stored procedures.",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "auroraUpgradeCheckForDatafilePathInconsistency",
+"title": "Check for inconsistency related to ibd file path.",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "auroraUpgradeCheckForInternalUsers",
+"title": "Check for 8.0 internal users.",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "auroraUpgradeCheckForInvalidUtf8mb3TableComments",
+"title": "Check for invalid utf8mb3 table comments.",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "auroraUpgradeCheckForInvalidUtf8mb3CharacterStringInViews",
+"title": "Check for invalid utf8mb3 character string.",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "auroraUpgradeCheckForInvalidUtf8mb3ColumnComments",
+"title": "Check for invalid utf8mb3 column comments.",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "auroraUpgradeCheckForInvalidUtf8mb3IndexComments",
+"title": "Check for invalid utf8mb3 index comments.",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "auroraUpgradeCheckForTriggersUsingGlobalVariablesTable",
+"title": "Check for triggers using information_schema.global_variables table",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "defaultAuthenticationPlugin",
+"title": "New default authentication plugin considerations",
+"description": "Warning: The new default authentication plugin 'caching_sha2_password' offers more secure password hashing than previously used 'mysql_native_password' (and consequent improved client connection authentication). However, it also has compatibility implications that may affect existing MySQL installations. If your MySQL installation must serve pre-8.0 clients and you encounter compatibility issues after upgrading, the simplest way to address those issues is to reconfigure the server to revert to the previous default authentication plugin (mysql_native_password). For example, use these lines in the server option file:\n\n[mysqld]\ndefault_authentication_plugin=mysql_native_password\n\nHowever, the setting should be viewed as temporary, not as a long term or permanent solution, because it causes new accounts created with the setting in effect to forego the improved authentication security.\nIf you are using replication please take time to understand how the authentication plugin changes may impact you.",
+"documentationLink": "https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password-compatibility-issues\nhttps://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password-replication"
+},
+{
+"id": "columnsWhichCannotHaveDefaultsCheck",
+"title": "Columns which cannot have default values",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "mysqlInvalid57NamesCheck",
+"title": "Check for invalid table names and schema names used in 5.7",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "mysqlOrphanedObjectsCheck",
+"title": "Check for orphaned routines and events in 5.7",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "mysqlIndexTooLargeCheck",
+"title": "Check for indexes that are too large to work on higher versions of MySQL Server than 5.7",
+"status": "OK",
+"detectedProblems": []
+},
+{
+"id": "mysqlEmptyDotTableSyntaxCheck",
+"title": "Check for deprecated '.<table>' syntax used in routines.",
+"status": "OK",
+"detectedProblems": []
+}
+],
+"errorCount": 140,
+"warningCount": 606,
+"noticeCount": 0,
+"Summary": "140 errors were found. Please correct these issues before upgrading to avoid compatibility issues. For more information on prechecks to address the error/errors, refer to https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraMySQL.upgrade-prechecks.descriptions.html "
+}
+----------------------- END OF LOG ----------------------
