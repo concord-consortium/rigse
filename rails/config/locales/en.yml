@@ -165,6 +165,12 @@ en:
     switch_back: Switch back
     research_projects: Research Projects
     researcher_reports: Researcher Reports
+  will_paginate:
+    models:
+      user:
+        zero: users
+        one: user
+        other: users
 
 'en-HAS':
   activerecord:
@@ -180,6 +186,10 @@ en:
         zero: activities
         one: activity
         other: activities
+      user:
+        zero: users
+        one: user
+        other: users
   HomePage:
     Teacher:
       Intro: |
@@ -229,6 +239,12 @@ en:
         Instructions_html: |
           To get started, click the Activities link on the left to view all activities
           You can set up a class by clicking the “Add a New Class” link on the left
+  will_paginate:
+    models:
+      user:
+        zero: users
+        one: user
+        other: users
 
 'en-NGSS-ASSESSMENT':
   HomePage:
@@ -245,3 +261,9 @@ en:
           <p>
           For help using this portal, click the Help link on the left.
           </p>
+  will_paginate:
+    models:
+      user:
+        zero: users
+        one: user
+        other: users
