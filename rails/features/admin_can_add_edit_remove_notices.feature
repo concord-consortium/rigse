@@ -16,7 +16,6 @@ Feature: Admin can add, edit and remove notices
     Then I should see "Notice for users"
 
   @javascript
-  @wip #RAILS-UPGRADE-TODO
   Scenario: Admin can edit notices
     Given a notice "Notice for admin"
     And am on the site notices index page
@@ -24,7 +23,7 @@ Feature: Admin can add, edit and remove notices
     When I follow "edit"
     And I fill "Edited notice for users" in the tinyMCE editor with id "notice_html"
     And I press "Update Notice"
-    And am on the getting started page
+    And am on the site notices index page
     Then I should see "Edited notice for users"
 
   @dialog
@@ -51,7 +50,6 @@ Feature: Admin can add, edit and remove notices
     Then I should be on "the site notices index page"
 
   @javascript
-  @wip #RAILS-UPGRADE-TODO
   Scenario: Admin can cancel notice editing
     Given a notice "Notice for admin"
     And am on the site notices index page
@@ -59,6 +57,7 @@ Feature: Admin can add, edit and remove notices
     When I follow "edit"
     And I follow "Cancel"
     Then I should be on "the site notices index page"
+    Then I should see "Notice for admin"
 
   @javascript
   Scenario: Admin is shown a message if there are no notices
