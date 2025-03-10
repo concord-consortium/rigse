@@ -126,8 +126,13 @@ There is one other query to run to update the charset:
 ALTER TABLE sessions CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-However, since the `sessions` table contains a huge amount of data, it is faster to run these:
+However, since the `sessions` table contains a huge amount of data, it may be faster to run these:
 ```sql
 ALTER TABLE sessions CHANGE COLUMN session_id session_id VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL, CHANGE COLUMN data data MEDIUMTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ALTER TABLE sessions DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+Or, if there is just too much data in the `sessions` table, it's safe to simply delete it before altering the table. I found the above would repeatedly fail after running for a few hours, so I went with and recommend this option.
+```sql
+TRUNCATE TABLE sessions;
 ```

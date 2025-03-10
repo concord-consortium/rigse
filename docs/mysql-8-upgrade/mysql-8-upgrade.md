@@ -18,7 +18,7 @@ _See `old-temporal-type.md` for a list of affected objects._
 
 #### Proposed Fix
 
-Run ALTER queries listed in `old-temporal-type.md`.
+Run the ALTER queries listed in `old-temporal-type.md`.
 
 ### ERROR #2: Table Rebuild Required
 
@@ -106,4 +106,4 @@ Most queries will run within a few seconds. Some will take a minute or two. Ther
 - The query `ALTER TABLE sessions FORCE;` took about 2 hours.
 - The query `ALTER TABLE sessions CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;` took about three hours and then failed, twice.
 
-Since we'll be upgrading in off hours, it'd be safe and better to simply delete all the `sessions` table row before running queries on it. After deleting all rows, the queries should only take a minute or so.
+Since we'll be upgrading in off hours, it'd be safe and better to simply delete all the `sessions` table rows before running queries on it. After deleting all rows, the queries should only take a minute or so.
