@@ -90,10 +90,18 @@ jobs:
       - run: bundle exec rake db:migrate
       - run: bundle exec rake db:test:prepare
       - run: bundle exec rake db:feature_test:prepare
-      - run: bundle exec rake app:setup:create_default_data
         env:
           RAILS_ENV: test
-      - run: bundle exec rake app:setup:create_default_data
+      - name: Prepare database for system tests
+        if: matrix.test_suite == 'spec_system_tests'
+        run: |
+          bundle exec rake app:setup:create_default_data
+        env:
+          RAILS_ENV: test
+      - name: Prepare database for cucumber tests
+        if: matrix.test_suite == 'cucumber_without_javascript' || matrix.test_suite == 'cucumber_javascript' || matrix.test_suite == 'cucumber_search'
+        run: |
+          bundle exec rake app:setup:create_default_data
         env:
           RAILS_ENV: cucumber
       - name: Install react-components dependencies
