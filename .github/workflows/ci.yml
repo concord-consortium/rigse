@@ -27,8 +27,6 @@ jobs:
         include:
           - test_suite: spec_without_webdriver
             env: test
-          - test_suite: spec_with_webdriver
-            env: test
           - test_suite: spec_system_tests
             env: test
           - test_suite: cucumber_without_javascript

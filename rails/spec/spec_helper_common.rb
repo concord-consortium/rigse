@@ -102,7 +102,7 @@ RSpec.configure do |config|
   config.include Sprockets::Rails::Helper
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include VerifyAndResetHelpers
-  config.include FeatureHelper
+  config.include SystemHelper
 
   config.infer_spec_type_from_file_location!
 

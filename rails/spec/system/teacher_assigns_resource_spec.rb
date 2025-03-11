@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.feature 'Teachers and anonymous users should be able to see an assign button for resources.', :WebDriver => true do
+RSpec.describe 'Teachers and anonymous users should be able to see an assign button for resources.', type: :system do
 
   context "When logged in as a student," do
     let!(:student_user)            { FactoryBot.create(:confirmed_user,

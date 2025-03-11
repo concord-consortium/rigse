@@ -1,4 +1,5 @@
-module FeatureHelper
+module SystemHelper
+
   def login_as(username)
     visit "/login/#{username}"
     expect(page).to have_content(username)
@@ -32,4 +33,5 @@ module FeatureHelper
   def close_window
     page.execute_script "window.close();"
   end
+
 end
