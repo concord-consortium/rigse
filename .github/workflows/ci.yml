@@ -88,15 +88,13 @@ jobs:
 
       # See: https://github.com/concord-consortium/rigse/blob/master/rails/script/travis_before_script#L17-L20
       - run: bundle exec rake db:create
-        env:
-          RAILS_ENV: test
-      - run: bundle exec rake db:create
-        env:
-          RAILS_ENV: cucumber
       - run: bundle exec rake db:schema:load
       - run: bundle exec rake db:migrate
       - run: bundle exec rake db:test:prepare
       - run: bundle exec rake db:feature_test:prepare
+      - run: bundle exec rake app:setup:create_default_data
+        env:
+          RAILS_ENV: test
       - run: bundle exec rake app:setup:create_default_data
         env:
           RAILS_ENV: cucumber
