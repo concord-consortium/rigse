@@ -84,6 +84,12 @@ Mysql2::Client.prepend(MutexLockedQuerying)
 RSpec.configure do |config|
   config.mock_with :rspec
 
+  # Do not include system tests with a general spec test run.
+  # The system tests need to be run separately to work.
+  if ENV['RUN_SYSTEM_TESTS'] != 'true' && !config.inclusion_filter.rules.include?(:type => :system)
+    config.filter_run_excluding type: :system
+  end
+
   config.around(:example, type: :feature) do |example|
     ApplicationRecord.with_database('feature_test') { example.run }
   end

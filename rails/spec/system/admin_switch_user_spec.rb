@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'Admin switches to a different user', type: :system, WebDriver: true do
+RSpec.describe 'Admin switches to a different user', type: :system do
 
   it "allows an admin to switch to another user and back again", js: true do
     visit "/login/admin"

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'Admin can add, edit and remove notices', type: :system, WebDriver: true do
+RSpec.describe 'Admin can add, edit and remove notices', type: :system do
 
   before do
     visit "/login/admin"
