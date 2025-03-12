@@ -6,7 +6,6 @@ module SystemHelper
   end
 
   def login_with_ui_as(username, password)
-
     visit "/users/sign_in"
 
     within(find(:xpath, "//form[@id='new_user']")) do
@@ -37,6 +36,16 @@ module SystemHelper
 
   def close_window
     page.execute_script "window.close();"
+  end
+
+  def open_class_page(class_name, page_name)
+    # Opens the "Classes" menu in the left navbar, clicks on the class name,
+    # then clicks on the page name.
+    within("#clazzes_nav") do
+      find("li", text: "Classes").click
+      first("li", text: class_name, exact_text: true).click
+      click_link(page_name)
+    end
   end
 
 end

@@ -8,12 +8,8 @@ RSpec.describe "Teacher edits and saves class information", type: :system do
     login_as("teacher")
     visit "/getting_started"
 
-    # Click on the Mathematics class's setup link
-    within("#clazzes_nav") do
-      find("li", text: "Classes").click
-      first("li", text: "Mathematics", exact_text: true).click
-      click_link("Class Setup")
-    end
+    # Go to the Mathematics class's setup page
+    open_class_page("Mathematics", "Class Setup")
   end
 
   def add_teacher(teacher_name)
