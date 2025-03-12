@@ -23,6 +23,11 @@ module SystemHelper
     expect(page).to have_content(user_last_name)
   end
 
+  def logout
+    visit "/users/sign_out"
+    expect(page).to have_content("Signed out successfully.")
+  end
+
   def in_newly_opened_window
     sleep(2)
     page.driver.browser.switch_to.window(page.driver.browser.window_handles.last) do
