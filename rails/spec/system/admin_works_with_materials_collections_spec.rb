@@ -69,31 +69,31 @@ RSpec.describe "Admin can work with materials collections", type: :system do
     expect(page).to have_content("My new Collection edits")
   end
 
-  it "Admin adds materials to a Materials Collection", js: true do
-    pending "Testing search not working yet."
-    author = User.find_by(login: "author")
-    FactoryBot.create(:external_activity, name: "testing fast cars", user: author)
-    visit "/search"
+  # testing search is not working yet
+  # it "Admin adds materials to a Materials Collection", js: true do
+  #   author = User.find_by(login: "author")
+  #   FactoryBot.create(:external_activity, name: "testing fast cars", user: author)
+  #   visit "/search"
 
-    fill_in "search_term", with: "testing fast cars"
-    click_button "Go"
-    expect(page).to have_content("Add to Collection")
-    click_link "Add to Collection"
-    expect(page).to have_content("Select Collection(s)")
-    expect(page).to have_content("Collection 1")
-    expect(page).to have_content("Collection 4")
-    expect(page).not_to have_content("Already assigned to the following collections")
-    expect(page).to have_current_path("/search")
-    check "Collection 1"
-    click_button "Save"
-    expect(page).not_to have_content("Collection 1")
-    expect(page).not_to have_content("Collection 4")
-    expect(page).to have_content("testing fast cars is assigned to the selected collection(s) successfully")
-    click_button "OK"
-    click_link "Add to Collection"
-    expect(page).to have_content("Select Collection(s)")
-    expect(page).to have_content("Already assigned to the following collection(s)")
-  end
+  #   fill_in "search_term", with: "testing fast cars"
+  #   click_button "Go"
+  #   expect(page).to have_content("Add to Collection")
+  #   click_link "Add to Collection"
+  #   expect(page).to have_content("Select Collection(s)")
+  #   expect(page).to have_content("Collection 1")
+  #   expect(page).to have_content("Collection 4")
+  #   expect(page).not_to have_content("Already assigned to the following collections")
+  #   expect(page).to have_current_path("/search")
+  #   check "Collection 1"
+  #   click_button "Save"
+  #   expect(page).not_to have_content("Collection 1")
+  #   expect(page).not_to have_content("Collection 4")
+  #   expect(page).to have_content("testing fast cars is assigned to the selected collection(s) successfully")
+  #   click_button "OK"
+  #   click_link "Add to Collection"
+  #   expect(page).to have_content("Select Collection(s)")
+  #   expect(page).to have_content("Already assigned to the following collection(s)")
+  # end
 
   it "Admin deletes existing materials collection", js: true do
     visit "/materials_collections"

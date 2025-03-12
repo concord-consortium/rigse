@@ -104,38 +104,38 @@ RSpec.describe 'Admin can work with projects', type: :system do
     expect(page).to have_content("Landing page slug has already been taken")
   end
 
-  it "Admin adds materials to a project", js: true do
-    pending "Testing search not working yet."
-    visit "/search"
-    fill_in "search_term", with: "testing fast cars"
-    click_button "Go"
-    click_link "portal settings"
-    expect(page).to have_content("Projects")
-    expect(page).to have_content("project 1")
-    expect(page).to have_content("project 2")
-    expect(page).to have_content("project 3")
-    check "project 1"
-    click_button "Save"
-    expect(page).to have_content("Collections")
-    expect(page).to have_content("project 1")
-  end
+  # testing search is not working yet
+  # it "Admin adds materials to a project", js: true do
+  #   visit "/search"
+  #   fill_in "search_term", with: "testing fast cars"
+  #   click_button "Go"
+  #   click_link "portal settings"
+  #   expect(page).to have_content("Projects")
+  #   expect(page).to have_content("project 1")
+  #   expect(page).to have_content("project 2")
+  #   expect(page).to have_content("project 3")
+  #   check "project 1"
+  #   click_button "Save"
+  #   expect(page).to have_content("Collections")
+  #   expect(page).to have_content("project 1")
+  # end
 
-  it "Admin filters search results based on projects", js: true do
-    pending "Testing search not working yet."
-    visit "/search"
-    expect(page).to have_content("Collections")
-    expect(page).to have_content("project 1")
-    expect(page).to have_content("project 2")
-    expect(page).not_to have_content("project 3")
-    check "project 1"
-    expect(page).to have_content("Radioactivity")
-    expect(page).not_to have_content("Set Theory")
-    expect(page).not_to have_content("Mechanics")
-    uncheck "project 1"
-    check "project 2"
-    expect(page).not_to have_content("Radioactivity")
-    expect(page).to have_content("Set Theory")
-    expect(page).to have_content("Mechanics")
-  end
+  # testing search is not working yet
+  # it "Admin filters search results based on projects", js: true do
+  #   visit "/search"
+  #   expect(page).to have_content("Collections")
+  #   expect(page).to have_content("project 1")
+  #   expect(page).to have_content("project 2")
+  #   expect(page).not_to have_content("project 3")
+  #   check "project 1"
+  #   expect(page).to have_content("Radioactivity")
+  #   expect(page).not_to have_content("Set Theory")
+  #   expect(page).not_to have_content("Mechanics")
+  #   uncheck "project 1"
+  #   check "project 2"
+  #   expect(page).not_to have_content("Radioactivity")
+  #   expect(page).to have_content("Set Theory")
+  #   expect(page).to have_content("Mechanics")
+  # end
 
 end
