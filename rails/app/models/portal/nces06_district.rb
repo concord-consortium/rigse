@@ -3,7 +3,7 @@ class Portal::Nces06District < ApplicationRecord
 
   has_many :nces_schools, :dependent => :destroy,:class_name => "Portal::Nces06School", :foreign_key => "nces_district_id"
 
-  has_many :minimized_nces_schools, -> { select "id, nces_district_id, NCESSCH, LEAID, SCHNO, STID, SEASCH, SCHNAM, GSLO, GSHI, PHONE, MEMBER, FTE, TOTFRL, AM, ASIAN, HISP, BLACK, WHITE, LATCOD, LONCOD, MCITY, MSTREE, MSTATE, MZIP" }, :dependent => :destroy, :class_name => "Portal::Nces06School", :foreign_key => "nces_district_id"
+  has_many :minimized_nces_schools, -> { select "id, nces_district_id, NCESSCH, LEAID, SCHNO, STID, SEASCH, SCHNAM, GSLO, GSHI, PHONE, `MEMBER`, FTE, TOTFRL, AM, ASIAN, HISP, BLACK, WHITE, LATCOD, LONCOD, MCITY, MSTREE, MSTATE, MZIP" }, :dependent => :destroy, :class_name => "Portal::Nces06School", :foreign_key => "nces_district_id"
 
   has_one :district, :class_name => "Portal::District", :foreign_key => "nces_district_id"
 
