@@ -5,14 +5,15 @@ RSpec.describe 'Student should see latest class information', type: :system do
   scenario 'Student should see the updated class name', js: true do
     create_class_in_js_context
     login_as("taylor")
-    visit root_path
+    visit "/my_classes"
     expect(page).to have_content('Basic Electronics')
   end
 
   scenario 'Student should see all the updated information of a class', js: true do
     create_class_in_js_context
     login_as("taylor")
-    visit root_path
+    visit "/my_classes"
+    expect(page).to have_content('Basic Electronics')
     first(:link, 'Basic Electronics').click
     expect(page).to have_content('Class Word: betrx')
     expect(page).to have_content('NON LINEAR DEVICES')
@@ -29,5 +30,6 @@ RSpec.describe 'Student should see latest class information', type: :system do
     fill_in('portal_clazz_class_word' , :with => 'betrx')
     click_button('Save Changes')
     expect(page).not_to have_content('Save')
+    logout()
   end
 end
