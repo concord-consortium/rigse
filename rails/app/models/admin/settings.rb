@@ -67,7 +67,7 @@ class Admin::Settings < ApplicationRecord
         # no active settings; try finding the first settings
         settings = first
         if settings
-          logger.warn("No active settings found for using the first settings")
+            logger.warn("No active admin settings found. Using the first settings as a fallback.")
         else
           if ENV["RAILS_ENV"] != "test" && ENV["RAILS_ENV"] != "cucumber"
             logger.warn("No settings found")
