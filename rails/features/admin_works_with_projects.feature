@@ -9,7 +9,7 @@ Feature: Admin can work with projects
     And the database has been seeded
     And I am logged in with the username admin
 
-  @wip #RAILS-UPGRADE-TODO
+  @wip # migrated to system test
   Scenario: Admin accesses projects
     Given the default projects exist using factories
     When I am on the projects index page
@@ -20,7 +20,7 @@ Feature: Admin can work with projects
     And I should see "project 3"
     And I should see "create Project"
 
-  @wip #RAILS-UPGRADE-TODO
+  @wip # migrated to system test
   Scenario: Admin creates a new project
     When I am on the projects index page
     And I click "create Project"
@@ -36,6 +36,7 @@ Feature: Admin can work with projects
     Then I should be on the route /new-project
     And I should see "New project FooBar!"
 
+  @wip # migrated to system test
   Scenario: Admin creates a new project providing invalid params
     When I am on the projects index page
     And I click "create Project"
@@ -60,7 +61,7 @@ Feature: Admin can work with projects
     And I should see "Name can't be blank"
     And I should see "Landing page slug only allows lower case letters, digits and '-' character"
 
-
+  @wip # migrated to system test
   Scenario: Admin edits existing project
     Given the default projects exist using factories
     And I am on the projects index page
@@ -69,6 +70,7 @@ Feature: Admin can work with projects
     And I press "Save"
     Then I should see "New project name"
 
+  @wip # migrated to system test
   Scenario: Admin adds a link to an existing project
     Given the default projects exist using factories
     And I am on the projects index page
@@ -80,6 +82,7 @@ Feature: Admin can work with projects
     And I press "Save"
     Then I should see "ProjectLink was successfully created"
 
+  @wip # migrated to system test
   Scenario: Admin edits existing project providing invalid params
     Given the default projects exist using factories
     And I am on the projects index page

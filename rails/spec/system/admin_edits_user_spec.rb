@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.feature 'Admin goes to users page', :WebDriver => true do
+RSpec.describe 'Admin goes to users page', type: :system do
   let!(:teacher1_user) { FactoryBot.create(:user, login: 'pteacher', password: 'password', first_name: 'Pat', last_name: 'Teacher') }
   let!(:teacher2_user) { FactoryBot.create(:user, login: 'rteacher', password: 'password', first_name: 'Reilly', last_name: 'Teacher') }
   let!(:student_user) { FactoryBot.create(:user, login: 'cstudent', password: 'password', first_name: 'Casey', last_name: 'Student') }
@@ -21,39 +21,37 @@ RSpec.feature 'Admin goes to users page', :WebDriver => true do
       @teacher2_name = "#{teacher2_user.first_name} #{teacher2_user.last_name}"
       @student_name = "#{student_user.first_name} #{student_user.last_name}"
       @cohort_a_name = "#{project_a.name}: #{cohort_a.name}"
-      login_as('admin')
+      login_as("admin")
       visit users_path
     end
 
-    # RAILS-UPGRADE-TODO: Reinstate this after finished upgrading Rails to v8. It's passing in dev but not in CI.
-    # scenario 'Portal admin can see both teachers and student in user list.', js: true do
-    #   search_for_user(@student_name)
-    #   expect(page).to have_content(@student_name)
-    #   search_for_user(@teacher1_name)
-    #   expect(page).to have_content(@teacher1_name)
-    #   search_for_user(@teacher2_name)
-    #   expect(page).to have_content(@teacher2_name)
-    # end
+    scenario 'Portal admin can see both teachers and student in user list.', js: true do
+      search_for_user(@student_name)
+      expect(page).to have_content(@student_name)
+      search_for_user(@teacher1_name)
+      expect(page).to have_content(@teacher1_name)
+      search_for_user(@teacher2_name)
+      expect(page).to have_content(@teacher2_name)
+    end
 
-    # RAILS-UPGRADE-TODO: Reinstate this after finished upgrading Rails to v8. It's passing in dev but not in CI.
-    # scenario 'Portal admin can add a teacher to a cohort.', js: true do
-    #   search_for_user(@teacher1_name)
-    #   visit_user_edit_page(@teacher1_name)
-    #   expect(page.body).to match(%r{#{@cohort_a_name}}i)
-    #   add_teacher_to_cohort(@cohort_a_name)
-    #   confirm_teacher_in_cohort(@teacher1_name, @cohort_a_name)
-    # end
+    scenario 'Portal admin can add a teacher to a cohort.', js: true do
+      search_for_user(@teacher1_name)
+      visit_user_edit_page(@teacher1_name)
+      expect(page.body).to match(%r{#{@cohort_a_name}}i)
+      add_teacher_to_cohort(@cohort_a_name)
+      confirm_teacher_in_cohort(@teacher1_name, @cohort_a_name)
+    end
 
     # Switch feature doesn't currently work in the testing environment
-    #scenario 'Portal admin can switch to a teacher.', js: true do
-      #search_for_user(@teacher1_name)
-      #click_link("Switch")
-      #visit root_path
-      #click_link("My Classes")
-      #find('a.portal-pages-main-nav-item__link', text: 'My Classes').click()
-      #expect(page.body).to match(%r{#{teacher1_name}}i)
-      #expect(page.body).to match(%r{#{'switch back'}}i)
-    #end
+    # scenario 'Portal admin can switch to a teacher.', js: true do
+    #   search_for_user(@teacher1_name)
+    #   click_link("Switch")
+    #   visit root_path
+    #   click_link("My Classes")
+    #   find('a.portal-pages-main-nav-item__link', text: 'My Classes').click()
+    #   expect(page.body).to match(%r{#{teacher1_name}}i)
+    #   expect(page.body).to match(%r{#{'switch back'}}i)
+    # end
 
   end
 
@@ -79,17 +77,16 @@ RSpec.feature 'Admin goes to users page', :WebDriver => true do
       expect(page).to_not have_content(@student_name)
     end
 
-    # RAILS-UPGRADE-TODO: Reinstate this after finished upgrading Rails to v8. It's passing in dev but not in CI.
-    # scenario 'Project admin can add a teacher to a cohort and then see their students in user list.', js: true do
-    #   search_for_user(@teacher1_name)
-    #   expect(page).to have_content(@teacher1_name)
-    #   visit_user_edit_page(@teacher1_name)
-    #   expect(page.body).to match(%r{#{@cohort_b_name}}i)
-    #   add_teacher_to_cohort(@cohort_b_name)
-    #   visit users_path
-    #   search_for_user(@student_name)
-    #   expect(page).to have_content(@student_name)
-    # end
+    scenario 'Project admin can add a teacher to a cohort and then see their students in user list.', js: true do
+      search_for_user(@teacher1_name)
+      expect(page).to have_content(@teacher1_name)
+      visit_user_edit_page(@teacher1_name)
+      expect(page.body).to match(%r{#{@cohort_b_name}}i)
+      add_teacher_to_cohort(@cohort_b_name)
+      visit users_path
+      search_for_user(@student_name)
+      expect(page).to have_content(@student_name)
+    end
 
     scenario 'Project admin cannot see cohorts for projects they are not an admin of.', js: true do
       search_for_user(@teacher1_name)
@@ -107,18 +104,17 @@ RSpec.feature 'Admin goes to users page', :WebDriver => true do
       expect(page.body).to match(%r{#{@cohort_b_name}}i)
     end
 
-    # RAILS-UPGRADE-TODO: Reinstate this after finished upgrading Rails to v8. It's passing in dev but not in CI.
-    # scenario 'Project admin can add a teacher to a cohort and then fully edit user.', js: true do
-    #   search_for_user(@teacher1_name)
-    #   visit_user_edit_page(@teacher1_name)
-    #   expect(page.body).to match(%r{#{@cohort_b_name}}i)
-    #   add_teacher_to_cohort(@cohort_b_name)
-    #   confirm_teacher_in_cohort(@teacher1_name, @cohort_b_name)
-    #   expect(page).to have_xpath("//input[@id='user_first_name']")
-    #   expect(page).to have_xpath("//input[@id='user_last_name']")
-    #   expect(page).to have_xpath("//input[@id='user_login']")
-    #   expect(page).to have_xpath("//input[@id='user_email']")
-    # end
+    scenario 'Project admin can add a teacher to a cohort and then fully edit user.', js: true do
+      search_for_user(@teacher1_name)
+      visit_user_edit_page(@teacher1_name)
+      expect(page.body).to match(%r{#{@cohort_b_name}}i)
+      add_teacher_to_cohort(@cohort_b_name)
+      confirm_teacher_in_cohort(@teacher1_name, @cohort_b_name)
+      expect(page).to have_xpath("//input[@id='user_first_name']")
+      expect(page).to have_xpath("//input[@id='user_last_name']")
+      expect(page).to have_xpath("//input[@id='user_login']")
+      expect(page).to have_xpath("//input[@id='user_email']")
+    end
 
     # Switch feature doesn't currently work in the testing environment
     #scenario 'Project admin can switch to a teacher that belongs to a cohort of their project.', js: true do

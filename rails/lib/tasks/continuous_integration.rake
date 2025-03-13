@@ -19,10 +19,11 @@ namespace :ci do
     end
   end
 
-  RSpec::Core::RakeTask.new(:spec_with_webdriver) do |t|
-    t.rspec_opts = "--tag WebDriver"
-  end
   RSpec::Core::RakeTask.new(:spec_without_webdriver) do |t|
     t.rspec_opts = "--tag ~WebDriver"
+  end
+  RSpec::Core::RakeTask.new(:spec_system_tests) do |t|
+    ENV["RUN_SYSTEM_TESTS"] = "true"
+    t.rspec_opts = "--tag type:system"
   end
 end

@@ -27,7 +27,7 @@ jobs:
         include:
           - test_suite: spec_without_webdriver
             env: test
-          - test_suite: spec_with_webdriver
+          - test_suite: spec_system_tests
             env: test
           - test_suite: cucumber_without_javascript
             env: cucumber
@@ -86,16 +86,22 @@ jobs:
 
       # See: https://github.com/concord-consortium/rigse/blob/master/rails/script/travis_before_script#L17-L20
       - run: bundle exec rake db:create
-        env:
-          RAILS_ENV: test
-      - run: bundle exec rake db:create
-        env:
-          RAILS_ENV: cucumber
       - run: bundle exec rake db:schema:load
       - run: bundle exec rake db:migrate
       - run: bundle exec rake db:test:prepare
       - run: bundle exec rake db:feature_test:prepare
-      - run: bundle exec rake app:setup:create_default_data
+        env:
+          RAILS_ENV: test
+      - name: Prepare database for system tests
+        if: matrix.test_suite == 'spec_system_tests'
+        run: |
+          bundle exec rake app:setup:create_default_data
+        env:
+          RAILS_ENV: test
+      - name: Prepare database for cucumber tests
+        if: matrix.test_suite == 'cucumber_without_javascript' || matrix.test_suite == 'cucumber_javascript' || matrix.test_suite == 'cucumber_search'
+        run: |
+          bundle exec rake app:setup:create_default_data
         env:
           RAILS_ENV: cucumber
       - name: Install react-components dependencies
