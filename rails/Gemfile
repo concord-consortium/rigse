@@ -49,7 +49,7 @@ gem 'pundit',               '~> 1'
 # cors is allowed for all groups because cors is always enabled for the interactives/export_model_library
 gem 'rack-cors', require: 'rack/cors'
 gem "rails-observers"
-gem 'redcarpet',            '~> 2.1.1'
+gem 'redcarpet',            '~> 3.5.1'
 gem 'responders'
 gem 'rollbar'
 gem 'sanitize'
