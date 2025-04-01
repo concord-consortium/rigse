@@ -789,6 +789,8 @@ Resources:
               Value: portal-report.concord.org concord-consortium.github.io
             - Name: REPORT_VIEW_URL
               Value: !Sub "https://portal-report.concord.org/${PortalReportVersion}/"
+            - Name: AWS_REGION
+              Value: us-east-1
             - Name: S3_ACCESS_KEY_ID
               Value: !Ref S3AccessKeyId
             - Name: S3_BUCKET
