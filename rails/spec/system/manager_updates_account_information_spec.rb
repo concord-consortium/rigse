@@ -28,6 +28,10 @@ RSpec.describe "A manager updates account information for another user", type: :
     click_button "Search"
     expect(page).to have_content(student_full_name)
     within(".action_menu", text: student_full_name) do
+      click_link "View/Manage"
+    end
+    expect(page).to have_content("#{student_full_name}")
+    within(".action_menu", text: student_full_name) do
       click_link "Reset Password"
     end
     expect(page).to have_content("Password for #{student_full_name} (#{student_user.login})")
@@ -45,6 +49,10 @@ RSpec.describe "A manager updates account information for another user", type: :
     fill_in "search", with: new_user_full_name
     click_button "Search"
     expect(page).to have_content(new_user_full_name)
+    within(".action_menu", text: new_user_full_name) do
+      click_link "View/Manage"
+    end
+    expect(page).to have_content("#{new_user_full_name}")
     within(".action_menu", text: new_user_full_name) do
       click_link "Activate"
     end

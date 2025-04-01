@@ -13,6 +13,10 @@ RSpec.describe 'Admin switches to a different user', type: :system do
 
     expect(page).to have_content("Joe Switchuser")
     within(".action_menu", text: "Joe Switchuser") do
+      click_link "View/Manage"
+    end
+    expect(page).to have_content("Joe Switchuser")
+    within(".action_menu", text: "Joe Switchuser") do
       click_link "Switch"
     end
 
