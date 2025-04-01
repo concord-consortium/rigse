@@ -1,13 +1,21 @@
-%h1 Listing Classes
+%h1 Classes
+= render :partial => 'shared/collection_menu', :locals => { :collection => @portal_clazzes, :collection_class => Portal::Clazz }
+
 %br
-%table{:width=>"100%"}
+%table{:width=>"100%", border: 1}
+  %tr
+    %th ID
+    %th Name
+    %th School
+    %th Classword
+    %th 
   - @portal_clazzes.each do |portal_clazz|
     %tr
       %td= portal_clazz.id
       %td= portal_clazz.name
-      %td= link_to 'Show', portal_clazz
-      %td= link_to 'Edit', portal_clazz 
-      %td= link_to 'Destroy', portal_clazz 
+      %td= portal_clazz.school.name
+      %td= portal_clazz.class_word
+      %td= link_to 'Class list', class_list_portal_clazz_path(portal_clazz)
   
 %br
 

@@ -30,6 +30,9 @@ class User < ApplicationRecord
   has_many :external_activities
   has_many :security_questions
 
+  belongs_to :primary_account, :class_name => "User", :optional => true
+  has_many :secondary_accounts, :class_name => "User", :foreign_key => "primary_account_id"
+
   has_one :portal_teacher, :dependent => :destroy, :class_name => "Portal::Teacher", :inverse_of => :user
   has_one :portal_student, :dependent => :destroy, :class_name => "Portal::Student", :inverse_of => :user
 

@@ -602,4 +602,16 @@ module ApplicationHelper
       getting_started_path
     end
   end
+
+  def is_student_email?(email)
+    email.start_with?("no-email-") && email.end_with?("@concord.org")
+  end
+
+  def maybe_redact_student_email(email)
+    if is_student_email?(email)
+      "n/a"
+    else
+      email
+    end
+  end
 end

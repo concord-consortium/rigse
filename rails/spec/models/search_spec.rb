@@ -19,14 +19,11 @@ describe Search do
 
   describe "parameter cleaning" do
     describe "clean_search_terms" do
-      it "should remove normal dashes" do
-        expect(Search.clean_search_terms("balrgs-bonk")).to eq("balrgs bonk")
+      it "should escape normal dashes" do
+        expect(Search.clean_search_terms("balrgs-bonk")).to eq("balrgs\\-bonk")
       end
-      it "should remove pluses" do
-        expect(Search.clean_search_terms("balrgs+bonk")).to eq("balrgs bonk")
-      end
-      it "should remove pluses" do
-        expect(Search.clean_search_terms("balrgs+bonk")).to eq("balrgs bonk")
+      it "should escape pluses" do
+        expect(Search.clean_search_terms("balrgs+bonk")).to eq("balrgs\\+bonk")
       end
       it "should leave white spaces in the middle" do
         expect(Search.clean_search_terms("balrgs bonk")).to eq("balrgs bonk")
@@ -35,7 +32,7 @@ describe Search do
         expect(Search.clean_search_terms(" balrgs bonk")).to eq("balrgs bonk")
       end
 
-      it "should not remove single quote strings" do
+      it "should not escape single quote strings" do
         expect(Search.clean_search_terms("This is Sarah's test sequence")).to eq("This is Sarah's test sequence")
       end
 
@@ -157,8 +154,8 @@ describe Search do
               expect(subject.results[:all]).to include funny_activity
             end
           end
-          describe "searching for 'Noah'" do
-            let(:search_term)      { "Noah*" }
+          describe "searching for \"Noah's\"" do
+            let(:search_term)      { "Noah's" }
             it "should be found" do
               expect(subject.results[:all]).to include funny_activity
             end
