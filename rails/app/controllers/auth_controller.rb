@@ -58,7 +58,7 @@ class AuthController < ApplicationController
     # If user is not logged in, we'll redirect back here after first
     # logging in the user. This redirect happens when in
     # ApplicationController#after_sign_in_path_for
-    redirect_to AccessGrant.get_authorize_redirect_uri(current_user, params)
+    redirect_to AccessGrant.get_authorize_redirect_uri(current_user, params), allow_other_host: true
   end
 
   def access_token
