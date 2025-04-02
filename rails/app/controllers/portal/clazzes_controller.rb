@@ -38,7 +38,7 @@ class Portal::ClazzesController < ApplicationController
     # PUNDIT_REVIEW_SCOPE
     # PUNDIT_CHECK_SCOPE (did not find instance)
     # @clazzes = policy_scope(Portal::Clazz)
-    @portal_clazzes = Portal::Clazz.all
+    @portal_clazzes = Portal::Clazz.search(params[:search], params[:page], nil)
 
     respond_to do |format|
       format.html # index.html.erb

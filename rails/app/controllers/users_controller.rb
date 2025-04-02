@@ -18,34 +18,38 @@ class UsersController < ApplicationController
   def index
     authorize User
 
+    search_for_portal_admins = params[:portal_admin].to_s.length > 0
+    search_for_project_admins = params[:project_admin].to_s.length > 0
+    search_for_project_researchers = params[:project_researcher].to_s.length > 0
+
+    joins = []
     user_type_conditions = []
 
-    if params[:portal_admin].to_s.length > 0
+    if search_for_portal_admins
       admin_role_id = Role.where(title: 'admin').first.id
       user_type_conditions << "roles_users.role_id = #{admin_role_id}"
+      joins << "LEFT JOIN roles_users ON users.id = roles_users.user_id "
     end
 
-    if params[:project_admin].to_s.length > 0
-      user_type_conditions << 'admin_project_users.is_admin = true'
+    if search_for_project_admins || search_for_project_researchers
+      if search_for_project_admins
+        user_type_conditions << 'admin_project_users.is_admin = true'
+      end
+
+      if search_for_project_researchers
+        user_type_conditions << 'admin_project_users.is_researcher = true'
+      end
+
+      joins << "LEFT JOIN admin_project_users ON users.id = admin_project_users.user_id "
     end
-
-    if params[:project_researcher].to_s.length > 0
-      user_type_conditions << 'admin_project_users.is_researcher = true'
-    end
-
-    user_types = user_type_conditions.map { |uc| uc }.join(" OR ")
-
-    join_string =
-      "LEFT JOIN roles_users ON users.id = roles_users.user_id " +
-      "LEFT JOIN admin_project_users ON users.id = admin_project_users.user_id "
 
     search_scope = policy_scope(User)
-    search_scope = search_scope
-      .includes(:imported_user, :portal_student, :authentications, :roles)
-      .includes({ teacher_cohorts: [:project] })
-      .includes({ student_cohorts: [:project] })
-      .includes({ portal_teacher: [:schools] })
-    search_scope = search_scope.joins(join_string).where(user_types).distinct()
+    if user_type_conditions.length > 0
+      user_types = user_type_conditions.map { |uc| uc }.join(" OR ")
+      join_string = joins.join(" ")
+      search_scope = search_scope.joins(join_string).where(user_types).distinct()
+    end
+
     @users = search_scope.search(params[:search], params[:page], nil)
     respond_to do |format|
       format.html # index.html.erb
@@ -68,6 +72,17 @@ class UsersController < ApplicationController
   def edit
     @user = User.find(params[:id])
     authorize @user
+    @can_set_primary = true
+    if @user.portal_student
+      # Find the list of options for the "primary account" pulldown
+      student = @user.portal_student
+      # At least for now, the only potential primaries are other students in the same class
+      @classmates = student.clazzes.includes(:students).flat_map(&:students).uniq - [student]
+      # Accounts that are secondary cannot be primary too
+      @classmates = @classmates.reject { |s| s.user.primary_account }
+    else
+      @classmates = []
+    end
     @roles = Role.all
     @projects = Admin::Project.all_sorted
   end
@@ -146,6 +161,16 @@ class UsersController < ApplicationController
           @mc_status = 'subscribed'
         end
         params[:user].delete :enews_subscription
+
+        # Set / unset primary account
+        primary_id = params[:user][:primary_account_id]
+        if primary_id == ""
+          @user.primary_account = nil
+          @user.save
+        elsif primary_id
+          @user.primary_account = User.find(params[:user][:primary_account_id])
+          @user.save
+        end
 
         if @user.update(user_strong_params(params[:user]))
 

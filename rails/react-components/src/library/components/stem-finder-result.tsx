@@ -272,7 +272,7 @@ const StemFinderResult = Component({
     const rubricDocLink = resource.links.rubric_doc && Portal.currentUser.isTeacher
       ? <a href={resource.links.rubric_doc.url} target="_blank" rel="noopener noreferrer" onClick={this.handleRubricDocClick}>{ resource.links.rubric_doc.text }</a>
       : null;
-    const assignCollectionLink = resource.links.assign_collection && (Portal.currentUser.isAdmin || Portal.currentUser.isManager)
+    const assignCollectionLink = !isCollection && resource.links.assign_collection && (Portal.currentUser.isAdmin || Portal.currentUser.isManager)
       ? <a href={resource.links.assign_collection.url} target="_blank" onClick={this.handleAddToCollectionClick} rel="noreferrer">{ resource.links.assign_collection.text }</a>
       : null;
     const portalSettingsLink = resource.links.edit && (Portal.currentUser.isAdmin || Portal.currentUser.isManager)
@@ -380,7 +380,10 @@ const StemFinderResult = Component({
         </div>
         <div className={css.finderResultText}>
           <div className={css.finderResultTextName}>
-            <a href={resourceLink} target="_blank" title={resourceName} rel="noreferrer">{ resourceName }</a>
+            {resource.material_type !== "Collection"
+              ? <a href={resourceLink} target="_blank" title={resourceName} rel="noreferrer">{ resourceName }</a>
+              : <a href={resource.links.preview.url} target="_blank" title={resourceName} rel="noreferrer" onClick={this.handleViewCollectionClick}>{ resourceName }</a>
+            }
           </div>
           <div className={css.metaTags}>
             <GradeLevels resource={resource} />
