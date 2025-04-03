@@ -50,7 +50,7 @@ class ExternalActivitiesController < ApplicationController
            uri.query = Rack::Utils.build_query(query)
            redirect_to uri.to_s, allow_other_host: true
         else
-          redirect_to(@external_activity.url)
+          redirect_to @external_activity.url, allow_other_host: true
         end
       }
       format.xml  { render xml: @external_activity }
