@@ -43,8 +43,6 @@ RailsPortal::Application.configure do
   # config.action_mailer.deliver_later_queue_name = :new_queue_name
   # 2. This only is valid for PostgreSQL
   # config.active_record.dump_schemas = :all
-  # 3. Commented out because this needs Ruby 2.4 to work
-  # ActiveSupport.to_time_preserves_timezone = false
   #
   # END OF RAILS 5 OPTIONS
 
@@ -69,7 +67,7 @@ RailsPortal::Application.configure do
 
   config.after_initialize do
     Bullet.enable = true
-    Bullet.bullet_logger = !BoolENV["RAILS_STDOUT_LOGGING"]
+    Bullet.bullet_logger = !BoolEnv["RAILS_STDOUT_LOGGING"]
     Bullet.rails_logger = true
     Bullet.add_footer = true
   end
@@ -93,6 +91,8 @@ RailsPortal::Application.configure do
 
   # Rails 5 defaults to disable submit
   config.action_view.automatically_disable_submit_tag = false
+
+  config.active_storage.service = :local
 
   LogConfig.configure(config, ENV['DEV_LOG_LEVEL'], 'DEBUG')
 end

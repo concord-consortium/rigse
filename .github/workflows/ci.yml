@@ -27,7 +27,7 @@ jobs:
         include:
           - test_suite: spec_without_webdriver
             env: test
-          - test_suite: spec_with_webdriver
+          - test_suite: spec_system_tests
             env: test
           - test_suite: cucumber_without_javascript
             env: cucumber
@@ -55,7 +55,6 @@ jobs:
           TEST_SOLR_PORT: 8981
     env:
       RAILS_ENV: ${{ matrix.env }}
-      CHROMEDRIVER_VERSION: '114.0.5735.90'
     defaults:
       run:
         working-directory: ./rails/
@@ -74,8 +73,6 @@ jobs:
       # Install ChromeDriver (wiping out whatever version was previously installed on Actions Runner)
       - name: Install ChromeDriver
         uses: nanasess/setup-chromedriver@v2
-        with:
-          chromedriver-version: ${{ env.CHROMEDRIVER_VERSION }}
       # Remove existing Google Chrome as ChromeDriver will default to it (setup-chrome installs under /opt/hostedtoolcache/setup-chrome/)
       - name: Remove Existing Google Chrome (so ChromeDriver doesn't use it instead of manually installed version)
         run: sudo apt-get remove google-chrome-stable
@@ -83,25 +80,28 @@ jobs:
       - name: Install Google Chrome
         id: install-chrome
         uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: ${{ env.CHROMEDRIVER_VERSION }}
-
       - run: cp -v ./config/database.github_actions.yml ./config/database.yml
       - run: cp -v ./config/app_environment_variables.sample.rb ./config/app_environment_variables.rb
       - run: cp -v ./config/settings.sample.yml ./config/settings.yml
 
       # See: https://github.com/concord-consortium/rigse/blob/master/rails/script/travis_before_script#L17-L20
       - run: bundle exec rake db:create
-        env:
-          RAILS_ENV: test
-      - run: bundle exec rake db:create
-        env:
-          RAILS_ENV: cucumber
       - run: bundle exec rake db:schema:load
       - run: bundle exec rake db:migrate
       - run: bundle exec rake db:test:prepare
       - run: bundle exec rake db:feature_test:prepare
-      - run: bundle exec rake app:setup:create_default_data
+        env:
+          RAILS_ENV: test
+      - name: Prepare database for system tests
+        if: matrix.test_suite == 'spec_system_tests'
+        run: |
+          bundle exec rake app:setup:create_default_data
+        env:
+          RAILS_ENV: test
+      - name: Prepare database for cucumber tests
+        if: matrix.test_suite == 'cucumber_without_javascript' || matrix.test_suite == 'cucumber_javascript' || matrix.test_suite == 'cucumber_search'
+        run: |
+          bundle exec rake app:setup:create_default_data
         env:
           RAILS_ENV: cucumber
       - name: Install react-components dependencies
@@ -163,13 +163,6 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      ## See: https://github.com/docker/login-action#docker-hub
-      #- name: Login to Docker Hub
-      #  uses: docker/login-action@v2
-      #  if: ${{ secrets.DOCKER_HUB_USERNAME != '' && secrets.DOCKER_HUB_TOKEN != '' && env.DOCKER_HUB_IMAGE }}
-      #  with:
-      #    username: ${{ secrets.DOCKER_HUB_USERNAME }}
-      #    password: ${{ secrets.DOCKER_HUB_TOKEN }}
       - name: Extract metadata for Docker image tagging
         id: docker_metadata
         uses: docker/metadata-action@v4

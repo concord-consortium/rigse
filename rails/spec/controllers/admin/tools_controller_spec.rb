@@ -52,7 +52,7 @@ RSpec.describe Admin::ToolsController, type: :controller do
 
   describe '#create' do
     it "creates a new model, redirects to index" do
-      post :create, params: { tool: {} }
+      post :create, params: { tool: { name: "Tool One", source_type: "a source type", tool_id: "test.host/" } }
       expect(response).to have_http_status(:redirect)
     end
   end

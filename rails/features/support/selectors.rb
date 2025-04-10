@@ -36,6 +36,8 @@ module HtmlSelectorsHelpers
       "div#clazzes_nav"
     when "content box in change password page"
       "div#content"
+    when "\"My Class\""
+      'li[class^="section--"]:has(text("My Class"))'
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #

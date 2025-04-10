@@ -35,7 +35,7 @@ describe Portal::TeachersController do
 
         post :create, params: params
 
-        expect(@response).to redirect_to(thanks_for_sign_up_url(:type=>'teacher',:login=>params[:user][:login]))
+        expect(@response).to redirect_to(thanks_for_sign_up_url(type: 'teacher', login: params[:user][:login], host: 'test.host'))
 
       end
     end

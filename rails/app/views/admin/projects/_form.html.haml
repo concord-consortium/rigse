@@ -5,8 +5,8 @@
       %p
         %ul.menu_v.error-explanation
           %li Project can't be saved, there are errors in form:
-          - project.errors.full_messages.each do |msg|
-            %li= msg
+          - project.errors.each do |error|
+            %li= error.message
     %p
       %ul.menu_v
         %li

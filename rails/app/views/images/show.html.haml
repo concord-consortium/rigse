@@ -1,4 +1,4 @@
-= link_to image_tag(@image.image.url(:attributed)), @image.image.url(:attributed)
+= link_to image_tag(@image.image.variant(resize: "650x400>").processed), url_for(@image.image)
 
 %p
   %b
@@ -36,9 +36,5 @@
       %br
       %span.small= link_to license.name, license.deed, :target => 'new'
       %span.tiny.description= license.description
-.horizontal_button_panel
-  - if @image.changeable?(current_visitor)
-    = button_to 'Edit', edit_image_path(@image), :method => :get
-    - unless @image.public?
-      = button_to "Delete", image_path(@image), :method => :delete, data: {:confirm => "are you sure?"}
+
   = button_to 'List', images_path, :method => :get

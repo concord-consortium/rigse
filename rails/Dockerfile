@@ -1,10 +1,8 @@
 ARG NODE_VERSION=18.18.0
-ARG RUBY_VERSION=2.7
+ARG RUBY_VERSION=3.3
 
 FROM node:${NODE_VERSION}-alpine AS node
-# Stick to Alpine <= 3.13 to avoid issues with ECS Docker
-# See: https://github.com/docker-library/ruby/issues/351#issue-940462153
-FROM docker.io/ruby:${RUBY_VERSION}-alpine3.12
+FROM ruby:${RUBY_VERSION}-alpine3.18
 
 COPY --from=node /usr/lib /usr/lib
 COPY --from=node /usr/local/lib /usr/local/lib
@@ -16,6 +14,9 @@ RUN node -v
 RUN true
 
 RUN apk add \
+  openssl \
+  libssl3 \
+  ca-certificates \
   # The Ruby Gem "delayed-web" has a transitive depdency for "racc" which builds
   # native extensions and requires a C toolchain (it attempts to use gcc):
   # "Gem::Ext::BuildError: ERROR: Failed to build gem native extension."
@@ -40,9 +41,13 @@ RUN apk add \
   # to your Gemfile and run bundle install (TZInfo::DataSourceNotFound)"
   tzdata \
   # See: https://github.com/sstephenson/ruby-yui-compressor#label-Installing+and+loading+Ruby-YUI+Compressor
-  openjdk8-jre
+  openjdk8-jre \
+  # Required for Selenium Webdriver
+  chromium \
+  chromium-chromedriver \
+  gcompat glib nss libxcb libgcc
 
-ENV APP_HOME /rigse/
+ENV APP_HOME=/rigse/
 
 RUN adduser -D -u 13000 app
 
@@ -77,7 +82,7 @@ ENV DOCKER_NO_INIT_ON_PRECOMPILE=true
 # Seems like the above doesn't work anymore: https://github.com/rails/rails/issues/32947
 # Instead we need to fake some ENV Vars for the precompile ...
 # Run precompile rake task in order to at least generate the manifest file
-RUN SECRET_KEY_BASE=dummy bundle exec rake assets:precompile
+RUN RAILS_SECRET_KEY_BASE=dummy bundle exec rake assets:precompile
 
 # This font is used by imagemagick to add attribution to the images in the image library
 # the DejaVu-Sans font is provided by the docker image this one is built on

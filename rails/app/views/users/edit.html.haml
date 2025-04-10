@@ -14,7 +14,10 @@
 
   .item
     .content
-      = form.error_messages
+      - if @user.errors.any?
+        %ul
+          - @user.errors.map(&:full_message).each do |msg|
+            %li= msg
       = render :partial => 'form', :locals => { :f => form }
       - if policy(@user).make_admin?
         -# FIXME: Currently this also prevents others from making the user an author

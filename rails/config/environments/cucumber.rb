@@ -4,6 +4,8 @@ RailsPortal::Application.configure do
   # Edit at your own peril - it's recommended to regenerate this file
   # in the future when you upgrade to a newer version of Cucumber.
 
+  config.secret_key_base = 'a4c92197b158570f42dd9fb0124dfc96ba858167187b6afaa8f10d1c2c542afa3721737874e49cb0dcd71f58f78c4d3f4dc14e57d67ae110e15114628cee8a43'
+
   # IMPORTANT: Setting config.cache_classes to false is known to
   # break Cucumber's use_transactional_fixtures method.
   # For more information see https://rspec.lighthouseapp.com/projects/16211/tickets/165
@@ -61,8 +63,6 @@ RailsPortal::Application.configure do
   # config.action_mailer.deliver_later_queue_name = :new_queue_name
   # 2. This only is valid for PostgreSQL
   # config.active_record.dump_schemas = :all
-  # 3. Commented out because this needs Ruby 2.4 to work
-  # ActiveSupport.to_time_preserves_timezone = false
   #
   # END OF RAILS 5 OPTIONS
 

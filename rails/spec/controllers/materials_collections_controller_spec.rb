@@ -27,8 +27,8 @@ describe MaterialsCollectionsController do
       login_admin
     end
 
-    let(:project) { FactoryBot.create(:project, name: "z project") }
-    let(:project2) { FactoryBot.create(:project, name: "a project") }
+    let(:project) { FactoryBot.create(:project, name: "z project", landing_page_slug: 'z-project') }
+    let(:project2) { FactoryBot.create(:project, name: "a project", landing_page_slug: 'a-project') }
     let(:materials_collection) { FactoryBot.create(:materials_collection, project_id: project.id) }
     let(:valid_attributes)     { { name: "Some name", description: "Some description", project_id: project.id } }
 
@@ -92,7 +92,7 @@ describe MaterialsCollectionsController do
 
         it "redirects to the materials_collections index" do
           post :create, params: { :materials_collection => valid_attributes }
-          expect(response).to redirect_to(materials_collections_url)
+          expect(response).to redirect_to(materials_collections_url(host: 'test.host'))
         end
       end
 
@@ -164,7 +164,7 @@ describe MaterialsCollectionsController do
 
       it "redirects to the materials_collections list" do
         delete :destroy, params: { :id => materials_collection.to_param }
-        expect(response).to redirect_to(materials_collections_url)
+        expect(response).to redirect_to(materials_collections_url(host: 'test.host'))
       end
     end
   end
@@ -203,7 +203,7 @@ describe MaterialsCollectionsController do
         get :show, params: { :id => other_materials_collection.to_param }
         expect(flash['alert']).to be_present
         expect(flash['alert']).to match(/You \(author\) can not view the requested resource/)
-        expect(response).to redirect_to(getting_started_url)
+        expect(response).to redirect_to(getting_started_url(host: 'test.host'))
       end
     end
 
@@ -224,7 +224,7 @@ describe MaterialsCollectionsController do
         get :edit, params: { :id => other_materials_collection.to_param }
         expect(flash['alert']).to be_present
         expect(flash['alert']).to match(/You \(author\) can not edit the requested resource/)
-        expect(response).to redirect_to(getting_started_url)
+        expect(response).to redirect_to(getting_started_url(host: 'test.host'))
       end
     end
 
@@ -244,7 +244,7 @@ describe MaterialsCollectionsController do
 
         it "redirects to the materials_collections index" do
           post :create, params: { :materials_collection => valid_attributes }
-          expect(response).to redirect_to(materials_collections_url)
+          expect(response).to redirect_to(materials_collections_url(host: 'test.host'))
         end
       end
 
@@ -316,7 +316,7 @@ describe MaterialsCollectionsController do
 
       it "redirects to the materials_collections list" do
         delete :destroy, params: { :id => materials_collection.to_param }
-        expect(response).to redirect_to(materials_collections_url)
+        expect(response).to redirect_to(materials_collections_url(host: 'test.host'))
       end
     end
   end

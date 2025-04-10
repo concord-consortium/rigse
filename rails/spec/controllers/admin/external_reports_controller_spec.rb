@@ -6,7 +6,7 @@ RSpec.describe Admin::ExternalReportsController, type: :controller do
 
   let(:data) {ExternalReport}
   let(:params_key) { :external_report }
-  let(:valid_attributes)  { { } }
+  let(:valid_attributes)  { { name: 'name', url: 'https://test.com/', launch_text: 'launch' } }
   let(:admin_user) {FactoryBot.generate(:admin_user)}
   let(:stubs) {{}}
   let(:mock_content) {

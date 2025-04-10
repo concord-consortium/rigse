@@ -1,4 +1,3 @@
-
 namespace :ci do
   require 'rspec/core/rake_task'
 
@@ -10,20 +9,21 @@ namespace :ci do
       t.cucumber_opts = opts
     end
     Cucumber::Rake::Task.new(:cucumber_without_javascript) do |t|
-         t.cucumber_opts = opts + " --tags 'not @javascript'"
+      t.cucumber_opts = opts + " --tags 'not @javascript'"
     end
     Cucumber::Rake::Task.new(:cucumber_javascript) do |t|
-         t.cucumber_opts = opts + " --tags @javascript --tags 'not @search'"
+      t.cucumber_opts = opts + " --tags @javascript --tags 'not @search'"
     end
     Cucumber::Rake::Task.new(:cucumber_search) do |t|
-         t.cucumber_opts = opts + " --tags @javascript --tags @search"
+      t.cucumber_opts = opts + " --tags @javascript --tags @search"
     end
   end
 
-  RSpec::Core::RakeTask.new(:spec_with_webdriver) do |t|
-    t.rspec_opts = "--tag WebDriver"
-  end
   RSpec::Core::RakeTask.new(:spec_without_webdriver) do |t|
     t.rspec_opts = "--tag ~WebDriver"
+  end
+  RSpec::Core::RakeTask.new(:spec_system_tests) do |t|
+    ENV["RUN_SYSTEM_TESTS"] = "true"
+    t.rspec_opts = "--tag type:system"
   end
 end

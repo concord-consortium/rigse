@@ -73,7 +73,7 @@ describe Portal::DistrictsController do
         allow(@district).to receive_messages(:id => 37, :save => true )
         allow(Portal::District).to receive(:new).and_return(@district)
         post :create, params: { :portal_district => {} }
-        expect(response).to redirect_to(portal_district_url(@district))
+        expect(response).to redirect_to(portal_district_url(@district, host: 'test.host'))
       end
     end
 
@@ -115,7 +115,7 @@ describe Portal::DistrictsController do
         allow(@district).to receive_messages(:update => true)
         allow(Portal::District).to receive(:find).and_return(@district)
         put :update, params: { :id => "1" }
-        expect(response).to redirect_to(portal_district_url(@district))
+        expect(response).to redirect_to(portal_district_url(@district, host: 'test.host'))
       end
     end
 
@@ -154,7 +154,7 @@ describe Portal::DistrictsController do
       expect(@district).to receive(:destroy).and_return(true)
       allow(Portal::District).to receive(:find).and_return(@district)
       delete :destroy, params: { :id => "1" }
-      expect(response).to redirect_to(portal_districts_url)
+      expect(response).to redirect_to(portal_districts_url(host: 'test.host'))
     end
   end
 end

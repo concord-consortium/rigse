@@ -1,6 +1,7 @@
 .item
   = edit_menu_for(project_link, f, { :omit_cancel => true })
-  = error_messages_for :project_link
+  - if project_link.errors.any?
+    = project_link.errors.map(&:full_message).join(', ')
   .content
     %p
       %ul.menu_v

@@ -1,7 +1,13 @@
 <h1>New nces06_district</h1>
 
 <% form_for(@nces06_district) do |f| %>
-  <%= f.error_messages %>
+  <% if @nces06_district.errors.any? %>
+    <ul>
+      <% @nces06_district.errors.map(&:full_message).each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  <% end %>
 
   <p>
     <%= f.submit 'Create' %>

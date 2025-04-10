@@ -1,10 +1,8 @@
 ARG NODE_VERSION=18.18.0
-ARG RUBY_VERSION=2.7
+ARG RUBY_VERSION=3.3
 
 FROM node:${NODE_VERSION}-alpine AS node
-# Stick to Alpine <= 3.13 to avoid issues with ECS Docker
-# See: https://github.com/docker-library/ruby/issues/351#issue-940462153
-FROM docker.io/ruby:${RUBY_VERSION}-alpine3.12
+FROM ruby:${RUBY_VERSION}-alpine3.18
 
 COPY --from=node /usr/lib /usr/lib
 COPY --from=node /usr/local/lib /usr/local/lib
@@ -16,6 +14,9 @@ RUN node -v
 RUN true
 
 RUN apk add \
+  openssl \
+  libssl3 \
+  ca-certificates \
   # The Ruby Gem "delayed-web" has a transitive depdency for "racc" which builds
   # native extensions and requires a C toolchain (it attempts to use gcc):
   # "Gem::Ext::BuildError: ERROR: Failed to build gem native extension."
@@ -42,7 +43,11 @@ RUN apk add \
   # See: https://github.com/sstephenson/ruby-yui-compressor#label-Installing+and+loading+Ruby-YUI+Compressor
   openjdk8-jre \
   # Alpine Linux doesn't include bash by default
-  bash
+  bash \
+  # Required for Selenium Webdriver
+  chromium \
+  chromium-chromedriver \
+  gcompat glib nss libxcb libgcc
 
 # This is currently commented out, as installing Chrome on Alpine Linux needs to be done in a different way,
 # and this linux distribution is missing multiple dependencies required for installing Chrome.
@@ -59,12 +64,12 @@ WORKDIR /usr/local/bin
 RUN wget https://raw.githubusercontent.com/vishnubob/wait-for-it/db049716e42767d39961e95dd9696103dca813f1/wait-for-it.sh && \
     chmod +x wait-for-it.sh
 
-ENV APP_HOME /rigse
+ENV APP_HOME=/rigse
 RUN mkdir $APP_HOME
 WORKDIR $APP_HOME
 
 # use a mounted volume so the gems don't need to be rebundled each time
-ENV BUNDLE_PATH /bundle
+ENV BUNDLE_PATH=/bundle
 
 ENV BUNDLE_GEMFILE=$APP_HOME/Gemfile \
   BUNDLE_JOBS=2 \

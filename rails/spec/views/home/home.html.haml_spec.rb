@@ -7,6 +7,10 @@ describe "/home/home.html.haml" do
   let(:content) { "" }
   let(:theme) { "xproject" }
   before(:each) do
+    # RAILS-UPGRADE-TODO: Find out why the next line is needed for these tests to pass. Since the upgrade from Rails v6.1 to 7.0
+    # the tests will fail without it. It has something to do with the partials rendered in the view. Rails
+    # can't seem to find the partial files without specifying the subdirectory in app/views here.
+    view.lookup_context.prefixes << "home"
     power_user = stub_model(User, has_role?: true)
     allow(view).to receive(:theme_name).and_return(theme)
     allow(view).to receive(:current_visitor).and_return(power_user)

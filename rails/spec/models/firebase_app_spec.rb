@@ -34,8 +34,8 @@ nC64AqP02IP2yOxnbxZ1uY2TrdI1VcO3AwcngxSEUMo=
 
   it "should be valid when used in a signed JWT" do
     FirebaseApp.create!(@valid_attributes)
-    token = SignedJWT::create_firebase_token(uid, @valid_app_name)
-    decoded_token = SignedJWT::decode_firebase_token(token, @valid_app_name)
+    token = SignedJwt::create_firebase_token(uid, @valid_app_name)
+    decoded_token = SignedJwt::decode_firebase_token(token, @valid_app_name)
     expect(decoded_token[:data]["uid"]).to eql uid
     expect(decoded_token[:data]["iss"]).to eql @valid_client_email
     expect(decoded_token[:data]["sub"]).to eql @valid_client_email
@@ -43,21 +43,21 @@ nC64AqP02IP2yOxnbxZ1uY2TrdI1VcO3AwcngxSEUMo=
   end
 
   it "should throw an error in a signed JWT when it doesn't exist" do
-    expect { SignedJWT::create_firebase_token(uid, @valid_app_name) }.to raise_error(SignedJWT::Error)
+    expect { SignedJwt::create_firebase_token(uid, @valid_app_name) }.to raise_error(SignedJwt::Error)
   end
 
   it "should create a valid JWT with claims" do
     FirebaseApp.create!(@valid_attributes)
     claims = {foo: "bar"}
-    token = SignedJWT::create_firebase_token(uid, @valid_app_name, 3600, claims)
-    decoded_token = SignedJWT::decode_firebase_token(token, @valid_app_name)
+    token = SignedJwt::create_firebase_token(uid, @valid_app_name, 3600, claims)
+    decoded_token = SignedJwt::decode_firebase_token(token, @valid_app_name)
     expect(decoded_token[:data]["foo"]).to eql "bar"
   end
 
   it "should throw an error when create a JWT with claims if reserved keys are used" do
     FirebaseApp.create!(@valid_attributes)
     claims = {sub: "bar"}
-    expect { SignedJWT::create_firebase_token(uid, @valid_app_name, 3600, claims) }.to raise_error(SignedJWT::Error)
+    expect { SignedJwt::create_firebase_token(uid, @valid_app_name, 3600, claims) }.to raise_error(SignedJwt::Error)
   end
 
 end

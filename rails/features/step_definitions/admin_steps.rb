@@ -22,6 +22,26 @@ When /^I create new settings with the description "([^"]*)"$/ do |description|
   expect(page).to have_no_button("Save")
 end
 
+Given(/^an admin user named "([^"]*)" with username "([^"]*)" exists$/) do |fullname, username|
+  first_name, last_name = fullname.split(' ', 2)
+  user = FactoryBot.create(:user, first_name: first_name, last_name: last_name, login: username)
+  user.add_role("member")
+  user.add_role("admin")
+  user.save!
+  user.confirm
+end
+
+Given(/^a student user named "([^"]*)" exists$/) do |fullname|
+  first_name, last_name = fullname.split(' ', 2)
+  user = FactoryBot.create(:user, first_name: first_name, last_name: last_name, login: last_name)
+  user.add_role("member")
+  user.save!
+  user.confirm
+
+  portal_student = FactoryBot.create(:full_portal_student, { :user => user })
+  portal_student.save!
+end
+
 Then /^I switch to "([^"]*)" in the user list by searching "([^"]*)"$/ do |fullname, search|
   visit path_to("user list")
   step 'I should see "Account Report"'

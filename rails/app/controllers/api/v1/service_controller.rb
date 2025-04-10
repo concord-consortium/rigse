@@ -5,7 +5,7 @@ class API::V1::ServiceController < API::APIController
     if API::V1::ReindexSolrJob.is_up_to_date
       message = "Up to date"
     else
-      Delayed::Job.enqueue API::V1::ReindexSolrJob.new
+      API::V1::ReindexSolrJob.perform_later
       message = "Re-indexing"
     end
 

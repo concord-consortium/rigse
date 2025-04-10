@@ -1,7 +1,13 @@
 <h1>Editing School for <%= @school_membership.member.name %></h1>
 
 <%= form_for(@school_membership) do |f| %>
-  <%= f.error_messages %>
+  <% if @school_membership.errors.any? %>
+    <ul>
+      <% @school_membership.errors.map(&:full_message).each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  <% end %>
 
   <%= f.hidden_field :member_id %>
   <%= f.hidden_field :member_type %>

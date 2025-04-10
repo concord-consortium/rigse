@@ -54,6 +54,10 @@ Run the rspec unit tests:
 
     rspec spec/
 
+Run the rspec system tests:
+
+    RUN_SYSTEM_TESTS=true rspec spec/system/
+
 Prepare a database for use when running the cucumber tests:
 
     RAILS_ENV=feature_test rake db:create
@@ -341,6 +345,18 @@ School Year 2006–07](http://nces.ed.gov/ccd/pdf/pau061bgen.pdf)
  * [rspec repo](http://github.com/dchelimsky/rspec)
  * [rspec-rails repo](http://github.com/dchelimsky/rspec-rails)
 
+#### System Tests
+
+These are integration tests that run in a headless Chrome browser via Selenium. System tests use Capybara under the hood. For more on Rails systems tests, see [System Testing](https://guides.rubyonrails.org/testing.html#system-testing).
+
+##### A Temporary Solution
+
+After upgrading to Rails 8 in March 2025, we found that several existing tests in `features/` and `spec/features/` became very flaky. We converted many of those flaky tests to new system tests since the latter seem to be more dependable.
+
+If time permits, migrating the remaining Cucumber tests in `features/` that are marked with `@wip #RAILS-UPGRADE-TODO` to system tests would be beneficial. However, long-term it would be better to start using Playwright or Cypress for integration tests instead. So it may be better to focus on that rather than creating more system tests. Currently at least, the system tests are meant as more of a transitional solution.
+
+The system test files are currently in `spec/system` and make use of some of the existing infrastructure there. If we keep them long-term, it may make sense to move them elsewhere so they can be more cleanly separated from the spec tests. For now, you need to set the environment variable `RUN_SYSTEM_TESTS` to `true` before attempting to run them with `rspec spec/system/` (e.g., `RUN_SYSTEM_TESTS=true rspec spec/system`). And running `rspec spec/` will automatically skip the systems tests.
+
 #### Cucumber / Capybara
 
 Feature specs that require javascript are run by Chrome via Selenium. By default Chrome will run in headless mode and there is nothing special you need to do inside of a Docker development environment.
@@ -387,6 +403,16 @@ or add a line number to run just one test in the file (this line number may chan
 **Running all the controller tests:**
 
     bundle exec rake spec SPEC=spec/controllers
+
+### Running the system tests
+
+**Running all the system tests:**
+
+    RUN_SYSTEM_TESTS=true bundle exec rspec spec/system
+
+**Running a single file:**
+
+    RUN_SYSTEM_TESTS=true bundle exec rspec spec/system/admin_edits_user_spec.rb
 
 ### Running the feature tests with cucumber
 

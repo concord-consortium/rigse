@@ -1,7 +1,8 @@
 shared_examples 'projects listing' do
   let (:project_name) { 'project foo bar test' }
+  let (:project_slug) { 'project-foo-bar-test' }
   before(:each) do
-    FactoryBot.create(:project, name: project_name)
+    FactoryBot.create(:project, name: project_name, landing_page_slug: project_slug)
   end
 
   context 'when user is an admin' do

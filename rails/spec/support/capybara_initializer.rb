@@ -1,5 +1,4 @@
 class CapybaraInitializer
-
   attr_accessor :headless, :context
   alias :headless? :headless
 
@@ -8,32 +7,11 @@ class CapybaraInitializer
   end
 
   def call
-    # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
-    # order to ease the transition to Capybara we set the default here. If you'd
-    # prefer to use XPath just remove this line and adjust any selectors in your
-    # steps to use the XPath syntax.
-    Capybara.default_selector = :css
+    configure_capybara_defaults
+    register_selenium_driver
+    register_headless_chrome_driver
 
-    # Increase default wait time for asynchronous JavaScript requests from 2 to 5s
-    # see section on Asynchronous JavaScript here: https://github.com/jnicklas/capybara
-    Capybara.default_max_wait_time = 5
-
-    # Add some Capybara config if we are running
-    # Chrome on the docker host machine.
-    if !headless? && docker?
-      Capybara.server_host = '0.0.0.0'
-      Capybara.server_port = '43447'
-    end
-
-    # ChromeDriver version shipped with GitHub Actions: https://github.com/actions/runner-images/blob/d5d4c565dffff750a33f0f7d020bc12a4a896d90/images/linux/Ubuntu2204-Readme.md?plain=1#L158
-    # Latest ChromeDriver version available for download: https://chromedriver.storage.googleapis.com/LATEST_RELEASE
-    # See: https://github.com/hitobito/hitobito/blob/c5a459a95feefc32f7caa4c3bd5b36c7cb149916/spec/spec_helper.rb#L190-L196
-    Webdrivers::Chromedriver.required_version = '114.0.5735.90' # Pin ChromeDriver version
-
-    # Register the driver
-    Capybara.register_driver(:selenium) { |app| driver(app) }
     Capybara.javascript_driver = :selenium
-    Capybara.server = :webrick
   end
 
   def self.configure
@@ -44,44 +22,67 @@ class CapybaraInitializer
 
   private
 
-  def driver(app)
-    Capybara::Selenium::Driver.new(app, driver_options)
-  end
+  def configure_capybara_defaults
+    # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
+    # order to ease the transition to Capybara we set the default here. If you'd
+    # prefer to use XPath just remove this line and adjust any selectors in your
+    # steps to use the XPath syntax.
+    Capybara.default_selector = :css
+    # Increase default wait time for asynchronous JavaScript requests from 2 to 5s
+    # see section on Asynchronous JavaScript here: https://github.com/jnicklas/capybara
+    Capybara.default_max_wait_time = 5
+    Capybara.server = :webrick
 
-  def driver_options
-    { browser: :chrome,
-      desired_capabilities: capabilities,
-      # driver_opts can be used to pass options to chromedriver, for example --log-level=DEBUG
-      # this approach is deprecated though so you might need to use the newer approach
-      # in the future
-      # driver_opts: [ '--log-level=DEBUG']
-     }.tap do |a|
-      a[:url] = 'http://host.docker.internal:9515/' if !headless? && docker?
+    # Add some Capybara config if we are running
+    # Chrome on the docker host machine.
+    if !headless? && docker?
+      Capybara.server_host = '0.0.0.0'
+      Capybara.server_port = '43447'
     end
   end
 
-  def capabilities
-    Selenium::WebDriver::Remote::Capabilities.chrome(
-      # This used to be chromeOptions but when w3c standardized the webdriver interface
-      # they required the switch to goog:chromeOptions
-      # instead of defining this key explicitly it would be better to switch to using the
-      # Selenium::WebDriver::Chrome::Options abstraction.
-      # you can see capybara using it in some of its default drivers
-      # https://github.com/teamcapybara/capybara/blob/c7c22789b7aaf6c1515bf6e68f00bfe074cf8fc1/lib/capybara/registrations/drivers.rb#L27
-      'goog:chromeOptions' => {
-        'args' => chrome_options,
-        w3c: false
-      },
-      'goog:loggingPrefs' => {
-        browser: 'ALL'
-      }
-    )
+  def register_selenium_driver
+    Capybara.register_driver(:selenium) do |app|
+      Capybara::Selenium::Driver.new(app, browser: :chrome, options: selenium_options)
+    end
   end
 
-  def chrome_options
-    %w(no-sandbox disable-gpu window-size=1440,900).tap do |a|
-      a << 'headless' if headless?
+  def register_headless_chrome_driver
+    Capybara.register_driver(:headless_chrome) do |app|
+      Capybara::Selenium::Driver.new(app, browser: :chrome, options: headless_chrome_options)
     end
+  end
+
+  def selenium_options
+    options = Selenium::WebDriver::Options.chrome
+    options.binary = "/usr/bin/chromium"
+
+    unique_user_data_dir = "/dev/shm/chrome-profile-#{Process.pid}"
+    FileUtils.mkdir_p(unique_user_data_dir)
+    FileUtils.chmod(0o777, unique_user_data_dir)
+
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--user-data-dir=#{unique_user_data_dir}")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--window-size=1440,900")
+    options.add_argument('--disable-features=PermissionsPolicy')
+
+    options.add_argument("--headless=new") if headless
+    options
+  end
+
+  def headless_chrome_options
+    options = Selenium::WebDriver::Chrome::Options.new
+    options.binary = "/usr/bin/chromium"
+
+    options.add_argument('--headless')
+    options.add_argument('--disable-gpu')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--window-size=1440,900')
+
+    options
   end
 
   def docker?

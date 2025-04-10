@@ -57,7 +57,7 @@ describe API::V1::ReportUsersController do
       @teacher5 = FactoryBot.create(:portal_teacher)
       @teacher6 = FactoryBot.create(:portal_teacher)
 
-      @project1 = FactoryBot.create(:project, name: 'Project 1')
+      @project1 = FactoryBot.create(:project, name: 'Project 1', landing_page_slug: 'project-1')
 
       @cohort1 = FactoryBot.create(:admin_cohort)
       @cohort2 = FactoryBot.create(:admin_cohort, project: @project1)
@@ -146,7 +146,7 @@ describe API::V1::ReportUsersController do
         expect(filter["runnables"].length).to eq 3
         expect(filter["start_date"]).to eq "01/02/19"
         expect(filter["end_date"]).to eq "03/04/19"
-        expect(resp["signature"]).to eq OpenSSL::HMAC.hexdigest("SHA256", SignedJWT.hmac_secret, resp["json"].to_json)
+        expect(resp["signature"]).to eq OpenSSL::HMAC.hexdigest("SHA256", SignedJwt.hmac_secret, resp["json"].to_json)
       end
     end
   end

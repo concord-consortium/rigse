@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "materials_collections/index" do
   before(:each) do
-    project = FactoryBot.create(:project, name: "Some Project")
+    project = FactoryBot.create(:project, name: "Some Project", landing_page_slug: "some-project")
     collection1 = FactoryBot.create(:materials_collection, project: project)
     collection2 = FactoryBot.create(:materials_collection_with_items, project: project)
 

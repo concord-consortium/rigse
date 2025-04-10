@@ -12,6 +12,7 @@ Feature: Admin can work with materials collections
 
   # the left menu is rendered by react-components
   @javascript
+  @wip # migrated to system test
   Scenario: Admin accesses Materials Collections
     When I am on the home page
     And I follow "Admin"
@@ -21,6 +22,8 @@ Feature: Admin can work with materials collections
     And I should see "Displaying all 4 materials collections"
     And I should see "Create Materials Collection"
 
+  @javascript
+  @wip # migrated to system test
   Scenario: Admin creates new Materials Collection
     Given a project called "My Project"
     When I am on the materials collection index page
@@ -36,11 +39,14 @@ Feature: Admin can work with materials collections
 
 
   @javascript
+  @wip # migrated to system test
   Scenario: Admin views existing Materials Collection via the show link
     When I am on the materials collection index page
     And I click on the id link for materials collection "Collection 4"
     Then I should be on the show page for materials collection "Collection 4"
 
+  @javascript
+  @wip # migrated to system test
   Scenario: Admin edits existing Materials Collection
     When I am on the materials collection index page
     And I click on the edit link for materials collection "Collection 4"
@@ -75,6 +81,7 @@ Feature: Admin can work with materials collections
 
 
   @javascript
+  @wip # migrated to system test
   Scenario: Admin deletes existing Materials Collection
     When I am on the materials collection index page
     And I click on the delete link for materials collection "Collection 2"
@@ -83,6 +90,7 @@ Feature: Admin can work with materials collections
     Then I should not see "Collection 2"
 
   @javascript
+  @wip # migrated to system test
   Scenario: Admin cancels deleting existing Materials Collection
     When I am on the materials collection index page
     And I click on the delete link for materials collection "Collection 1"

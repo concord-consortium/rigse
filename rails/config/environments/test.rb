@@ -7,20 +7,17 @@ RailsPortal::Application.configure do
   # test suite.  You never need to work with it otherwise.  Remember that
   # your test database is "scratch space" for the test suite and is wiped
   # and recreated between test runs.  Don't rely on the data there!
-  config.cache_classes = true
+  config.cache_classes = false
 
   # Eager loads all registered config.eager_load_namespaces. This includes your application, engines, Rails frameworks, and any other registered namespace.
-  config.eager_load = true  # normally false unless you use a tool that preloads your test environment
-
-  # this will fall back to autoloading to files outside the app folder
-  config.enable_dependency_loading = true
+  config.eager_load = false  # normally false unless you use a tool that preloads your test environment
 
   # Show full error reports and disable caching
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
 
   # Raise exceptions instead of rendering exception templates
-  config.action_dispatch.show_exceptions = false
+  config.action_dispatch.show_exceptions = :none
 
   # Disable request forgery protection in test environment
   config.action_controller.allow_forgery_protection    = false
@@ -68,13 +65,13 @@ RailsPortal::Application.configure do
   # config.action_mailer.deliver_later_queue_name = :new_queue_name
   # 2. This only is valid for PostgreSQL
   # config.active_record.dump_schemas = :all
-  # 3. Commented out because this needs Ruby 2.4 to work
-  # ActiveSupport.to_time_preserves_timezone = false
   #
   # END OF RAILS 5 OPTIONS
 
   # Rails 5 defaults to disable submit
   config.action_view.automatically_disable_submit_tag = false
+
+  config.active_storage.service = :test
 
   LogConfig.configure(config, ENV['TEST_LOG_LEVEL'], 'WARN')
 end

@@ -1,6 +1,9 @@
 RailsPortal::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
+  # This is not the Rails 8 way, but we want to be able to set the secret key base via an environment variable.
+  config.secret_key_base = ENV["RAILS_SECRET_KEY_BASE"] || raise("Missing RAILS_SECRET_KEY_BASE")
+
   # The production environment is meant for finished, "live" apps.
   # Code is not reloaded between requests
   config.cache_classes = true
@@ -29,7 +32,7 @@ RailsPortal::Application.configure do
 
   # Use a different logger for distributed setups
   # config.logger = SyslogLogger.new
-  if BoolENV['RAILS_STDOUT_LOGGING']
+  if BoolEnv['RAILS_STDOUT_LOGGING']
     config.logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
   end
 
@@ -88,12 +91,12 @@ RailsPortal::Application.configure do
   # config.action_mailer.deliver_later_queue_name = :new_queue_name
   # 2. This only is valid for PostgreSQL
   # config.active_record.dump_schemas = :all
-  # 3. Commented out because this needs Ruby 2.4 to work
-  # ActiveSupport.to_time_preserves_timezone = false
   #
   # END OF RAILS 5 OPTIONS
 
   # Rails 5 defaults to disable submit
   config.action_view.automatically_disable_submit_tag = false
+
+  config.active_storage.service = :amazon
 
 end

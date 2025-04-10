@@ -1,8 +1,4 @@
 require File.expand_path("../../config/environment", __FILE__)
-require 'factory_bot'
-FactoryBot.definition_file_paths = %w(factories)
-
-require 'webdrivers'
 require 'rspec/rails'
 require 'rspec/mocks'
 require 'capybara/rspec'
@@ -18,7 +14,9 @@ WebMock.disable_net_connect!(allow_localhost: true, :allow =>
                                 [   "#{SolrSpecHelper::SOLR_HOST}:#{SolrSpecHelper::SOLR_PORT}",
                                     "codeclimate.com",
                                     'host.docker.internal:9515',
-                                    'chromedriver.storage.googleapis.com'
+                                    'chromedriver.storage.googleapis.com',
+                                    'googlechromelabs.github.io',
+                                    'storage.googleapis.com',
                                 ]
                             )
 
@@ -65,7 +63,8 @@ class ActiveRecord::Base
   end
 
   def self.current_database_configuration_name
-    configurations.to_h.find { |_k, v| v['database'] == connection.current_database }[0]
+    config = configurations.configs_for(env_name: Rails.env).find { |cfg| cfg.database == connection.current_database }
+    config&.env_name
   end
 end
 ActiveRecord::Base.set_shared_connection
@@ -83,15 +82,19 @@ end
 Mysql2::Client.prepend(MutexLockedQuerying)
 
 RSpec.configure do |config|
-  config.include FactoryBot::Syntax::Methods
-
   config.mock_with :rspec
+
+  # Do not include system tests with a general spec test run.
+  # The system tests need to be run separately to work.
+  if ENV['RUN_SYSTEM_TESTS'] != 'true' && !config.inclusion_filter.rules.include?(:type => :system)
+    config.filter_run_excluding type: :system
+  end
 
   config.around(:example, type: :feature) do |example|
     ApplicationRecord.with_database('feature_test') { example.run }
   end
 
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  config.fixture_path = ["#{::Rails.root}/spec/fixtures"]
   config.use_transactional_fixtures = Rails.env == 'test'
   config.infer_spec_type_from_file_location!
   config.expose_current_running_example_as :example
@@ -99,7 +102,7 @@ RSpec.configure do |config|
   config.include Sprockets::Rails::Helper
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include VerifyAndResetHelpers
-  config.include FeatureHelper
+  config.include SystemHelper
 
   config.infer_spec_type_from_file_location!
 
@@ -110,7 +113,7 @@ RSpec.configure do |config|
 end
 
 begin
-  ActiveRecord::Migration.check_pending!
+  ActiveRecord::Migration.check_all_pending!
 rescue => exception
   puts
   puts "*** pending migrations need to be applied to run the tests"
@@ -122,6 +125,6 @@ rescue => exception
   exit 1
 end
 
-# Prevent Factory definitions from being loaded multiple times
-# But allow access to cucumber specs and db prep
-@defs_loaded ||= FactoryBot.find_definitions and true
+# # Prevent Factory definitions from being loaded multiple times
+# # But allow access to cucumber specs and db prep
+# @defs_loaded ||= FactoryBot.find_definitions and true

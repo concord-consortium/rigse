@@ -13,8 +13,8 @@ describe API::V1::ResearchClassesController do
     @teacher1 = FactoryBot.create(:portal_teacher, schools: [@cc_school])
     @teacher2 = FactoryBot.create(:portal_teacher, schools: [@cc_school])
 
-    @project1 = FactoryBot.create(:project, name: 'Project 1')
-    @project2 = FactoryBot.create(:project, name: 'Project 2')
+    @project1 = FactoryBot.create(:project, name: 'Project 1', landing_page_slug: 'project-1')
+    @project2 = FactoryBot.create(:project, name: 'Project 2', landing_page_slug: 'project-2')
 
     @cohort1 = FactoryBot.create(:admin_cohort, project: @project1)
     @cohort2 = FactoryBot.create(:admin_cohort, project: @project2)
@@ -118,7 +118,7 @@ describe API::V1::ResearchClassesController do
         json = JSON.parse(response.body)
         expect(response.status).to eql(200)
         clazz = @clazz1
-        expect(json["hits"]).to eql({"classes"=>[{"class_url"=>materials_portal_clazz_url(clazz.id, researcher: true), "cohort_names"=>@cohort1.name, "id"=>clazz.id, "name"=>clazz.name, "school_name"=>@teacher1.school.name, "teacher_names"=>"#{@teacher1.name}, #{@teacher2.name}"}]})
+        expect(json["hits"]).to eql({"classes"=>[{"class_url"=>materials_portal_clazz_url(clazz.id, researcher: true, host: 'test.host'), "cohort_names"=>@cohort1.name, "id"=>clazz.id, "name"=>clazz.name, "school_name"=>@teacher1.school.name, "teacher_names"=>"#{@teacher1.name}, #{@teacher2.name}"}]})
       end
       it "gets totals" do
         params = {

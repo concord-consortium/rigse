@@ -1,7 +1,13 @@
 <h1>Editing nces06_school</h1>
 
 <% form_for(@nces06_school) do |f| %>
-  <%= f.error_messages %>
+  <% if @nces06_school.errors.any? %>
+    <ul>
+      <% @nces06_school.errors.map(&:full_message).each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  <% end %>
 
   <p>
     <%= f.submit 'Update' %>

@@ -2,12 +2,12 @@
 
 require 'spec_helper'
 
-RSpec.describe SignedJWT do
+RSpec.describe SignedJwt do
 
   describe "#is_valid_private_key?" do
 
     it "fails on a invalid private key" do
-      expect(SignedJWT::is_valid_private_key?("foo")).to be false
+      expect(SignedJwt::is_valid_private_key?("foo")).to be false
     end
 
     it "succeeds on a valid private key" do
@@ -26,7 +26,7 @@ LD5xpj3ZwRTDBngQHSDJ6YjVqHqVCzeIsx3kdqcGERan9F5X0d9CClh26MLQ9H8K
 kDmRiuAZJNKDigRlx9tJAkAdrkzo40+vsucH9OxOcR7KkUfufL1EWC4qcqH46oDX
 gpZlAvdO9CFaBcBKsAcJnNDQBY2lhFsSeqYs78PoW7Zz
 -----END RSA PRIVATE KEY-----"
-      expect(SignedJWT::is_valid_private_key?(valid_private_key)).to be true
+      expect(SignedJwt::is_valid_private_key?(valid_private_key)).to be true
     end
 
   end
