@@ -202,7 +202,7 @@ describe MaterialsCollectionsController do
       it "shows error when requesting a materials_collection not assigned to the project admins project" do
         get :show, params: { :id => other_materials_collection.to_param }
         expect(flash['alert']).to be_present
-        expect(flash['alert']).to match(/You \(author\) can not view the requested resource/)
+        expect(flash['alert']).to match(/You don't have permission to view this materials collection/)
         expect(response).to redirect_to(getting_started_url(host: 'test.host'))
       end
     end
@@ -223,7 +223,7 @@ describe MaterialsCollectionsController do
       it "shows error when requesting a materials_collection not assigned to the project admins project" do
         get :edit, params: { :id => other_materials_collection.to_param }
         expect(flash['alert']).to be_present
-        expect(flash['alert']).to match(/You \(author\) can not edit the requested resource/)
+        expect(flash['alert']).to match(/You don't have permission to edit this materials collection/)
         expect(response).to redirect_to(getting_started_url(host: 'test.host'))
       end
     end
