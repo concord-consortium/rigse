@@ -6,7 +6,8 @@ const TIMEOUT = 350;
 
 class TextInput extends React.Component<any, any> {
   static defaultProps = {
-    type: "text"
+    type: "text",
+    value: ""
   };
 
   inputRef: any;
@@ -15,16 +16,26 @@ class TextInput extends React.Component<any, any> {
     super(props);
 
     this.state = {
-      inputVal: ""
+      inputVal: this.props.value ?? ""
     };
 
     this.onChange = this.onChange.bind(this);
     this.inputRef = React.createRef();
+
+    // if there is an initial value wait for the render and then update the input to run the validation
+    if (this.props.value) {
+      setTimeout(() => {
+        this.changeInput(this.props.value);
+      }, 0);
+    }
   }
 
   onChange (event: any) {
-    const cursor = event.target.selectionStart;
-    let newVal = event.currentTarget.value;
+    this.changeInput(event.currentTarget.value);
+  }
+
+  changeInput (newVal: any) {
+    const cursor = this.inputRef.current?.selectionStart;
     const delay = this.props.isValidValue(newVal) ? 0 : TIMEOUT;
 
     this.setState({

@@ -1,0 +1,17 @@
+-if @current_user
+  %div
+    You are already logged in!
+-else
+  #sign_in_or_register
+    <noscript>This page requires JavaScript.</noscript>
+
+  :javascript
+    jQuery(document).ready(function () {
+      var options = {
+        appName: "#{@app_name}",
+        loginUrl: "#{@login_url}",
+        classWord: "#{@class_word}",
+      }
+      PortalComponents.renderSigninOrRegister(options, 'sign_in_or_register');
+    });
+
