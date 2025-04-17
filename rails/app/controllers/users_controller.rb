@@ -298,6 +298,22 @@ class UsersController < ApplicationController
     end
   end
 
+  def sign_in_or_register
+    # if the user is already logged in, redirect to the login_url to start the oauth flow
+    # see CLUE standalone mode for the original use case
+    if current_user && params[:login_url]
+      redirect_to params[:login_url], allow_other_host: true
+    end
+
+    @app_name = params[:app_name]
+    @login_url = params[:login_url]
+    @class_word = params[:class_word]
+
+    # the extra_options are used in the header - we hide the login and register
+    # links if the user is NOT logged in as the page itself presents login/register links
+    @extra_options = {:hideNavLinks => !current_user}
+  end
+
   def user_strong_params(params)
     params && params.permit(:first_name, :last_name, :email, :login, :password, :password_confirmation, :can_add_teachers_to_cohorts)
   end

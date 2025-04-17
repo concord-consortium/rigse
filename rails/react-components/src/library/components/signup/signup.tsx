@@ -54,7 +54,8 @@ export default class SignUp extends React.Component<any, any> {
   }
 
   onBasicDataSubmit (data: any) {
-    data.sign_up_path = window.location.pathname;
+    const {pathname, search} = window.location;
+    data.sign_up_path = `${pathname}${search ? `?${search}` : ""}`;
     this.setState({
       basicData: data
     });
@@ -85,7 +86,7 @@ export default class SignUp extends React.Component<any, any> {
   }
 
   render () {
-    const { signupText, oauthProviders, anonymous, omniauthOrigin } = this.props;
+    const { signupText, oauthProviders, anonymous, omniauthOrigin, loginUrl, classWord } = this.props;
     const { userType, basicData, studentData, teacherData } = this.state;
 
     let form;
@@ -103,12 +104,12 @@ export default class SignUp extends React.Component<any, any> {
       //
       // Display completion step
       //
-      form = <StudentRegistrationComplete anonymous={anonymous} data={studentData} />;
+      form = <StudentRegistrationComplete anonymous={anonymous} data={studentData} loginUrl={loginUrl} />;
     } else if (teacherData) {
       //
       // Display completion step
       //
-      form = <TeacherRegistrationComplete anonymous={anonymous} />;
+      form = <TeacherRegistrationComplete anonymous={anonymous} loginUrl={loginUrl} />;
     } else if (omniauthOrigin != null) {
       if (omniauthOrigin.search("teacher") > -1) {
         form = <TeacherForm
@@ -120,6 +121,7 @@ export default class SignUp extends React.Component<any, any> {
         form = <StudentForm
           basicData={basicData}
           onRegistration={this.onStudentRegistration}
+          classWord={classWord}
         />;
       }
     } else if (!userType) {
@@ -129,6 +131,7 @@ export default class SignUp extends React.Component<any, any> {
         anonymous={anonymous}
         oauthProviders={oauthProviders}
         onUserTypeSelect={this.onUserTypeSelect}
+        loginUrl={loginUrl}
       />;
     } else if (basicData) {
       if (userType === "teacher") {
@@ -141,6 +144,7 @@ export default class SignUp extends React.Component<any, any> {
         form = <StudentForm
           basicData={basicData}
           onRegistration={this.onStudentRegistration}
+          classWord={classWord}
         />;
       }
     } else {

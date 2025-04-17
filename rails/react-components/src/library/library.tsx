@@ -46,6 +46,7 @@ import BrowsePage from "./components/browse-page/browse-page";
 import ResourceRequirements from "./components/browse-page/resource-requirements";
 import ResourceLicense from "./components/browse-page/resource-license";
 import ResourceProjects from "./components/browse-page/resource-projects";
+import SigninOrRegister from "./components/signin-or-register/signin-or-register";
 import showTab from "./helpers/tabs";
 import { loadMaterialsCollections } from "./helpers/materials-collection-cache";
 import { render } from "./helpers/react-render";
@@ -346,6 +347,11 @@ window.PortalPages = window.PortalComponents = {
   ResourceProjects,
   renderResourceProjects (options: any, id: any) {
     render(createElement(ResourceProjects, options), id);
+  },
+
+  SigninOrRegister,
+  renderSigninOrRegister (options: any, id: any) {
+    render(createElement(SigninOrRegister, options), id);
   },
 
   showTab

@@ -20,7 +20,8 @@ const PageHeader = Component({
       theme: this.props.theme || Portal.theme || "default",
       homePath: this.props.homePath || Portal.currentUser.homePath || "/",
       isStudent: this.props.isStudent || Portal.currentUser.isStudent || false,
-      sitewideAlert: this.props.sitewideAlert
+      sitewideAlert: this.props.sitewideAlert,
+      hideNavLinks: !!this.props.hideNavLinks
     };
   },
 
@@ -207,7 +208,7 @@ const PageHeader = Component({
     let wrapperClass = "theme-" + this.state.theme;
     wrapperClass = this.state.loggedIn ? wrapperClass + " logged-in" : wrapperClass;
     let navLinks = "";
-    if (this.state.windowWidth > 950 || !this.state.nav_menu_collapsed) {
+    if (!this.state.hideNavLinks && (this.state.windowWidth > 950 || !this.state.nav_menu_collapsed)) {
       navLinks = this.renderNavLinks();
     }
     const logoClass = this.state.logo_class;

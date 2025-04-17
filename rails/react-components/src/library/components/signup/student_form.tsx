@@ -57,6 +57,7 @@ export default class StudentForm extends React.Component<any, any> {
             <TextInput
               name="class_word"
               placeholder="Class Word (not case sensitive)"
+              value={this.props.classWord}
               required
               asyncValidation={classWordValidator}
               asyncValidationError={INVALID_CLASS_WORD}
