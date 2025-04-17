@@ -211,9 +211,6 @@ class ApplicationController < ActionController::Base
     # Add additional info if available
     error_message = "#{error_message}. #{additional_info}" if !additional_info.empty?
 
-    # Add sign-in prompt for anonymous users
-    error_message = "#{error_message}. Please sign in to continue." if current_user.nil?
-
     error_message
   end
 
