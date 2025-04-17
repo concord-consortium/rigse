@@ -20,10 +20,21 @@ export default class Offerings extends React.Component<any, any> {
       return (
         <>
           <p className={css.noActivity}>No recent activity.</p>
-          <p><strong>You need to assign at least one activity to your classes.</strong> To add an assignment, click "Classes" on the left, then on the name of
-            a class. Next click the "Assignments" link for that class, and then the "Find More Resources" button to view assignable activities.
-          </p>
-          <p>As your students get started on assigned activities, their progress will be displayed here.</p>
+          <p><strong>Welcome! We're so glad you created a teacher account on our STEM Resource Finder!</strong></p>
+          <p>It's time to add a class and assign activities to your students.</p>
+
+          <p>To create a new class, click <strong>Add Class</strong> in the lefthand menu. Complete the fields and click <strong>Save Changes</strong>. For step-by-step instructions, please see our <a href="https://learn-resources.concord.org/docs/stem-resource-finder-teacher-user-guide/" target="_blank" rel="noreferrer">User Guide</a>.</p>
+
+          <p>To assign materials, you have several options:</p>
+          <ul>
+            <li><span className={css.stepNumber}>1</span> Use the <strong>Find More Resources</strong> button when you are viewing Assignments.</li>
+            <li><span className={css.stepNumber}>2</span> Browse a collection of related resources using the <a href="https://learn.concord.org/collections" target="_blank" rel="noreferrer">Collections</a> menu.</li>
+            <li><span className={css.stepNumber}>3</span> Use the <a href="https://learn.concord.org/" target="_blank" rel="noreferrer">Find Resources</a> link, which takes you to the STEM Resource Finder homepage.</li>
+          </ul>
+
+          <p>When you find a resource you want to assign to your class, simply click the <strong>ASSIGN OR SHARE</strong> link.</p>
+
+          <p><strong>Need a hand?</strong> Learn how to set up a class, assign resources, have your students register for your class, view student work, and more in the <a href="https://learn-resources.concord.org/docs/stem-resource-finder-teacher-user-guide/" target="_blank" rel="noreferrer">User Guide</a>. Or email us at <a href="mailto:help@concord.org">help@concord.org</a>.</p>
         </>
       );
     }

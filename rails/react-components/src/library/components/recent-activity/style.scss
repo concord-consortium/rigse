@@ -36,3 +36,18 @@
   font-weight: 700;
   font-style: italic;
 }
+
+.stepNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background-color: #0592af;
+  color: white;
+  border-radius: 50%;
+  margin-right: 8px;
+  font-weight: bold;
+  font-size: 13px;
+  vertical-align: middle;
+}
