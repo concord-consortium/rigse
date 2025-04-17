@@ -198,10 +198,18 @@ class ApplicationController < ActionController::Base
     is_singular = action_name != "index"
 
     action = humanized_action.downcase
-    error_message = "#{current_user.nil? ? "Anonymous users" : "You (#{current_visitor.login})"} can not #{action} the requested"
-    error_message = "#{error_message} #{resource_name.empty? ? '' : "'#{resource_name}' "}#{resource_type.empty? ? 'resource' : resource_type.pluralize(is_singular ? 1 : 2 )}"
-    error_message = "#{error_message}, #{additional_info}" if !additional_info.empty?
-    error_message = "#{error_message}.  Please sign in to #{action} #{is_singular ? 'it' : 'them'}." if current_user.nil?
+    # More user-friendly error message
+    if current_user.nil?
+      error_message = "You need to sign in to #{action} this #{resource_type.empty? ? 'resource' : resource_type}"
+    else
+      error_message = "You don't have permission to #{action} this #{resource_type.empty? ? 'resource' : resource_type}"
+    end
+
+    # Add resource name if available
+    error_message = "#{error_message}#{resource_name.empty? ? '' : " (#{resource_name})"}"
+
+    # Add additional info if available
+    error_message = "#{error_message}. #{additional_info}" if !additional_info.empty?
 
     error_message
   end
