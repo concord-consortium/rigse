@@ -106,9 +106,9 @@ module RailsPortal
         # always allow access to the class#info
         resource '/portal/classes/info', :headers => :any, :methods => :get
         resource '/api/v1/reports/*', :headers => :any, :methods => [:get, :put]
-        resource '/api/v1/offerings/*', :headers => :any, :methods => [:get, :put]
+        resource '/api/v1/offerings/*', :headers => :any, :methods => [:get, :put, :post]
         resource '/api/v1/offering/*', :headers => :any, :methods => [:get, :put]
-        resource '/api/v1/classes/*', :headers => :any, :methods => [:get]
+        resource '/api/v1/classes/*', :headers => :any, :methods => [:get, :put, :post]
         resource '/api/v1/jwt/*', :headers => :any, :methods => [:get]
         resource '/api/v1/bookmarks', :headers => :any, :methods => [:post]
         resource '/api/v1/bookmarks/*', :headers => :any, :methods => [:put, :delete]

@@ -387,9 +387,12 @@ RailsPortal::Application.routes.draw do
         end
 
         resources :offerings, only: [:show, :update, :index] do
+          collection do
+            post :create_for_external_activity
+          end
         end
 
-        resources :classes, only: [:show] do
+        resources :classes, only: [:show, :create] do
           member do
             get :log_links
             post :set_is_archived

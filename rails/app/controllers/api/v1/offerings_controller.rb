@@ -81,6 +81,46 @@ class API::V1::OfferingsController < API::APIController
     render :json => filtered_offerings.to_json, :callback => params[:callback]
   end
 
+  def create_for_external_activity
+    authorize Portal::Offering, :api_create_for_external_activity?
+
+    return error("A class_id is required") unless params[:class_id].present?
+    return error("A name is required") unless params[:name].present?
+    return error("An url is required") unless params[:url].present?
+
+    # make sure the user is a teacher for the class
+    clazz = Portal::Clazz.find(params[:class_id])
+    if !current_user.has_role?('admin') && !clazz.is_teacher?(current_user)
+      # Only admin can create offerings for somebody else's class.
+      return error('You are not a teacher of the specified class', 403)
+    end
+
+    # make sure the offering does not already exist
+    offering = Portal::Offering.where(clazz_id: clazz.id, runnable_type: 'ExternalActivity')
+                .select { |o| o.runnable.url == params[:url] }
+                .first
+    if !offering
+
+      # find the existing external activity
+      external_activity = ExternalActivity.where(url: params[:url]).first
+      if !external_activity
+        # create a new external activity
+        external_activity = ExternalActivity.create!(name: params[:name], url: params[:url])
+      end
+
+      # create the offering
+      offering = Portal::Offering.create!(
+        clazz_id: clazz.id,
+        runnable_type: external_activity.class.to_s,
+        runnable_id: external_activity.id,
+        active: true,
+        locked: false,
+      )
+    end
+
+    render :json => {id: offering.id}
+  end
+
   def portal_offering_strong_params(params)
     params && params.permit(:active, :locked)
   end

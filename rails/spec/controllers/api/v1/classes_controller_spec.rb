@@ -15,6 +15,9 @@ describe API::V1::ClassesController do
   let(:other_teacher)       { FactoryBot.create(:portal_teacher) }
   let(:other_clazz)         { FactoryBot.create(:portal_clazz, name: 'other class', teachers: [other_teacher]) }
 
+  let(:student_user)    { FactoryBot.create(:confirmed_user, :login => "authorized_student") }
+  let(:student)         { FactoryBot.create(:portal_student, :user_id => student_user.id) }
+
   let(:project)         { FactoryBot.create(:project, cohorts: [cohort]) }
   let(:researcher_user) {
     researcher = FactoryBot.generate(:researcher_user)
@@ -99,12 +102,90 @@ describe API::V1::ClassesController do
     end
   end
 
-  # TODO: auto-generated
-  describe '#mine' do
-    it 'GET mine' do
-      get :mine
+  describe "POST #create" do
+    describe "as a student" do
+      before :each do
+        sign_in student_user
+      end
 
-      expect(response).to have_http_status(:forbidden)
+      it "should fail" do
+        post :create
+        expect(response).to have_http_status(:forbidden)
+        expect(JSON.parse(response.body)["message"]).to eq "Not authorized"
+      end
+    end
+
+    describe "as a teacher" do
+      before :each do
+        sign_in teacher.user
+      end
+
+      it "should fail when no name is provided" do
+        post :create, params: { name: nil }
+        expect(response).to have_http_status(:bad_request)
+        expect(JSON.parse(response.body)["message"]).to eq "Missing class name"
+      end
+
+      it "should fail when no class word is provided" do
+        post :create, params: { name: "Test Class", class_word: nil }
+        expect(response).to have_http_status(:bad_request)
+        expect(JSON.parse(response.body)["message"]).to eq "Missing class word"
+      end
+
+      it "should succeed when a name and class word are provided" do
+        post :create, params: { name: "Test Class", class_word: "testword" }
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)["id"]).to_not be_nil
+        expect(JSON.parse(response.body)["class_word"]).to eq "testword"
+        expect(Portal::Clazz.find(JSON.parse(response.body)["id"]).name).to eq "Test Class"
+        expect(Portal::Clazz.find(JSON.parse(response.body)["id"]).class_word).to eq "testword"
+      end
+
+      it "should succeed when a name and a request for an auto-generated class word are provided" do
+        post :create, params: { name: "Test Class", auto_generate_class_word: true }
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)["id"]).to_not be_nil
+        expect(JSON.parse(response.body)["class_word"]).to_not be_nil
+        expect(Portal::Clazz.find(JSON.parse(response.body)["id"]).name).to eq "Test Class"
+        expect(Portal::Clazz.find(JSON.parse(response.body)["id"]).class_word).to match(/class_#{teacher.user.id}\d+/)
+      end
+
+      it "should succeed when a name and a request for an auto-generated class word are provided along with a prefix" do
+        post :create, params: { name: "Test Class", auto_generate_class_word: true, class_word_prefix: "test" }
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)["id"]).to_not be_nil
+        expect(JSON.parse(response.body)["class_word"]).to_not be_nil
+        expect(Portal::Clazz.find(JSON.parse(response.body)["id"]).name).to eq "Test Class"
+        expect(Portal::Clazz.find(JSON.parse(response.body)["id"]).class_word).to match(/test_#{teacher.user.id}\d+/)
+      end
+    end
+  end
+
+  describe '#mine' do
+    describe "as a student" do
+      before :each do
+        student.add_clazz(clazz)
+        sign_in student_user
+      end
+
+      it "should succeed but not include the student list" do
+        get :mine
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)["classes"][0]["students"].length).to eq 0
+      end
+    end
+
+    describe "as a teacher" do
+      before :each do
+        student.add_clazz(clazz)
+        sign_in teacher.user
+      end
+
+      it "should succeed and include the student list" do
+        get :mine
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)["classes"][1]["students"].length).to eq 1
+      end
     end
   end
 
