@@ -201,7 +201,7 @@ RSpec.describe 'Admin goes to users page', type: :system do
   def add_teacher_to_cohort(cohort)
     check(cohort)
     click_button('Save')
-    expect(current_path).to eq '/users'
+    expect(page).to have_current_path('/users', ignore_query: true)
     expect(page.body).to match(%r{#{'successfully updated'}}i)
   end
 
