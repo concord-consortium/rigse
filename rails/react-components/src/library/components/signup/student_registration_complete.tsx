@@ -39,10 +39,25 @@ export default class StudentRegistrationComplete extends React.Component<any, an
   }
 
   render () {
-    const { anonymous, data } = this.props;
+    const { anonymous, data, loginUrl } = this.props;
     const { login } = data;
 
-    const successMessage = anonymous ? <div><p style={{ marginBottom: "30px" }}>Success! Your username is <span className="login">{ login }</span></p><p style={{ marginBottom: "30px" }}>Use your new account to sign in below.</p></div> : <p><a href="/">Start using the site.</a></p>;
+    const loginMessage = loginUrl ? "Click the login button below to sign in." : "Use your new account to sign in below.";
+
+    const successMessage = anonymous
+      ? <div><p style={{ marginBottom: "30px" }}>Success! Your username is <span className="login">{ login }</span></p><p style={{ marginBottom: "30px" }}>{loginMessage}</p></div>
+      : <p><a href="/">Start using the site.</a></p>;
+
+    if (loginUrl) {
+      return (
+        <div className="registration-complete student">
+          { successMessage }
+          <div className="submit-button-container">
+            <a href={loginUrl} className="submit-btn">Log In!</a>
+          </div>
+        </div>
+      );
+    }
 
     return (
       <div className="registration-complete student">

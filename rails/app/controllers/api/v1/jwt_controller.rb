@@ -181,6 +181,16 @@ class API::V1::JwtController < API::APIController
         :user_id => url_for(user),
         :teacher_id => teacher.id
       }
+    else
+      claims = {
+        :domain => root_url,
+        :user_type => "user",
+        :user_id => url_for(user),
+        :first_name => user.first_name,
+        :last_name => user.last_name,
+        :teacher => user.portal_teacher ? true : false,
+        :student => user.portal_student ? true : false
+      }
     end
     add_admin_claims(user,claims)
 

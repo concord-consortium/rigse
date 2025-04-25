@@ -24,6 +24,11 @@ export default class UserTypeSelector extends React.Component<any, any> {
       "label": "Step 1 Log in Link Clicked"
     });
 
+    if (this.props.loginUrl) {
+      window.location.href = this.props.loginUrl;
+      return;
+    }
+
     PortalComponents.renderLoginModal({
       oauthProviders: this.props.oauthProviders,
       afterSigninPath: this.props.afterSigninPath
