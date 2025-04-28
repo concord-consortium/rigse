@@ -230,7 +230,7 @@ describe Admin::CohortsController do
           post :create, params: valid_params
           # Redirect, and show error when not allowed:
           expect(response).to have_http_status(:redirect)
-          expect(request.flash['alert']).to match(/You don't have permission to view this cohort/)
+          expect(request.flash['alert']).to match(/You don't have permission to create this cohort/)
         end
       end
 
