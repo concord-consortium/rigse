@@ -21,6 +21,12 @@ class Admin::ProjectLinksController < ApplicationController
     @project_link = Admin::ProjectLink.find(params[:id])
   end
 
+  protected
+
+  def not_authorized_error_message
+    super({resource_type: 'project link'})
+  end
+
   public
 
   # GET /project_links or /admin/project/:project_id/project_links

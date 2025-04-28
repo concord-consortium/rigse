@@ -96,4 +96,10 @@ class MaterialsCollectionsController < ApplicationController
     @projects = policy_scope(Admin::Project).order(:name)
   end
 
+  protected
+
+  def not_authorized_error_message
+    super({resource_type: 'materials collection'})
+  end
+
 end

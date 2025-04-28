@@ -31,7 +31,7 @@ describe Admin::CohortsController do
           get :show, params: { id: cohort.id }
           # Redirect, and show error when not allowed:
           expect(response).to have_http_status(:redirect)
-          expect(request.flash['alert']).to match(RegexConstants::AUTH_FAIL_SHOW)
+          expect(request.flash['alert']).to match(/You don't have permission to view this cohort/)
         end
       end
     end
@@ -41,7 +41,7 @@ describe Admin::CohortsController do
         get :new
         # Redirect, and show error when not allowed:
         expect(response).to have_http_status(:redirect)
-        expect(request.flash['alert']).to match(RegexConstants::AUTH_FAIL_NEW)
+        expect(request.flash['alert']).to match(/You don't have permission to create this cohort/)
       end
     end
 
@@ -50,7 +50,7 @@ describe Admin::CohortsController do
         put :create
         # Redirect, and show error when not allowed:
         expect(response).to have_http_status(:redirect)
-        expect(request.flash['alert']).to match(RegexConstants::AUTH_FAIL_NEW)
+        expect(request.flash['alert']).to match(/You don't have permission to create this cohort/)
       end
     end
 
@@ -59,7 +59,7 @@ describe Admin::CohortsController do
         put :update, params: { id:@cohort_1.id }
         # Redirect, and show error when not allowed:
         expect(response).to have_http_status(:redirect)
-        expect(request.flash['alert']).to match(RegexConstants::AUTH_FAIL_MODIFY)
+        expect(request.flash['alert']).to match(/You don't have permission to update this cohort/)
       end
     end
     describe 'Destroy' do
@@ -67,7 +67,7 @@ describe Admin::CohortsController do
         delete :destroy, params: { id: @cohort_1.id }
         # Redirect, and show error when not allowed:
         expect(response).to have_http_status(:redirect)
-        expect(request.flash['alert']).to match(RegexConstants::AUTH_FAIL_DESTROY)
+        expect(request.flash['alert']).to match(/You don't have permission to destroy this cohort/)
       end
     end
   end
@@ -134,7 +134,7 @@ describe Admin::CohortsController do
           get :show, params: { id:@cohort_2.id }
           # Redirect, and show error when not allowed:
           expect(response).to have_http_status(:redirect)
-          expect(request.flash['alert']).to match(RegexConstants::AUTH_FAIL_SHOW)
+          expect(request.flash['alert']).to match(/You don't have permission to view this cohort/)
         end
       end
     end
@@ -230,7 +230,7 @@ describe Admin::CohortsController do
           post :create, params: valid_params
           # Redirect, and show error when not allowed:
           expect(response).to have_http_status(:redirect)
-          expect(request.flash['alert']).to match(RegexConstants::AUTH_FAIL_NEW)
+          expect(request.flash['alert']).to match(/You don't have permission to view this cohort/)
         end
       end
 
