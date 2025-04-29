@@ -153,7 +153,8 @@ class API::V1::ClassesController < API::APIController
           :name => offering.name,
           :active => offering.active,
           :locked => offering.locked,
-          :url => api_v1_offering_url(offering.id)
+          :url => api_v1_offering_url(offering.id),
+          :external_url => offering.runnable.respond_to?(:url) ? offering.runnable.url : nil,
         }
       },
       :external_class_reports => clazz.external_class_reports.map { |external_report|

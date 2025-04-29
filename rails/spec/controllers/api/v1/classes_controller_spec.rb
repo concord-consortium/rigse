@@ -173,6 +173,13 @@ describe API::V1::ClassesController do
         expect(response).to have_http_status(:ok)
         expect(JSON.parse(response.body)["classes"][0]["students"].length).to eq 0
       end
+
+      it "should include the external_url in the offerings" do
+        # make sure the offering is added to the class
+        offering_a
+        get :mine
+        expect(JSON.parse(response.body)["classes"][0]["offerings"][0]["external_url"]).to eq offering_a.runnable.url
+      end
     end
 
     describe "as a teacher" do
@@ -181,13 +188,23 @@ describe API::V1::ClassesController do
         sign_in teacher.user
       end
 
+      # note: both of these test use the second class as the teacher is in two classes
+
       it "should succeed and include the student list" do
         get :mine
         expect(response).to have_http_status(:ok)
         expect(JSON.parse(response.body)["classes"][1]["students"].length).to eq 1
       end
+
+      it "should include the external_url in the offerings" do
+        # make sure the offering is added to the class
+        offering_a
+        get :mine
+        expect(JSON.parse(response.body)["classes"][1]["offerings"][0]["external_url"]).to eq offering_a.runnable.url
+      end
     end
-  end
+
+end
 
   # TODO: auto-generated
   describe '#info' do
