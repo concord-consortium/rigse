@@ -78,9 +78,9 @@ export default class LoginModal extends React.Component<any, any> {
         <Formsy className={"signup-form"} onValidSubmit={this.submit}>
           <h2>
             <strong>
-              Log in
+              Log In
             </strong>
-            { " " }
+            <br />
             to the { this.props.siteName }
           </h2>
           <div className={"third-party-login-options"}>
@@ -99,7 +99,7 @@ export default class LoginModal extends React.Component<any, any> {
               Username
             </dt>
             <dd>
-              <TextInput name={"user[login]"} placeholder={""} required />
+              <TextInput name={"user[login]"} placeholder={""} autoFocus={true} required />
             </dd>
             <dt>
               Password

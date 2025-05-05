@@ -60,7 +60,7 @@ export default class ForgotPasswordModal extends React.Component<any, any> {
           <dl>
             <dt>Username or Email Address</dt>
             <dd>
-              <TextInput name="user[login]" placeholder="" required />
+              <TextInput name="user[login]" placeholder="" required autoFocus={true} />
             </dd>
           </dl>
           <div className="submit-button-container">

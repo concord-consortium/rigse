@@ -146,6 +146,7 @@ export default class TeacherForm extends React.Component<any, any> {
               name="login"
               placeholder=""
               required={true}
+              autoFocus={true}
               validations={{
                 minLength: 3
               }}

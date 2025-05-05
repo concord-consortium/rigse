@@ -56,6 +56,7 @@ export default class StudentForm extends React.Component<any, any> {
           <dd>
             <TextInput
               name="class_word"
+              autoFocus={true}
               placeholder="Class Word (not case sensitive)"
               value={this.props.classWord}
               required
