@@ -43,8 +43,9 @@ class API::V1::OfferingsController < API::APIController
 
     # Process additional params to limit final offerings set.
     class_ids = []
+    request_from_student = !!current_user.portal_student
 
-    if params[:user_id]
+    if params[:user_id] && !request_from_student
       user = User.find(params[:user_id])
       if !current_user.has_role?('admin') && current_user != user
         # Only admin can list offerings of other users / teachers.
@@ -78,6 +79,14 @@ class API::V1::OfferingsController < API::APIController
     filtered_offerings = filtered_offerings.map do |offering|
       API::V1::Offering.new(offering, request.protocol, request.host_with_port, current_user, params[:add_external_report])
     end
+
+    # remove the other students in the list when a student requests their own offerings
+    if request_from_student
+      filtered_offerings.each do |offering|
+        offering.students = offering.students.select { |s| s.user_id == current_user.id }
+      end
+    end
+
     render :json => filtered_offerings.to_json, :callback => params[:callback]
   end
 
