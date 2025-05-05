@@ -121,13 +121,19 @@ class API::V1::OfferingsController < API::APIController
       # find the existing external activity
       external_activity = ExternalActivity.where(url: params[:url]).first
       if !external_activity
+        # FIXME: add a new CRUD model for automatically creating external activities
+        # that includes a user_id and an allowed list of url prefixes/patterns
+        # FOR NOW: we will use a temporary ENV variable to set the USER_ID
+        automatic_creator_user_id = ENV["AUTOMATIC_EXTERNAL_ACTIVITY_CREATOR_USER_ID"]
+        return error("Unable to find AUTOMATIC_EXTERNAL_ACTIVITY_CREATOR_USER_ID env var") unless automatic_creator_user_id
+
         # create a new external activity
         external_activity = ExternalActivity.create(
           :name                   => params[:name],
           :url                    => params[:url],
           :material_type          => "Activity",
           :publication_status     => params[:publication_status] || "published",
-          :user                   => user,
+          :user_id                => automatic_creator_user_id, # FIXME: use the user_id in the TBD CRUD model
           :append_auth_token      => params[:append_auth_token] || false,
           :author_url             => params[:author_url],
           :print_url              => params[:print_url],
