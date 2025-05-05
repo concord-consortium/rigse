@@ -121,10 +121,10 @@ export default class LoginModal extends React.Component<any, any> {
               Don't have an account?
               { " " }
               <a href={"#"} onClick={this.handleRegister}>
-                Sign up for free
+                Create an account
               </a>
               { " " }
-              to create classes, assign activities, save student work, track student progress, and more!
+              for free and get access to bonus features! <strong>Students</strong> can save their work and get feedback. <strong>Teachers</strong> can create classes, assign activities, track student progress and more!
             </p>
           </footer>
         </Formsy>
