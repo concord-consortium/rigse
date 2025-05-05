@@ -170,7 +170,7 @@ export default class SignUp extends React.Component<any, any> {
         { formTitle }
         <div className="signup-form">
           { form }
-          <AlreadyHaveAccount />
+          <AlreadyHaveAccount oauthProviders={oauthProviders} loginUrl={loginUrl} />
         </div>
         <footer className="reg-footer">
           <p><strong>Why sign up?</strong> It’s free and you get access to bonus features! <strong>Students</strong> can save their work and get feedback from their teachers. <strong>Teachers</strong> can create classes, assign activities, track student progress, and more!</p>
