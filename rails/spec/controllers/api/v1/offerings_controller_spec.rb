@@ -482,6 +482,8 @@ describe API::V1::OfferingsController do
       end
 
       it "should create a new offering and external activity if one does not exist" do
+        # FIXME: remove when new CRUD table is added for automatically creating external activities
+        ENV["AUTOMATIC_EXTERNAL_ACTIVITY_CREATOR_USER_ID"] = teacher.user.id.to_s
         offering # Make sure that the offering is created.
         post :create_for_external_activity, params: { class_id: clazz.id, name: 'Test', url: 'http://test.com' }
         expect(response.status).to eql(200)
