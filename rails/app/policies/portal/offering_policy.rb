@@ -8,6 +8,10 @@ class Portal::OfferingPolicy < ApplicationPolicy
     teacher? || admin?
   end
 
+  def api_create_for_external_activity?
+    teacher? || admin?
+  end
+
   class Scope < Scope
     def resolve
       return none unless user

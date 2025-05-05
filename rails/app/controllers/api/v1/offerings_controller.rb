@@ -81,6 +81,97 @@ class API::V1::OfferingsController < API::APIController
     render :json => filtered_offerings.to_json, :callback => params[:callback]
   end
 
+  def find_tool(tool_id)
+    return nil if tool_id.nil?
+    tool = Tool.where(tool_id: tool_id).first
+  end
+
+  def create_for_external_activity
+    authorize Portal::Offering, :api_create_for_external_activity?
+
+    begin
+      user, role = check_for_auth_token(params)
+    rescue StandardError => e
+      return error(e.message)
+    end
+
+    return error("A class_id is required") unless params[:class_id].present?
+    return error("A name is required") unless params[:name].present?
+    return error("An url is required") unless params[:url].present?
+
+    begin
+      validated_url = URI.parse(params[:url])
+    rescue Exception
+      return error("Invalid url", 422)
+    end
+
+    # make sure the user is a teacher for the class
+    clazz = Portal::Clazz.find(params[:class_id])
+    if !user.has_role?('admin') && !clazz.is_teacher?(user)
+      # Only admin can create offerings for somebody else's class.
+      return error('You are not a teacher of the specified class', 403)
+    end
+
+    # make sure the offering does not already exist
+    offering = Portal::Offering.where(clazz_id: clazz.id, runnable_type: 'ExternalActivity')
+                .select { |o| o.runnable.url == params[:url] }
+                .first
+    if !offering
+
+      # find the existing external activity
+      external_activity = ExternalActivity.where(url: params[:url]).first
+      if !external_activity
+        # FIXME: add a new CRUD model for automatically creating external activities
+        # that includes a user_id and an allowed list of url prefixes/patterns
+        # FOR NOW: we will use a temporary ENV variable to set the USER_ID
+        automatic_creator_user_id = ENV["AUTOMATIC_EXTERNAL_ACTIVITY_CREATOR_USER_ID"]
+        return error("Unable to find AUTOMATIC_EXTERNAL_ACTIVITY_CREATOR_USER_ID env var") unless automatic_creator_user_id
+
+        # create a new external activity
+        external_activity = ExternalActivity.create(
+          :name                   => params[:name],
+          :url                    => params[:url],
+          :material_type          => "Activity",
+          :publication_status     => params[:publication_status] || "published",
+          :user_id                => automatic_creator_user_id, # FIXME: use the user_id in the TBD CRUD model
+          :append_auth_token      => params[:append_auth_token] || false,
+          :author_url             => params[:author_url],
+          :print_url              => params[:print_url],
+          :tool                   => find_tool(params[:tool_id]),
+          :thumbnail_url          => params[:thumbnail_url],
+          :author_email           => params[:author_email],
+          :is_locked              => params[:is_locked],
+          :student_report_enabled => params[:student_report_enabled],
+          :rubric_url             => params[:rubric_url],
+          :rubric_doc_url         => params[:rubric_doc_url]
+        )
+
+        if params[:external_report_url]
+          external_report = ExternalReport.find_by_url(params[:external_report_url])
+          if external_report
+            external_activity.external_reports=[external_report]
+            external_activity.save
+          end
+        end
+
+        if !external_activity.valid?
+          return error("Unable to create external activity", 422)
+        end
+      end
+
+      # create the offering
+      offering = Portal::Offering.create!(
+        clazz_id: clazz.id,
+        runnable_type: external_activity.class.to_s,
+        runnable_id: external_activity.id,
+        active: true,
+        locked: false,
+      )
+    end
+
+    render :json => {id: offering.id}
+  end
+
   def portal_offering_strong_params(params)
     params && params.permit(:active, :locked)
   end

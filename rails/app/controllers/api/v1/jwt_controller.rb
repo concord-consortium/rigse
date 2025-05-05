@@ -148,6 +148,28 @@ class API::V1::JwtController < API::APIController
   def portal
     user, learner, teacher = handle_initial_auth
 
+    # allow the user to select which type of JWT they want
+    if params[:as_learner] == "true"
+      offering_id = params[:offering_id]
+      raise StandardError, "Missing offering_id parameter. Required for requesting learner JWTs." if offering_id.blank?
+
+      offering = Portal::Offering.find_by_id(offering_id)
+      raise StandardError, "Offering not found" unless offering
+
+      portal_student = offering.clazz.students.find_by(user_id: user.id)
+      raise StandardError, "You are not a student of the class with the offering" unless portal_student
+
+      learner = offering.find_or_create_learner(portal_student)
+    end
+    if params[:as_teacher] == "true"
+      teacher = user.portal_teacher
+      raise StandardError, "You are not a teacher" unless teacher
+    end
+    if params[:as_user] == "true"
+      learner = nil
+      teacher = nil
+    end
+
     claims = {}
     if params[:researcher] == "true"
       # Note: no check is done to see if the user is a researcher for any projects.
