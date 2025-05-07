@@ -296,7 +296,7 @@ export default class TeacherForm extends React.Component<any, any> {
         }
         <PrivacyPolicy />
         <div className="submit-button-container">
-          <button className="submit-btn" type="submit" disabled={!canSubmit}>Register!</button>
+          <button className="submit-btn" type="submit" disabled={!canSubmit}>Create Account!</button>
         </div>
       </Formsy>
     );

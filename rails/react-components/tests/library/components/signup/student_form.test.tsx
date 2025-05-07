@@ -14,7 +14,7 @@ describe("When I try to render signup student form", () => {
     render(<StudentForm />);
     expect(screen.getByText("Class Word")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("Class Word (not case sensitive)")).toBeInTheDocument();
-    expect(screen.getByText("By clicking Register!, you agree to our", { exact: false })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Register!" })).toBeInTheDocument();
+    expect(screen.getByText("By clicking \"Create Account!\", you agree to our", { exact: false })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Create Account!" })).toBeInTheDocument();
   });
 });
