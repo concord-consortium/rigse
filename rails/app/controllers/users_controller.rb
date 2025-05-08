@@ -5,7 +5,14 @@ class UsersController < ApplicationController
   protected
 
   def not_authorized_error_message
-    super({resource_type: 'user', resource_name: @user ? @user.name : nil})
+    case action_name
+    when "index"
+      "You do not have permission to view this page."
+    when "show"
+      "You do not have permission to view this user. Please contact your administrator if you believe this is an error."
+    else
+      super({resource_type: 'user', resource_name: @user ? @user.name : nil})
+    end
   end
 
   public
