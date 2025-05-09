@@ -1,0 +1,50 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Auto External Activity Rules" %>
+
+<h1>Auto External Activity Rules</h1>
+
+<div id="auto_external_activity_rules">
+  <% if @auto_external_activity_rules.length > 0 %>
+    <table cellpadding="5" border="0">
+      <tr>
+        <th style="text-align: left;">Name</th>
+        <th style="text-align: left;">User</th>
+        <th style="text-align: left;">Slug</th>
+        <th style="text-align: left;">Description</th>
+      </tr>
+    <% @auto_external_activity_rules.each do |auto_external_activity_rule| %>
+      <tr>
+        <td>
+          <%= link_to auto_external_activity_rule.name, auto_external_activity_rule %>
+        </td>
+        <td>
+          <%= auto_external_activity_rule.user.name %>
+        </td>
+        <td>
+          <%= auto_external_activity_rule.slug %>
+        </td>
+        <td>
+          <%= auto_external_activity_rule.description %>
+        </td>
+      </tr>
+    <% end %>
+    </table>
+  <% else %>
+    <div style="margin: 10px 0">
+      You have no auto external activity rules.
+      <br/>
+      To create one click the "Create Auto External Activity Rule" button.
+    </div>
+  <% end %>
+</div>
+
+<%= link_to "Create Auto External Activity Rule", new_admin_auto_external_activity_rule_path, {:class => 'button'} %>
+
+<div style="margin-top: 20px; padding: 10px; background: #f1f1f1;">
+  Auto external activity rules are used to automatically create external activities in the API offerings controller
+  when the external activity for the offering does not exist.  The "slug" for the rule is passed to the api endpoint
+  which then uses it to look up the rule and ensure the external activity
+  url matches the allow patterns regex.  If it does the associated user for the rule is used as the author of the
+  external activity.
+</div>

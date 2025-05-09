@@ -1,0 +1,67 @@
+<%= form_with(model: auto_external_activity_rule) do |form| %>
+  <div style="display: flex; flex-direction: column; gap: 15px; width: 90%">
+    <% if auto_external_activity_rule.errors.any? %>
+      <div style="color: red">
+        <h2><%= pluralize(auto_external_activity_rule.errors.count, "error") %> prohibited this from being saved:</h2>
+
+        <ul>
+          <% auto_external_activity_rule.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div>
+      <%= form.label :name, style: "display: block" %>
+      <%= form.text_field :name, style: "width: 100%" %>
+      <div>This is what is displayed in the admin interface.</div>
+    </div>
+
+    <div>
+      <%= form.label :user_id, "User", style: "display: block" %>
+      <%= form.select :user_id, options_from_collection_for_select(@authors, :id, :name, form.object.user_id),
+                      { include_blank: "Select an author" }, style: "width: 100%" %>
+      <div>Select the user to use as the author when creating external activities with this rule.</div>
+    </div>
+
+    <div>
+      <%= form.label :slug, style: "display: block" %>
+      <%= form.text_field :slug, style: "width: 100%" %>
+      <div>
+        The slug must be unique and can only contain letters, numbers, underscores, and dashes.
+        Once set it should not be changed as it is used by API clients to reference this rule.
+      </div>
+    </div>
+
+    <div>
+      <%= form.label :description, style: "display: block" %>
+      <%= form.text_field :description, style: "width: 100%" %>
+      <div>Describe why this rule exists. Shown in the list of rules in the admin interface.</div>
+    </div>
+
+    <div>
+      <%= form.label :allow_patterns, style: "display: block" %>
+      <%= form.text_area :allow_patterns, class: "mceNoEditor", rows: 10, style: "width: 100%", placeholder: "Examples:\n\nhttps://collaborative-learning.concord.org/*\nhttp://localhost:8080/*" %>
+      <div>One or more regex patterns that will be used to determine if the activity is allowed to be automatically created.  The pattern must match the entire URL. Use newlines to separate patterns.</div>
+    </div>
+
+    <div>
+      <%= form.label :external_reports, style: "display: block" %>
+      <%= hidden_field_tag :update_external_reports, "true" %>
+      <div style="padding: 10px; background-color: #f0f0f0;">
+        <% ExternalReport.where(report_type: [ExternalReport::OfferingReport, ExternalReport::ClassReport]).each do |external_report| %>
+          <div>
+            <%= check_box_tag "external_reports[]", external_report.id, form.object.external_report_ids.include?(external_report.id), id: external_report.id %>
+            <%= label_tag external_report.name, external_report.name %>
+          </div>
+        <% end %>
+      </div>
+      <div>Select the reports that should be added to the activity when an activity is created with this rule.</div>
+    </div>
+
+    <div>
+      <%= form.submit %>
+    </div>
+  </div>
+<% end %>
