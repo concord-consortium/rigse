@@ -197,10 +197,17 @@ describe API::V1::OfferingsController do
     describe "when user is a student" do
       before (:each) do
         sign_in student_a.user
+        # Make sure that the offering is created.
+        @offering = offering
       end
-      it "returns 403 error" do
+      it "they will get a list of their own offerings with only themselves in the student list" do
         get :index
-        expect(response.status).to eql(403)
+        expect(response.status).to eql(200)
+        json = JSON.parse(response.body)
+        expect(json.length).to eq 1
+        # student only sees themselves
+        expect(json[0]["students"].length).to eq 1
+        expect(json[0]["students"][0]["user_id"]).to eq student_a.user.id
       end
     end
 
@@ -227,6 +234,10 @@ describe API::V1::OfferingsController do
         expect(response.status).to eql(200)
         json = JSON.parse(response.body)
         expect(json.length).to eq 1
+        # teacher sees both students
+        expect(json[0]["students"].length).to eq 2
+        expect(json[0]["students"][0]["user_id"]).to eq student_a.user.id
+        expect(json[0]["students"][1]["user_id"]).to eq student_b.user.id
       end
     end
 
