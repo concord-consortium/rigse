@@ -65,7 +65,7 @@ class TextInput extends React.Component<any, any> {
   }
 
   render () {
-    const { type, placeholder, disabled, name } = this.props;
+    const { type, placeholder, disabled, name, autoFocus } = this.props;
 
     let className = "text-input " + this.props.name;
     if (this.props.showRequired && !this.props.isPristine) {
@@ -90,6 +90,7 @@ class TextInput extends React.Component<any, any> {
           onChange={this.onChange}
           value={this.state.inputVal}
           placeholder={placeholder}
+          autoFocus={autoFocus}
           disabled={disabled}
         />
         <div className="input-error">

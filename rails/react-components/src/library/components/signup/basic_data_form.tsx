@@ -93,7 +93,7 @@ export default class BasicDataForm extends React.Component<any, any> {
           <div>
             <dl>
               <dt className="two-col">First Name</dt>
-              <dd className="name_wrapper first-name-wrapper two-col"><TextInput name="first_name" placeholder="" required asyncValidation={nameValidator} asyncValidationError={INVALID_FIRST_NAME} /></dd>
+              <dd className="name_wrapper first-name-wrapper two-col"><TextInput name="first_name" placeholder="" required autoFocus={true} asyncValidation={nameValidator} asyncValidationError={INVALID_FIRST_NAME} /></dd>
               <dt className="two-col">Last Name</dt>
               <dd className="name_wrapper last-name-wrapper two-col"><TextInput name="last_name" placeholder="" required asyncValidation={nameValidator} asyncValidationError={INVALID_LAST_NAME} /></dd>
               <dt>Password</dt>

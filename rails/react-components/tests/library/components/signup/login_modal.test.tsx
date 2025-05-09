@@ -7,7 +7,7 @@ describe("When I try to render signup user type selector", () => {
     render(<LoginModal />);
 
     // Check for the presence of various elements in the modal
-    expect(screen.getByRole("heading", { name: "Log in to the Portal" })).toBeInTheDocument();
+    expect(screen.getByText("Log In")).toBeInTheDocument();
     expect(screen.getByText("Sign in with:")).toBeInTheDocument();
     expect(screen.getByText("Or")).toBeInTheDocument();
     expect(screen.getByText("Username")).toBeInTheDocument();

@@ -8,6 +8,7 @@ import TeacherRegistrationComplete from "./teacher_registration_complete";
 import UserTypeSelector from "./user_type_selector";
 
 import ParseQueryString from "../../helpers/parse-query-string";
+import AlreadyHaveAccount from "./already_have_account";
 
 export default class SignUp extends React.Component<any, any> {
   static defaultProps = {
@@ -157,21 +158,32 @@ export default class SignUp extends React.Component<any, any> {
       />;
     }
 
-    let formTitleIntro = "Register";
-    if (this.state.userType != null) {
-      formTitleIntro = "Register as a " + userType.charAt(0).toUpperCase() + userType.slice(1);
+    let formTitle: JSX.Element
+    if (studentData) {
+      // note: this isn't done for teachers as they don't get a login form at the end of the registration process
+      // but rather a final dialog that tells them to check their email
+      formTitle = <h2><strong>Log In</strong><br /> to the { this.props.siteName }</h2>
+    } else if (anonymous) {
+      const formTitleIntro = this.state.userType != null
+        ? `Create a ${userType.charAt(0).toUpperCase() + userType.slice(1)} Account`
+        : "Create an Account";
+      formTitle = <h2><strong>{ formTitleIntro }</strong><br/> for the { this.props.siteName }</h2>
+    } else {
+      formTitle = <h2><strong>Finish</strong> Signing Up</h2>;
     }
 
-    const formTitle = anonymous ? <h2><strong>{ formTitleIntro }</strong> for the { this.props.siteName }</h2> : <h2><strong>Finish</strong> Signing Up</h2>;
+    // don't show the already have account link if the user has finished the student or teacher registration process
+    const hideAlreadyHaveAccount = studentData || teacherData;
 
     return (
       <div>
         { formTitle }
         <div className="signup-form">
           { form }
+          {!hideAlreadyHaveAccount && <AlreadyHaveAccount oauthProviders={oauthProviders} loginUrl={loginUrl} />}
         </div>
         <footer className="reg-footer">
-          <p><strong>Why sign up?</strong> It's free and you get access to several key features, like creating classes for your students, assigning activities, saving work, tracking student progress, and more!</p>
+          <p><strong>Why sign up?</strong> It’s free and you get access to bonus features! <strong>Students</strong> can save their work and get feedback from their teachers. <strong>Teachers</strong> can create classes, assign activities, track student progress, and more!</p>
         </footer>
       </div>
     );
