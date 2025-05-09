@@ -20,7 +20,7 @@ describe Admin::ProjectLinksController do
     it 'it should NOT let them' do
       put :update, params: full_params
       expect(response).to have_http_status(:redirect)
-      expect(request.flash['alert']).to match(RegexConstants::AUTH_FAIL_MODIFY)
+      expect(request.flash['alert']).to match(/You don't have permission to update this project link/)
     end
   end
 
@@ -38,7 +38,7 @@ describe Admin::ProjectLinksController do
           get :show, params: { id: link.id }
           # Redirect, and show error when not allowed:
           expect(response).to have_http_status(:redirect)
-          expect(request.flash['alert']).to match(RegexConstants::AUTH_FAIL_SHOW)
+          expect(request.flash['alert']).to match(/You don't have permission to view this project link/)
         end
       end
     end
@@ -47,7 +47,7 @@ describe Admin::ProjectLinksController do
         get :new
         # Redirect, and show error when not allowed:
         expect(response).to have_http_status(:redirect)
-        expect(request.flash['alert']).to match(RegexConstants::AUTH_FAIL_NEW)
+        expect(request.flash['alert']).to match(/You don't have permission to create this project link/)
       end
     end
 
@@ -56,7 +56,7 @@ describe Admin::ProjectLinksController do
         put :create
         # Redirect, and show error when not allowed:
         expect(response).to have_http_status(:redirect)
-        expect(request.flash['alert']).to match(RegexConstants::AUTH_FAIL_NEW)
+        expect(request.flash['alert']).to match(/You don't have permission to create this project link/)
       end
     end
 
@@ -65,7 +65,7 @@ describe Admin::ProjectLinksController do
         put :update, params: { id: @link_1.id }
         # Redirect, and show error when not allowed:
         expect(response).to have_http_status(:redirect)
-        expect(request.flash['alert']).to match(RegexConstants::AUTH_FAIL_MODIFY)
+        expect(request.flash['alert']).to match(/You don't have permission to update this project link/)
       end
     end
 
@@ -74,7 +74,7 @@ describe Admin::ProjectLinksController do
         delete :destroy, params: { id: @link_1.id }
         # Redirect, and show error when not allowed:
         expect(response).to have_http_status(:redirect)
-        expect(request.flash['alert']).to match(RegexConstants::AUTH_FAIL_DESTROY)
+        expect(request.flash['alert']).to match(/You don't have permission to destroy this project link/)
       end
     end
   end
@@ -121,7 +121,7 @@ describe Admin::ProjectLinksController do
           get :show, params: { id:@link_2.id }
           # Redirect, and show error when not allowed:
           expect(response).to have_http_status(:redirect)
-          expect(request.flash['alert']).to match(RegexConstants::AUTH_FAIL_SHOW)
+          expect(request.flash['alert']).to match(/You don't have permission to view this project link/)
         end
       end
     end
@@ -226,7 +226,7 @@ describe Admin::ProjectLinksController do
           post :create, params: params
           # Redirect, and show error when not allowed:
           expect(response).to have_http_status(:redirect)
-          expect(request.flash['alert']).to match(RegexConstants::AUTH_FAIL_NEW)
+          expect(request.flash['alert']).to match(/You don't have permission to create this project link/)
         end
       end
     end
@@ -558,7 +558,7 @@ describe Admin::ProjectLinksController do
             post :create, params: params
             # Redirect, and show error when not allowed:
             expect(response).to have_http_status(:redirect)
-            expect(request.flash['alert']).to match(RegexConstants::AUTH_FAIL_NEW)
+            expect(request.flash['alert']).to match(/You don't have permission to create this project link/)
           end
         end
       end

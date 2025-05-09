@@ -199,7 +199,7 @@ describe Admin::ProjectsController do
       it "is unavailable to project admins" do
         get :new
         expect(response).to have_http_status(:redirect)
-        expect(request.flash['alert']).to match(RegexConstants::AUTH_FAIL_NEW)
+        expect(request.flash['alert']).to match(/You don't have permission to create this project/)
       end
     end
 
@@ -218,7 +218,7 @@ describe Admin::ProjectsController do
           other_projects.each do |proj|
             get :edit, params: { id: proj.id }
             expect(response).to have_http_status(:redirect)
-            expect(request.flash['alert']).to match(RegexConstants::AUTH_FAIL_EDIT)
+            expect(request.flash['alert']).to match(/You don't have permission to edit this project/)
           end
         end
       end
@@ -235,7 +235,7 @@ describe Admin::ProjectsController do
         it "redirects with warning" do
           post :create, params: { :admin_project => valid_attributes }
           expect(response).to have_http_status(:redirect)
-          expect(request.flash['alert']).to match(RegexConstants::AUTH_FAIL_NEW)
+          expect(request.flash['alert']).to match(/You don't have permission to create this project/)
         end
       end
     end
@@ -292,7 +292,7 @@ describe Admin::ProjectsController do
         it "redirects to the projects list" do
           delete :destroy, params: { :id => project.id }
           expect(response).to have_http_status(:redirect)
-          expect(request.flash['alert']).to match(RegexConstants::AUTH_FAIL_DESTROY)
+          expect(request.flash['alert']).to match(/You don't have permission to destroy this project/)
         end
       end
     end

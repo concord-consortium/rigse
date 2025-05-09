@@ -60,7 +60,7 @@ export default class ForgotPasswordModal extends React.Component<any, any> {
           <dl>
             <dt>Username or Email Address</dt>
             <dd>
-              <TextInput name="user[login]" placeholder="" required />
+              <TextInput name="user[login]" placeholder="" required autoFocus={true} />
             </dd>
           </dl>
           <div className="submit-button-container">
@@ -71,7 +71,7 @@ export default class ForgotPasswordModal extends React.Component<any, any> {
 
           <footer>
             <p>
-              Don't have an account? <a href="#" onClick={this.handleShowSignup}>Sign up for free</a> to create classes, assign activities, save student work, track student progress, and more!
+              Don't have an account? <a href="#" onClick={this.handleShowSignup}>Create an account</a> for free and get access to bonus features! <strong>Students</strong> can save their work and get feedback. <strong>Teachers</strong> can create classes, assign activities, track student progress and more!
             </p>
           </footer>
         </Formsy>

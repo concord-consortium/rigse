@@ -147,6 +147,12 @@ services:
       REPORT_SERVICE_SOURCE: "${REPORT_SERVICE_SOURCE:-authoring.lara.staging.concord.org}"
       REPORT_SERVICE_BEARER_TOKEN:
 
+      # Temporary setting for the new automatic external activity creator to test on staging
+      # This will be replaced with a new model that has a CRUD UI to manage the user id to use
+      # when automatically creating external activities.
+      # THIS SHOULD BE REMOVED BEFORE THE FINAL RELEASE AND NOT BE USED IN PRODUCTION
+      AUTOMATIC_EXTERNAL_ACTIVITY_CREATOR_USER_ID:
+
     # open standard in and turn on tty so we can attach to the container and debug it
     stdin_open: true
     tty: true

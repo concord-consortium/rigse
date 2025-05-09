@@ -25,6 +25,10 @@ class Portal::ClazzPolicy < ApplicationPolicy
     class_teacher_or_admin? || class_student? || class_researcher?
   end
 
+  def api_create?
+    teacher? || admin?
+  end
+
   def mine?
     teacher? || student?
   end

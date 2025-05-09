@@ -56,7 +56,9 @@ export default class StudentForm extends React.Component<any, any> {
           <dd>
             <TextInput
               name="class_word"
+              autoFocus={true}
               placeholder="Class Word (not case sensitive)"
+              value={this.props.classWord}
               required
               asyncValidation={classWordValidator}
               asyncValidationError={INVALID_CLASS_WORD}
@@ -66,7 +68,7 @@ export default class StudentForm extends React.Component<any, any> {
         <PrivacyPolicy />
         <div className="submit-button-container">
           <button className="submit-btn" type="submit" disabled={!this.state.canSubmit}>
-            Register!
+            Create Account!
           </button>
         </div>
       </Formsy>
