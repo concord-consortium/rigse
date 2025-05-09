@@ -503,14 +503,14 @@ describe API::V1::OfferingsController do
       describe "when rule is provided" do
         let (:allow_patterns) { "https://example.com/*\nhttp://foo.com/*" }
 
-        it "should fail when url doesn't match rule allowed_patterns" do
+        it "should fail when url doesn't match rule allow_patterns" do
           rule
           post :create_for_external_activity, params: { class_id: clazz.id, name: 'Test', url: 'http://test.com', rule: 'test' }
           expect(JSON.parse(response.body)["message"]).to eq "The URL is not allowed by the rule"
           expect(response.status).to eql(400)
         end
 
-        it "should succeed when url does match rule allowed_patterns" do
+        it "should succeed when url does match rule allow_patterns" do
           rule
           post :create_for_external_activity, params: { class_id: clazz.id, name: 'Test', url: 'http://foo.com/bar', rule: 'test' }
           expect(response.status).to eql(200)

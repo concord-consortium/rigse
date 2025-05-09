@@ -49,6 +49,16 @@ describe Admin::AutoExternalActivityRule do
     it "should be required" do
       expect(Admin::AutoExternalActivityRule.new(valid_attributes.merge(allow_patterns: '')).valid?).to be_falsey
     end
+
+    it "should be valid regex" do
+      expect(Admin::AutoExternalActivityRule.new(valid_attributes.merge(allow_patterns: 'invalid[')).valid?).to be_falsey
+      expect(Admin::AutoExternalActivityRule.new(valid_attributes.merge(allow_patterns: 'vali?d*')).valid?).to be_truthy
+    end
+
+    it "should be valid regex with multiple patterns" do
+      expect(Admin::AutoExternalActivityRule.new(valid_attributes.merge(allow_patterns: 'valid\ninvalid[')).valid?).to be_falsey
+      expect(Admin::AutoExternalActivityRule.new(valid_attributes.merge(allow_patterns: 'val?id*\nvalid2.*')).valid?).to be_truthy
+    end
   end
 
   describe "#user" do
