@@ -1,5 +1,4 @@
 RailsPortal::Application.routes.draw do
-
   devise_for :users, :controllers => {
     :registrations => 'registrations',
     :confirmations => 'confirmations',
@@ -250,6 +249,7 @@ RailsPortal::Application.routes.draw do
 
       resources :authoring_sites
       resources :firebase_apps
+      resources :auto_external_activity_rules
     end
 
     resources :materials_collections

@@ -1,0 +1,9 @@
+<h1>Auto External Activity Rule</h1>
+
+<%= render @auto_external_activity_rule %>
+
+<div style="display: flex; gap: 10px">
+  <%= link_to "Edit", edit_admin_auto_external_activity_rule_path(@auto_external_activity_rule), class: "button" %>
+  <%= link_to "Back", admin_auto_external_activity_rules_path, class: "button" %>
+</div>
+<%= button_to "Delete", @auto_external_activity_rule, method: :delete %>

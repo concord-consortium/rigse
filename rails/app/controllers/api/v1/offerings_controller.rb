@@ -107,6 +107,7 @@ class API::V1::OfferingsController < API::APIController
     return error("A class_id is required") unless params[:class_id].present?
     return error("A name is required") unless params[:name].present?
     return error("An url is required") unless params[:url].present?
+    return error("A rule is required") unless params[:rule].present?
 
     begin
       validated_url = URI.parse(params[:url])
@@ -130,11 +131,10 @@ class API::V1::OfferingsController < API::APIController
       # find the existing external activity
       external_activity = ExternalActivity.where(url: params[:url]).first
       if !external_activity
-        # FIXME: add a new CRUD model for automatically creating external activities
-        # that includes a user_id and an allowed list of url prefixes/patterns
-        # FOR NOW: we will use a temporary ENV variable to set the USER_ID
-        automatic_creator_user_id = ENV["AUTOMATIC_EXTERNAL_ACTIVITY_CREATOR_USER_ID"]
-        return error("Unable to find AUTOMATIC_EXTERNAL_ACTIVITY_CREATOR_USER_ID env var") unless automatic_creator_user_id
+        # check if the rule allows the url
+        rule = Admin::AutoExternalActivityRule.find_by(slug: params[:rule])
+        return error("Unable to find #{params[:rule]} rule") unless rule
+        return error("The URL is not allowed by the rule") unless rule.matches_pattern?(params[:url])
 
         # create a new external activity
         external_activity = ExternalActivity.create(
@@ -142,7 +142,7 @@ class API::V1::OfferingsController < API::APIController
           :url                    => params[:url],
           :material_type          => "Activity",
           :publication_status     => params[:publication_status] || "published",
-          :user_id                => automatic_creator_user_id, # FIXME: use the user_id in the TBD CRUD model
+          :user_id                => rule.user_id,
           :append_auth_token      => params[:append_auth_token] || false,
           :author_url             => params[:author_url],
           :print_url              => params[:print_url],
@@ -155,16 +155,14 @@ class API::V1::OfferingsController < API::APIController
           :rubric_doc_url         => params[:rubric_doc_url]
         )
 
-        if params[:external_report_url]
-          external_report = ExternalReport.find_by_url(params[:external_report_url])
-          if external_report
-            external_activity.external_reports=[external_report]
-            external_activity.save
-          end
-        end
-
         if !external_activity.valid?
           return error("Unable to create external activity", 422)
+        end
+
+        # add all the external reports setup in the rule
+        if rule.external_reports.any?
+          external_activity.external_reports += rule.external_reports
+          external_activity.save
         end
       end
 

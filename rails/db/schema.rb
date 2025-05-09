@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_01_146000) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_09_115230) do
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
     t.string "access_token"
@@ -206,6 +206,26 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_146000) do
     t.string "url"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+  end
+
+  create_table "auto_external_activity_rules", charset: "utf8", force: :cascade do |t|
+    t.string "name"
+    t.string "slug"
+    t.string "description"
+    t.text "allow_patterns"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "auto_external_activity_rules_uniq_idx", unique: true
+    t.index ["user_id"], name: "index_auto_external_activity_rules_on_user_id"
+  end
+
+  create_table "auto_external_activity_rules_external_reports", id: false, charset: "utf8", force: :cascade do |t|
+    t.bigint "auto_external_activity_rule_id"
+    t.bigint "external_report_id"
+    t.index ["auto_external_activity_rule_id", "external_report_id"], name: "auto_external_activity_rules_reports"
+    t.index ["auto_external_activity_rule_id"], name: "idx_on_auto_external_activity_rule_id_02af4cd4b9"
+    t.index ["external_report_id"], name: "idx_on_external_report_id_50ce69adab"
   end
 
   create_table "clients", id: :integer, charset: "utf8", force: :cascade do |t|
