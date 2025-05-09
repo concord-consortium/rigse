@@ -155,16 +155,14 @@ class API::V1::OfferingsController < API::APIController
           :rubric_doc_url         => params[:rubric_doc_url]
         )
 
-        if params[:external_report_url]
-          external_report = ExternalReport.find_by_url(params[:external_report_url])
-          if external_report
-            external_activity.external_reports=[external_report]
-            external_activity.save
-          end
-        end
-
         if !external_activity.valid?
           return error("Unable to create external activity", 422)
+        end
+
+        # add all the external reports setup in the rule
+        if rule.external_reports.any?
+          external_activity.external_reports += rule.external_reports
+          external_activity.save
         end
       end
 
