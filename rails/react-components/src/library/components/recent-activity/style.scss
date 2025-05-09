@@ -38,6 +38,9 @@
 }
 
 .stepNumber {
+  position: absolute;
+  left: 0;
+  top: 0.2em;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -58,5 +61,7 @@
 }
 
 .numberedStepsList li {
+  position: relative;
   margin-bottom: 1em;
+  padding-left: 32px;
 }
