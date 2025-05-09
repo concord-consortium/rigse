@@ -4,24 +4,29 @@ class Admin::AutoExternalActivityRulesController < ApplicationController
 
   # GET /auto_external_activity_rules
   def index
-    @auto_external_activity_rules = Admin::AutoExternalActivityRule.all
+    authorize Admin::AutoExternalActivityRule
+    @auto_external_activity_rules = policy_scope(Admin::AutoExternalActivityRule)
   end
 
   # GET /auto_external_activity_rules/1
   def show
+    authorize @auto_external_activity_rule
   end
 
   # GET /auto_external_activity_rules/new
   def new
+    authorize Admin::AutoExternalActivityRule
     @auto_external_activity_rule = Admin::AutoExternalActivityRule.new
   end
 
   # GET /auto_external_activity_rules/1/edit
   def edit
+    authorize @auto_external_activity_rule
   end
 
   # POST /auto_external_activity_rules
   def create
+    authorize Admin::AutoExternalActivityRule
     @auto_external_activity_rule = Admin::AutoExternalActivityRule.new(auto_external_activity_rule_params)
 
     if params[:update_external_reports]
@@ -37,6 +42,7 @@ class Admin::AutoExternalActivityRulesController < ApplicationController
 
   # PATCH/PUT /auto_external_activity_rules/1
   def update
+    authorize @auto_external_activity_rule
     if @auto_external_activity_rule.update(auto_external_activity_rule_params)
       if params[:update_external_reports]
         @auto_external_activity_rule.external_report_ids= (params[:external_reports] || [])
@@ -51,6 +57,7 @@ class Admin::AutoExternalActivityRulesController < ApplicationController
 
   # DELETE /auto_external_activity_rules/1
   def destroy
+    authorize @auto_external_activity_rule
     @auto_external_activity_rule.destroy!
     redirect_to admin_auto_external_activity_rules_path, notice: "Auto external activity rule was successfully destroyed.", status: :see_other
   end
