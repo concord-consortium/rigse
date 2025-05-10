@@ -7,7 +7,6 @@ import StudentRegistrationComplete from "./student_registration_complete";
 import TeacherRegistrationComplete from "./teacher_registration_complete";
 import UserTypeSelector from "./user_type_selector";
 
-import ParseQueryString from "../../helpers/parse-query-string";
 import AlreadyHaveAccount from "./already_have_account";
 
 export default class SignUp extends React.Component<any, any> {
@@ -33,20 +32,9 @@ export default class SignUp extends React.Component<any, any> {
   }
 
   onUserTypeSelect (data: any) {
-    let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-    let queryString = "?";
-
-    if (window.location.search) {
-      const params: any = ParseQueryString();
-      const paramKeys = Object.keys(params);
-      for (let i = 0; i < paramKeys.length; i++) {
-        if (paramKeys[i] !== "userType") {
-          queryString = queryString + paramKeys[i] + "=" + params[paramKeys[i]] + "&";
-        }
-      }
-    }
-    queryString = queryString + "userType=" + data;
-    newUrl = newUrl + queryString;
+    const url = new URL(window.location.href);
+    url.searchParams.set("userType", data);
+    const newUrl = url.toString();
 
     window.history.pushState({ path: newUrl }, "", newUrl);
     this.setState({
@@ -56,7 +44,7 @@ export default class SignUp extends React.Component<any, any> {
 
   onBasicDataSubmit (data: any) {
     const {pathname, search} = window.location;
-    data.sign_up_path = `${pathname}${search ? `?${search}` : ""}`;
+    data.sign_up_path = `${pathname}${search}`;
     this.setState({
       basicData: data
     });
