@@ -5,6 +5,7 @@ describe API::V1::OfferingsController do
 
   let(:admin_user)        { FactoryBot.generate(:admin_user) }
   let(:manager_user)      { FactoryBot.generate(:manager_user) }
+  let(:author_user)       { FactoryBot.generate(:author_user) }
   let(:teacher)           { FactoryBot.create(:portal_teacher) }
   let(:activity_1)        { FactoryBot.create(:external_activity, name: 'Activity 1') }
   let(:activity_2)        { FactoryBot.create(:external_activity, name: 'Activity 2') }
@@ -14,6 +15,9 @@ describe API::V1::OfferingsController do
   let(:student_b)         { FactoryBot.create(:full_portal_student) }
   let(:locked)            { false }
   let(:offering)          { FactoryBot.create(:portal_offering, {clazz: clazz, runnable: runnable, locked: locked}) }
+  let(:slug)              { "test" }
+  let(:allow_patterns)    { ".*" }
+  let(:rule)              { FactoryBot.create(:admin_auto_external_activity_rule, slug: slug, allow_patterns: allow_patterns, user: author_user) }
 
   before(:each) {
     # This silences warnings in the console when running
@@ -197,10 +201,17 @@ describe API::V1::OfferingsController do
     describe "when user is a student" do
       before (:each) do
         sign_in student_a.user
+        # Make sure that the offering is created.
+        @offering = offering
       end
-      it "returns 403 error" do
+      it "they will get a list of their own offerings with only themselves in the student list" do
         get :index
-        expect(response.status).to eql(403)
+        expect(response.status).to eql(200)
+        json = JSON.parse(response.body)
+        expect(json.length).to eq 1
+        # student only sees themselves
+        expect(json[0]["students"].length).to eq 1
+        expect(json[0]["students"][0]["user_id"]).to eq student_a.user.id
       end
     end
 
@@ -227,6 +238,10 @@ describe API::V1::OfferingsController do
         expect(response.status).to eql(200)
         json = JSON.parse(response.body)
         expect(json.length).to eq 1
+        # teacher sees both students
+        expect(json[0]["students"].length).to eq 2
+        expect(json[0]["students"][0]["user_id"]).to eq student_a.user.id
+        expect(json[0]["students"][1]["user_id"]).to eq student_b.user.id
       end
     end
 
@@ -437,6 +452,114 @@ describe API::V1::OfferingsController do
           clazz.reload
           expect(clazz.offerings).to eq [ offering_3, offering_1, offering_2 ]
         end
+      end
+    end
+  end
+
+  describe "POST create_for_external_activity" do
+    describe "as a student" do
+      it "should fail" do
+        sign_in student_a.user
+        post :create_for_external_activity, params: { class_id: clazz.id, name: 'Test', url: 'http://test.com' }
+        expect(response.status).to eql(403)
+      end
+    end
+
+    describe "as a teacher" do
+      before (:each) do
+        sign_in teacher.user
+      end
+
+      it "should fail when class_id is not provided" do
+        post :create_for_external_activity, params: { name: 'Test', url: 'http://test.com', rule: 'test' }
+        expect(JSON.parse(response.body)["message"]).to eq "A class_id is required"
+        expect(response.status).to eql(400)
+      end
+
+      it "should fail when name is not provided" do
+        post :create_for_external_activity, params: { class_id: clazz.id, url: 'http://test.com', rule: 'test' }
+        expect(JSON.parse(response.body)["message"]).to eq "A name is required"
+        expect(response.status).to eql(400)
+      end
+
+      it "should fail when url is not provided" do
+        post :create_for_external_activity, params: { class_id: clazz.id, name: 'Test', rule: 'test' }
+        expect(JSON.parse(response.body)["message"]).to eq "An url is required"
+        expect(response.status).to eql(400)
+      end
+
+      it "should fail when rule is not provided" do
+        post :create_for_external_activity, params: { class_id: clazz.id, name: 'Test', url: 'http://test.com' }
+        expect(JSON.parse(response.body)["message"]).to eq "A rule is required"
+        expect(response.status).to eql(400)
+      end
+
+      it "should fail when rule doesn't exist" do
+        post :create_for_external_activity, params: { class_id: clazz.id, name: 'Test', url: 'http://test.com', rule: 'invalid-rule' }
+        expect(JSON.parse(response.body)["message"]).to eq "Unable to find invalid-rule rule"
+        expect(response.status).to eql(400)
+      end
+
+      describe "when rule is provided" do
+        let (:allow_patterns) { "https://example.com/*\nhttp://foo.com/*" }
+
+        it "should fail when url doesn't match rule allow_patterns" do
+          rule
+          post :create_for_external_activity, params: { class_id: clazz.id, name: 'Test', url: 'http://test.com', rule: 'test' }
+          expect(JSON.parse(response.body)["message"]).to eq "The URL is not allowed by the rule"
+          expect(response.status).to eql(400)
+        end
+
+        it "should succeed when url does match rule allow_patterns" do
+          rule
+          post :create_for_external_activity, params: { class_id: clazz.id, name: 'Test', url: 'http://foo.com/bar', rule: 'test' }
+          expect(response.status).to eql(200)
+          json = JSON.parse(response.body)
+          expect(json["id"]).not_to eq nil
+          expect(json["id"]).not_to eq offering.id
+          expect(Portal::Offering.find(json["id"]).runnable.url).to eq 'http://foo.com/bar'
+        end
+      end
+
+      it "should fail when user is not a teacher for the class" do
+        other_teacher = FactoryBot.create(:portal_teacher)
+        sign_in other_teacher.user
+        post :create_for_external_activity, params: { class_id: clazz.id, name: 'Test', url: 'http://test.com', rule: 'test' }
+        expect(JSON.parse(response.body)["message"]).to eq "You are not a teacher of the specified class"
+        expect(response.status).to eql(403)
+      end
+
+      it "should create a new offering and external activity if one does not exist" do
+        rule
+        offering # Make sure that the offering is created.
+        post :create_for_external_activity, params: { class_id: clazz.id, name: 'Test', url: 'http://test.com', rule: 'test' }
+        expect(response.status).to eql(200)
+        json = JSON.parse(response.body)
+        expect(json["id"]).not_to eq nil
+        expect(json["id"]).not_to eq offering.id
+        expect(Portal::Offering.find(json["id"]).runnable.url).to eq 'http://test.com'
+      end
+
+      it "should create a new offering but not an new external activity if one already exists" do
+        offering # Make sure that the offering is created.
+        external_activity = ExternalActivity.create!(name: "Existing activity", url: "http://test.com/existing")
+
+        post :create_for_external_activity, params: { class_id: clazz.id, name: 'Test', url: external_activity.url, rule: 'test' }
+        expect(response.status).to eql(200)
+        json = JSON.parse(response.body)
+        expect(json["id"]).not_to eq nil
+        expect(json["id"]).not_to eq offering.id
+        expect(Portal::Offering.find(json["id"]).runnable.id).to eq external_activity.id
+        expect(Portal::Offering.find(json["id"]).runnable.url).to eq external_activity.url
+      end
+
+      it "should not create a new offering if one already exists" do
+        offering # Make sure that the offering is created.
+        post :create_for_external_activity, params: { class_id: clazz.id, name: 'Test', url: offering.runnable.url, rule: 'test' }
+        expect(response.status).to eql(200)
+        json = JSON.parse(response.body)
+        expect(json["id"]).not_to eq nil
+        expect(json["id"]).to eq offering.id
       end
     end
   end

@@ -1,0 +1,31 @@
+<div id="<%= dom_id auto_external_activity_rule %>">
+  <p>
+    <strong>Name:</strong>
+    <%= auto_external_activity_rule.name %>
+  </p>
+
+  <p>
+    <strong>User:</strong>
+    <%= auto_external_activity_rule.user.name %>
+  </p>
+
+  <p>
+    <strong>Slug:</strong>
+    <%= auto_external_activity_rule.slug %>
+  </p>
+
+  <p>
+    <strong>Description:</strong>
+    <%= auto_external_activity_rule.description %>
+  </p>
+
+  <p>
+    <strong>Allow patterns:</strong>
+    <%= auto_external_activity_rule.allow_patterns.split("\n").join(", ") %>
+  </p>
+
+  <p>
+    <strong>External Reports:</strong>
+    <%= auto_external_activity_rule.external_reports.map(&:name).join(", ") %>
+  </p>
+</div>

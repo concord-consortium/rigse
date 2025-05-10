@@ -117,6 +117,12 @@ jobs:
 
       - run: bundle exec rake ci:${{ matrix.test_suite }}
         name: Run Rake ci:${{ matrix.test_suite }} task
+      - name: Archive capybara failure screenshots
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: capybara-screenshots
+          path: /home/runner/work/rigse/rigse/rails/tmp/capybara/**
 
   test-react-components:
     name: Run react-components tests

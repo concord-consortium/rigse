@@ -1,5 +1,4 @@
 RailsPortal::Application.routes.draw do
-
   devise_for :users, :controllers => {
     :registrations => 'registrations',
     :confirmations => 'confirmations',
@@ -32,6 +31,8 @@ RailsPortal::Application.routes.draw do
   post "help/preview_help_page"
   post "home/preview_about_page"
   post "home/preview_home_page"
+
+  get "/users/sign_in_or_register" => "users#sign_in_or_register", :as => :sign_in_or_register
 
   # external_activities can have uuids for ids so this resource needs to lay outside the :id constaint
   resources :external_activities, path: 'eresources' do
@@ -248,6 +249,7 @@ RailsPortal::Application.routes.draw do
 
       resources :authoring_sites
       resources :firebase_apps
+      resources :auto_external_activity_rules
     end
 
     resources :materials_collections
@@ -385,9 +387,12 @@ RailsPortal::Application.routes.draw do
         end
 
         resources :offerings, only: [:show, :update, :index] do
+          collection do
+            post :create_for_external_activity
+          end
         end
 
-        resources :classes, only: [:show] do
+        resources :classes, only: [:show, :create] do
           member do
             get :log_links
             post :set_is_archived

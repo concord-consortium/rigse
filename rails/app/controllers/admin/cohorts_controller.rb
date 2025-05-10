@@ -26,6 +26,12 @@ class Admin::CohortsController < ApplicationController
     authorize @project
   end
 
+  protected
+
+  def not_authorized_error_message
+    super({resource_type: 'cohort'})
+  end
+
   public
 
   # GET /admin_cohorts

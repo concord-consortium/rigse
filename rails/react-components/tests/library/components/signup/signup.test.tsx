@@ -11,7 +11,6 @@ describe("When I try to render signup student form", () => {
     expect(screen.getByRole("button", { name: "I am a Student" })).toBeInTheDocument();
     expect(screen.getByText("Already have an account?")).toBeInTheDocument();
     expect(screen.getByText("Why sign up?")).toBeInTheDocument();
-    expect(screen.getByText("It's free and you get access to several key features, like creating classes for your students, assigning activities, saving work, tracking student progress, and more!")).toBeInTheDocument();
   });
 
   it("should render with anonymous prop", () => {
@@ -22,7 +21,6 @@ describe("When I try to render signup student form", () => {
     expect(screen.getByRole("button", { name: "I am a Student" })).toBeInTheDocument();
     expect(screen.getByText("Already have an account?")).toBeInTheDocument();
     expect(screen.getByText("Why sign up?")).toBeInTheDocument();
-    expect(screen.getByText("It's free and you get access to several key features, like creating classes for your students, assigning activities, saving work, tracking student progress, and more!")).toBeInTheDocument();
   });
 
   it("should render teacher signup", () => {
@@ -30,7 +28,7 @@ describe("When I try to render signup student form", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "I am a Teacher" }));
 
-    expect(screen.getByText("Register as a Teacher")).toBeInTheDocument();
+    expect(screen.getByText("Create a Teacher Account")).toBeInTheDocument();
     expect(screen.getByText("First Name")).toBeInTheDocument();
     expect(screen.getByText("Last Name")).toBeInTheDocument();
     expect(screen.getByText("Password")).toBeInTheDocument();
@@ -43,7 +41,7 @@ describe("When I try to render signup student form", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "I am a Student" }));
 
-    expect(screen.getByText("Register as a Student")).toBeInTheDocument();
+    expect(screen.getByText("Create a Student Account")).toBeInTheDocument();
     expect(screen.getByText("First Name")).toBeInTheDocument();
     expect(screen.getByText("Last Name")).toBeInTheDocument();
     expect(screen.getByText("Password")).toBeInTheDocument();

@@ -114,7 +114,7 @@
           = render_themed_partial 'shared/logo'
           %p
             Log in with your #{APP_CONFIG[:site_name]} account
-            = @app_name.present? ? " to access the #{@app_name}" : ""
+            = @app_name.present? ? " to access the #{@app_name} app" : ""
             %span>.
           %p
             %input#username{:name => "user[login]", :type => "text", :placeholder => "Enter your username."}/

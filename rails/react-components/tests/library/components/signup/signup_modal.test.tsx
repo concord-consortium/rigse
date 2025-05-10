@@ -12,6 +12,9 @@ describe("When I try to render signup modal", () => {
     expect(screen.getByText("Already have an account?", { exact: false })).toBeInTheDocument();
     expect(screen.getByText("Log in »", { exact: false })).toBeInTheDocument();
     expect(screen.getByText("Why sign up?", { exact: false })).toBeInTheDocument();
-    expect(screen.getByText("It's free and you get access to several key features, like creating classes for your students, assigning activities, saving work, tracking student progress, and more!", { exact: false })).toBeInTheDocument();
+
+    // Check if the login option paragraph with the login link is rendered
+    expect(screen.getByText("Already have an account?")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Log in »/i })).toBeInTheDocument();
   });
 });

@@ -6,7 +6,8 @@ const TIMEOUT = 350;
 
 class TextInput extends React.Component<any, any> {
   static defaultProps = {
-    type: "text"
+    type: "text",
+    value: ""
   };
 
   inputRef: any;
@@ -15,16 +16,26 @@ class TextInput extends React.Component<any, any> {
     super(props);
 
     this.state = {
-      inputVal: ""
+      inputVal: this.props.value ?? ""
     };
 
     this.onChange = this.onChange.bind(this);
     this.inputRef = React.createRef();
+
+    // if there is an initial value wait for the render and then update the input to run the validation
+    if (this.props.value) {
+      setTimeout(() => {
+        this.changeInput(this.props.value);
+      }, 0);
+    }
   }
 
   onChange (event: any) {
-    const cursor = event.target.selectionStart;
-    let newVal = event.currentTarget.value;
+    this.changeInput(event.currentTarget.value);
+  }
+
+  changeInput (newVal: any) {
+    const cursor = this.inputRef.current?.selectionStart;
     const delay = this.props.isValidValue(newVal) ? 0 : TIMEOUT;
 
     this.setState({
@@ -54,7 +65,7 @@ class TextInput extends React.Component<any, any> {
   }
 
   render () {
-    const { type, placeholder, disabled, name } = this.props;
+    const { type, placeholder, disabled, name, autoFocus } = this.props;
 
     let className = "text-input " + this.props.name;
     if (this.props.showRequired && !this.props.isPristine) {
@@ -79,6 +90,7 @@ class TextInput extends React.Component<any, any> {
           onChange={this.onChange}
           value={this.state.inputVal}
           placeholder={placeholder}
+          autoFocus={autoFocus}
           disabled={disabled}
         />
         <div className="input-error">

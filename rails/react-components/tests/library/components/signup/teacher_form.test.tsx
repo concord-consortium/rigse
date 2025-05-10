@@ -31,8 +31,8 @@ describe("When I try to render signup user type selector", () => {
 
     expect(screen.getByText("Country")).toBeInTheDocument();
     expect(screen.getByText("Send me updates about educational technology resources.")).toBeInTheDocument();
-    expect(screen.getByText("By clicking Register!, you agree to our")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Register!" })).toBeInTheDocument();
+    expect(screen.getByText("By clicking \"Create Account!\", you agree to our")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Create Account!" })).toBeInTheDocument();
   });
 
   it("should render with anonymous prop", () => {
@@ -42,8 +42,8 @@ describe("When I try to render signup user type selector", () => {
     expect(screen.getByText("Email")).toBeInTheDocument();
     expect(screen.getByText("Send me updates about educational technology resources.")).toBeInTheDocument();
     expect(screen.getByText("Country")).toBeInTheDocument();
-    expect(screen.getByText("By clicking Register!, you agree to our")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Register!" })).toBeInTheDocument();
+    expect(screen.getByText("By clicking \"Create Account!\", you agree to our")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Create Account!" })).toBeInTheDocument();
   });
 
 });

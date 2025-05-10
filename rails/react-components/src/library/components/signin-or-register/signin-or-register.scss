@@ -1,0 +1,68 @@
+@import '../../../shared/styles/variables/_variables.scss';
+
+.signinOrRegister {
+  padding: 48px 0;
+  text-align: center;
+
+  .topMessage {
+    margin-bottom: 32px;
+    font-size: 14px;
+  }
+
+  .panels {
+    display: flex;
+    gap: 52px;
+    justify-content: center;
+
+    .panel {
+      border: 1px solid #777;
+      border-radius: 10px;
+      padding: 75px 60px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-direction: column;
+
+      .top {
+        font-size: 18px;
+        max-width: 250px;
+        height: 75px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .button {
+        color: #fff;
+        border: solid 2px $col-orange;
+        background: $col-orange;
+        display: block;
+        line-height: .8;
+        padding: 14px 21px;
+        text-align: center;
+        display: block;
+        font: 700 20px / 1 museo-sans, Arial, Helvetica, sans-serif;
+
+        &:hover, &:active {
+          background: #ffc320;
+          color: #fff;
+          border: solid 2px #ffc320;
+          transition: all .2s ease-in-out;
+        }
+
+        &.reverse {
+          background: #fff;
+          border: solid 2px $col-orange;
+          color: $col-orange;
+
+          &:hover, &:active {
+            background: #ffc320;
+            color: #fff;
+            border: solid 2px #ffc320;
+            transition: all .2s ease-in-out;
+          }
+        }
+      }
+    }
+  }
+}

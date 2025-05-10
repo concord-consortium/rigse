@@ -5,6 +5,10 @@ class Portal::OfferingPolicy < ApplicationPolicy
   end
 
   def api_index?
+    teacher? || admin? || student?
+  end
+
+  def api_create_for_external_activity?
     teacher? || admin?
   end
 
@@ -24,6 +28,11 @@ class Portal::OfferingPolicy < ApplicationPolicy
 
       elsif user.portal_teacher
         scope.where(clazz_id: user.portal_teacher.clazz_ids)
+      elsif user.portal_student
+        # students can only see their own offerings
+        # in the controller the list of students in the offering is filtered
+        # to only include the student requesting the offering
+        scope.where(clazz_id: user.portal_student.clazz_ids)
       else
         none
       end
