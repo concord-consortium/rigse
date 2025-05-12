@@ -9,12 +9,24 @@ describe SearchController do
 
   let(:mock_school)     { FactoryBot.create(:portal_school) }
 
-  let(:teacher_user)    { FactoryBot.create(:confirmed_user, :login => "teacher_user") }
-  let(:teacher)         { FactoryBot.create(:portal_teacher, :user => teacher_user, :schools => [mock_school]) }
-  let(:admin_user)      { FactoryBot.generate(:admin_user) }
-  let(:author_user)     { FactoryBot.generate(:author_user) }
-  let(:manager_user)    { FactoryBot.generate(:manager_user) }
-  let(:researcher_user) { FactoryBot.generate(:researcher_user) }
+  let(:teacher_user)            { FactoryBot.create(:confirmed_user, :login => "teacher_user") }
+  let(:teacher)                 { FactoryBot.create(:portal_teacher, :user => teacher_user, :schools => [mock_school]) }
+  let(:admin_user)              { FactoryBot.generate(:admin_user) }
+  let(:author_user)             { FactoryBot.generate(:author_user) }
+  let(:manager_user)            { FactoryBot.generate(:manager_user) }
+  let(:researcher_user)         { FactoryBot.generate(:researcher_user) }
+
+  let(:project)                 { FactoryBot.create(:project) }
+  let(:project_admin_user)      {
+    project_admin = FactoryBot.generate(:author_user)
+    project_admin.admin_for_projects << project
+    project_admin
+  }
+  let(:project_researcher_user) {
+    project_admin = FactoryBot.generate(:author_user)
+    project_admin.researcher_for_projects << project
+    project_admin
+  }
 
   let(:student_user)    { FactoryBot.create(:confirmed_user, :login => "authorized_student") }
   let(:student)         { FactoryBot.create(:portal_student, :user_id => student_user.id) }
@@ -80,7 +92,41 @@ describe SearchController do
         expect(response).to redirect_to action: :index, include_official: '1'
       end
     end
+
+    describe "when it is a teacher visiting" do
+      it "should not show the show archived checkbox" do
+        get :index
+        expect(assigns(:can_view_archived)).to be_falsey
+      end
+    end
+
+    describe "should show the archived resources checkbox" do
+      it "when the user is an admin" do
+        admin_user
+        allow(controller).to receive(:current_user).and_return(admin_user)
+        get :index
+        expect(assigns(:can_view_archived)).to be_truthy
+      end
+      it "when the user is a researcher" do
+        researcher_user
+        allow(controller).to receive(:current_user).and_return(researcher_user)
+        get :index
+        expect(assigns(:can_view_archived)).to be_truthy
+      end
+      it "when the user is a project admin" do
+        project
+        project_admin_user
+        allow(controller).to receive(:current_user).and_return(project_admin_user)
+        get :index
+        expect(assigns(:can_view_archived)).to be_truthy
+      end
+      it "when the user is a project researcher" do
+        project
+        project_researcher_user
+        allow(controller).to receive(:current_user).and_return(project_researcher_user)
+        get :index
+        expect(assigns(:can_view_archived)).to be_truthy
+      end
+    end
   end
-
-
 end

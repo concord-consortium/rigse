@@ -80,10 +80,11 @@
                 = check_box_tag 'include_mine', '1', params[:include_mine], :id => 'include_mine', :class => 'include_mine'
                 %label.tooltip{:for => "include_mine", :class => 'include_mine'}
                   = t "search.only_mine"
-              .only_show_archived
-                = check_box_tag 'show_archived', '1', params[:show_archived], :id => 'show_archived', :class => 'show_archived'
-                %label.tooltip{:for => "show archived", :class => 'show_archived'}
-                  = t "search.only_archived"
+              - if @can_view_archived
+                .only_show_archived
+                  = check_box_tag 'show_archived', '1', params[:show_archived], :id => 'show_archived', :class => 'show_archived'
+                  %label.tooltip{:for => "show archived", :class => 'show_archived'}
+                    = t "search.only_archived"
       -if @form_model.available_sensors.size > 0
         .filter-row
           #sensor-filters.filter-group
