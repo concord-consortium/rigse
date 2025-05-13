@@ -58,8 +58,17 @@ const openModal = (type: any, properties: any = {}, closeFunc?: () => void) => {
     properties.closeable = true;
   }
 
+  // by default, if there is no closeFunc, we hide the modal unless the modal is not hideable
+  // (e.g. the forgot password modal on the forgot password page)
   if (!closeFunc) {
-    closeFunc = () => hideModalOfType(type);
+    const notHideable = properties.notHideable ?? false;
+    if (notHideable) {
+      closeFunc = () => {
+        // do nothing
+      };
+    } else {
+      closeFunc = () => hideModalOfType(type);
+    }
   }
 
   render(React.createElement(type, properties), modalContainer);
