@@ -31,6 +31,9 @@ class SearchController < ApplicationController
     # PUNDIT_CHECK_SCOPE (did not find instance)
     # @searches = policy_scope(Search)
 
+    # plain teachers cannot see archived resources, only teachers that are also either admins, researchers, project admins or project researchers
+    @can_view_archived = current_user && (current_user.has_role?('admin') || current_user.has_role?('researcher') || current_user.admin_for_projects.present? || current_user.researcher_for_projects.present?)
+
     if request.query_parameters.empty?
       flash.keep
       return redirect_to action: 'index', include_official: '1'
