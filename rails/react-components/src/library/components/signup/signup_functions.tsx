@@ -42,6 +42,9 @@ const getModalContainer = (type: any) => {
 };
 
 const hideModalOfType = (type: any) => {
+  if (Modal.isHideDisabled()) {
+    return;
+  }
   const modalContainer = getModalContainer(type);
   Modal.hideModal();
   // This should not be necessary; however, all this code is an awkward mix of React and non-React code (such as jQuery

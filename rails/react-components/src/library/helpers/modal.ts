@@ -56,7 +56,17 @@ const hideModal = function () {
   jQuery(".portal-pages-special-msg").text("").hide();
 };
 
+let hideDisabled = false;
+const disableHide = function (disable: boolean) {
+  hideDisabled = disable;
+};
+const isHideDisabled = function () {
+  return hideDisabled;
+};
+
 export default {
   showModal,
-  hideModal
+  hideModal,
+  disableHide,
+  isHideDisabled,
 };
