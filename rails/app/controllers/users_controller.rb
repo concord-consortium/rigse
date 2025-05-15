@@ -321,6 +321,21 @@ class UsersController < ApplicationController
     @extra_options = {:hideNavLinks => !current_user}
   end
 
+  def confirm_logout
+    @after_url = params[:after]
+
+    if request.post?
+      confirm = !!params[:confirm]
+      cancel = !!params[:cancel]
+      if confirm || cancel
+        if confirm
+          sign_out
+        end
+        redirect_to (@after_url || home_path()), allow_other_host: true
+      end
+    end
+  end
+
   def user_strong_params(params)
     params && params.permit(:first_name, :last_name, :email, :login, :password, :password_confirmation, :can_add_teachers_to_cohorts)
   end
