@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_09_115230) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_16_145846) do
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
     t.string "access_token"
@@ -1616,7 +1616,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_09_115230) do
     t.string "unconfirmed_email"
     t.datetime "confirmation_sent_at", precision: nil
     t.boolean "require_portal_user_type", default: false
-    t.string "sign_up_path"
+    t.string "sign_up_path", limit: 1024
     t.boolean "email_subscribed", default: false
     t.boolean "can_add_teachers_to_cohorts", default: false
     t.datetime "reset_password_sent_at", precision: nil
