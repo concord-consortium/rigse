@@ -7,7 +7,6 @@ import StudentRegistrationComplete from "./student_registration_complete";
 import TeacherRegistrationComplete from "./teacher_registration_complete";
 import UserTypeSelector from "./user_type_selector";
 import AlreadyHaveAccount from "./already_have_account";
-import Modal from "../../helpers/modal";
 
 export default class SignUp extends React.Component<any, any> {
   static defaultProps = {
@@ -98,10 +97,6 @@ export default class SignUp extends React.Component<any, any> {
       //
       // Display completion step
       //
-
-      // don't allow the user to close the modal, otherwise a blank page will be shown in certain cases
-      Modal.disableHide(true);
-
       form = <TeacherRegistrationComplete anonymous={anonymous} loginUrl={loginUrl} />;
     } else if (omniauthOrigin != null) {
       if (omniauthOrigin.search("teacher") > -1) {

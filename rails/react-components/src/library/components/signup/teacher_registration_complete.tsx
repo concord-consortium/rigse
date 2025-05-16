@@ -1,11 +1,20 @@
 import React from "react";
+import Modal from "../../helpers/modal";
 
 export default class TeacherRegistrationComplete extends React.Component<any, any> {
   componentDidMount () {
+    // don't allow the user to close the modal by clicking on the background overlay
+    // so that the user does not miss checking their email in the the success message
+    Modal.disableHide(true);
+
     gtag("event", "click", {
       "category": "User Registration",
       "label": "Final Step Completed - Teacher"
     });
+  }
+
+  handleClose () {
+    Modal.forceCloseModal();
   }
 
   render () {
@@ -14,10 +23,15 @@ export default class TeacherRegistrationComplete extends React.Component<any, an
       : <p><a href="/">Start using the site.</a></p>;
 
     return (
-      <div className="registration-complete">
-        <p className="reg-header">Thanks for signing up!</p>
-        { successMessage }
-      </div>
+      <>
+        <div className="registration-complete">
+          <p className="reg-header">Thanks for signing up!</p>
+          { successMessage }
+        </div>
+        <p>
+          <button className="button" onClick={() => this.handleClose()}>Close</button>
+        </p>
+      </>
     );
   }
 }
