@@ -22,6 +22,16 @@ const showOverlay = function (clickHandler: any, modalId: any, fixedPosition: an
   jQuery("#portal-pages-modal-overlay").css({ "height": jQuery(document).height() + "px" }).fadeIn("fast");
 };
 
+const forceCloseModal = function () {
+  // ensure we can hide the modal
+  disableHide(false);
+
+  // this is a little hacky but the close function is not able to be captured reliably in showModal as there
+  // is no guarantee that showModal will be only called once or that showOverlay will be called independently
+  // of showModal so we simulate a click on the overlay to close the modal
+  jQuery("#portal-pages-modal-overlay").click();
+};
+
 const showModal = function (modalId: any, specialMsg: any, fixedPosition: any, closeFunc: any, modalCloseable: any) {
   let _closeFunc = hideModal;
   if (closeFunc) {
@@ -69,4 +79,5 @@ export default {
   hideModal,
   disableHide,
   isHideDisabled,
+  forceCloseModal
 };
