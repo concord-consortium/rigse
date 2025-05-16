@@ -330,6 +330,13 @@ class UsersController < ApplicationController
       if confirm || cancel
         if confirm
           sign_out
+        else
+          # add a logout_canceled hash parameter to the URL so that it can detect that the user canceled the logout
+          if @after_url
+            uri = URI.parse(@after_url)
+            uri.fragment = [uri.fragment, "logout_canceled=true"].compact.join("&")
+            @after_url = uri.to_s
+          end
         end
         redirect_to (@after_url || home_path()), allow_other_host: true
       end
