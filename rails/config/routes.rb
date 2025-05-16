@@ -166,6 +166,7 @@ RailsPortal::Application.routes.draw do
     match '/portal/school_selector/update' => 'portal/school_selector#update', :as => :school_selector_update, via: [:get, :post]
     match '/logout' => 'sessions#destroy', :as => :logout, via: [:get, :post]
     match '/login' => 'home#index', :as => :login, via: [:get, :post]
+    match '/confirm_logout' => 'users#confirm_logout', :as => :confirm_logout, via: [:get, :post]
     match '/register' => 'users#create', :as => :register, via: [:get, :post]
     match '/signup' => 'users#new', :as => :signup, via: [:get, :post]
     match '/activate/:activation_code' => 'users#activate', :as => :activate, :activation_code => nil, via: [:get, :post]

@@ -1,0 +1,18 @@
+%h1 Logout
+
+-if !@current_user
+  %p
+    You are already logged out!
+
+  -if @after_url
+    :javascript
+      setTimeout(function () {
+        window.location.assign("#{@after_url}");
+      }, 3000);
+-else
+  %p
+    Are you sure you want to logout?
+  %form{:method => "post"}
+    %input{ :type => "hidden", :name => "after_url", :value => @after_url }/
+    %input{ :type => "submit", :name => "confirm", :value => "Yes" }
+    %input{ :type => "submit", :name => "cancel", :value => "No" }
