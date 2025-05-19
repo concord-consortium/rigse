@@ -196,6 +196,22 @@
       font-size: 2.5em;
     }
   }
+  .registration-complete-button {
+    background: #ea6d2f;
+    border: none;
+    border-radius: 0;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 15px 20px;
+    text-align: center;
+    transition: color 0.2s ease-in-out;
+    transition-property: background-color, border-color, color, opacity;
+
+    &:active, &:hover {
+      background: #ffc320;
+    }
+  }
 }
 
 .signup-default-modal-content {
