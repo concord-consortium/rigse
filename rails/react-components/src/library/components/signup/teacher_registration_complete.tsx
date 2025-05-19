@@ -29,7 +29,7 @@ export default class TeacherRegistrationComplete extends React.Component<any, an
           { successMessage }
         </div>
         <p>
-          <button className="button" onClick={() => this.handleClose()}>Close</button>
+          <button className="button registration-complete-button" onClick={() => this.handleClose()}>Close</button>
         </p>
       </>
     );
