@@ -43,10 +43,10 @@ export default class Offering extends React.Component<any, any> {
 
         </div>
         <div className={css.reports}>
-          <OfferingButtons offering={this.props.offering} classHash={classHash} />
+          <OfferingButtons offeringDetails={this.props.offering} classHash={classHash} />
         </div>
         <div>
-          { detailsVisible && <OfferingProgress activities={progressTableActivities} students={students} /> }
+          { detailsVisible && <OfferingProgress activities={progressTableActivities} students={students} offeringDetails={this.props.offering} /> }
         </div>
       </div>
     );

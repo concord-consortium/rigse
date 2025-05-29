@@ -242,8 +242,15 @@ class Portal::Clazz < ApplicationRecord
     self.offerings.includes(:runnable).select{ |o| (! o.runnable.archived?) }
   end
 
-  def student_visible_offerings
-    self.active_offerings.includes(:runnable).select{ |o| (! o.runnable.archived?) }
+  def student_visible_offerings(user)
+    offerings = self.active_offerings.includes(:runnable).select{ |o| (! o.runnable.archived?) }
+    if user
+      offerings.select do |offering|
+        metadata = UserOfferingMetadata.find_by(user_id: user.id, offering_id: offering.id)
+        # include if no user specific metadata or metadata flag active
+        metadata.nil? || metadata.active
+      end
+    end
   end
 
   def update_offering_position(offering, new_pos)

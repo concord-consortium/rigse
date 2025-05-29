@@ -1,8 +1,8 @@
 import React from "react";
 
-import css from "./style.scss";
+import ProgressTableRow from "./offering-progress-row";
 
-const formatDate = (date: any) => `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+import css from "./style.scss";
 
 export default class ProgressTable extends React.Component<any, any> {
   getFeedbackOptions (activityId: any) {
@@ -17,15 +17,8 @@ export default class ProgressTable extends React.Component<any, any> {
       : name;
   }
 
-  renderStudentName (student: any) {
-    const name = <span className={css.name}>{ student.name }</span>;
-    return student.reportUrl && student.totalProgress > 0
-      ? <a href={student.reportUrl} target="_blank" title={`Open report for ${student.name}`} rel="noreferrer">{ name }</a>
-      : name;
-  }
-
   render () {
-    const { students } = this.props;
+    const { students, offeringDetails, offering, onSetStudentOfferingMetadata } = this.props;
     if (students.length === 0) {
       return null;
     }
@@ -38,19 +31,11 @@ export default class ProgressTable extends React.Component<any, any> {
                 <th>Student</th>
                 <th className={css.dateHeader}>Last Run</th>
                 <th>Status</th>
+                {offering && <th>Visible</th>}
+                {offering && <th>Locked</th>}
               </tr>
               {
-                students.map((student: any) =>
-                  <tr key={student.id}>
-                    <td>{ this.renderStudentName(student) }</td>
-                    <td className={css.date} title={student.lastRun?.toLocaleDateString()}>
-                      { student.lastRun ? formatDate(student.lastRun) : "n/a" }
-                    </td>
-                    <td className={css.status}>
-                      { student.startedActivity ? "Started" : "Not Started" }
-                    </td>
-                  </tr>
-                )
+                students.map((student: any) => <ProgressTableRow student={student} offeringDetails={offeringDetails} offering={offering} onSetStudentOfferingMetadata={onSetStudentOfferingMetadata} key={student.id} />)
               }
             </tbody>
           </table>

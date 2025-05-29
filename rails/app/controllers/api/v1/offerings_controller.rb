@@ -32,7 +32,38 @@ class API::V1::OfferingsController < API::APIController
       clazz = offering.clazz
       clazz.update_offering_position(offering, params[:position].to_i)
     end
+
+    # When toggling active or locked, update the existing student metadata to match.
+    # There is no need to create new metadata records, as any missing metadata
+    # values default to the offering's values.
+    if params[:active].present? || params[:locked].present?
+      UserOfferingMetadata.where(offering_id: offering.id).each do |metadata|
+        if params[:active].present?
+          metadata.update!(active: params[:active] == 'true')
+        end
+        if params[:locked].present?
+          metadata.update!(locked: params[:locked] == 'true')
+        end
+      end
+    end
+
     render :json => {message: 'OK'}, :callback => params[:callback]
+  end
+
+  def update_student_metadata
+    offering = Portal::Offering.find(params[:id])
+    authorize offering, :update?
+    user = User.find(params[:user_id])
+
+    student = offering.clazz.students.find_by(user_id: user.id)
+    if student.nil?
+      return error('student not found in the class', 404)
+    end
+
+    metadata = UserOfferingMetadata.find_or_create_by(user_id: user.id, offering_id: offering.id)
+    metadata.update!(student_offering_metadata_strong_params(params))
+
+    render :json => metadata.as_json(only: [:active, :locked]), :callback => params[:callback]
   end
 
   def index
@@ -180,6 +211,10 @@ class API::V1::OfferingsController < API::APIController
   end
 
   def portal_offering_strong_params(params)
+    params && params.permit(:active, :locked)
+  end
+
+  def student_offering_metadata_strong_params(params)
     params && params.permit(:active, :locked)
   end
 end
