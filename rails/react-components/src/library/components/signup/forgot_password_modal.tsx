@@ -71,7 +71,10 @@ export default class ForgotPasswordModal extends React.Component<any, any> {
 
           <footer>
             <p>
-              Don't have an account? <a href="#" onClick={this.handleShowSignup}>Create an account</a> for free and get access to bonus features! <strong>Students</strong> can save their work and get feedback. <strong>Teachers</strong> can create classes, assign activities, track student progress and more!
+              Don't have an account?
+              &nbsp;<a href="#" onClick={this.handleShowSignup}>Create an account</a> for free and get access to bonus features!
+              &nbsp;<strong>Students</strong> can save their work and get feedback.
+              &nbsp;<strong>Teachers</strong> can create classes, assign activities, track student progress and more!
             </p>
           </footer>
         </Formsy>

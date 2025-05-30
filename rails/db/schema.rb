@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_16_145846) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_29_161016) do
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
     t.string "access_token"
@@ -1582,6 +1582,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_16_145846) do
     t.string "source_type"
     t.text "tool_id"
     t.string "remote_duplicate_url"
+  end
+
+  create_table "user_offering_metadata", charset: "utf8", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "offering_id", null: false
+    t.boolean "active", default: true
+    t.boolean "locked", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "offering_id"], name: "unique_user_offering_metadata", unique: true
   end
 
   create_table "users", id: :integer, charset: "utf8", force: :cascade do |t|

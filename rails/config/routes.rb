@@ -391,6 +391,9 @@ RailsPortal::Application.routes.draw do
           collection do
             post :create_for_external_activity
           end
+          member do
+            put :update_student_metadata
+          end
         end
 
         resources :classes, only: [:show, :create] do

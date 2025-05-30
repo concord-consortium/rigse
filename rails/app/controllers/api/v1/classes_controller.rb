@@ -148,11 +148,17 @@ class API::V1::ClassesController < API::APIController
       },
       :students => students,
       :offerings => clazz.teacher_visible_offerings.map { |offering|
+        metadata = UserOfferingMetadata.where(offering_id: offering.id)
+        partially_active = !metadata.all? { |m| m.active }
+        partially_locked = !metadata.all? { |m| m.locked }
+
         {
           :id => offering.id,
           :name => offering.name,
           :active => offering.active,
           :locked => offering.locked,
+          :partially_active => partially_active,
+          :partially_locked => partially_locked,
           :url => api_v1_offering_url(offering.id),
           :external_url => offering.runnable.respond_to?(:url) ? offering.runnable.url : nil,
         }

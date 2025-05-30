@@ -14,31 +14,38 @@ module RunnablesHelper
     return false
   end
 
-  # TODO: rename and make more general
-  def student_run_button_css(offering,_classes=[])
+  def student_run_button_css(offering, locked, _classes=[])
     classes = _classes.dup
     classes << "button"
     classes << "run" if display_status_updates?(offering)
-    classes << "disabled" if offering.locked
+    classes << "disabled" if locked
     classes.join(" ")
   end
 
-  def student_run_buttons(offering,opts={})
+  def student_run_buttons(user,offering,opts={})
     default_solo_label = display_workgroups_run_link?(offering) ? "Run by Myself" : "Run"
     solo_label      = opts[:solo_text]  || default_solo_label
     group_label     = opts[:group_label]|| "Run with Other Students"
+
+    locked = offering.locked
+    if locked
+      metadata = UserOfferingMetadata.find_by(user_id: user.id, offering_id: offering.id)
+      locked = metadata.locked if metadata.present?
+    end
+
     options         = popup_options_for(offering)
-    options[:href]  = !offering.locked ? run_url_for(offering) : "javascript:void(0)"
-    options[:class] = student_run_button_css(offering, ["solo"])
+    options[:href]  = locked ? run_url_for(offering) : "javascript:void(0)"
+    options[:class] = student_run_button_css(offering, locked, ["solo"])
     # Disable button for 10 seconds after click, to prevent accidental double-clicks
     options[:onclick] = "if (this.classList.contains('disabled')) { event.preventDefault(); } else { this.classList.add('disabled'); setTimeout(() => { this.classList.remove('disabled'); }, 10000); }"
+    options[:title] = "This offering has been locked by your teacher." if locked
 
     capture_haml do
       haml_tag :a, options do
         haml_concat solo_label
       end
       if display_workgroups_run_link?(offering)
-        options[:class] = student_run_button_css(offering, ["in_group"])
+        options[:class] = student_run_button_css(offering, locked, ["in_group"])
         options[:label] = group_label
         options[:offeringId] = offering.id
         span_id = "run-with-collaborators-button-#{offering.id}"

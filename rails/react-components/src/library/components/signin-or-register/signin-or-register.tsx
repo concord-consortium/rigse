@@ -52,6 +52,6 @@ const SigninOrRegister = ({appName, loginUrl, classWord}: Props) => {
       </div>
     </div>
   );
-}
+};
 
 export default SigninOrRegister;

@@ -8,4 +8,15 @@ class Portal::StudentClazz < ApplicationRecord
 
   [:name, :description].each { |m| delegate m, :to => :clazz }
 
+  after_destroy :remove_user_offering_metadata
+
+  private
+
+  def remove_user_offering_metadata
+    self.clazz.offerings.each do |offering|
+      metadata = UserOfferingMetadata.find_by(user_id: self.student.user.id, offering_id: offering.id)
+      metadata.destroy if metadata
+    end
+  end
+
 end
