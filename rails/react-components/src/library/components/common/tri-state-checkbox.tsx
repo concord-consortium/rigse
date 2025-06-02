@@ -37,7 +37,10 @@ const TriStateCheckbox: React.FC<TriStateCheckboxProps> = ({
     }
   }, [indeterminate]);
 
-  const handleChange = () => onChange(!checked);
+  const handleChange = () => {
+    if (disabled) return;
+    onChange(!checked);
+  };
 
   return (
     <label className={css.triStateCheckbox}>

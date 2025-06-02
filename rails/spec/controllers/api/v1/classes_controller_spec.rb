@@ -18,11 +18,23 @@ describe API::V1::ClassesController do
   let(:student_user)    { FactoryBot.create(:confirmed_user, :login => "authorized_student") }
   let(:student)         { FactoryBot.create(:portal_student, :user_id => student_user.id) }
 
+  let(:student_user2)   { FactoryBot.create(:confirmed_user, :login => "authorized_student2") }
+  let(:student2)        { FactoryBot.create(:portal_student, :user_id => student_user2.id) }
+
   let(:project)         { FactoryBot.create(:project, cohorts: [cohort]) }
   let(:researcher_user) {
     researcher = FactoryBot.generate(:researcher_user)
     researcher.researcher_for_projects << project
     researcher
+  }
+
+  let(:user_offering_active) { true }
+  let(:user_offering_locked) { false }
+  let(:user_offering_metadata) {
+    FactoryBot.create(:user_offering_metadata, user: student.user, offering: offering_a, active: user_offering_active, locked: user_offering_locked)
+  }
+  let(:user2_offering_metadata) {
+    FactoryBot.create(:user_offering_metadata, user: student2.user, offering: offering_a, active: true, locked: false)
   }
 
   describe "GET #show" do
@@ -180,6 +192,44 @@ describe API::V1::ClassesController do
         get :mine
         expect(JSON.parse(response.body)["classes"][0]["offerings"][0]["external_url"]).to eq offering_a.runnable.url
       end
+
+      it "should include partially_active and partially_locked in the offerings" do
+        # make sure the offering is added to the class
+        offering_a
+        get :mine
+        offerings = JSON.parse(response.body)["classes"][0]["offerings"]
+        # when no metadata is set, both should be false
+        expect(offerings[0]["partially_active"]).to eq false
+        expect(offerings[0]["partially_locked"]).to eq false
+      end
+
+      describe "when the offering is not active" do
+        let(:user_offering_active) { false }
+
+        it "should set partially_active to true" do
+          offering_a
+          user_offering_metadata
+          user2_offering_metadata
+          get :mine
+          offerings = JSON.parse(response.body)["classes"][0]["offerings"]
+          # user1 is not active, user2 is active
+          expect(offerings[0]["partially_active"]).to eq true
+        end
+      end
+
+      describe "when the offering is locked" do
+        let(:user_offering_locked) { true }
+
+        it "should set partially_locked to true" do
+          offering_a
+          user_offering_metadata
+          user2_offering_metadata
+          get :mine
+          offerings = JSON.parse(response.body)["classes"][0]["offerings"]
+          # user1 is locked, user2 is not
+          expect(offerings[0]["partially_locked"]).to eq true
+        end
+      end
     end
 
     describe "as a teacher" do
@@ -203,7 +253,6 @@ describe API::V1::ClassesController do
         expect(JSON.parse(response.body)["classes"][1]["offerings"][0]["external_url"]).to eq offering_a.runnable.url
       end
     end
-
 end
 
   # TODO: auto-generated
