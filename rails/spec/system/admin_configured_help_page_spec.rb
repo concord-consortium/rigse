@@ -15,6 +15,7 @@ RSpec.describe "Admin configures help page", type: :system do
     fill_in "admin_settings[external_url]", with: "https://www.google.com"
     click_save
     visit "/help"
+    skip "This test is flaky on GitHub Actions as it requires a network connection" if ENV["GITHUB_ACTIONS"]
     expect(page.current_url).to match(/^https:\/\/www\.google\.com/)
   end
 
