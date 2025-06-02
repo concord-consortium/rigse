@@ -60,8 +60,8 @@ export default class ProgressTableRow extends React.Component<any, any> {
         <td className={css.status}>
           { student.startedActivity ? "Started" : "Not Started" }
         </td>
-        {offering && <td><TriStateCheckbox checked={student.active} disabled={!offering.active} onChange={this.onActiveUpdate} /></td>}
-        {offering && <td><TriStateCheckbox checked={student.locked} disabled={!offering.locked} onChange={this.onLockedUpdate} /></td>}
+        {offering && <td className={css.centered}><TriStateCheckbox checked={student.active} onChange={this.onActiveUpdate} /></td>}
+        {offering && <td className={css.centered}><TriStateCheckbox checked={student.locked} onChange={this.onLockedUpdate} /></td>}
       </tr>
     );
   }

@@ -28,9 +28,9 @@ module RunnablesHelper
     group_label     = opts[:group_label]|| "Run with Other Students"
 
     locked = offering.locked
-    if locked
-      metadata = UserOfferingMetadata.find_by(user_id: user.id, offering_id: offering.id)
-      locked = metadata.locked if metadata.present?
+    metadata = UserOfferingMetadata.find_by(user_id: user.id, offering_id: offering.id)
+    if metadata.present?
+      locked = metadata.locked
     end
 
     options         = popup_options_for(offering)

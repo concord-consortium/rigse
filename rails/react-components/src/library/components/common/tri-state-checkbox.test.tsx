@@ -50,21 +50,6 @@ describe("TriStateCheckbox", () => {
     expect((checkbox as HTMLInputElement).indeterminate).toBe(true);
   });
 
-  it("does not set indeterminate if partiallyChecked is false or checked is false", () => {
-    render(
-      <TriStateCheckbox
-        checked={false}
-        partiallyChecked={true}
-        partiallyCheckedMessage="Partially selected"
-        onChange={() => {}}
-      />
-    );
-
-    const checkbox = screen.getByRole("checkbox");
-    expect(checkbox).not.toHaveAttribute("title");
-    expect((checkbox as HTMLInputElement).indeterminate).toBe(false);
-  });
-
   it("renders with provided id", () => {
     render(<TriStateCheckbox checked={false} onChange={() => {}} id="my-id" />);
     expect(screen.getByRole("checkbox")).toHaveAttribute("id", "my-id");

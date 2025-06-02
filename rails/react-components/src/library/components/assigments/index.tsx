@@ -23,8 +23,7 @@ const offeringsListMapping = (data: any) => {
     apiUrl: offering.url,
     locked: offering.locked,
     active: offering.active,
-    partiallyLocked: offering.partially_locked,
-    partiallyActive: offering.partially_active,
+    metadata: offering.metadata,
   }));
 };
 
@@ -154,6 +153,11 @@ export default class Assignments extends React.Component<any, any> {
     // when setting active or locked, we also set all students in the offering to that value
     // overriding any previous values
     if (["active", "locked"].includes(prop)) {
+      newOffering.metadata = newOffering.metadata.map((m: any) => {
+        m[prop] = value;
+        return m;
+      });
+
       const offeringDetails = this.state.offeringDetails[offering.id];
       if (offeringDetails) {
         const newStudents = offeringDetails.students.map((s: any) => ({ ...s, [prop]: value }));
@@ -161,12 +165,6 @@ export default class Assignments extends React.Component<any, any> {
         this.setState((prevState: any) => ({
           offeringDetails: { ...prevState.offeringDetails, [offering.id]: newOfferingDetails }
         }));
-      }
-      if (prop === "active") {
-        newOffering.partiallyActive = false;
-      }
-      if (prop === "locked") {
-        newOffering.partiallyLocked = false;
       }
     }
 
@@ -199,14 +197,17 @@ export default class Assignments extends React.Component<any, any> {
 
       const { active, locked } = metadata;
       const { students } = offeringDetails;
-      const me = students.find((s: any) => s.id === studentId);
-      const newMe = { ...me, active, locked };
-      const newStudents = students.map((s: any) => s.id === studentId ? newMe : s);
+      const currentStudent = students.find((s: any) => s.id === studentId);
+      const newCurrentStudent = { ...currentStudent, active, locked };
+      const newStudents = students.map((s: any) => s.id === studentId ? newCurrentStudent : s);
       const newOfferingDetails = { ...offeringDetails, students: newStudents };
 
-      const partiallyActive = !newStudents.every((s: any) => s.active);
-      const partiallyLocked = !newStudents.every((s: any) => s.locked);
-      const newOffering = { ...offering, partiallyActive, partiallyLocked };
+      const newOffering = { ...offering };
+      newOffering.metadata = newStudents.map((s: any) => ({
+        user_id: s.id,
+        active: s.active,
+        locked: s.locked
+      }));
       const newOfferings = offerings.map((o: any) => o.id === offeringId ? newOffering : o);
 
       return {

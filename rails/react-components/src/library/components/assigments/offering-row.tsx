@@ -41,7 +41,7 @@ export default class OfferingRow extends React.Component<any, any> {
   }
 
   partiallyCheckedMessage (flag: string) {
-    const message = [`Offering is not ${flag} for some students`];
+    const message = [`Some students have different ${flag} settings`];
     if (!this.state.detailsVisible) {
       message.push(`, click "Show Detail" to see which students`);
     }
@@ -49,9 +49,23 @@ export default class OfferingRow extends React.Component<any, any> {
     return message.join("");
   }
 
+  isPartiallyChecked (offering: any, flag: string) {
+    const checked = offering[flag];
+    const totalCount = offering.metadata.length;
+    const numChecked = offering.metadata.reduce((count: number, metadata: any) => count + (metadata[flag] ? 1 : 0), 0);
+
+    if (checked) {
+      return numChecked < totalCount;
+    }
+    return numChecked > 0;
+  }
+
   render () {
     const { detailsVisible } = this.state;
     const { offering, offeringDetails, clazz, readOnly, onSetStudentOfferingMetadata } = this.props;
+
+    const partiallyActive = this.isPartiallyChecked(offering, "active");
+    const partiallyLocked = this.isPartiallyChecked(offering, "locked");
 
     return (
       <div className={css.offering}>
@@ -62,7 +76,7 @@ export default class OfferingRow extends React.Component<any, any> {
             <TriStateCheckbox
               disabled={readOnly}
               checked={offering.active}
-              partiallyChecked={offering.partiallyActive}
+              partiallyChecked={partiallyActive}
               partiallyCheckedMessage={this.partiallyCheckedMessage("visible")}
               onChange={this.onActiveUpdate}
             />
@@ -71,7 +85,7 @@ export default class OfferingRow extends React.Component<any, any> {
             <TriStateCheckbox
               disabled={readOnly}
               checked={offering.locked}
-              partiallyChecked={offering.partiallyLocked}
+              partiallyChecked={partiallyLocked}
               partiallyCheckedMessage={this.partiallyCheckedMessage("locked")}
               onChange={this.onLockedUpdate}
             />

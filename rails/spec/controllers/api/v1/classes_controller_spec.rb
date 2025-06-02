@@ -193,14 +193,13 @@ describe API::V1::ClassesController do
         expect(JSON.parse(response.body)["classes"][0]["offerings"][0]["external_url"]).to eq offering_a.runnable.url
       end
 
-      it "should include partially_active and partially_locked in the offerings" do
+      it "should include metadata in the offerings" do
         # make sure the offering is added to the class
         offering_a
         get :mine
         offerings = JSON.parse(response.body)["classes"][0]["offerings"]
-        # when no metadata is set, both should be false
-        expect(offerings[0]["partially_active"]).to eq false
-        expect(offerings[0]["partially_locked"]).to eq false
+        # when no metadata is set, it should be empty
+        expect(offerings[0]["metadata"]).to eq []
       end
 
       describe "when the offering is not active" do
@@ -213,7 +212,8 @@ describe API::V1::ClassesController do
           get :mine
           offerings = JSON.parse(response.body)["classes"][0]["offerings"]
           # user1 is not active, user2 is active
-          expect(offerings[0]["partially_active"]).to eq true
+          expect(offerings[0]["metadata"][0]["active"]).to eq false
+          expect(offerings[0]["metadata"][1]["active"]).to eq true
         end
       end
 
@@ -227,7 +227,8 @@ describe API::V1::ClassesController do
           get :mine
           offerings = JSON.parse(response.body)["classes"][0]["offerings"]
           # user1 is locked, user2 is not
-          expect(offerings[0]["partially_locked"]).to eq true
+          expect(offerings[0]["metadata"][0]["locked"]).to eq true
+          expect(offerings[0]["metadata"][1]["locked"]).to eq false
         end
       end
     end

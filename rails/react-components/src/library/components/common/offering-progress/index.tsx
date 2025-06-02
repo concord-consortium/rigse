@@ -31,8 +31,8 @@ export default class ProgressTable extends React.Component<any, any> {
                 <th>Student</th>
                 <th className={css.dateHeader}>Last Run</th>
                 <th>Status</th>
-                {offering && <th>Visible</th>}
-                {offering && <th>Locked</th>}
+                {offering && <th className={css.centered}>Visible</th>}
+                {offering && <th className={css.centered}>Locked</th>}
               </tr>
               {
                 students.map((student: any) => <ProgressTableRow student={student} offeringDetails={offeringDetails} offering={offering} onSetStudentOfferingMetadata={onSetStudentOfferingMetadata} key={student.id} />)

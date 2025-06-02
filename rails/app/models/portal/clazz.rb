@@ -243,13 +243,21 @@ class Portal::Clazz < ApplicationRecord
   end
 
   def student_visible_offerings(user)
-    offerings = self.active_offerings.includes(:runnable).select{ |o| (! o.runnable.archived?) }
     if user
+      # there is a user so we need to get all the offerings and filter out the ones that are not active
+      # for the user based on their metadata settings
+      offerings = self.offerings.includes(:runnable).select{ |o| (! o.runnable.archived?) }
       offerings.select do |offering|
         metadata = UserOfferingMetadata.find_by(user_id: user.id, offering_id: offering.id)
-        # include if no user specific metadata or metadata flag active
-        metadata.nil? || metadata.active
+        if metadata.present?
+          metadata.active
+        else
+          offering.active
+        end
       end
+    else
+      # no user so we just return all the active offerings
+      self.active_offerings.includes(:runnable).select{ |o| (! o.runnable.archived?) }
     end
   end
 
