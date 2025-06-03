@@ -201,8 +201,25 @@ export default class Assignments extends React.Component<any, any> {
       const newCurrentStudent = { ...currentStudent, active, locked };
       const newStudents = students.map((s: any) => s.id === studentId ? newCurrentStudent : s);
       const newOfferingDetails = { ...offeringDetails, students: newStudents };
-
       const newOffering = { ...offering };
+
+      // if all the students are set to the same values, update the offering metadata
+      // in both the UI and on the server
+      const allSameActive = newStudents.every((s: any) => s.active === active);
+      const allSameLocked = newStudents.every((s: any) => s.locked === locked);
+      const data: Record<string, boolean> = {};
+      if (allSameActive) {
+        newOffering.active = active;
+        data.active = active;
+      }
+      if (allSameLocked) {
+        newOffering.locked = locked;
+        data.locked = locked;
+      }
+      if (allSameActive || allSameLocked) {
+        jQuery.ajax({type: "PUT", url: newOffering.apiUrl, data});
+      }
+
       newOffering.metadata = newStudents.map((s: any) => ({
         user_id: s.id,
         active: s.active,
