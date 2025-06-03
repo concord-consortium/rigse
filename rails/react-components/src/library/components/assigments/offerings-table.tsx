@@ -15,6 +15,12 @@ const Offerings = ({
   return (
     <div className={`${css.offeringsTable} ${readOnly ? css.readOnly : ""}`}>
       <div className={css.headers}>
+        <span className={css.activityNameCell} />
+        <span className={css.iconCell} />
+        <span className={css.headersCell}>Class Settings</span>
+        <span className={css.detailsCell} />
+      </div>
+      <div className={css.headers}>
         <span className={css.activityNameCell}>Name</span>
         { /* Empty icon cell just to make sure that total width is correct */ }
         <span className={css.iconCell} />
