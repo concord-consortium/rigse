@@ -14,6 +14,7 @@
 
       th {
         text-align: left;
+        text-transform: uppercase;
       }
 
       .name {
@@ -30,6 +31,16 @@
 
       .centered {
         text-align: center;
+      }
+
+      .studentSettingsHeader {
+        height: initial;
+
+        th {
+          font-weight: 300;
+          color: #3f3f3f;
+          text-align: center;
+        }
       }
     }
   }

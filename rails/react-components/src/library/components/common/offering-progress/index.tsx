@@ -27,6 +27,14 @@ export default class ProgressTable extends React.Component<any, any> {
         <div className={css.namesTableContainer}>
           <table className={css.namesTable}>
             <tbody>
+              {offering &&
+                <tr className={css.studentSettingsHeader}>
+                  <th />
+                  <th />
+                  <th />
+                  <th colSpan={2}>Student Settings</th>
+                </tr>
+              }
               <tr>
                 <th>Student</th>
                 <th className={css.dateHeader}>Last Run</th>
