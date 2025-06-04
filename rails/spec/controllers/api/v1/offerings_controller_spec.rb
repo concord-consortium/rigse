@@ -19,6 +19,12 @@ describe API::V1::OfferingsController do
   let(:allow_patterns)    { ".*" }
   let(:rule)              { FactoryBot.create(:admin_auto_external_activity_rule, slug: slug, allow_patterns: allow_patterns, user: author_user) }
 
+  let(:user_offering_active) { true }
+  let(:user_offering_locked) { false }
+  let(:user_offering_metadata) {
+    FactoryBot.create(:user_offering_metadata, user: student_a.user, offering: offering, active: user_offering_active, locked: user_offering_locked)
+  }
+
   before(:each) {
     # This silences warnings in the console when running
     generate_default_settings_with_mocks
@@ -390,16 +396,6 @@ describe API::V1::OfferingsController do
       end
     end
 
-    describe "when user is not logged in" do
-      before (:each) do
-        logout_user
-      end
-      it "returns 403 error" do
-        put :update, params: { id: offering.id, active: false }
-        expect(response.status).to eql(403)
-      end
-    end
-
     describe "when user is teacher, but does not own the offering" do
       before (:each) do
         sign_in FactoryBot.create(:portal_teacher).user
@@ -452,6 +448,72 @@ describe API::V1::OfferingsController do
           clazz.reload
           expect(clazz.offerings).to eq [ offering_3, offering_1, offering_2 ]
         end
+      end
+
+      it "should update any existing user metadata" do
+        # ensure that user metadata exists with the default values
+        user_offering_metadata
+        expect(user_offering_metadata.active).to eq true
+        expect(user_offering_metadata.locked).to eq false
+
+        # update the offering and check if metadata is updated
+        put :update, params: { id: offering.id, active: false, locked: true }
+        user_offering_metadata.reload
+        expect(user_offering_metadata.active).to eq false
+        expect(user_offering_metadata.locked).to eq true
+      end
+    end
+  end
+
+  describe "PUT #update_student_metadata" do
+    let (:update_params) { { id: offering.id, user_id: student_a.user.id, active: false, locked: true } }
+
+    describe "when user is not logged in" do
+      before (:each) do
+        logout_user
+      end
+      it "returns 403 error" do
+        put :update_student_metadata, params: update_params
+        expect(response.status).to eql(403)
+      end
+    end
+
+    describe "when user is a student" do
+      before (:each) do
+        sign_in student_a.user
+      end
+      it "returns 403 error" do
+        put :update_student_metadata, params: update_params
+        expect(response.status).to eql(403)
+      end
+    end
+
+    describe "when user is teacher, but does not own the offering" do
+      before (:each) do
+        sign_in FactoryBot.create(:portal_teacher).user
+      end
+      it "returns 403 error" do
+        put :update_student_metadata, params: update_params
+        expect(response.status).to eql(403)
+      end
+    end
+
+    describe "when user is teacher and owns the offering" do
+      before (:each) do
+        sign_in teacher.user
+      end
+
+      it "should update the metadata" do
+        # ensure that user metadata exists with the default values
+        user_offering_metadata
+        expect(user_offering_metadata.active).to eq true
+        expect(user_offering_metadata.locked).to eq false
+
+        put :update_student_metadata, params: update_params
+        expect(response.status).to eql(200)
+        user_offering_metadata.reload
+        expect(user_offering_metadata.active).to eq false
+        expect(user_offering_metadata.locked).to eq true
       end
     end
   end

@@ -8,16 +8,23 @@ const Offerings = ({
   offerings,
   offeringDetails,
   onOfferingUpdate,
+  onSetStudentOfferingMetadata,
   requestOfferingDetails,
   clazz
 }: any) => {
   return (
     <div className={`${css.offeringsTable} ${readOnly ? css.readOnly : ""}`}>
       <div className={css.headers}>
+        <span className={css.activityNameCell} />
+        <span className={css.iconCell} />
+        <span className={css.headersCell}>Class Settings</span>
+        <span className={css.detailsCell} />
+      </div>
+      <div className={css.headers}>
         <span className={css.activityNameCell}>Name</span>
         { /* Empty icon cell just to make sure that total width is correct */ }
         <span className={css.iconCell} />
-        <span className={css.checkboxCell}>Active</span>
+        <span className={css.checkboxCell}>Visible</span>
         <span className={css.checkboxCell}>Locked</span>
         <span className={css.detailsCell} />
       </div>
@@ -30,7 +37,9 @@ const Offerings = ({
               offeringDetails={offeringDetails[offering.id]}
               clazz={clazz}
               requestOfferingDetails={requestOfferingDetails}
-              onOfferingUpdate={onOfferingUpdate} readOnly={readOnly}
+              onOfferingUpdate={onOfferingUpdate}
+              readOnly={readOnly}
+              onSetStudentOfferingMetadata={onSetStudentOfferingMetadata}
             />
           </SortableItem>
         )
@@ -40,7 +49,7 @@ const Offerings = ({
 };
 
 const OfferingsTable = (props: any) => {
-  const { offerings, offeringDetails, onOfferingsReorder, onOfferingUpdate, requestOfferingDetails, clazz, readOnly } = props;
+  const { offerings, offeringDetails, onOfferingsReorder, onOfferingUpdate, onSetStudentOfferingMetadata, requestOfferingDetails, clazz, readOnly } = props;
 
   if (offerings.length === 0) {
     return <div className={css.noMaterials}>No materials have been assigned to this class.</div>;
@@ -54,7 +63,9 @@ const OfferingsTable = (props: any) => {
         offeringDetails={offeringDetails[offering.id]}
         clazz={clazz}
         requestOfferingDetails={requestOfferingDetails}
-        onOfferingUpdate={onOfferingUpdate} readOnly={readOnly}
+        onOfferingUpdate={onOfferingUpdate}
+        onSetStudentOfferingMetadata={onSetStudentOfferingMetadata}
+        readOnly={readOnly}
       />
     );
   };
@@ -71,6 +82,7 @@ const OfferingsTable = (props: any) => {
         clazz={clazz}
         readOnly={readOnly}
         onOfferingUpdate={onOfferingUpdate}
+        onSetStudentOfferingMetadata={onSetStudentOfferingMetadata}
         requestOfferingDetails={requestOfferingDetails}
       />
     </SortableContainer>

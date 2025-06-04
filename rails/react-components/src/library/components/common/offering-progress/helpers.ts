@@ -35,7 +35,9 @@ export const studentMapping = (data: any, researcher = false) => ({
   totalProgress: data.total_progress,
   startedActivity: data.started_activity,
   reportUrl: data.learner_report_url,
-  detailedProgress: data.detailed_progress?.map((dp: any) => detailedProgressMapping(dp))
+  detailedProgress: data.detailed_progress?.map((dp: any) => detailedProgressMapping(dp)),
+  active: data.active,
+  locked: data.locked,
 });
 
 export const reportableActivityMapping = (data: any) => ({

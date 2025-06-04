@@ -7,7 +7,7 @@ import commonCss from "../../styles/common-css-modules.scss";
 export default class OfferingButtons extends React.Component<any, any> {
   render () {
     const { classHash } = this.props;
-    const { id, activityName, previewUrl, activityUrl, hasTeacherEdition, reportUrl, externalReports } = this.props.offering;
+    const { id, activityName, previewUrl, activityUrl, hasTeacherEdition, reportUrl, externalReports } = this.props.offeringDetails;
     const activity = `activity: ${id}`;
     const parameters = {
       activityName,

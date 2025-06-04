@@ -22,7 +22,8 @@ const offeringsListMapping = (data: any) => {
     name: offering.name,
     apiUrl: offering.url,
     locked: offering.locked,
-    active: offering.active
+    active: offering.active,
+    metadata: offering.metadata,
   }));
 };
 
@@ -95,6 +96,7 @@ export default class Assignments extends React.Component<any, any> {
     this.onOfferingUpdate = this.onOfferingUpdate.bind(this);
     this.requestOfferingDetails = this.requestOfferingDetails.bind(this);
     this.handleNewAssignments = this.handleNewAssignments.bind(this);
+    this.onSetStudentOfferingMetadata = this.onSetStudentOfferingMetadata.bind(this);
   }
 
   componentDidMount () {
@@ -147,9 +149,29 @@ export default class Assignments extends React.Component<any, any> {
   onOfferingUpdate (offering: any, prop: any, value: any) {
     const { offerings } = this.state;
     const newOffering = { ...offering, [prop]: value };
+
+    // when setting active or locked, we also set all students in the offering to that value
+    // overriding any previous values
+    if (["active", "locked"].includes(prop)) {
+      newOffering.metadata = newOffering.metadata.map((m: any) => {
+        m[prop] = value;
+        return m;
+      });
+
+      const offeringDetails = this.state.offeringDetails[offering.id];
+      if (offeringDetails) {
+        const newStudents = offeringDetails.students.map((s: any) => ({ ...s, [prop]: value }));
+        const newOfferingDetails = { ...offeringDetails, students: newStudents };
+        this.setState((prevState: any) => ({
+          offeringDetails: { ...prevState.offeringDetails, [offering.id]: newOfferingDetails }
+        }));
+      }
+    }
+
     const newOfferings = offerings.slice();
     newOfferings.splice(offerings.indexOf(offering), 1, newOffering);
     this.setState({ offerings: newOfferings });
+
     jQuery.ajax({
       type: "PUT",
       url: offering.apiUrl,
@@ -159,6 +181,56 @@ export default class Assignments extends React.Component<any, any> {
       error: () => {
         window.alert("Offering update failed, please try to reload page and try again.");
       }
+    });
+  }
+
+  onSetStudentOfferingMetadata (studentId: any, offeringId: any, metadata: any) {
+    this.setState((prevState: any) => {
+      const { offerings } = prevState;
+      const offering = offerings.find((o: any) => o.id === offeringId);
+      const offeringDetails = prevState.offeringDetails[offeringId];
+
+      if (!offeringDetails || !offering) {
+        // sanity check, if offeringDetails or offering is not found, do nothing
+        return prevState;
+      }
+
+      const { active, locked } = metadata;
+      const { students } = offeringDetails;
+      const currentStudent = students.find((s: any) => s.id === studentId);
+      const newCurrentStudent = { ...currentStudent, active, locked };
+      const newStudents = students.map((s: any) => s.id === studentId ? newCurrentStudent : s);
+      const newOfferingDetails = { ...offeringDetails, students: newStudents };
+      const newOffering = { ...offering };
+
+      // if all the students are set to the same values, update the offering metadata
+      // in both the UI and on the server
+      const allSameActive = newStudents.every((s: any) => s.active === active);
+      const allSameLocked = newStudents.every((s: any) => s.locked === locked);
+      const data: Record<string, boolean> = {};
+      if (allSameActive) {
+        newOffering.active = active;
+        data.active = active;
+      }
+      if (allSameLocked) {
+        newOffering.locked = locked;
+        data.locked = locked;
+      }
+      if (allSameActive || allSameLocked) {
+        jQuery.ajax({type: "PUT", url: newOffering.apiUrl, data});
+      }
+
+      newOffering.metadata = newStudents.map((s: any) => ({
+        user_id: s.id,
+        active: s.active,
+        locked: s.locked
+      }));
+      const newOfferings = offerings.map((o: any) => o.id === offeringId ? newOffering : o);
+
+      return {
+        offeringDetails: { ...prevState.offeringDetails, [offeringId]: newOfferingDetails },
+        offerings: newOfferings
+      };
     });
   }
 
@@ -202,6 +274,7 @@ export default class Assignments extends React.Component<any, any> {
           requestOfferingDetails={this.requestOfferingDetails}
           onOfferingsReorder={this.onOfferingsReorder}
           onOfferingUpdate={this.onOfferingUpdate}
+          onSetStudentOfferingMetadata={this.onSetStudentOfferingMetadata}
         />
       </div>
     );

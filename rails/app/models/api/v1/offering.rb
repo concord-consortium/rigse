@@ -27,6 +27,8 @@ class API::V1::Offering
     attribute :last_run, Date
     attribute :total_progress, Float
     attribute :detailed_progress, Array
+    attribute :active, Boolean
+    attribute :locked, Boolean
 
     def initialize(student, offering, protocol, host_with_port, anonymize = false)
       self.name = anonymize ? "#{student.anonymized_first_name} #{student.anonymized_last_name}" : student.user.name
@@ -41,6 +43,12 @@ class API::V1::Offering
       self.total_progress = learner ? learner.report_learner.complete_percent : 0
       self.last_run = learner ? learner.report_learner.last_run : nil
       self.learner_report_url = learner && learner.reportable? ? report_portal_learner_url(learner, protocol: protocol, host: host_with_port) : nil
+
+      # the user offering metadata is a sparse table, so only students that have metadata set will exist
+      # so fallback to offering setting if no metadata exists
+      metadata = UserOfferingMetadata.find_by(user_id: student.user.id, offering_id: offering.id)
+      self.active = metadata ? metadata.active : offering.active
+      self.locked = metadata ? metadata.locked : offering.locked
     end
   end
 

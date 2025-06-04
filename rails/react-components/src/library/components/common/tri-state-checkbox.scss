@@ -1,0 +1,16 @@
+.triStateCheckbox {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+
+  input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    appearance: checkbox;
+    cursor: pointer;
+  }
+
+  .label {
+    user-select: none;
+  }
+}

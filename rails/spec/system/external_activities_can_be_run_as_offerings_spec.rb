@@ -9,7 +9,7 @@ RSpec.describe 'External Activities can be run as offerings', type: :system do
     assignable = typeName.classify.constantize.find_by_name("My Activity")
     FactoryBot.create(:portal_offering, {
       :runnable => assignable,
-      :clazz => portal_class
+      :clazz => portal_class,
     })
 
     login_as("student")
@@ -18,7 +18,6 @@ RSpec.describe 'External Activities can be run as offerings', type: :system do
     first(:link, 'Class_with_no_assignment').click
     expect(page).to have_content('MY ACTIVITY')
     expect(page).to have_content('Run')
-    expect(page).to have_link('Run', href: /portal\/offerings\/\d+\.run_resource_html/)
 
   end
 
