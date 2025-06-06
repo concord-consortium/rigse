@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_29_161016) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_06_134219) do
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
     t.string "access_token"
@@ -1591,6 +1591,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_29_161016) do
     t.boolean "locked", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["offering_id"], name: "index_user_offering_metadata_on_offering_id"
     t.index ["user_id", "offering_id"], name: "unique_user_offering_metadata", unique: true
   end
 
