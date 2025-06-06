@@ -117,4 +117,24 @@ class API::V1::ExternalActivitiesController < API::APIController
       error("Unable to save external activity options")
     end
   end
+
+  def update
+    begin
+      user, role = check_for_auth_token(params)
+    rescue StandardError => e
+      return error(e.message, 403)
+    end
+
+    external_activity = ExternalActivity.find(params[:id])
+    authorize external_activity
+
+    permitted_params = params.permit(:popup)
+
+    if external_activity.update(permitted_params)
+      render :json => { success: true }, :status => :ok
+    else
+      error("Unable to save external activity options")
+    end
+  end
+
 end
