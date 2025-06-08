@@ -18,7 +18,7 @@ RSpec.describe 'External Activities can be run as offerings', type: :system do
     first(:link, 'Class_with_no_assignment').click
     expect(page).to have_content('MY ACTIVITY')
     expect(page).to have_content('Run')
-
+    expect(page).to have_link('Run', href: /portal\/offerings\/\d+\.run_resource_html/)
   end
 
 end
