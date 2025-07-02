@@ -219,7 +219,7 @@ class ExternalActivitiesController < ApplicationController
       :domain_uid => current_visitor.id
     }.to_query
     if params[:iFrame] == "false"
-      redirect_to @uri.to_s
+      redirect_to @uri.to_s, allow_other_host: true
     end
   end
 
