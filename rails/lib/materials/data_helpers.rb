@@ -389,14 +389,6 @@ module Materials
             target: '_blank'
           }
         end
-        if current_visitor.has_role?('admin')
-          links[:external_edit_iframe] = {
-            url: matedit_external_activity_url(material, iFrame: true),
-            text: "(edit in iframe)",
-            target: '_blank',
-            className: ''
-          }
-        end
       end
 
       if material.respond_to?(:print_url) && material.print_url.present?
