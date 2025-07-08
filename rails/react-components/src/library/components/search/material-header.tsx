@@ -33,9 +33,6 @@ export default class SMaterialHeader extends React.Component<any, any> {
         { material.links.edit != null
           ? <span className="superTiny"><SGenericLink link={material.links.edit} /></span>
           : undefined }
-        { material.links.external_edit_iframe != null && !material.lara_activity_or_sequence
-          ? <span className="superTiny"><SGenericLink link={material.links.external_edit_iframe} /></span>
-          : undefined }
       </span>
     );
   }

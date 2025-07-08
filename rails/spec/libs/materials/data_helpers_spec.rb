@@ -153,11 +153,9 @@ describe DataHelpersTestController, type: :controller do
       edit = links[:edit]
       external_edit = links[:external_edit]
       external_lara_edit = links[:external_lara_edit]
-      external_edit_iframe = links[:external_edit_iframe]
       expect(edit[:url]).not_to be_empty
       expect(external_edit[:url]).not_to be_empty
       expect(external_lara_edit[:url]).not_to be_empty
-      expect(external_edit_iframe[:url]).not_to be_empty
     end
 
     it "should return values for teacher resource, teacher guide and rubric if a teacher is logged in" do

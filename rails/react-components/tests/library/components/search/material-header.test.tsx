@@ -29,10 +29,6 @@ describe("When I try to render search material header", () => {
         edit: {
           url: "http://example.com/edit",
           text: "edit text"
-        },
-        external_edit_iframe: {
-          url: "http://example.com/external_edit_iframe",
-          text: "external_edit_iframe text"
         }
       }
     };
@@ -43,7 +39,6 @@ describe("When I try to render search material header", () => {
     expect(screen.getByText("draft")).toBeInTheDocument();
     expect(screen.getByText("material name")).toBeInTheDocument();
     expect(screen.getByText("edit text")).toBeInTheDocument();
-    expect(screen.getByText("external_edit_iframe text")).toBeInTheDocument();
   });
 
 });
