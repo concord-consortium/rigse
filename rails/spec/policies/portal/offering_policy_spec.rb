@@ -121,13 +121,114 @@ RSpec.describe Portal::OfferingPolicy do
     end
   end
 
-  # TODO: auto-generated
   describe '#show?' do
-    it 'show?' do
-      offering_policy = described_class.new(nil, nil)
-      result = offering_policy.show?
+    before(:each) do
+      @teacher1 = FactoryBot.create(:portal_teacher)
+      @teacher2 = FactoryBot.create(:portal_teacher)
 
-      expect(result).to be_nil
+      @runnable1 = FactoryBot.create(:external_activity)
+      @runnable2 = FactoryBot.create(:external_activity)
+
+      @offering1 = FactoryBot.create(:portal_offering, {clazz: @teacher1.clazzes[0], runnable: @runnable1})
+      @offering2 = FactoryBot.create(:portal_offering, {clazz: @teacher2.clazzes[0], runnable: @runnable2})
+
+      @student1 = FactoryBot.create(:full_portal_student)
+      @student2 = FactoryBot.create(:full_portal_student)
+
+      @teacher1.clazzes[0].students = [@student1]
+      @teacher1.clazzes[0].save!
+
+      @teacher2.clazzes[0].students = [@student2]
+      @teacher2.clazzes[0].save!
+    end
+
+    describe 'for admins' do
+      let(:admin) { FactoryBot.generate(:admin_user) }
+      let(:policy) { described_class.new(admin, @offering1) }
+
+      it 'should allow access' do
+        expect(policy.show?).to be true
+      end
+    end
+
+    describe 'for teachers' do
+      describe 'of the class' do
+        let(:policy) { described_class.new(@teacher1.user, @offering1) }
+
+        it 'should allow access' do
+          expect(policy.show?).to be true
+        end
+      end
+
+      describe 'of other classes' do
+        let(:policy) { described_class.new(@teacher2.user, @offering1) }
+
+        it 'should not allow access' do
+          expect(policy.show?).to be false
+        end
+      end
+    end
+
+    describe 'for students' do
+      describe 'of the class' do
+        let(:policy) { described_class.new(@student1.user, @offering1) }
+
+        it 'should allow access when the offering is unlocked' do
+          expect(policy.show?).to be true
+        end
+
+        describe 'when the offering is locked but the student is unlocked' do
+          let(:user_offering_metadata) {
+            FactoryBot.create(:user_offering_metadata, user: @student1.user, offering: @offering1, active: true, locked: false)
+          }
+
+          before(:each) do
+            @offering1.locked = true
+            @offering1.save!
+          end
+
+          it 'should allow access' do
+            # ensure the offering metadata is created for the student to unlock the offering for the student
+            user_offering_metadata
+            expect(policy.show?).to be true
+          end
+        end
+
+        describe 'when the offering is unlocked but the student is locked' do
+          let(:user_offering_metadata) {
+            FactoryBot.create(:user_offering_metadata, user: @student1.user, offering: @offering1, active: true, locked: true)
+          }
+
+          it 'should not allow access' do
+            # ensure the offering metadata is created for the student to lock the offering for the student
+            user_offering_metadata
+            expect(policy.show?).to be false
+          end
+        end
+
+        describe 'when the offering is locked but the show_feedback param is present' do
+          # NOTE: instead of the user being passed in the context, we pass in an OpenStruct with the user and params
+          # so that we can test the show_feedback param.  This is handled in ApplicationPolicy#initialize.
+          let(:policy) { described_class.new(OpenStruct.new(user: @student1.user, params: { show_feedback: true }), @offering1) }
+
+          before(:each) do
+            @offering1.locked = true
+            @offering1.save!
+          end
+
+          it 'should allow access' do
+            expect(policy.show?).to be true
+          end
+        end
+      end
+
+      describe 'of other classes' do
+        let(:policy) { described_class.new(@student2.user, @offering1) }
+
+        it 'should not allow access' do
+          expect(policy.show?).to be false
+        end
+      end
     end
   end
 

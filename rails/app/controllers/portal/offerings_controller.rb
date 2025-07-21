@@ -3,7 +3,7 @@ class Portal::OfferingsController < ApplicationController
   protected
 
   def not_authorized_error_message
-    additional_info = @offering && @offering.locked ? "this offering is locked" : nil
+    additional_info = @offering && @offering.locked ? "This offering is locked." : nil
     super({resource_type: 'offering', additional_info: additional_info})
   end
 
