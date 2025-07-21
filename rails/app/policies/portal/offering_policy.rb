@@ -46,8 +46,26 @@ class Portal::OfferingPolicy < ApplicationPolicy
 
   # Used by Portal::OfferingsController:
   def show?
-    # if locked, only show if the show_feedback param is present so the student can see feedback
-    class_teacher_or_admin? || (class_student? && (!record.locked || params[:show_feedback].present?))
+    # all teachers of the class and admins can see the offering
+    return true if class_teacher_or_admin?
+
+    # only students of the class can see the offering
+    return false if !class_student?
+
+    # always allow access if the show_feedback param is present so the student can see feedback
+    # NOTE: @params is set in ApplicationPolicy#initialize at runtime but not in the test suite
+    # except for the test for the show_feedback parameter which is why the present? check is needed
+    return true if @params.present? && @params[:show_feedback].present?
+
+    # check if the offering is locked for the student
+    locked = record.locked
+    metadata = UserOfferingMetadata.find_by(user_id: user.id, offering_id: record.id)
+    if metadata.present?
+      locked = metadata.locked
+    end
+
+    # if the offering is locked, the student cannot see it
+    return !locked
   end
 
   def destroy?
