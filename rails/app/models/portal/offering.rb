@@ -49,7 +49,14 @@ class Portal::Offering < ApplicationRecord
 
   end
 
-  def active?
+  def active?(current_user = nil)
+    active = self.active
+    if current_user
+      metadata = UserOfferingMetadata.find_by(user_id: current_user.id, offering_id: self.id)
+      if metadata.present?
+        active = metadata.active
+      end
+    end
     active
   end
 
@@ -75,8 +82,8 @@ class Portal::Offering < ApplicationRecord
     runnable.archived?
   end
 
-  def should_show?
-    active? && (!archived?)
+  def should_show?(current_user = nil)
+    active?(current_user) && (!archived?)
   end
 
   def can_be_deleted?

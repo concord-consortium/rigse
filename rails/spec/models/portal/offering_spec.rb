@@ -6,10 +6,16 @@ describe Portal::Offering do
     let(:runnable) { FactoryBot.create(:external_activity) }
     let(:args)     { {runnable: runnable} }
     let(:offering) { FactoryBot.create(:portal_offering, args) }
+    let(:student)  { FactoryBot.create(:full_portal_student) }
+    let(:user_offering_active) { true }
+    let(:user_offering_metadata) {
+      FactoryBot.create(:user_offering_metadata, user: student.user, offering: offering, active: user_offering_active)
+    }
 
     it "should be active by default" do
      expect(offering.active).to be_truthy
      expect(offering.active?).to be_truthy
+     expect(offering.active?(nil)).to be_truthy
     end
 
     it "can be deactivated" do
@@ -26,6 +32,73 @@ describe Portal::Offering do
 
      offering.activate!
      expect(offering.active?).to be_truthy
+    end
+
+    describe "can be overridden by user metadata" do
+      before(:each) do
+        user_offering_metadata # ensure metadata is created
+      end
+
+      describe "when offering is active and user metadata is active" do
+        it "should be active? and should_show? when not archived" do
+          expect(offering.active?).to be_truthy
+          expect(offering.should_show?).to be_truthy
+          expect(offering.active?(student.user)).to be_truthy
+          expect(offering.should_show?(student.user)).to be_truthy
+        end
+
+        it "should not should_show? when archived" do
+          offering.runnable.archive!
+          expect(offering.should_show?).to be_falsey
+          expect(offering.should_show?(student.user)).to be_falsey
+        end
+      end
+
+      describe "when offering is active and user metadata is not active" do
+        let(:user_offering_active) { false }
+
+        it "should be active? and should_show? when user is not passed" do
+          expect(offering.active?).to be_truthy
+          expect(offering.should_show?).to be_truthy
+        end
+
+        it "should not be active? and not should_show? when user is passed" do
+          expect(offering.active?(student.user)).to be_falsey
+          expect(offering.should_show?(student.user)).to be_falsey
+        end
+      end
+
+      describe "when offering is not active and user metadata is active" do
+        it "should not be active? and not should_show? when user is not passed" do
+          offering.deactivate!
+          expect(offering.active?).to be_falsey
+          expect(offering.should_show?).to be_falsey
+        end
+
+        it "should be active? and should_show? when not archived and user is passed" do
+          offering.deactivate!
+          expect(offering.active?(student.user)).to be_truthy
+          expect(offering.should_show?(student.user)).to be_truthy
+        end
+
+        it "should not should_show? when archived" do
+          offering.runnable.archive!
+          expect(offering.should_show?).to be_falsey
+          expect(offering.should_show?(student.user)).to be_falsey
+        end
+      end
+
+      describe "when offering is not active and user metadata is not active" do
+        let(:user_offering_active) { false }
+
+        it "should not be active? and not should_show?" do
+          offering.deactivate!
+          expect(offering.active?).to be_falsey
+          expect(offering.should_show?).to be_falsey
+          expect(offering.active?(student.user)).to be_falsey
+          expect(offering.should_show?(student.user)).to be_falsey
+        end
+      end
     end
 
     describe "should_be_shown" do
