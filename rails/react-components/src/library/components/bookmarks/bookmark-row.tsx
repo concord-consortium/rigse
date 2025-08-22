@@ -42,12 +42,19 @@ class BookmarkRow extends React.Component<any, any> {
       }
     };
 
+     // prevents @dnd-kit/sortable KeyboardSensor starting a drag when the space key is pressed
+    const stopSpaceFromStartingDrag = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.code === "Space" || e.key === " ") {
+        e.stopPropagation();
+      }
+    };
+
     if (editing) {
       return (
         <div className={css.editBookmarkRow}>
           <span className={css.editBookmarkName}>
-            <input type="text" ref={this.nameRef} defaultValue={bookmark.name} placeholder="Name" />
-            <input type="text" ref={this.urlRef} defaultValue={bookmark.url} placeholder="URL" />
+            <input type="text" ref={this.nameRef} defaultValue={bookmark.name} placeholder="Name" autoFocus onKeyDown={stopSpaceFromStartingDrag} />
+            <input type="text" ref={this.urlRef} defaultValue={bookmark.url} placeholder="URL" onKeyDown={stopSpaceFromStartingDrag} />
           </span>
           <span className={css.editBookmarkButtons}>
             <button onClick={handleSave}>Save</button>
