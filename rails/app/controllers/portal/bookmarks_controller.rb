@@ -21,7 +21,7 @@ class Portal::BookmarksController < ApplicationController
   def visit
     mark = Portal::Bookmark.find(params['id'])
     mark.record_visit(current_visitor)
-    redirect_to mark.url
+    redirect_to mark.url, allow_other_host: true
   end
 
   def visits
