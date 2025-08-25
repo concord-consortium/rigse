@@ -17,7 +17,7 @@ const PageFooter = Component({
       <div id="footer">
         <div className="footer-inner">
           <p>
-            Copyright <span className="copyright">©</span> { year } <a href="https://concord.org" id="footer_cc_link">Concord Consortium</a>. All rights reserved.
+            © { year } <a href="https://concord.org" id="footer_cc_link">The Concord Consortium</a>. All Rights Reserved. The Concord Consortium is a 501(c)(3) nonprofit organization registered in the U.S.
             <br />
             <a href="https://concord.org/privacy-policy" id="privacy-policy-link" target="_blank" rel="noopener noreferrer">Privacy Policy</a> · Questions/Feedback: <a href="mailto:help@concord.org?subject=STEM%20Resource%20Finder%20question">Send us an email</a>
             <br />

@@ -48,13 +48,10 @@
         \. This license permits you to copy, distribute, and display such content so long as you attribute the Next Generation Science Assessment Project and do not use commercially.
     .col-12
       %p
-        Copyright
-        %span.copyright
-          &copy;
-        - now = DateTime.now
-        - copyright_year = now.year
-        = copyright_year
-        \. All rights reserved.
+        &copy;
+        = DateTime.now.year
+        #{link_to 'The Concord Consortium','https://concord.org', :id=>"footer_cc_link"}.
+        All Rights Reserved. The Concord Consortium is a 501(c)(3) nonprofit organization registered in the U.S.
         %br
         #{link_to 'Privacy Policy','https://concord.org/privacy-policy', :id=>"privacy-policy-link", :target=>"_blank", :rel=>"noopener"}
         &middot;
@@ -65,3 +62,5 @@
         %br
         Version:
         = ENV['CC_PORTAL_IMAGE_VERSION'].present? ? ENV['CC_PORTAL_IMAGE_VERSION'] : ENV['CC_PORTAL_VERSION']
+        :javascript
+          document.write("(React " + window.React.version + ")")
