@@ -55,11 +55,14 @@
         The Concord Consortium is a 501(c)(3) nonprofit charity registered in the U.S. under EIN 04-3254131.
         %br
         #{link_to 'Privacy Policy','https://concord.org/privacy-policy', :id=>"privacy-policy-link", :target=>"_blank", :rel=>"noopener"}
-        &middot;
+        %br
         For technical assistance, contact:
         = mail_to(APP_CONFIG[:help_email] || APP_CONFIG[:default_admin_user][:email], APP_CONFIG[:help_email] || APP_CONFIG[:default_admin_user][:email], :subject => "#{APP_CONFIG[:site_name]} question", :encode => "javascript")
-        \. For all other questions/feedback, contact: For all other questions/feedback contact:
+        \.
+        %br
+        For all other questions/feedback, contact:
         = mail_to('info@nextgenscienceassessment.org', 'info@nextgenscienceassessment.org', :subject => "#{APP_CONFIG[:site_name]} question", :encode => "javascript")
+        \.
         %br
         Version:
         = ENV['CC_PORTAL_IMAGE_VERSION'].present? ? ENV['CC_PORTAL_IMAGE_VERSION'] : ENV['CC_PORTAL_VERSION']
