@@ -1,13 +1,4 @@
 
-- if BoolEnv['RESEARCHER_REPORT_ONLY']
-  - # in this case we are only showing a minmal layout. So provide the user with a
-  - # simple header
-  %div
-    Welcome
-    = "#{current_visitor.name}"
-    %br
-    = link_to 'Logout', destroy_user_session_path
-
 #form-container
 
 - external_reports = ExternalReport.where(report_type: ExternalReport::ResearcherLearnerReport).map { |r| {url: "#{r.url}", name: "#{r.name}", label: "#{r.launch_text}", useQueryJwt: r.use_query_jwt} }.to_json

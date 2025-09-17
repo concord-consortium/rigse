@@ -590,8 +590,6 @@ module ApplicationHelper
     if current_user.nil?
       # anonymous home is the '/'
       root_path
-    elsif BoolEnv['RESEARCHER_REPORT_ONLY']
-      learner_report_path
     elsif current_user.portal_student
       my_classes_path
     elsif APP_CONFIG[:recent_activity_on_login] && current_user.portal_teacher
