@@ -25,7 +25,7 @@ class Report::LearnerController < ApplicationController
 
   def index
     authorize Report::Learner
-    render layout: ENV['RESEARCHER_REPORT_ONLY'] ? "minimal" : "application"
+    render layout: "application"
   end
 
   def updated_at

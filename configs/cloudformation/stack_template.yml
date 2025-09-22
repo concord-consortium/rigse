@@ -33,18 +33,12 @@ Parameters:
     Description:
       The DNS name that will be created or updated to point at the load
       balancer
-  ReportDomainName:
-    Type: String
-    Description:
-      The DNS name of a secondary server that is configured to only handle reports
-      the main server will redirect users to this secondary server. This host will be accessed
-      with https so the name needs to work with the selected SSL certificate.
 
   HostedZoneId:
     Type: AWS::Route53::HostedZone::Id
     Default: Z2P4W3M7MDAUV6
     Description:
-      The Route53 hosted zone for the DNS entries for the portal and report portal.
+      The Route53 hosted zone for the DNS entries for the portal.
       This should be concord.org for the production AWS account and concordqa.org for the
       QA AWS account.
 
@@ -111,11 +105,6 @@ Parameters:
   PortalFeatures:
     Type: String
     Description: list of rails engines to load to support exstra features
-  PortalReportVersion:
-    Type: String
-    Description:
-      version of portal report used to construct the REPORT_VIEW_URL using the
-      pattern https://portal-report.concord.org/[PortalReportVersion]/ For example 'version/v1.0.0'
   S3AccessKeyId:
     Type: String
   S3SecreateAccessKey:
@@ -464,10 +453,6 @@ Resources:
               Value: !Ref PortalFeatures
             - Name: RAILS_STDOUT_LOGGING
               Value: "true"
-            - Name: REPORT_DOMAINS
-              Value: portal-report.concord.org concord-consortium.github.io
-            - Name: REPORT_VIEW_URL
-              Value: !Sub "https://portal-report.concord.org/${PortalReportVersion}/"
             - Name: AWS_REGION
               Value: us-east-1
             - Name: S3_ACCESS_KEY_ID
@@ -498,8 +483,6 @@ Resources:
               Value: !Ref Theme
             - Name: TOP_LEVEL_CONTAINER_NAME
               Value: activity
-            - Name: RESEARCHER_REPORT_HOST
-              Value: !Sub "https://${ReportDomainName}"
             - Name: JWT_HMAC_SECRET
               Value: !Ref JWTHMACSecret
             - !If
@@ -546,13 +529,6 @@ Resources:
                         ],
                       ]
                     - !Ref "AWS::NoValue"
-                  - !Join [
-                      "-",
-                      [
-                        "report",
-                        !Select [1, !Split ["/", !Ref PortalReportVersion]],
-                      ],
-                    ]
             - Name: OG_TITLE
               Value: !Ref OpenGraphTitle
             - Name: OG_DESCRIPTION
@@ -718,230 +694,6 @@ Resources:
       DesiredCount: "1"
       Cluster: { "Fn::ImportValue": !Sub "${ClusterStackName}-ClusterName" }
 
-  # 2019-04-04
-  # Most of the time the report task is just sitting around. So it doesn't need to
-  # reserve a lot of Cpu. A much better approach would be look again at the parts of the
-  # reporting that are slow and move them into worker, then we can get rid of this report
-  # task. But in the meantime we an set the Cpu low, and just let it spike up to use as
-  # much of the available CPU as it can, when someone decides to use it.
-  # So we'll move the Cpu down from 512 to 128.
-  # Looking at the memory usage of learn the report service is maxing out around 40%
-  # So I'll decrease the memory reservation to 1400 which is the same as the app task
-  ReportTaskDefinition:
-    Type: AWS::ECS::TaskDefinition
-    Properties:
-      Family: !Sub "${AWS::StackName}-Report"
-      ContainerDefinitions:
-        - Name: Report
-          Image: !Ref PortalDockerImage
-          Cpu: "128"
-          PortMappings:
-            - ContainerPort: "3000"
-          Memory: "1400"
-          Essential: "true"
-          LogConfiguration:
-            LogDriver: awslogs
-            Options:
-              awslogs-region: us-east-1
-              awslogs-group: !Ref CloudWatchLogGroup
-              awslogs-stream-prefix: portal
-          Environment:
-            - Name: ADMIN_EMAIL
-              Value: !Ref AdminEmail
-            - Name: APPSIGNAL_PUSH_API_KEY
-              Value: !Ref AppSignalPushAPIKey
-            - Name: APPSIGNAL_APP_NAME
-              Value: !Ref AppSignalAppName
-            - Name: APPSIGNAL_APP_ENV
-              Value: !Ref Environment
-            # this is to help appsignal track revisions
-            - Name: APP_REVISION
-              Value: !Select [1, !Split [":", !Ref PortalDockerImage]]
-            - Name: AUTHORING_SITE_URL
-              Value: !Ref AuthoringSiteURL
-            - Name: DB_HOST
-              Value: !Ref DbHost
-            - Name: DB_NAME
-              Value: portal
-            - Name: DB_PASSWORD
-              Value: !Ref DbPassword
-            - Name: DB_USER
-              Value: !Ref DbUserName
-            - Name: DEVISE_SECRET_KEY
-              Value: !Ref DeviseSecretKey
-            - Name: HELP_EMAIL
-              Value: !Ref HelpEmail
-            - Name: NEW_RELIC_APP_NAME
-              Value: !Ref NewRelicAppName
-            - Name: NEW_RELIC_LICENSE_KEY
-              Value: !Ref NewRelicLicenseKey
-            - Name: NUM_UNICORN_PROCESSES
-              Value: "2"
-            - Name: PADLET_PASSWORD
-              Value: !Ref PadletPassword
-            - Name: PADLET_USER
-              Value: !Ref PadletUser
-            - Name: PORTAL_FEATURES
-              Value: !Ref PortalFeatures
-            - Name: RAILS_STDOUT_LOGGING
-              Value: "true"
-            - Name: REPORT_DOMAINS
-              Value: portal-report.concord.org concord-consortium.github.io
-            - Name: REPORT_VIEW_URL
-              Value: !Sub "https://portal-report.concord.org/${PortalReportVersion}/"
-            - Name: AWS_REGION
-              Value: us-east-1
-            - Name: S3_ACCESS_KEY_ID
-              Value: !Ref S3AccessKeyId
-            - Name: S3_BUCKET
-              Value: !Ref S3Bucket
-            - Name: S3_SECRET_ACCESS_KEY
-              Value: !Ref S3SecreateAccessKey
-            - Name: SCHOOLOGY_CONSUMER_KEY
-              Value: !Ref SchoologyConsumerKey
-            - Name: SCHOOLOGY_CONSUMER_SECRET
-              Value: !Ref SchoologyConsumerSecret
-            - Name: SITE_KEY
-              Value: !Ref SiteKey
-            - Name: SITE_NAME
-              Value: !Ref SiteName
-            - Name: SITE_URL
-              Value: !Ref SiteURL
-            - Name: SMTP_PASS
-              Value: !Ref SMTPPassword
-            - Name: SMTP_USER
-              Value: !Ref SMTPUser
-            - Name: SOLR_HOST
-              Value: !GetAtt InternalLoadBalancerStack.Outputs.ELBDNSName # this should refer to the solr
-            - Name: SOLR_PORT
-              Value: "80"
-            - Name: THEME
-              Value: !Ref Theme
-            - Name: TOP_LEVEL_CONTAINER_NAME
-              Value: activity
-            - Name: JWT_HMAC_SECRET
-              Value: !Ref JWTHMACSecret
-            - !If
-              - PortalPagesLibraryDefined
-              - Name: PORTAL_PAGES_LIBRARY_URL
-                Value: !Sub "https://portal-pages.concord.org/${PortalPagesLibraryVersion}/library"
-              - !Ref "AWS::NoValue"
-            - Name: EXTERNAL_CSS_URL
-              Value: !Ref ExternalCSSURL
-            - Name: RESEARCHER_REPORT_ONLY
-              Value: "true"
-            - Name: UNICORN_TIMEOUT
-              Value: "300"
-            - Name: GOOGLE_ANALYTICS_MEASUREMENT_ID
-              Value: !Ref GoogleAnalyticsMeasurementID
-            - Name: GOOGLE_CLIENT_KEY
-              Value: !Ref GoogleClientKey
-            - Name: GOOGLE_CLIENT_SECRET
-              Value: !Ref GoogleClientSecret
-            - Name: ROLLBAR_ACCESS_TOKEN
-              Value: !Ref RollbarAccessToken
-            - Name: ROLLBAR_CLIENT_ACCESS_TOKEN
-              Value: !Ref RollbarClientAccessToken
-            - Name: RESTART_TOGGLE
-              Value: !Ref RestartToggle
-            - Name: CC_PORTAL_VERSION
-              Value: !Join
-                - ", "
-                - - !Join [
-                      "-",
-                      [
-                        "portal",
-                        !Select [1, !Split [":", !Ref PortalDockerImage]],
-                      ],
-                    ]
-                  - !If
-                    - PortalPagesLibraryDefined
-                    - !Join [
-                        "-",
-                        [
-                          "pages",
-                          !Select [
-                            1,
-                            !Split ["/", !Ref PortalPagesLibraryVersion],
-                          ],
-                        ],
-                      ]
-                    - !Ref "AWS::NoValue"
-                  - !Join [
-                      "-",
-                      [
-                        "report",
-                        !Select [1, !Split ["/", !Ref PortalReportVersion]],
-                      ],
-                    ]
-            - Name: ELASTICSEARCH_URL
-              Value: !Sub "https://${ElasticSearchStack.Outputs.DomainEndpoint}"
-            - Name: RAILS_SECRET_KEY_BASE
-              Value: !Ref RailsSecretKeyBase
-
-  # Need ECS Service definition
-  ReportTargetGroup:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    Properties:
-      HealthCheckProtocol: HTTP
-      # even though this is set to 80 the actual port will
-      # be overriden by each of the containers that is added
-      # to the target group
-      Port: "80"
-      Protocol: HTTP
-      VpcId: { "Fn::ImportValue": !Sub "${ClusterStackName}-ClusterVpcId" }
-      TargetGroupAttributes:
-        # The report is only used by admins, and if their connections get killed off during
-        # an update that is OK
-        - Key: deregistration_delay.timeout_seconds
-          Value: "20"
-      # Use this name property to force the TargetGroup to be recreated whenever the load
-      # balancer is recreated. Otherwise CloudFormation tries to add the TargetGroup
-      # to the new load balancer before removing it from the old one. And that results
-      # in an error.
-      Name: !Sub "ReportTarget-${LoadBalancerStack.Outputs.LoadBalancerEndingId}"
-
-  ReportDNS:
-    Type: AWS::Route53::RecordSet
-    Properties:
-      AliasTarget:
-        DNSName: !GetAtt LoadBalancerStack.Outputs.ELBDNSName
-        HostedZoneId: !GetAtt LoadBalancerStack.Outputs.CanonicalHostedZoneID
-      # HostedZoneName: concord.org.
-      HostedZoneId: !Ref "HostedZoneId"
-      Name: !Ref ReportDomainName
-      Type: A
-
-  ReportService:
-    Type: AWS::ECS::Service
-    DependsOn:
-      - AppListener443
-    # The docs recommend adding a dependency on the load balancer listener hear
-    # but I don't see why that is necessary so were are trying without it...
-    Properties:
-      Role: ecsServiceRole
-      TaskDefinition: !Ref ReportTaskDefinition
-      DesiredCount: "1"
-      LoadBalancers:
-        - TargetGroupArn: !Ref ReportTargetGroup
-          ContainerPort: "3000"
-          ContainerName: Report
-      Cluster: { "Fn::ImportValue": !Sub "${ClusterStackName}-ClusterName" }
-
-  # Send all requests to the report domain name to the report target group
-  ReportListenerRule:
-    Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    Properties:
-      ListenerArn: !Ref AppListener443
-      Actions:
-        - TargetGroupArn: !Ref ReportTargetGroup
-          Type: forward
-      Conditions:
-        - Field: host-header
-          Values:
-            - !Ref ReportDomainName
-      Priority: "1"
-
   # Notes from Nov 14, 2017
   # Reviewing data over 4 weeks of usage
   # several CPU spikes up to 768 CPU and one spike up to 1024.
@@ -1026,10 +778,6 @@ Resources:
               Value: !Ref PortalFeatures
             - Name: RAILS_STDOUT_LOGGING
               Value: "true"
-            - Name: REPORT_DOMAINS
-              Value: portal-report.concord.org concord-consortium.github.io
-            - Name: REPORT_VIEW_URL
-              Value: !Sub "https://portal-report.concord.org/${PortalReportVersion}/"
             - Name: AWS_REGION
               Value: us-east-1
             - Name: S3_ACCESS_KEY_ID
@@ -1276,4 +1024,3 @@ Metadata:
         Parameters:
           - PortalDockerImage
           - PortalPagesLibraryVersion
-          - PortalReportVersion

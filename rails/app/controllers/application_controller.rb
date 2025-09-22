@@ -80,29 +80,21 @@ class ApplicationController < ActionController::Base
       render :html => "<div class='flash_error'>#{error_message}</div>", :status => 403
     else
       if current_user
-        if BoolEnv['RESEARCHER_REPORT_ONLY']
-          # if we are here then current user is not authorized to access the reports.
-          # The normal code path would send them in a redirect loop
-          # instead sign them out and show them a page telling them this ia report only portal
-          sign_out :user
-          redirect_to learner_report_only_path
-        else
-          # only show the error alert if we are not redirecting after signing in
-          # An error on redirecting after signing in should only happen in two cases:
-          # 1. the user was logged out and then clicked on an restricted link, then the user
-          #    didn't actually log in, but just left the page there. Then a different user
-          #    logged in. This new user didn't have access to the page of the original user
-          #    so this exception was thrown during the automatic redirect to the original
-          # 2. A anonymous user tried to access something they shouldn't access. They should
-          #    have been shown a message and directed to the login page.  Now if the user
-          #    logs in the portal will redirect to this initial page. Since the user already
-          #    saw the message there is no need to show it again.
-          # So instead of showing the error message again, we just send the user to the
-          # default login page for that user.
-          flash['alert'] = error_message if not params[:redirecting_after_sign_in]
+        # only show the error alert if we are not redirecting after signing in
+        # An error on redirecting after signing in should only happen in two cases:
+        # 1. the user was logged out and then clicked on an restricted link, then the user
+        #    didn't actually log in, but just left the page there. Then a different user
+        #    logged in. This new user didn't have access to the page of the original user
+        #    so this exception was thrown during the automatic redirect to the original
+        # 2. A anonymous user tried to access something they shouldn't access. They should
+        #    have been shown a message and directed to the login page.  Now if the user
+        #    logs in the portal will redirect to this initial page. Since the user already
+        #    saw the message there is no need to show it again.
+        # So instead of showing the error message again, we just send the user to the
+        # default login page for that user.
+        flash['alert'] = error_message if not params[:redirecting_after_sign_in]
 
-          redirect_to view_context.current_user_home_path
-        end
+        redirect_to view_context.current_user_home_path
       else
         flash['alert'] = error_message
         # send the anonymous user to the login page, and then try to send the user back

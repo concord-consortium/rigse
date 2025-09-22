@@ -10,6 +10,6 @@ class Report::UserController < ApplicationController
 
   def index
     authorize Report::User
-    render layout: ENV['RESEARCHER_REPORT_ONLY'] ? "minimal" : "application"
+    render layout: "application"
   end
 end

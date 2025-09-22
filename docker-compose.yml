@@ -30,7 +30,6 @@ services:
       GOOGLE_CLIENT_SECRET:
 
       SITE_URL: "${PORTAL_PROTOCOL:-http}://${PORTAL_HOST:-app.portal.docker}"
-      RESEARCHER_REPORT_ONLY:
 
       #
       # ASN API key

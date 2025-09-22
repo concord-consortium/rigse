@@ -18,13 +18,6 @@ ENV['ELASTICSEARCH_URL'] ||= 'http://search-has-portal-prod-xruhhhyiv2fugtujtzbg
 # URL for the report server reports used in the sidebar
 # ENV['REPORT_SERVER_REPORTS_URL'] ||= 'https://report-server.concord.org/reports'
 
-# TBD: remove this when the separate report server is no longer needed
-# Researcher report link can point to a different portal instance to avoid overloading the main server.
-# ENV['RESEARCHER_REPORT_HOST'] ||= 'https://research-report-portal.concord.org'
-# Portal that is dedicated to the research report should enable option below to disable all the links that could
-# lead researchers to other parts of the portal.
-# ENV['RESEARCHER_REPORT_ONLY'] ||= 'true'
-
 # CORS_ORIGINS:
 # Sets the allowed CORS origins to a specific whitelist. Requires ENV['PORTAL_FEATURES'] ||= 'allow_cors'
 # ENV['CORS_ORIGINS']    ||= "concord.org"
