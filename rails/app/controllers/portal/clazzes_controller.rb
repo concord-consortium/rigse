@@ -10,13 +10,6 @@ class Portal::ClazzesController < ApplicationController
   before_action :teacher_admin, :only => [:class_list, :edit]
   before_action :student_teacher_admin, :only => [:show]
 
-  #
-  # Check that the current teacher owns the class they are
-  # accessing.
-  #
-  include RestrictedTeacherController
-  before_action :check_teacher_owns_clazz, :only => [ :roster ]
-
   def current_clazz
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHOOSE_AUTHORIZE
@@ -288,6 +281,8 @@ class Portal::ClazzesController < ApplicationController
   # GET /portal_clazzes/1/roster
   def roster
     @portal_clazz = Portal::Clazz.find(params[:id])
+
+    authorize @portal_clazz, :roster?
 
     # Save the left pane sub-menu item
     Portal::Teacher.save_left_pane_submenu_item(current_visitor, Portal::Teacher.LEFT_PANE_ITEM['STUDENT_ROSTER'])

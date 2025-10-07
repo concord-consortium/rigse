@@ -24,6 +24,14 @@ describe Portal::ClazzesController do
     sign_in instance_variable_get("@#{user_sym}")
   end
 
+  def create_project_user(name, project, role)
+    # All non student users created via the UI are teachers, so we follow that pattern here.
+    teacher = FactoryBot.create(:portal_teacher, :user => FactoryBot.create(:confirmed_user, :login => name))
+    user = teacher.user
+    user.add_role_for_project(role, project)
+    user
+  end
+
   before(:each) do
     @mock_school = FactoryBot.create(:portal_school)
 
@@ -41,6 +49,19 @@ describe Portal::ClazzesController do
     @unauthorized_teacher_user = @unauthorized_teacher.user
     @authorized_student_user = @authorized_student.user
 
+    @project = FactoryBot.create(:project) 
+    @project_admin_user = create_project_user("project_admin", @project, 'admin')
+    @project_researcher_user = create_project_user("project_researcher", @project, 'researcher')
+
+    @another_project = FactoryBot.create(:project)
+    @another_project_admin_user = create_project_user("another_project_admin", @another_project, 'admin')
+    @another_project_researcher_user = create_project_user("another_project_researcher", @another_project, 'researcher')
+
+    @cohort = FactoryBot.create(:admin_cohort, project: @project)
+    @authorized_teacher.cohorts << @cohort
+    
+    @another_cohort = FactoryBot.create(:admin_cohort, project: @another_project)
+    @unauthorized_teacher.cohorts << @another_cohort
 
     @mock_clazz_name = "Random Test Class"
     @mock_course = FactoryBot.create(:portal_course, :name => @mock_clazz_name, :school => @mock_school)
@@ -460,6 +481,35 @@ describe Portal::ClazzesController do
       expect(@authorized_teacher.left_pane_submenu_item).to eq(Portal::Teacher.LEFT_PANE_ITEM['MATERIALS'])
     end
 
+    it "redirects for an unauthorized teacher" do
+      sign_in @unauthorized_teacher_user
+
+      get :materials, params: { :id => @mock_clazz.id }
+
+      expect(response).not_to be_successful
+      expect(response).to redirect_to("/recent_activity")
+    end
+
+    it "allows a project admin only with researcher param" do
+      sign_in @project_admin_user
+
+      get :materials, params: { :id => @mock_clazz.id }
+      expect(response).not_to be_successful
+
+      get :materials, params: { :id => @mock_clazz.id, :researcher => true }
+      expect(response).to be_successful
+    end
+
+    it "allows a project researcher only with researcher param" do
+      sign_in @project_researcher_user
+
+      get :materials, params: { :id => @mock_clazz.id }
+      expect(response).not_to be_successful
+
+      get :materials, params: { :id => @mock_clazz.id, :researcher => true }
+      expect(response).to be_successful
+    end
+
   end
 
   # GET roster
@@ -475,6 +525,49 @@ describe Portal::ClazzesController do
       expect(@authorized_teacher.left_pane_submenu_item).to eq(Portal::Teacher.LEFT_PANE_ITEM['STUDENT_ROSTER'])
     end
 
+    it "redirects for an unauthorized teacher" do
+      sign_in @unauthorized_teacher_user
+
+      get :roster, params: { :id => @mock_clazz.id }
+      
+      expect(response).not_to be_successful
+      expect(response).to redirect_to("/recent_activity")
+    end
+
+    it "allows a project admin for a project of the teacher in the class" do
+      sign_in @project_admin_user
+
+      get :roster, params: { :id => @mock_clazz.id }
+      
+      expect(response).to be_successful
+    end
+
+    it "does not allow a project admin for a project not related to the class" do
+      sign_in @another_project_admin_user
+
+      get :roster, params: { :id => @mock_clazz.id }
+      
+      expect(response).not_to be_successful
+      expect(response).to redirect_to("/recent_activity")
+    end
+
+    it "does not allow a project researcher for a project related to the class" do
+      sign_in @project_researcher_user
+
+      get :roster, params: { :id => @mock_clazz.id }
+      
+      expect(response).not_to be_successful
+      expect(response).to redirect_to("/recent_activity")
+    end
+
+    it "does not allow a project researcher for a project not related to the class" do
+      sign_in @another_project_researcher_user
+
+      get :roster, params: { :id => @mock_clazz.id }
+      
+      expect(response).not_to be_successful
+      expect(response).to redirect_to("/recent_activity")
+    end
   end
 
 
