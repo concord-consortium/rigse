@@ -37,10 +37,10 @@ describe API::V1::ResearchClassesController do
     # This will test explicit filtering of filter options (cohorts, teachers, runnables) by project_id.
     @clazz1.teachers << @teacher2
 
-    sign_in researcher
+    sign_in logged_in_user
   end
 
-  let(:researcher) do
+  let(:logged_in_user) do
     user = FactoryBot.create(:confirmed_user)
     user.add_role_for_project('researcher', @project1)
     user.add_role_for_project('researcher', @project2)
@@ -89,10 +89,6 @@ describe API::V1::ResearchClassesController do
   end
 
   describe "project researcher access" do
-    before (:each) do
-      sign_in researcher
-    end
-
     describe "GET index" do
       it "allows index" do
         get :index
@@ -118,7 +114,17 @@ describe API::V1::ResearchClassesController do
         json = JSON.parse(response.body)
         expect(response.status).to eql(200)
         clazz = @clazz1
-        expect(json["hits"]).to eql({"classes"=>[{"class_url"=>materials_portal_clazz_url(clazz.id, researcher: true, host: 'test.host'), "cohort_names"=>@cohort1.name, "id"=>clazz.id, "name"=>clazz.name, "school_name"=>@teacher1.school.name, "teacher_names"=>"#{@teacher1.name}, #{@teacher2.name}"}]})
+        expect(json["hits"]).to eql({
+          "classes"=>[{ 
+            "materials_url"=>materials_portal_clazz_url(clazz.id, researcher: true, host: 'test.host'),
+            "roster_url"=>nil,
+            "cohort_names"=>@cohort1.name, 
+            "id"=>clazz.id, 
+            "name"=>clazz.name, 
+            "school_name"=>@teacher1.school.name, 
+            "teacher_names"=>"#{@teacher1.name}, #{@teacher2.name}"
+          }]
+        })
       end
       it "gets totals" do
         params = {
@@ -194,4 +200,93 @@ describe API::V1::ResearchClassesController do
       end
     end
   end
+
+  describe "different users with different project access" do
+    describe "a project admin of project 1 and not related to project2" do
+      let(:logged_in_user) do
+        user = FactoryBot.create(:confirmed_user)
+        user.add_role_for_project('admin', @project1)
+        user
+      end
+      it "allows index" do
+        params = {
+          project_id: @project1.id
+        }
+        get :index, params: params
+        expect(response.status).to eql(200)
+      end
+      it "gets class info" do
+        params = {
+          project_id: @project1.id
+        }
+        get :index, params: params
+        json = JSON.parse(response.body)
+        expect(response.status).to eql(200)
+        clazz = @clazz1
+        expect(json["hits"]).to eql({
+          "classes"=>[{ 
+            "materials_url"=>materials_portal_clazz_url(clazz.id, researcher: true, host: 'test.host'),
+            "roster_url"=>roster_portal_clazz_url(clazz.id, host: 'test.host'),
+            "cohort_names"=>@cohort1.name, 
+            "id"=>clazz.id, 
+            "name"=>clazz.name, 
+            "school_name"=>@teacher1.school.name, 
+            "teacher_names"=>"#{@teacher1.name}, #{@teacher2.name}"
+          }]
+        })
+      end
+    end
+    describe "a project admin of project 1 and a researcher of project2" do
+      let(:logged_in_user) do
+        user = FactoryBot.create(:confirmed_user)
+        user.add_role_for_project('admin', @project1)
+        user.add_role_for_project('researcher', @project2)
+        user
+      end
+      it "allows index" do
+        params = {
+          project_id: @project2.id
+        }
+        get :index, params: params
+        expect(response.status).to eql(200)
+      end
+      it "gets class info" do
+        # We query project2 here so we can get both class 1 and class 2
+        params = {
+          project_id: @project2.id
+        }
+        get :index, params: params
+        json = JSON.parse(response.body)
+        expect(response.status).to eql(200)
+
+        # Note the order of the classes is reversed
+        expect(json["hits"]).to eql({
+          "classes"=>[
+            { 
+              "materials_url"=>materials_portal_clazz_url(@clazz2.id, researcher: true, host: 'test.host'),
+              # No roster for class2 since the logged in user is only researcher for project2
+              # and class2 only has a teacher from project2
+              "roster_url"=>nil,
+              "cohort_names"=>@cohort1.name, 
+              "id"=>@clazz2.id, 
+              "name"=>@clazz2.name, 
+              # Note the school and teacher names are actually the same for teacher 1 and teacher 2
+              "school_name"=>@teacher2.school.name, 
+              "teacher_names"=>"#{@teacher2.name}"
+            },
+            { 
+              "materials_url"=>materials_portal_clazz_url(@clazz1.id, researcher: true, host: 'test.host'),              
+              "roster_url"=>roster_portal_clazz_url(@clazz1.id, host: 'test.host'),
+              "cohort_names"=>@cohort1.name, 
+              "id"=>@clazz1.id, 
+              "name"=>@clazz1.name, 
+              "school_name"=>@teacher1.school.name, 
+              "teacher_names"=>"#{@teacher1.name}, #{@teacher2.name}"
+            }
+          ]
+        })
+      end
+    end
+  end
+
 end

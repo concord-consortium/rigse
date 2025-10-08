@@ -22,7 +22,7 @@ class Portal::ClazzPolicy < ApplicationPolicy
 
   # Used by API::V1::ClassesController:
   def api_show?
-    class_teacher_or_admin? || class_student? || class_researcher?
+    class_teacher_or_admin? || class_student? || class_project_admin? ||class_researcher?
   end
 
   def api_create?

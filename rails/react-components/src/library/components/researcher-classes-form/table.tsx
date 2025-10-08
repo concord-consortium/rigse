@@ -100,7 +100,12 @@ export default class ResearcherClassesTable extends React.Component<any, any> {
                   <td>{ c.teacher_names }</td>
                   <td>{ c.name }</td>
                   { showSchoolName && <td>{ c.school_name }</td> }
-                  <td className={css.linkCell}><a href={c.class_url} target="_blank" rel="noreferrer">View Class</a></td>
+                  <td className={css.linkCell}>
+                    <a href={c.materials_url} target="_blank" rel="noreferrer">View Assignments</a>
+                    { c.roster_url && 
+                      <><br /><a href={c.roster_url} target="_blank" rel="noreferrer">View Roster</a></>
+                    }
+                  </td>
                 </tr>
               ))
             }

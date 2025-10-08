@@ -82,6 +82,12 @@ end
 Mysql2::Client.prepend(MutexLockedQuerying)
 
 RSpec.configure do |config|
+  # The following line is necessary so the Devise sign_in method works in controller specs
+  # From: https://github.com/heartcombo/devise/issues/5794
+  config.before(:each, type: :controller) do
+    Rails.application.reload_routes_unless_loaded
+  end
+
   config.mock_with :rspec
 
   # Do not include system tests with a general spec test run.

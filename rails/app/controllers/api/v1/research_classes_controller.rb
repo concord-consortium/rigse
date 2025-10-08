@@ -168,7 +168,12 @@ class API::V1::ResearchClassesController < API::APIController
         teacher_names: c.teachers.map { |t| "#{t.user.first_name} #{t.user.last_name}" }.join(", "),
         cohort_names: c.teachers.map { |t| t.cohorts.map(&:name) }.flatten.uniq.join(", "),
         school_name: c.teacher_school ? c.teacher_school.name : "",
-        class_url: materials_portal_clazz_url(c.id, researcher: true)
+        materials_url: materials_portal_clazz_url(c.id, researcher: true),
+        # Note: This call to policy(..) will be inefficient if there are many classes.
+        # It seems the number of classes is not limited by pagination. Also there are other places
+        # where this will be inefficient, so if we need to show a lot of classes hopefully we can
+        # make time to paginate it.
+        roster_url: policy(c).roster? ? roster_portal_clazz_url(c.id) : nil
       }
     end
   end
