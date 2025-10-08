@@ -44,7 +44,7 @@ module NavigationHelper
   end
 
   def show_research_projects_links
-    current_visitor.is_project_researcher?
+    current_visitor.is_project_researcher? || current_visitor.is_project_admin?
   end
 
   def show_switch_user_link
@@ -255,8 +255,9 @@ module NavigationHelper
     }
   end
 
-  def researcher_project_links
-    if current_visitor.researcher_for_projects.empty?
+  def research_project_links
+    if current_visitor.admin_for_projects.empty? &&
+      current_visitor.researcher_for_projects.empty?
       return []
     end
 
@@ -267,7 +268,8 @@ module NavigationHelper
       sort: 4
     }]
 
-    projects = current_visitor.researcher_for_projects.sort_by(&:name)
+    projects = current_visitor.researcher_for_projects + current_visitor.admin_for_projects
+    projects = projects.uniq.sort_by(&:name)
 
     projects.each do |project|
       links << {
@@ -336,7 +338,7 @@ module NavigationHelper
     end
 
     if show_research_projects_links
-      researcher_project_links.each {|clazz_link| service.add_item clazz_link}
+      research_project_links.each {|clazz_link| service.add_item clazz_link}
     end
 
     clazz_links.each {|clazz_link| service.add_item clazz_link}
