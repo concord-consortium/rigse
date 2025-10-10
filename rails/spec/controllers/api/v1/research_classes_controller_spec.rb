@@ -115,13 +115,13 @@ describe API::V1::ResearchClassesController do
         expect(response.status).to eql(200)
         clazz = @clazz1
         expect(json["hits"]).to eql({
-          "classes"=>[{ 
+          "classes"=>[{
             "materials_url"=>materials_portal_clazz_url(clazz.id, researcher: true, host: 'test.host'),
             "roster_url"=>nil,
-            "cohort_names"=>@cohort1.name, 
-            "id"=>clazz.id, 
-            "name"=>clazz.name, 
-            "school_name"=>@teacher1.school.name, 
+            "cohort_names"=>@cohort1.name,
+            "id"=>clazz.id,
+            "name"=>clazz.name,
+            "school_name"=>@teacher1.school.name,
             "teacher_names"=>"#{@teacher1.name}, #{@teacher2.name}"
           }]
         })
@@ -224,13 +224,13 @@ describe API::V1::ResearchClassesController do
         expect(response.status).to eql(200)
         clazz = @clazz1
         expect(json["hits"]).to eql({
-          "classes"=>[{ 
+          "classes"=>[{
             "materials_url"=>materials_portal_clazz_url(clazz.id, researcher: true, host: 'test.host'),
             "roster_url"=>roster_portal_clazz_url(clazz.id, host: 'test.host'),
-            "cohort_names"=>@cohort1.name, 
-            "id"=>clazz.id, 
-            "name"=>clazz.name, 
-            "school_name"=>@teacher1.school.name, 
+            "cohort_names"=>@cohort1.name,
+            "id"=>clazz.id,
+            "name"=>clazz.name,
+            "school_name"=>@teacher1.school.name,
             "teacher_names"=>"#{@teacher1.name}, #{@teacher2.name}"
           }]
         })
@@ -260,31 +260,29 @@ describe API::V1::ResearchClassesController do
         expect(response.status).to eql(200)
 
         # Note the order of the classes is reversed
-        expect(json["hits"]).to eql({
-          "classes"=>[
-            { 
-              "materials_url"=>materials_portal_clazz_url(@clazz2.id, researcher: true, host: 'test.host'),
-              # No roster for class2 since the logged in user is only researcher for project2
-              # and class2 only has a teacher from project2
-              "roster_url"=>nil,
-              "cohort_names"=>@cohort1.name, 
-              "id"=>@clazz2.id, 
-              "name"=>@clazz2.name, 
-              # Note the school and teacher names are actually the same for teacher 1 and teacher 2
-              "school_name"=>@teacher2.school.name, 
-              "teacher_names"=>"#{@teacher2.name}"
-            },
-            { 
-              "materials_url"=>materials_portal_clazz_url(@clazz1.id, researcher: true, host: 'test.host'),              
-              "roster_url"=>roster_portal_clazz_url(@clazz1.id, host: 'test.host'),
-              "cohort_names"=>@cohort1.name, 
-              "id"=>@clazz1.id, 
-              "name"=>@clazz1.name, 
-              "school_name"=>@teacher1.school.name, 
-              "teacher_names"=>"#{@teacher1.name}, #{@teacher2.name}"
-            }
-          ]
-        })
+        expect(json["hits"]["classes"]).to match_array([
+          {
+            "materials_url"=>materials_portal_clazz_url(@clazz2.id, researcher: true, host: 'test.host'),
+            # No roster for class2 since the logged in user is only researcher for project2
+            # and class2 only has a teacher from project2
+            "roster_url"=>nil,
+            "cohort_names"=>@cohort1.name,
+            "id"=>@clazz2.id,
+            "name"=>@clazz2.name,
+            # Note the school and teacher names are actually the same for teacher 1 and teacher 2
+            "school_name"=>@teacher2.school.name,
+            "teacher_names"=>"#{@teacher2.name}"
+          },
+          {
+            "materials_url"=>materials_portal_clazz_url(@clazz1.id, researcher: true, host: 'test.host'),
+            "roster_url"=>roster_portal_clazz_url(@clazz1.id, host: 'test.host'),
+            "cohort_names"=>@cohort1.name,
+            "id"=>@clazz1.id,
+            "name"=>@clazz1.name,
+            "school_name"=>@teacher1.school.name,
+            "teacher_names"=>"#{@teacher1.name}, #{@teacher2.name}"
+          }
+        ])
       end
     end
   end
