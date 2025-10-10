@@ -185,6 +185,8 @@ class API::V1::StudentsController < API::APIController
     return error(result[:error]) if result[:error]
     portal_clazz = result[:portal_clazz]
 
+    authorize portal_clazz, :update_roster?
+
     student_id = params[:student_id]
     if !student_id
       return error("Missing student_id parameter")
@@ -195,9 +197,9 @@ class API::V1::StudentsController < API::APIController
       return error("Invalid student_id: #{student_id}")
     end
 
-    if !portal_clazz.is_teacher?(current_user)
-      return error("You must be a teacher of the class to add students")
-    end
+    # The current user needs to be authorized to view the student if they
+    # want to add this student to their class
+    authorize student, :show?
 
     student.add_clazz(portal_clazz)
 
@@ -216,9 +218,7 @@ class API::V1::StudentsController < API::APIController
     end
 
     portal_clazz = student_clazz.clazz
-    if !portal_clazz.is_teacher?(current_user)
-      return error("You must be a teacher of the class to remove students")
-    end
+    authorize portal_clazz, :update_roster?
 
     student_clazz.destroy
 

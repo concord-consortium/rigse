@@ -9,6 +9,7 @@ RSpec.describe API::V1::StudentsController, type: :controller do
   let(:teacher_user) { FactoryBot.create(:confirmed_user, :login => "teacher_user") }
   let(:teacher)      { FactoryBot.create(:portal_teacher, :user => teacher_user, :schools => [school]) }
   let(:clazz)        { FactoryBot.create(:portal_clazz, :teachers => [teacher]) }
+  let(:clazz_with_student) { FactoryBot.create(:portal_clazz, :teachers => [teacher], :students => [student]) }
   let(:student_user) { FactoryBot.create(:confirmed_user, :login => "student_user") }
   let(:grade_level)  { FactoryBot.create(:grade_level, :name => "9") }
 
@@ -200,35 +201,92 @@ RSpec.describe API::V1::StudentsController, type: :controller do
     end
   end
 
-  # describe '#add_to_class' do
-  #   it 'should fail without a student_id parameter' do
-  #     post :add_to_class, params: { clazz_id: clazz.id }
-  #     expect(response).to have_http_status(:bad_request)
-  #     expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Missing student_id parameter"}')
-  #   end
+  # This was disabled for security before, because any teacher could add any student
+  # to their class as long as they knew or guessed the student id.
+  # Now only students that the current user can view are allowed to be added to classes
+  # the current user can manage.
+  describe '#add_to_class' do
+    it 'should fail without a student_id parameter' do
+      sign_in teacher_user
+      post :add_to_class, params: { clazz_id: clazz.id }
+      expect(response).to have_http_status(:bad_request)
+      expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Missing student_id parameter"}')
+    end
 
-  #   it 'should fail with and invalid student_id parameter' do
-  #     post :add_to_class, params: { clazz_id: clazz.id, student_id: 0 }
-  #     expect(response).to have_http_status(:bad_request)
-  #     expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Invalid student_id: 0"}')
-  #   end
+    it 'should fail with and invalid student_id parameter' do
+      sign_in teacher_user
+      post :add_to_class, params: { clazz_id: clazz.id, student_id: 0 }
+      expect(response).to have_http_status(:bad_request)
+      expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Invalid student_id: 0"}')
+    end
 
-  #   it 'should fail when the teacher is not in the class' do
-  #     sign_in teacher_user
-  #     post :add_to_class, params: { clazz_id: clazz2.id, student_id: student.id }
-  #     expect(response).to have_http_status(:bad_request)
-  #     expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"You must be a teacher of the class to add students"}')
-  #   end
+    describe 'it should fail if the current user' do
+      it 'is not a teacher of the class' do
+        sign_in teacher_user
+        post :add_to_class, params: { clazz_id: clazz2.id, student_id: student.id }
+        expect(response).to have_http_status(:forbidden)
+        expect(response.body).to eq('{"success":false,"message":"Not authorized"}')
+      end
 
-  #   it 'should succeed' do
-  #     sign_in teacher_user
-  #     expect(clazz.students.include? student).to eq false
-  #     post :add_to_class, params: { clazz_id: clazz.id, student_id: student.id }
-  #     expect(response).to have_http_status(:ok)
-  #     expect(response.body).to eq('{"success":true}')
-  #     expect(clazz.students.include? student).to eq true
-  #   end
-  # end
+      it 'is a teacher that does not have this student in any classes' do
+        new_student = FactoryBot.create(:full_portal_student) # create a student that is not accessible by the teacher
+        sign_in teacher_user
+        post :add_to_class, params: { clazz_id: clazz.id, student_id: new_student.id }
+        expect(response).to have_http_status(:forbidden)
+        expect(response.body).to eq('{"success":false,"message":"Not authorized"}')
+      end
+
+      it 'is a project admin that is not associated with the class or with the student' do
+        project_admin = FactoryBot.create(:confirmed_user, :login => "project_admin")
+        project = FactoryBot.create(:project)
+        project_admin.add_role_for_project('admin', project)
+        sign_in project_admin
+        post :add_to_class, params: { clazz_id: clazz.id, student_id: student.id }
+        expect(response).to have_http_status(:forbidden)
+        expect(response.body).to eq('{"success":false,"message":"Not authorized"}')
+      end
+    end
+
+    describe 'should succeed if the current user' do
+      it 'is a teacher of another class of the student' do
+        sign_in teacher_user
+        expect(clazz_with_student.students.include? student).to eq true
+        expect(clazz.students.include? student).to eq false
+        post :add_to_class, params: { clazz_id: clazz.id, student_id: student.id }
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to eq('{"success":true}')
+        expect(clazz.students.include? student).to eq true
+      end
+
+      it 'is an admin' do
+        admin_user = FactoryBot.generate(:admin_user)
+        sign_in admin_user
+        expect(clazz.students.include? student).to eq false
+        post :add_to_class, params: { clazz_id: clazz.id, student_id: student.id }
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to eq('{"success":true}')
+        expect(clazz.students.include? student).to eq true
+      end
+
+      it 'is a project admin associated with the class and with the student' do
+        project_admin = FactoryBot.create(:confirmed_user, :login => "project_admin")
+        project = FactoryBot.create(:project)
+        project_admin.add_role_for_project('admin', project)
+        cohort = FactoryBot.create(:admin_cohort, :project => project)
+        teacher.cohorts << cohort
+        # because the student is in another class of the teacher that associates
+        # the student with the project_admin
+        expect(clazz_with_student.students.include? student).to eq true
+
+        sign_in project_admin
+        expect(clazz.students.include? student).to eq false
+        post :add_to_class, params: { clazz_id: clazz.id, student_id: student.id }
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to eq('{"success":true}')
+        expect(clazz.students.include? student).to eq true
+      end
+    end
+  end
 
   describe '#remove_from_class' do
     it 'should fail without a student_clazz_id parameter' do
@@ -243,20 +301,59 @@ RSpec.describe API::V1::StudentsController, type: :controller do
       expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Invalid student_clazz_id: 0"}')
     end
 
-    it 'should fail when the teacher is not in the class' do
-      sign_in teacher_user
-      post :remove_from_class, params: { student_clazz_id: student_clazz2.id }
-      expect(response).to have_http_status(:bad_request)
-      expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"You must be a teacher of the class to remove students"}')
+    describe 'it should fail if the current user' do
+      it 'is not a teacher of the class' do
+        sign_in teacher_user
+        post :remove_from_class, params: { student_clazz_id: student_clazz2.id }
+        expect(response).to have_http_status(:forbidden)
+        expect(response.body).to eq('{"success":false,"message":"Not authorized"}')
+      end
+
+      it 'is a project admin that is not associated with the class or with the student' do
+        project_admin = FactoryBot.create(:confirmed_user, :login => "project_admin")
+        project = FactoryBot.create(:project)
+        project_admin.add_role_for_project('admin', project)
+        sign_in project_admin
+        post :remove_from_class, params: { student_clazz_id: student_clazz.id }
+        expect(response).to have_http_status(:forbidden)
+        expect(response.body).to eq('{"success":false,"message":"Not authorized"}')
+      end
     end
 
-    it 'should succeed' do
-      sign_in teacher_user
-      expect { student_clazz.reload }.not_to raise_error
-      post :remove_from_class, params: { student_clazz_id: student_clazz.id }
-      expect(response).to have_http_status(:ok)
-      expect(response.body).to eq('{"success":true}')
-      expect { student_clazz.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    describe 'should succeed if the current user' do
+      it 'is a teacher of of the class' do
+        clazz.students << student
+        sign_in teacher_user
+        local_student_clazz = clazz.student_clazzes.find_by(student_id: student.id)
+        post :remove_from_class, params: { student_clazz_id: local_student_clazz.id }
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to eq('{"success":true}')
+        expect { local_student_clazz.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect(clazz.students.include? student).to eq false
+      end
+
+      it 'is an admin' do
+        admin_user = FactoryBot.generate(:admin_user)
+        sign_in admin_user
+        post :remove_from_class, params: { student_clazz_id: student_clazz.id }
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to eq('{"success":true}')
+        expect { student_clazz.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      it 'is a project admin associated with the class and with the student' do
+        project_admin = FactoryBot.create(:confirmed_user, :login => "project_admin")
+        project = FactoryBot.create(:project)
+        project_admin.add_role_for_project('admin', project)
+        cohort = FactoryBot.create(:admin_cohort, :project => project)
+        teacher.cohorts << cohort
+
+        sign_in project_admin
+        post :remove_from_class, params: { student_clazz_id: student_clazz.id }
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to eq('{"success":true}')
+        expect { student_clazz.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
     end
   end
 

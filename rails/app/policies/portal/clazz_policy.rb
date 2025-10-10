@@ -53,6 +53,10 @@ class Portal::ClazzPolicy < ApplicationPolicy
     class_teacher_or_admin? || class_project_admin?
   end
 
+  def update_roster?
+    class_teacher_or_admin? || class_project_admin?
+  end
+
   def external_report?
     class_teacher_or_admin? || class_researcher? || class_student?
   end
@@ -61,6 +65,14 @@ class Portal::ClazzPolicy < ApplicationPolicy
 
   def class_permission_forms?
     admin? || class_teacher? || class_project_admin? || (user && record && user.is_researcher_for_clazz?(record, check_can_manage_permission_forms: true))
+  end
+
+  # This is a special page that admins can use to add students to other classes
+  # Regular teachers are not allowed to do this. That is because when the student
+  # runs assignments in the second class they won't see their work from the first
+  # class.
+  def manage_students?
+    admin? || class_project_admin?
   end
 
   private

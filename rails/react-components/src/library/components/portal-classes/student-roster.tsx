@@ -4,6 +4,8 @@ import RegisterStudentModal from "./register-student-modal";
 import StudentRosterRow from "./student-roster-row";
 import ModalDialog from "../shared/modal-dialog";
 import api from "../../helpers/api";
+import TriStateCheckbox from "../common/tri-state-checkbox";
+import { ManageStudentsForm } from "./manage-students-form";
 
 import css from "./student-roster.scss";
 import modalDialogCSS from "../shared/modal-dialog.scss";
@@ -23,7 +25,9 @@ export default class StudentRoster extends React.Component<any, any> {
 
     this.state = {
       showRegisterStudentModal: false,
-      showRegisterAnotherStudentModal: false
+      showRegisterAnotherStudentModal: false,
+      showManageStudentsModal: false,
+      studentCheckboxes: {}
     };
 
     this.handleRemoveStudent = this.handleRemoveStudent.bind(this);
@@ -33,6 +37,8 @@ export default class StudentRoster extends React.Component<any, any> {
     this.handleRegisterStudent = this.handleRegisterStudent.bind(this);
     this.handleToggleRegisterAnotherModal = this.handleToggleRegisterAnotherModal.bind(this);
     this.handleRegisterAnotherStudent = this.handleRegisterAnotherStudent.bind(this);
+    this.handleStudentCheckboxChange = this.handleStudentCheckboxChange.bind(this);
+    this.handleAllStudentCheckboxChange = this.handleAllStudentCheckboxChange.bind(this);
   }
 
   // eslint-disable-next-line camelcase
@@ -61,6 +67,27 @@ export default class StudentRoster extends React.Component<any, any> {
       window.alert(`This student is authenticated as a ${student.oauth_provider} user. You cannot change this password.`);
     } else {
       window.location.assign(`/users/${student.user_id}/reset_password`);
+    }
+  }
+
+  handleStudentCheckboxChange (student: any, checked: boolean) {
+    this.setState((prevState: any) => ({
+      studentCheckboxes: {
+        ...prevState.studentCheckboxes,
+        [student.user_id]: checked
+      }
+    }));
+  }
+
+  handleAllStudentCheckboxChange (checked: boolean) {
+    if (checked) {
+      const studentCheckboxes: Record<string, boolean> = {};
+      this.props.students.forEach((s: any) => {
+        studentCheckboxes[s.user_id] = true;
+      });
+      this.setState({ studentCheckboxes });
+    } else {
+      this.setState({ studentCheckboxes: {} });
     }
   }
 
@@ -127,17 +154,55 @@ export default class StudentRoster extends React.Component<any, any> {
     );
   }
 
+  renderManageStudentsModal () {
+    const { clazz, students } = this.props;
+    const { studentCheckboxes } = this.state;
+    const selectedStudents = students.filter((s: any) => studentCheckboxes[s.user_id]);
+
+    return (
+      <ModalDialog borderColor="orange">
+        <ManageStudentsForm
+          students={selectedStudents}
+          totalStudents={students.length}
+          className={clazz.name}
+          teacherIds={ clazz.teacherIds }
+          onFormClose={() => this.setState({ showManageStudentsModal: false })}
+        />
+      </ModalDialog>
+    );
+  }
+
   renderStudents (canEdit: any) {
-    const { students } = this.props;
+    const { students, canManageStudents } = this.props;
+    const { studentCheckboxes } = this.state;
 
     if (students.length === 0) {
       return <div>No students registered for this class yet.</div>;
     }
 
+    const allStudentsChecked = students.every((s: any) => studentCheckboxes[s.user_id]);
+    const noStudentsChecked = students.every((s: any) => !studentCheckboxes[s.user_id]);
+    const someStudentsChecked = !allStudentsChecked && !noStudentsChecked;
+
     return (
       <table className={css.table}>
         <tbody>
           <tr>
+            { canManageStudents &&
+              <th>
+               {/*
+                  Using allStudentsChecked for the checked prop means that when only some students are
+                  checked, clicking on the checkbox will toggle it to checked.
+                  handleAllStudentsCheckboxChange will then select all students.
+                  Note: In the assignments page there are similar checkboxes but their behavior is not
+                  deterministic. Sometimes clicking them will check all students and sometimes clicking them
+                  will uncheck all students.
+                */}
+                <TriStateCheckbox
+                  checked={allStudentsChecked}
+                  partiallyChecked={someStudentsChecked}
+                  onChange={this.handleAllStudentCheckboxChange} />
+              </th> }
             <th>Name</th>
             <th>Username</th>
             <th>Last Login</th>
@@ -148,6 +213,9 @@ export default class StudentRoster extends React.Component<any, any> {
             key={student.student_id}
             student={student}
             canEdit={canEdit}
+            canManageStudents={canManageStudents}
+            studentCheckboxChecked={!!studentCheckboxes[student.user_id]}
+            onStudentCheckboxChange={this.handleStudentCheckboxChange}
             onRemoveStudent={this.handleRemoveStudent}
             onChangePassword={this.handleChangePassword}
           />) }
@@ -157,15 +225,25 @@ export default class StudentRoster extends React.Component<any, any> {
   }
 
   render () {
-    const { showRegisterStudentModal, showRegisterAnotherStudentModal } = this.state;
-    const { canEdit } = this.props;
+    const {
+      showRegisterStudentModal,
+      showRegisterAnotherStudentModal,
+      showManageStudentsModal
+    } = this.state;
+    const { canEdit, canManageStudents } = this.props;
 
     return (
       <>
-        { /* {canEdit ? <StudentRosterHeader allowDefaultClass={allowDefaultClass} otherStudents={otherStudents} onAddStudent={this.handleAddStudent} onRegisterStudent={this.handleToggleRegisterStudentModal} /> : undefined} */ }
+        {/* { canEdit ? <StudentRosterHeader otherStudents={otherStudents} onAddStudent={this.handleAddStudent} onRegisterStudent={this.handleToggleRegisterStudentModal} /> : undefined } */}
+        { canManageStudents &&
+          <div className={css.newHeader}>
+            <button onClick={() => this.setState({ showManageStudentsModal: true })}>Manage Students</button>
+          </div>
+        }
         { this.renderStudents(canEdit) }
-        { showRegisterStudentModal ? <RegisterStudentModal onSubmit={this.handleRegisterStudent} onCancel={this.handleToggleRegisterStudentModal} /> : undefined }
-        { showRegisterAnotherStudentModal ? this.renderRegisterAnotherModal() : undefined }
+        { showRegisterStudentModal && <RegisterStudentModal onSubmit={this.handleRegisterStudent} onCancel={this.handleToggleRegisterStudentModal} /> }
+        { showRegisterAnotherStudentModal && this.renderRegisterAnotherModal() }
+        { showManageStudentsModal && this.renderManageStudentsModal() }
       </>
     );
   }

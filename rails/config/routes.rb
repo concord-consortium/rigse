@@ -339,7 +339,7 @@ RailsPortal::Application.routes.draw do
             post :join_class
             post :confirm_class_word
             post :register
-            # post :add_to_class
+            post :add_to_class
             post :remove_from_class
             get :get_feedback_metadata
           end

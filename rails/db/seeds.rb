@@ -3,12 +3,16 @@ def create_district_school
   site_district = Portal::District.where(name: APP_CONFIG[:site_district]).first_or_create
   site_district.description = "This is a virtual district used as a default for Schools, Teachers, Classes and Students that don't belong to any other districts."
   site_district.state = "MA"
+  site_district.country = Portal::Country.find_by(name: "United States")
+  site_district.zip = "01742"
   site_district.save!
 
   # Make a school within the district
   site_school = Portal::School.where(name: APP_CONFIG[:site_school], district_id: site_district.id).first_or_create
   site_school.description = "This is a virtual school used as a default for Teachers, Classes and Students that don't belong to any other schools."
   site_school.state = "MA"
+  site_school.country = Portal::Country.find_by(name: "United States")
+  site_school.zip = "01742"
   site_school.save!
 
 end
@@ -146,15 +150,14 @@ def create_settings
   end
 end
 
+# populate Countries table
+Portal::Country.from_csv_file
 
 create_district_school
 create_roles
 create_default_users
 create_grades
 create_settings
-
-# populate Countries table
-Portal::Country.from_csv_file
 
 #
 # Populate default Standard Documents
