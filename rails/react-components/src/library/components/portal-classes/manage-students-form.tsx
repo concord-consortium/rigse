@@ -28,6 +28,8 @@ export const ManageStudentsForm = (
   const [addStudentsError, setAddStudentsError] = React.useState<string | undefined>(undefined);
   const [addStudentsProgress, setAddStudentsProgress] = React.useState<string>("");
 
+  const numSelectedClasses = Object.keys(selectedClasses).length;
+
   useEffect(() => {
     const abortController = new AbortController();
     let isMounted = true;
@@ -82,7 +84,6 @@ export const ManageStudentsForm = (
 
   const addStudentsToSelectedClasses = async () => {
     const errorsAddingStudents: any[] = [];
-    const numSelectedClasses = Object.keys(selectedClasses).length;
     const totalChanges = students.length * numSelectedClasses;
     let changesCompleted = 0;
 
@@ -195,7 +196,7 @@ export const ManageStudentsForm = (
         <button className={css.cancelButton} onClick={onFormClose}>
           Cancel
         </button>
-        <button onClick={addStudentsToSelectedClasses}>
+        <button onClick={addStudentsToSelectedClasses} disabled={numSelectedClasses === 0 || !!addStudentsProgress}>
           Add Students
         </button>
       </div>

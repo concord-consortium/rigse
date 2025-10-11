@@ -228,16 +228,27 @@ export default class StudentRoster extends React.Component<any, any> {
     const {
       showRegisterStudentModal,
       showRegisterAnotherStudentModal,
-      showManageStudentsModal
+      showManageStudentsModal,
+      studentCheckboxes
     } = this.state;
-    const { canEdit, canManageStudents } = this.props;
+    const {
+      canEdit,
+      canManageStudents,
+      students
+     } = this.props;
 
+    const someStudentsSelected = students.some((s: any) => studentCheckboxes[s.user_id]);
     return (
       <>
         {/* { canEdit ? <StudentRosterHeader otherStudents={otherStudents} onAddStudent={this.handleAddStudent} onRegisterStudent={this.handleToggleRegisterStudentModal} /> : undefined } */}
         { canManageStudents &&
           <div className={css.newHeader}>
-            <button onClick={() => this.setState({ showManageStudentsModal: true })}>Manage Students</button>
+            <button
+              onClick={() => this.setState({ showManageStudentsModal: true })}
+              disabled={!someStudentsSelected}
+            >
+              Manage Students
+            </button>
           </div>
         }
         { this.renderStudents(canEdit) }
