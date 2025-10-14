@@ -34,6 +34,11 @@
   }
 }
 
+.newHeader {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .table {
   border-collapse: collapse;
   margin: 20px 0;

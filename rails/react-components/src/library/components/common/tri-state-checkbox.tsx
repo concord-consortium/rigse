@@ -25,7 +25,7 @@ const TriStateCheckbox: React.FC<TriStateCheckboxProps> = ({
 
   const indeterminate = useMemo(() => {
     return partiallyChecked !== undefined && partiallyChecked;
-  }, [checked, partiallyChecked]);
+  }, [partiallyChecked]);
 
   const title = useMemo(() => {
     return indeterminate && partiallyCheckedMessage ? partiallyCheckedMessage : undefined;

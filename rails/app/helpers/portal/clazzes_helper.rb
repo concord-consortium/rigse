@@ -5,7 +5,7 @@ module Portal::ClazzesHelper
 
   def student_roster_props(portal_clazz=@portal_clazz)
 
-    can_edit = portal_clazz.changeable?(current_visitor)
+    can_edit = policy(portal_clazz).update_roster?
 
     students = []
     roster = StudentRoster.new(portal_clazz)
@@ -27,6 +27,9 @@ module Portal::ClazzesHelper
     end
 
     # adapted from old student_add_dropdown helper
+    # note this isn't currently provided to the react component
+    # For the new feature, we don't need this list because we are just going to be allowing the teacher to add
+    # students from the current class to other classes
     other_students = []
     if can_edit
       other_clazzes = portal_clazz.school ? (portal_clazz.school.clazzes.includes(:students => :user) - [portal_clazz]) : []
@@ -40,10 +43,12 @@ module Portal::ClazzesHelper
 
     return {
       canEdit: can_edit,
+      canManageStudents: policy(portal_clazz).manage_students?,
       allowDefaultClass: current_settings.allow_default_class,
       clazz: {
         id: portal_clazz.id,
-        name: portal_clazz.name
+        name: portal_clazz.name,
+        teacherIds: portal_clazz.teachers.pluck(:id)
       },
       students: students
     }

@@ -1,0 +1,72 @@
+@import "../../../shared/styles/variables/variables";
+
+// This is mostly a copy from create-edit-permission-form.scss
+.manageStudentsForm {
+  width: 600px;
+
+  .formTop {
+    background-color: $col-link;
+    color: white;
+    font-weight: bold;
+    padding: 10px;
+    margin-bottom:10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .formRow {
+    display: flex;
+    align-items: center;
+    padding: 7px 20px;
+    font-weight: 500;
+
+    label {
+      // Override global label style
+      text-transform: initial;
+    }
+  }
+
+  .contextInfo {
+    font-size: 0.9em;
+    font-weight: 300;
+  }
+
+  .note {
+    font-size: 0.9em;
+    font-weight: 300;
+  }
+
+  .name {
+    width: 273px;
+  }
+
+  .url {
+    width: 450px;
+  }
+
+  .formButtonArea {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0px;
+    padding: 10px 20px;
+    margin-bottom:10px;
+
+    button:first-child {
+      margin-right: 8px;
+    }
+
+    .cancelButton {
+      background-color: #ccc;
+      border-color: #ccc;
+      color:#333;
+    }
+  }
+
+  .classList {
+    list-style-type: none;
+    padding-left: 0px;
+    margin-left: 0px;
+    margin-bottom: 0px;
+  }
+}
