@@ -321,7 +321,7 @@ RSpec.describe API::V1::StudentsController, type: :controller do
     end
 
     describe 'should succeed if the current user' do
-      it 'is a teacher of of the class' do
+      it 'is a teacher of the class' do
         clazz.students << student
         sign_in teacher_user
         local_student_clazz = clazz.student_clazzes.find_by(student_id: student.id)
