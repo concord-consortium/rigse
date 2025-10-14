@@ -21,8 +21,6 @@ import Assignments from "./components/assigments";
 import PermissionForms from "./components/permission-forms";
 import Navigation from "./components/navigation";
 import RunWithCollaborators from "./components/run-with-collaborators";
-import LearnerReportForm from "./components/learner-report-form";
-import UserReportForm from "./components/user-report-form";
 import ResearcherClassesForm from "./components/researcher-classes-form";
 import SiteNotices from "./components/site-notices";
 import SiteNoticesNewForm from "./components/site-notices/new";
@@ -119,25 +117,6 @@ window.PortalPages = window.PortalComponents = {
   Assignments,
   renderAssignments (options: any, id: any) {
     render(createElement(Assignments, options), id);
-  },
-
-  LearnerReportForm,
-  renderLearnerReportForm (options: any, id: any) {
-    render(createElement(LearnerReportForm, options), id);
-  },
-
-  // renderResearcherReportForm was renamed renderLearnerReportForm so to allow
-  // independent deploys of the this repo and the portal keep this alias in for now
-  // NOTE: this should be removed once the user report work in the portal is in production
-  //       and no other code references this export.
-  ResearcherReportForm: LearnerReportForm,
-  renderResearcherReportForm (options: any, id: any) {
-    render(createElement(LearnerReportForm, options), id);
-  },
-
-  UserReportForm,
-  renderUserReportForm (options: any, id: any) {
-    render(createElement(UserReportForm, options), id);
   },
 
   ResearcherClassesForm,
