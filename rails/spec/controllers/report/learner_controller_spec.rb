@@ -75,22 +75,4 @@ describe Report::LearnerController do
       expect(response).to have_http_status(:redirect)
     end
   end
-
-  # TODO: auto-generated
-  describe '#index' do
-    it 'GET index' do
-      get :index
-
-      expect(response).to have_http_status(:redirect)
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#report_only' do
-    it 'GET report_only' do
-      get :report_only
-
-      expect(response).to have_http_status(:ok)
-    end
-  end
 end
