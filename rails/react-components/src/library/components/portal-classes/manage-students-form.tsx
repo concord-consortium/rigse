@@ -72,18 +72,18 @@ export const ManageStudentsForm = (
       results.flat().forEach((currentClass) => {
         if (currentClass == null) return;
         // Skip the class the manage students form is being shown for
-        if (currentClass.id == classId) return;
+        if (currentClass.id === classId) return;
         if (uniqueClasses.find((item:any) => item.id === currentClass.id)) return;
         uniqueClasses.push(currentClass);
       });
       setClasses(uniqueClasses);
-    }
+    };
     fetchData();
     return () => {
       isMounted = false;
       abortController.abort();
     };
-  }, [teacherIds]);
+  }, [teacherIds, classId]);
 
   const addStudentsToSelectedClasses = async () => {
     const errorsAddingStudents: any[] = [];
@@ -205,4 +205,4 @@ export const ManageStudentsForm = (
       </div>
     </div>
   );
-}
+};
