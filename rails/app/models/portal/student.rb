@@ -109,7 +109,6 @@ class Portal::Student < ApplicationRecord
 
   def update_report_permissions(permission_form)
     report_learners.each { |l| l.update_permission_forms; l.save }
-    learners.each { |l| l.update_report_model_cache(true) }
   end
 
   ## TODO: fix with has_many finderSQL

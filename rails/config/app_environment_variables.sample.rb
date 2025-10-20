@@ -7,7 +7,6 @@
 # sample :  ENV['PORTAL_FEATURES']  ||= 'allow_cors'
 
 ENV['PORTAL_FEATURES']   ||= ''
-ENV['ELASTICSEARCH_URL'] ||= 'http://search-has-portal-prod-xruhhhyiv2fugtujtzbgfq7bem.us-east-1.es.amazonaws.com'
 
 # LOGGER_URI:
 # Log manager logging endpoint
