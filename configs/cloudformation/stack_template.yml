@@ -52,13 +52,6 @@ Parameters:
   DbHost:
     Type: String
     Description: The hostname of the database. Template assumes database name is portal.
-  LogStashDbHost:
-    Type: String
-    Description:
-      The hostname of a logstash db host. If this is blank then logstash will not
-      be deployed. If it is set, it can be the same as the main DbHost or it can be a
-      read-only copy of the main database.
-      The template assumes database name is portal.
   DbPassword:
     Type: String
     Description: The password of the database.
@@ -234,11 +227,6 @@ Parameters:
     Type: String
     Default: https://s3.amazonaws.com/concord-devops/cloud-formation/v3
 
-  ElasticSearchSubnetId:
-    Type: String
-    # QA Value: 'subnet-13a1133d'
-    Default: "subnet-7fb16326"
-
   LoggerUri:
     Type: String
     Default: https://logger.concord.org/logs
@@ -267,7 +255,6 @@ Conditions:
   PortalPagesLibraryDefined: !Not [!Equals [!Ref PortalPagesLibraryVersion, ""]]
   CreateLoadBalancerHTTPRedirectCond:
     !Equals [!Ref CreateLoadBalancerHTTPRedirect, "true"]
-  CreateLogStashCond: !Not [!Equals [!Ref LogStashDbHost, ""]]
 
 Resources:
   LoadBalancerStack:
@@ -352,18 +339,6 @@ Resources:
       LoadBalancerArn: !GetAtt LoadBalancerStack.Outputs.LoadBalancer
       Port: "80"
       Protocol: HTTP
-
-  ElasticSearchStack:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: !Sub "${NestedTemplatesFolder}/elastic-search.yml"
-      Parameters:
-        ClusterSecurityGroupId:
-          {
-            "Fn::ImportValue": !Sub "${ClusterStackName}-ClusterSecurityGroupId",
-          }
-        VpcId: { "Fn::ImportValue": !Sub "${ClusterStackName}-ClusterVpcId" }
-        SubnetIds: !Ref ElasticSearchSubnetId
 
   # Notes from 2017-11-14:
   # Based on usage over 4 weeks there are multiple spikes up to 1500 CPU units
@@ -545,8 +520,6 @@ Resources:
               Value: !Ref EnewsAPIListID
             - Name: ENEWS_API_URI
               Value: "https://us2.api.mailchimp.com/3.0/lists"
-            - Name: ELASTICSEARCH_URL
-              Value: !Sub "https://${ElasticSearchStack.Outputs.DomainEndpoint}"
             - Name: RAILS_SECRET_KEY_BASE
               Value: !Ref RailsSecretKeyBase
             - Name: LOGGER_URI
@@ -632,67 +605,6 @@ Resources:
       ToPort: "3306"
       SourceSecurityGroupId:
         { "Fn::ImportValue": !Sub "${ClusterStackName}-ClusterSecurityGroupId" }
-
-  LogStashExecutionRole:
-    Type: AWS::IAM::Role
-    Condition: CreateLogStashCond
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: ["ecs-tasks.amazonaws.com"]
-            Action: ["sts:AssumeRole"]
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/AmazonESFullAccess
-        - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
-
-  LogStashTaskDefinition:
-    Type: AWS::ECS::TaskDefinition
-    Condition: CreateLogStashCond
-    Properties:
-      Family: !Sub "${AWS::StackName}-LogStash"
-      # specifiy a execution role that provides access to elastic search
-      ExecutionRoleArn: !GetAtt [LogStashExecutionRole, Arn]
-      ContainerDefinitions:
-        - Name: LogStash
-          Image: concordconsortium/rigse-logstash:logstash-v1.1.3
-          Cpu: "256"
-          # if you adjust the memory you should also adjust the -Xmx setting below
-          Memory: "2500"
-          Essential: "true"
-          LogConfiguration:
-            LogDriver: awslogs
-            Options:
-              awslogs-region: us-east-1
-              awslogs-group: !Ref CloudWatchLogGroup
-              awslogs-stream-prefix: portal
-          Environment:
-            - Name: DB_NAME
-              Value: portal
-            - Name: DB_HOST
-              Value: !Ref LogStashDbHost
-            - Name: DB_PASSWORD
-              Value: !Ref DbPassword
-            - Name: DB_USER
-              Value: !Ref DbUserName
-            - Name: ES_HOST
-              Value: !GetAtt ElasticSearchStack.Outputs.DomainEndpoint
-            - Name: AWS_REGION
-              Value: us-east-1
-            - Name: LOGSTASH_SCHEDULE
-              Value: "*/30 * * * *"
-            - Name: LS_JAVA_OPTS
-              Value: "-Xmx2g"
-
-  LogStashService:
-    Type: AWS::ECS::Service
-    Condition: CreateLogStashCond
-    Properties:
-      TaskDefinition: !Ref LogStashTaskDefinition
-      DesiredCount: "1"
-      Cluster: { "Fn::ImportValue": !Sub "${ClusterStackName}-ClusterName" }
 
   # Notes from Nov 14, 2017
   # Reviewing data over 4 weeks of usage
@@ -839,8 +751,6 @@ Resources:
               Value: !Ref EnewsAPIListID
             - Name: ENEWS_API_URI
               Value: "https://us2.api.mailchimp.com/3.0/lists"
-            - Name: ELASTICSEARCH_URL
-              Value: !Sub "https://${ElasticSearchStack.Outputs.DomainEndpoint}"
             - Name: RAILS_SECRET_KEY_BASE
               Value: !Ref RailsSecretKeyBase
             - Name: LOGGER_URI

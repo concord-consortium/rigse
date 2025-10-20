@@ -268,12 +268,8 @@ RailsPortal::Application.routes.draw do
       end
     end
 
-    get '/report/learner' => 'report/learner#index', :as => :learner_report
     get '/report/learner/updated_at/:id' => 'report/learner#updated_at', :as => :learner_updated_at
-    get '/report/learner/report_only' => 'report/learner#report_only', :as => :learner_report_only
     get '/report/learner/update_learners' => 'report/learner#update_learners'
-
-    get '/report/user' => 'report/user#index', :as => :user_report
 
     post '/external_activities/publish/:version' => 'external_activities#publish', :as => :external_activity_publish, :version => /v\d+/
     post '/external_activities/republish/:version' => 'external_activities#republish', :as => :external_activity_republish, :version => /v\d+/
@@ -434,14 +430,6 @@ RailsPortal::Application.routes.draw do
 
         namespace :service do
           get :solr_initialized
-        end
-
-        resources :report_learners_es, only: [:index] do
-          collection do
-            get :external_report_query
-            get :external_report_query_jwt
-            post :external_report_learners_from_jwt
-          end
         end
 
         resources :report_users, only: [:index] do

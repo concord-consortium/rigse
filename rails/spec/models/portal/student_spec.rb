@@ -51,30 +51,11 @@ describe Portal::Student do
 
     it "the report learner info of the student is updated" do
 
-      # In theory the following 'with' clause should work. It would be more concise and provides better
-      # error reporting:
-      #   .with(body: hash_including({doc: {learner_id: learner.id, permission_forms_id: []}}))
-      # But it didn't work.
-      stub = WebMock.stub_request(:post, "#{ENV['ELASTICSEARCH_URL']}/report_learners/doc/#{learner.id}/_update")
-        .with{ |request|
-          doc = JSON.parse(request.body)["doc"]
-          doc["learner_id"] == learner.id && doc["permission_forms_id"].empty?}
-        .to_return(status: 200, body: "", headers: {})
       expect(learner.report_learner.permission_forms_id).to be_blank
-      expect(stub).to have_been_requested
-
-      # reset WebMock to make it easier to track down errors
-      WebMock.reset!
-      stub = WebMock.stub_request(:post, "#{ENV['ELASTICSEARCH_URL']}/report_learners/doc/#{learner.id}/_update")
-        .with{ |request|
-          doc = JSON.parse(request.body)["doc"]
-          doc["learner_id"] == learner.id && doc["permission_forms_id"] == [permission_form.id] }
-        .to_return(status: 200, body: "", headers: {})
 
       student.permission_forms = [ permission_form ]
       learner.report_learner.reload
       expect(learner.report_learner.permission_forms_id).to eq(permission_form.id.to_s)
-      expect(stub).to have_been_requested
     end
   end
 
