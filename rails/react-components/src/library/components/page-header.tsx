@@ -130,12 +130,6 @@ const PageHeader = Component({
     }
   },
 
-  renderProtectedLink (linkID: any, linkTitle: any, linkText: any) {
-    return (
-      <a href="#" className={"portal-pages-main-nav-item__link"} id={linkID} title={linkTitle} onClick={this.toggleTooltip}>{ linkText }</a>
-    );
-  },
-
   renderNavLinks (e: any) {
     const headerItems = [];
     let key = 1;
