@@ -130,12 +130,6 @@ const PageHeader = Component({
     }
   },
 
-  renderProtectedLink (linkID: any, linkTitle: any, linkText: any) {
-    return (
-      <a href="#" className={"portal-pages-main-nav-item__link"} id={linkID} title={linkTitle} onClick={this.toggleTooltip}>{ linkText }</a>
-    );
-  },
-
   renderNavLinks (e: any) {
     const headerItems = [];
     let key = 1;
@@ -151,22 +145,6 @@ const PageHeader = Component({
             </ul>
           </li>
         );
-        if (this.state.loggedIn) {
-          headerItems.push(
-            <li key={nextKey("ForumLoggedIn")} className="portal-pages-main-nav-item portal-pages-main-nav-forum">
-              <a href="https://ngsa.concord.org/forum?autosignin=true" className="portal-pages-main-nav-item__link" title="Visit the NGSA Forum">Forum</a>
-            </li>
-          );
-        } else {
-          const linkID = "ngsa-forum";
-          const linkTitle = "Registered teachers can participate in a forum with other teachers. Login or register as a teacher to access the forum.";
-          const linkText = "Forum";
-          headerItems.push(
-            <li key={nextKey("ForumLoggedOut")} className="portal-pages-main-nav-item portal-pages-main-nav-forum">
-              { this.renderProtectedLink(linkID, linkTitle, linkText) }
-            </li>
-          );
-        }
       } else {
         headerItems.push(
           <li key={nextKey("Collections")} className={"portal-pages-main-nav-item portal-pages-main-nav-collections" + (this.props.isCollections ? " current-menu-item" : "")}>
