@@ -14,12 +14,15 @@
     height: 165px !important;
     margin-bottom: 0 !important;
     }
-  .logo-contain { margin-top: 55px; }
+  .concord-navigation {
+    align-items: center;
+    display: flex;
+  }
+  .logo-contain { margin-top: 30px; }
   .concord-logo {
     background-image: url(https://ngss-assessment-resources.concord.org/ngsa-logo.png);
     background-size: 100%;
-    height: 53px;
-    width: 300px;
+    width: 255px;
     }
   .portal-pages-hero {
     background: url(https://ngss-assessment-resources.concord.org/students.jpg) no-repeat;
@@ -233,7 +236,7 @@
         }
       }
     }
-    .mobile-nav-contain { margin-top: 40px !important; }
+    .mobile-nav-contain { margin-top: 15px !important; }
     .portal-pages-hero {
       .portal-pages-hero__text {
         width: auto;
