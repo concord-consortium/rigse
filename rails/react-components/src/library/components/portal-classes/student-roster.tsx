@@ -165,6 +165,7 @@ export default class StudentRoster extends React.Component<any, any> {
           students={selectedStudents}
           totalStudents={students.length}
           className={clazz.name}
+          classId={clazz.id}
           teacherIds={ clazz.teacherIds }
           onFormClose={() => this.setState({ showManageStudentsModal: false })}
         />
