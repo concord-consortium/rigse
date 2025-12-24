@@ -9,7 +9,7 @@ export default class Offerings extends React.Component<any, any> {
     if (!anyClasses) {
       return (
         <>
-          <p><strong>Welcome! We're so glad you created a teacher account on our STEM Resource Finder!</strong> It's time to add a class and assign activities to your students.</p>
+          <p><strong>Welcome! We're so glad you created a teacher account on learn.concord.org!</strong> It's time to add a class and assign activities to your students.</p>
 
           <p>To create a new class, follow these steps:</p>
           <ul className={css.numberedStepsList}>
@@ -37,7 +37,7 @@ export default class Offerings extends React.Component<any, any> {
           <ul className={css.numberedStepsList}>
             <li><span className={css.stepNumber}>1</span> Use the <strong>Find More Resources</strong> button when you are viewing Assignments.</li>
             <li><span className={css.stepNumber}>2</span> Browse a collection of related resources using the <a href="https://learn.concord.org/collections" target="_blank" rel="noreferrer">Collections</a> menu.</li>
-            <li><span className={css.stepNumber}>3</span> Use the <a href="https://learn.concord.org/" target="_blank" rel="noreferrer">Find Resources</a> link, which takes you to the STEM Resource Finder homepage.</li>
+            <li><span className={css.stepNumber}>3</span> Use the <a href="https://learn.concord.org/" target="_blank" rel="noreferrer">Find Resources</a> link, which takes you to the learn.concord.org homepage.</li>
           </ul>
 
           <p>When you find a resource you want to assign to your class, simply click the <strong>ASSIGN OR SHARE</strong> link.</p>
@@ -50,7 +50,7 @@ export default class Offerings extends React.Component<any, any> {
       return (
         <>
           <p className={css.noActivity}>No recent activity.</p>
-          <p><strong>There are no students in your class.</strong> Please instruct your students to create an account on the STEM Resource Finder. After creating their account, they can join your class using a unique "class word" that you provide. For detailed instructions, please refer to the <a href="https://learn.concord.org/help" target="_blank" rel="noreferrer">User Guide</a>.
+          <p><strong>There are no students in your class.</strong> Please instruct your students to create an account on learn.concord.org. After creating their account, they can join your class using a unique "class word" that you provide. For detailed instructions, please refer to the <a href="https://learn.concord.org/help" target="_blank" rel="noreferrer">User Guide</a>.
           </p>
           <p>As your students register and get started on the assigned activities, their progress will be displayed here.</p>
         </>
