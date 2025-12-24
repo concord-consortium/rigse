@@ -53,15 +53,10 @@
   text-indent: 300px;
   white-space: nowrap;
   width: 255px;
-
-  &.cc-no-tagline {
-    background-image: url(./assets/banners/concord-logo-no-tag.svg);
-    }
-
-  }
+}
 .theme-learn .logo-contain {
   margin: 10px 0;
-  }
+}
 .theme-learn .concord-logo {
   background: url(./assets/banners/concord-logo.svg) no-repeat top;
   // height: 120px;
