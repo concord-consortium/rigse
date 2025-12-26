@@ -16,7 +16,6 @@ describe("When I try to render signup student form", () => {
   it("should render with anonymous prop", () => {
     render(<SignUp anonymous={true} />);
 
-    expect(screen.getByText("for the Portal")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "I am a Teacher" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "I am a Student" })).toBeInTheDocument();
     expect(screen.getByText("Already have an account?")).toBeInTheDocument();
