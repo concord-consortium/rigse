@@ -1,0 +1,10 @@
+%b
+  Ways to Give Page Content
+%br
+(This is the text that gets displayed on the /ways-to-give page of the portal.)
+%br
+- ways_to_give_text_area_id = dom_id_for(admin_settings, :ways_to_give_page_content, :textarea)
+= f.text_area :ways_to_give_page_content, :id => ways_to_give_text_area_id, :class => 'mceNoEditor htmlContentEditor'
+%input{:type=>"button", :value=>"Preview Ways to Give Page", :onclick=>"preview_ways_to_give_page('#{ways_to_give_text_area_id}', null);", :class=>"button", :style=>"margin-top: 10px; font-size: 13px"}
+%br
+%br

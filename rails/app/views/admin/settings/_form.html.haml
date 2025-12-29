@@ -94,6 +94,8 @@
     %p
       = render :partial => "about_page_content_field", :locals => { :admin_settings => admin_settings, :f => f }
     %p
+      = render :partial => "ways_to_give_page_content_field", :locals => { :admin_settings => admin_settings, :f => f }
+    %p
       = render :partial => "help_page_item", :locals => { :admin_settings => admin_settings, :f => f }
     :javascript
       new Chosen($('admin_settings_enabled_bookmark_types'));

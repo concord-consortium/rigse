@@ -136,18 +136,23 @@
       - home_page_content = admin_settings.home_page_content
       - unless home_page_content.nil?
         %input{:type=>"button", :value=>"Preview Home Page", :onclick=>"preview_home_page(null, '#{ERB::Util.url_encode(home_page_content)}');", :class=>"button", :style=>"margin-top: 10px; font-size: 13px"}
-      %br
+      - about_page_content = admin_settings.about_page_content
+      - unless about_page_content.nil?
+        %input{:type=>"button", :value=>"Preview About Page", :onclick=>"preview_about_page(null, '#{ERB::Util.url_encode(about_page_content)}');", :class=>"button", :style=>"margin-top: 10px; font-size: 13px"}
+      - ways_to_give_page_content = admin_settings.ways_to_give_page_content
+      - unless ways_to_give_page_content.nil?
+        %input{:type=>"button", :value=>"Preview Ways to Give Page", :onclick=>"preview_ways_to_give_page(null, '#{ERB::Util.url_encode(ways_to_give_page_content)}');", :class=>"button", :style=>"margin-top: 10px; font-size: 13px"}
       - case admin_settings.help_type
       - when 'external url'
         - external_url = admin_settings.external_url
         %a{:href=> external_url, target: "_blank", class: "button", style:"margin-top: 10px; font-size: 13px"}
-          preview help
+          Visit External Help Page
       - when 'help custom html'
         %a{href:"/help", target:"_blank", class: "button", style:"margin-top: 10px; font-size: 13px"}
-          preview help
+          View Help Page
       - when 'no help'
         %br
         %b
-          No Help Page
+          No Help Page is available
       %br
       %br

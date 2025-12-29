@@ -31,6 +31,7 @@ RailsPortal::Application.routes.draw do
   post "help/preview_help_page"
   post "home/preview_about_page"
   post "home/preview_home_page"
+  post "home/preview_ways_to_give_page"
 
   get "/users/sign_in_or_register" => "users#sign_in_or_register", :as => :sign_in_or_register
 
@@ -501,6 +502,7 @@ RailsPortal::Application.routes.draw do
     get '/recent_activity' => 'home#recent_activity', :as => :recent_activity
     get '/getting_started' => 'home#getting_started', :as => :getting_started
     get '/about' => 'home#about'
+    get '/ways-to-give' => 'home#ways_to_give'
     get '/collections' => 'home#collections'
     get '/test_exception' => 'home#test_exception', :as => :test_exception
     get '/pick_signup' => 'home#pick_signup', :as => :pick_signup

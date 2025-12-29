@@ -141,6 +141,7 @@ module RailsPortal
       preview_home_page.js
       preview_about_page.js
       preview_help_page.js
+      preview_ways_to_give_page.js
       share_material.js
       settings_form.js
       jquery/jquery.js

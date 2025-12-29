@@ -44,21 +44,31 @@ class HomeController < ApplicationController
   def preview_home_page
     @emulate_anonymous_user = true
     preview_content = params[:home_page_preview_content]
-    homePage = HomePage.new(User.anonymous, Admin::Settings.default_settings, preview_content)
+    home_page = HomePage.new(User.anonymous, Admin::Settings.default_settings, preview_content)
     @wide_content_layout = true
     load_featured_materials
     response.headers["X-XSS-Protection"] = "0"
-    render :home, locals: homePage.view_options, layout: homePage.layout
+    render :home, locals: home_page.view_options, layout: home_page.layout
   end
 
   def preview_about_page
     @emulate_anonymous_user = true
     preview_content = params[:about_page_preview_content]
-    aboutPage = HomePage.new(User.anonymous, Admin::Settings.default_settings, preview_content)
+    about_page = AboutPage.new(User.anonymous, Admin::Settings.default_settings, preview_content)
     @wide_content_layout = true
     load_featured_materials
     response.headers["X-XSS-Protection"] = "0"
-    render :about, locals: aboutPage.view_options, layout: aboutPage.layout
+    render :about, locals: about_page.view_options
+  end
+
+  def preview_ways_to_give_page
+    @emulate_anonymous_user = true
+    preview_content = params[:ways_to_give_page_preview_content]
+    ways_to_give_page = WaysToGivePage.new(User.anonymous, Admin::Settings.default_settings, preview_content)
+    @wide_content_layout = true
+    load_featured_materials
+    response.headers["X-XSS-Protection"] = "0"
+    render :ways_to_give, locals: ways_to_give_page.view_options
   end
 
   def readme
@@ -83,6 +93,14 @@ class HomeController < ApplicationController
     @open_graph[:title] = "About the #{APP_CONFIG[:site_name]}"
 
     render locals: aboutPage.view_options, layout: 'minimal'
+  end
+
+  def ways_to_give
+    ways_to_give_page = WaysToGivePage.new(current_visitor, current_settings)
+    @page_title = 'Ways to Give'
+    @open_graph = default_open_graph
+    @open_graph[:title] = "Ways to Give"
+    render locals: ways_to_give_page.view_options, layout: 'minimal'
   end
 
   def collections
