@@ -33,6 +33,7 @@ RailsPortal::Application.routes.draw do
   post "home/preview_home_page"
   post "home/preview_ways_to_give_page"
   post "home/preview_terms_of_use_page"
+  post "home/preview_teacher_guide_page"
 
   get "/users/sign_in_or_register" => "users#sign_in_or_register", :as => :sign_in_or_register
 
@@ -505,6 +506,7 @@ RailsPortal::Application.routes.draw do
     get '/about' => 'home#about'
     get '/ways-to-give' => 'home#ways_to_give'
     get '/terms-of-use' => 'home#terms_of_use'
+    get '/teacher-guide' => 'home#teacher_guide'
     get '/collections' => 'home#collections'
     get '/test_exception' => 'home#test_exception', :as => :test_exception
     get '/pick_signup' => 'home#pick_signup', :as => :pick_signup

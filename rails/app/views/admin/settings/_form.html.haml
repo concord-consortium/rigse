@@ -98,6 +98,8 @@
     %p
       = render :partial => "terms_of_use_page_content_field", :locals => { :admin_settings => admin_settings, :f => f }
     %p
+      = render :partial => "teacher_guide_page_content_field", :locals => { :admin_settings => admin_settings, :f => f }
+    %p
       = render :partial => "help_page_item", :locals => { :admin_settings => admin_settings, :f => f }
     :javascript
       new Chosen($('admin_settings_enabled_bookmark_types'));

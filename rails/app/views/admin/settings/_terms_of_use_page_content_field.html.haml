@@ -1,10 +1,8 @@
-%b
-  Terms of Use Page Content
-%br
-(This is the text that gets displayed on the /terms-of-use page of the portal.)
-%br
-- terms_of_use_text_area_id = dom_id_for(admin_settings, :terms_of_use_page_content, :textarea)
-= f.text_area :terms_of_use_page_content, :id => terms_of_use_text_area_id, :class => 'mceNoEditor htmlContentEditor'
-%input{:type=>"button", :value=>"Preview Terms of Use Page", :onclick=>"preview_terms_of_use_page('#{terms_of_use_text_area_id}', null);", :class=>"button", :style=>"margin-top: 10px; font-size: 13px"}
-%br
-%br
+%fieldset
+  %legend
+    Terms of Use Page Content
+  (This is the text that gets displayed on the /terms-of-use page of the portal.)
+  %br
+  - terms_of_use_text_area_id = dom_id_for(admin_settings, :terms_of_use_page_content, :textarea)
+  = f.text_area :terms_of_use_page_content, :id => terms_of_use_text_area_id, :class => 'mceNoEditor htmlContentEditor'
+  %input{:type=>"button", :value=>"Preview Terms of Use Page", :onclick=>"preview_terms_of_use_page('#{terms_of_use_text_area_id}', null);", :class=>"button", :style=>"margin-top: 10px; font-size: 13px"}

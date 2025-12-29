@@ -1,0 +1,23 @@
+%fieldset
+  %legend
+    Teacher Guide Settings
+  - teacher_guide_external_url_id = "teacher_guide_external_url_for_settings_#{admin_settings.id}"
+  = f.radio_button :teacher_guide_type,"external url",:id=> "#{teacher_guide_external_url_id}",:style=>"margin-top:10px"
+  %label{:for=>"#{teacher_guide_external_url_id}", :style=>"margin-left : 10px"}
+    Use external teacher guide URL
+  %br
+  (This option will take users to an external URL when /teacher-guide is visited.)
+  - teacher_guide_external_url_textbox_id = "teacher_guide_external_url_textbox_for_settings_#{admin_settings.id}"
+  = f.text_field :teacher_guide_external_url, :id=> "#{teacher_guide_external_url_textbox_id}",:size => 60, :style=>"display: block"
+  %input{:type=>"button", :value=>"Preview External Teacher Guide URL", :onclick=>"openPreviewHelpPage(true, '#{teacher_guide_external_url_textbox_id}', true, '')", :class=>"button" , :style=>"margin-top: 10px; font-size: 13px"}
+  %br
+  %br
+  - teacher_guide_custom_html_id = "teacher_guide_custom_html_for_settings_#{admin_settings.id}"
+  = f.radio_button :teacher_guide_type,"custom html",:id=> "#{teacher_guide_custom_html_id}",:style=>"margin-top:10px"
+  %label{:for=>"#{teacher_guide_custom_html_id}", :style=>"margin-left : 10px"}
+    Use custom teacher guide page HTML
+  %br
+  (This will set the text that gets displayed on the /teacher-guide page of the portal.)
+  - teacher_guide_text_area_id = dom_id_for(admin_settings, :teacher_guide_page_content, :textarea)
+  = f.text_area :teacher_guide_page_content, :id => teacher_guide_text_area_id, :class => 'mceNoEditor htmlContentEditor'
+  %input{:type=>"button", :value=>"Preview Teacher Guide Page", :onclick=>"preview_teacher_guide_page('#{teacher_guide_text_area_id}', null);", :class=>"button", :style=>"margin-top: 10px; font-size: 13px"}

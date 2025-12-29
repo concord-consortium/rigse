@@ -145,6 +145,13 @@
       - terms_of_use_page_content = admin_settings.terms_of_use_page_content
       - unless terms_of_use_page_content.nil?
         %input{:type=>"button", :value=>"Preview Terms of Use Page", :onclick=>"preview_terms_of_use_page(null, '#{ERB::Util.url_encode(terms_of_use_page_content)}');", :class=>"button", :style=>"margin-top: 10px; font-size: 13px"}
+      - if admin_settings.teacher_guide_type == 'external url'
+        - external_url = admin_settings.teacher_guide_external_url
+        %a{:href=> external_url, target: "_blank", class: "button", style:"margin-top: 10px; font-size: 13px"}
+          Visit External Teacher Guide Page
+      - else
+        - teacher_guide_page_content = admin_settings.teacher_guide_page_content
+        %input{:type=>"button", :value=>"Preview Teacher Guide Page", :onclick=>"preview_teacher_guide_page(null, '#{ERB::Util.url_encode(teacher_guide_page_content)}');", :class=>"button", :style=>"margin-top: 10px; font-size: 13px"}
       - case admin_settings.help_type
       - when 'external url'
         - external_url = admin_settings.external_url
