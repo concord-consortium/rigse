@@ -132,7 +132,7 @@ module RailsPortal
     end
 
     # Add a middlewere to log more info about the response
-    config.middleware.insert_before 0, Rack::ResponseLogger
+    # config.middleware.insert_before 0, Rack::ResponseLogger
 
     config.assets.enabled = true
     config.assets.precompile += %w(
