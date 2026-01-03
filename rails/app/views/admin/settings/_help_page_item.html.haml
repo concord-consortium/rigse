@@ -1,14 +1,13 @@
-%b
-  Help Page Settings
-%br
-
+%fieldset
+  %legend
+    Help Page Settings
   - no_help_id = "no_help_for_settings_#{admin_settings.id}"
   = f.radio_button :help_type,"no help", :checked => (@admin_settings.help_type.nil?) || (@admin_settings.help_type == 'no help'),:id=> "#{no_help_id}",:style=>"margin-top:10px"
   %label{:for=>"#{no_help_id}", :style=>"margin-left : 10px"}
     No help link
   %br
   (This option will remove the help link from the menu.)
-%br
+  %br
   - help_external_url_id = "help_external_url_for_settings_#{admin_settings.id}"
   = f.radio_button :help_type,"external url",:id=> "#{help_external_url_id}",:style=>"margin-top:10px"
   %label{:for=>"#{help_external_url_id}", :style=>"margin-left : 10px"}
@@ -18,7 +17,8 @@
   - external_url_textbox_id = "external_url_textbox_for_settings_#{admin_settings.id}"
   = f.text_field :external_url, :id=> "#{external_url_textbox_id}",:size => 60, :style=>"display: block"
   %input{:type=>"button", :value=>"Preview External Help URL", :onclick=>"openPreviewHelpPage(true, '#{external_url_textbox_id}', true, '')", :class=>"button" , :style=>"margin-top: 10px; font-size: 13px"}
-%br
+  %br
+  %br
   - help_custom_html_id = "help_custom_html_for_settings_#{admin_settings.id}"
   = f.radio_button :help_type,"help custom html",:id=> "#{help_custom_html_id}",:style=>"margin-top:10px"
   %label{:for=>"#{help_custom_html_id}", :style=>"margin-left : 10px"}

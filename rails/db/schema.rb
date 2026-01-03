@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_29_105348) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_29_112600) do
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
     t.string "access_token"
@@ -164,6 +164,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_29_105348) do
     t.text "sitewide_alert"
     t.text "ways_to_give_page_content", size: :medium
     t.text "terms_of_use_page_content", size: :medium
+    t.string "teacher_guide_type", default: "custom html"
+    t.text "teacher_guide_page_content", size: :medium
+    t.string "teacher_guide_external_url"
   end
 
   create_table "admin_site_notice_users", id: :integer, charset: "utf8", force: :cascade do |t|
