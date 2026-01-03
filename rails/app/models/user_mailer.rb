@@ -1,28 +1,13 @@
 class UserMailer < Devise::Mailer
-  default :from => "#{APP_CONFIG[:site_name]} <#{APP_CONFIG[:help_email]}>"
+  default :from => "Concord Consortium <#{APP_CONFIG[:help_email]}>"
   helper :theme
 
   def confirmation_instructions(record, token, opts={})
     @url = "#{APP_CONFIG[:site_url]}/activate/#{token}"
     @token = token
     @user = record
-    finish_email(@user, 'Please activate your new account')
+    finish_email(@user, "Activate your account on #{APP_CONFIG[:site_name]}")
   end
-
-  # TODO: NP 2020-08-11 Methods removed as per  https://bit.ly/2PJlnG5
-  # I have some anxiety about removing them:
-
-  # def signup_notification(user)
-  #   @url = "#{APP_CONFIG[:site_url]}/activate/#{user.confirmation_token}"
-  #   @user = user
-  #   finish_email(user, 'Please activate your new account')
-  # end
-
-  # def activation(user)
-  #   @url = APP_CONFIG[:site_url]
-  #   @user = user
-  #   finish_email(user, 'Your account has been activated!')
-  # end
 
   protected
 
