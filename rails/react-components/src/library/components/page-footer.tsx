@@ -21,9 +21,13 @@ const PageFooter = Component({
             <br/>
             The Concord Consortium is a 501(c)(3) nonprofit charity registered in the U.S. under EIN 04-3254131.
             <br />
-            <a href="https://concord.org/privacy-policy" id="privacy-policy-link" target="_blank" rel="noopener noreferrer">Privacy Policy</a> · Questions/Feedback: <a href="mailto:help@concord.org?subject=STEM%20Resource%20Finder%20question">Send us an email</a>
-            <br />
-            Version: unknown
+            <a href="https://concord.org/privacy-policy" id="privacy-policy-link" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+            ·
+            <a href="/terms-of-use"> Terms of Use</a>
+            ·
+            <a href="https://concord.org/licensing/" id="licensing-link" target="_blank" rel="noopener noreferrer">Licensing</a>
+            ·
+            <a href="mailto:help@concord.org?subject=Question">Contact</a>
           </p>
         </div>
       </div>

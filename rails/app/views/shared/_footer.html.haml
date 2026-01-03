@@ -10,10 +10,13 @@
         %br
         #{link_to 'Privacy Policy','https://concord.org/privacy-policy', :id=>"privacy-policy-link", :target=>"_blank", :rel=>"noopener"}
         &middot;
-        Questions/Feedback:
-        = mail_to(APP_CONFIG[:help_email] || APP_CONFIG[:default_admin_user][:email], "Send us an email", :subject => "#{APP_CONFIG[:site_name]} question", :encode => "javascript")
-        %br
-        Version:
-        = ENV['CC_PORTAL_IMAGE_VERSION'].present? ? ENV['CC_PORTAL_IMAGE_VERSION'] : ENV['CC_PORTAL_VERSION']
-        :javascript
-          document.write("(React " + window.React.version + ")")
+        #{link_to 'Terms of Use','/terms-of-use'}
+        &middot;
+        #{link_to 'Licensing','https://concord.org/licensing/', :id=>"licensing-link", :target=>"_blank", :rel=>"noopener"}
+        &middot;
+        = mail_to(APP_CONFIG[:help_email] || APP_CONFIG[:default_admin_user][:email], "Contact", :subject => "Question about #{APP_CONFIG[:site_name]}", :encode => "javascript")
+        %div{style: 'margin-top: 10px; opacity: 0.5'}
+          Version:
+          = ENV['CC_PORTAL_IMAGE_VERSION'].present? ? ENV['CC_PORTAL_IMAGE_VERSION'] : ENV['CC_PORTAL_VERSION']
+          :javascript
+            document.write("(React " + window.React.version + ")")
