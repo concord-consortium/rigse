@@ -138,9 +138,25 @@
         top: 4px;
       }
 
+      &#artificialIntelligence {
+        &:before {
+          content: "\f2db";
+        }
+      }
       &#chemistry {
         &:before {
           content: "\f492";
+        }
+      }
+      &#computerScience {
+        &:before {
+          content: "\f5fc";
+          left: 7px;
+        }
+      }
+      &#dataScience {
+        &:before {
+          content: "\f080";
         }
       }
       &#earthSpace {
@@ -151,6 +167,12 @@
       &#engineeringTech {
         &:before {
           content: "\f013";
+        }
+      }
+      &#englishLanguageArts {
+        &:before {
+          content: "\f518";
+          left: 7px;
         }
       }
       &#lifeSciences {

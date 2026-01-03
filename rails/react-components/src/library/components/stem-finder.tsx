@@ -384,10 +384,10 @@ class StemFinder extends React.Component<Props, State> {
   }
 
   buildFilterId (filterKey: any) {
-    const filterKeyWords = filterKey.split("-");
-    const filterId = filterKeyWords.length > 1
-      ? filterKeyWords[0] + filterKeyWords[1].charAt(0).toUpperCase() + filterKeyWords[1].slice(1)
-      : filterKeyWords[0];
+    const filterKeyWords: string[] = filterKey.split("-");
+    const filterId = filterKeyWords
+      .map((word, idx) => idx === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1))
+      .join("");
     return filterId;
   }
 

@@ -1,8 +1,12 @@
 const filters: any = {
   subjectAreas: [
+    { key: "artificial-intelligence", title: "Artificial Intelligence", searchAreas: ["Artificial Intelligence"] },
     { key: "chemistry", title: "Chemistry", searchAreas: ["Chemistry"] },
+    { key: "computer-science", title: "Computer Science", searchAreas: ["Computer Science"] },
+    { key: "data-science", title: "Data Science", searchAreas: ["Data Science"] },
     { key: "earth-space", title: "Earth & Space", searchAreas: ["Earth and Space Science"] },
     { key: "engineering-tech", title: "Engineering", searchAreas: ["Engineering"] },
+    { key: "english-language-arts", title: "English Language Arts", searchAreas: ["English Language Arts"] },
     { key: "life-sciences", title: "Life Science", searchAreas: ["Biology"] },
     { key: "mathematics", title: "Mathematics", searchAreas: ["Mathematics"] },
     { key: "physics", title: "Physics", searchAreas: ["Physics"] }
