@@ -80,8 +80,6 @@ export default class LoginModal extends React.Component<any, any> {
             <strong>
               Log In
             </strong>
-            <br />
-            to the { this.props.siteName }
           </h2>
           <div className={"third-party-login-options"}>
             <p>
