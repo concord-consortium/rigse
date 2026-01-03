@@ -157,6 +157,11 @@ const PageHeader = Component({
           </li>
         );
         headerItems.push(
+          <li key={nextKey("WaysToGive")} className={"portal-pages-main-nav-item portal-pages-main-nav-about" + (this.props.isWaysToGive ? " current-menu-item" : "")}>
+            <a href="/ways-to-give" className="portal-pages-main-nav-item__link" title="Ways to Give">Ways to Give</a>
+          </li>
+        );
+        headerItems.push(
           <li key={nextKey("Help")} className={"portal-pages-main-nav-item portal-pages-main-nav-help" + (this.props.isHelp ? " current-menu-item" : "")}>
             <a href="/help" className="portal-pages-main-nav-item__link" title="Get help with using learn.concord.org">Help</a>
           </li>

@@ -1,5 +1,6 @@
 = javascript_include_tag('preview_home_page.js')
 = javascript_include_tag('preview_about_page.js')
 = javascript_include_tag('preview_help_page.js')
+= javascript_include_tag('preview_ways_to_give_page.js')
 = form_with(model: @admin_settings, before: "tinyMCE.triggerSave(true,true)") do |f|
   = render partial: 'admin/settings/form', locals: { admin_settings: @admin_settings, f: f }
