@@ -71,6 +71,16 @@ class HomeController < ApplicationController
     render :ways_to_give, locals: ways_to_give_page.view_options
   end
 
+  def preview_terms_of_use_page
+    @emulate_anonymous_user = true
+    preview_content = params[:terms_of_use_page_preview_content]
+    terms_of_use_page = TermsOfUsePage.new(User.anonymous, Admin::Settings.default_settings, preview_content)
+    @wide_content_layout = true
+    load_featured_materials
+    response.headers["X-XSS-Protection"] = "0"
+    render :terms_of_use, locals: terms_of_use_page.view_options
+  end
+
   def readme
     @document = FormattedDoc.new('README.md')
     render :action => "formatted_doc", :layout => "technical_doc"
@@ -101,6 +111,14 @@ class HomeController < ApplicationController
     @open_graph = default_open_graph
     @open_graph[:title] = "Ways to Give"
     render locals: ways_to_give_page.view_options, layout: 'minimal'
+  end
+
+  def terms_of_use
+    terms_of_use_page = TermsOfUsePage.new(current_visitor, current_settings)
+    @page_title = 'Terms of Use'
+    @open_graph = default_open_graph
+    @open_graph[:title] = "Terms of Use"
+    render locals: terms_of_use_page.view_options, layout: 'minimal'
   end
 
   def collections

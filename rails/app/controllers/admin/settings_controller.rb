@@ -114,7 +114,7 @@ class Admin::SettingsController < ApplicationController
                             :home_page_content, :include_external_activities, :pub_interval,
                             :require_user_consent, :show_collections_menu, :teacher_home_path, :teachers_can_author, :use_bitmap_snapshots,
                             :use_student_security_questions, :user_id, :wrap_home_page_content, :sitewide_alert,
-                            :ways_to_give_page_content,
+                            :ways_to_give_page_content, :terms_of_use_page_content,
                             # array value for this field
                             :enabled_bookmark_types => [])
   end
