@@ -24,7 +24,7 @@ export default class Offerings extends React.Component<any, any> {
             <li><span className={css.stepNumber}>7</span> Click Save Changes.</li>
           </ul>
 
-          <p><strong>Need a hand?</strong> Learn how to set up a class, assign resources, have your students register for your class, view student work, and more in the <a href="https://learn-resources.concord.org/docs/stem-resource-finder-teacher-user-guide/" target="_blank" rel="noreferrer">User Guide</a>. Or email us at <a href="mailto:help@concord.org">help@concord.org</a>.</p>
+          <p><strong>Need a hand?</strong> Learn how to set up a class, assign resources, have your students register for your class, view student work, and more in the <a href="/teacher-guide" target="_blank">Teacher Guide</a>. Or email us at <a href="mailto:help@concord.org">help@concord.org</a>.</p>
         </>
       );
     }
@@ -42,7 +42,7 @@ export default class Offerings extends React.Component<any, any> {
 
           <p>When you find a resource you want to assign to your class, simply click the <strong>ASSIGN OR SHARE</strong> link.</p>
 
-          <p><strong>Need a hand?</strong> Learn how to set up a class, assign resources, have your students register for your class, view student work, and more in the <a href="https://learn-resources.concord.org/docs/stem-resource-finder-teacher-user-guide/" target="_blank" rel="noreferrer">User Guide</a>. Or email us at <a href="mailto:help@concord.org">help@concord.org</a>.</p>
+          <p><strong>Need a hand?</strong> Learn how to set up a class, assign resources, have your students register for your class, view student work, and more in the <a href="/teacher-guide" target="_blank">Teacher Guide</a>. Or email us at <a href="mailto:help@concord.org">help@concord.org</a>.</p>
         </>
       );
     }
@@ -50,7 +50,7 @@ export default class Offerings extends React.Component<any, any> {
       return (
         <>
           <p className={css.noActivity}>No recent activity.</p>
-          <p><strong>There are no students in your class.</strong> Please instruct your students to create an account on learn.concord.org. After creating their account, they can join your class using a unique "class word" that you provide. For detailed instructions, please refer to the <a href="https://learn.concord.org/help" target="_blank" rel="noreferrer">User Guide</a>.
+          <p><strong>There are no students in your class.</strong> Please instruct your students to create an account on learn.concord.org. After creating their account, they can join your class using a unique "class word" that you provide. For detailed instructions, please refer to the <a href="/teacher-guide" target="_blank">Teacher Guide</a>.
           </p>
           <p>As your students register and get started on the assigned activities, their progress will be displayed here.</p>
         </>
