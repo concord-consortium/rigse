@@ -57,7 +57,7 @@ describe "/home/home.html.haml" do
     describe "with the default (learn) theme" do
       it "should include text from the learn project_info partial" do
         render
-        expect(rendered).to match("About the STEM Resource Finder")
+        expect(rendered).to match("About learn.concord.org")
       end
 
       # Only the xproject theme renders the project_summary partial, from the
