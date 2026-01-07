@@ -75,27 +75,27 @@
       white-space: nowrap;
   }
 }
-@media screen and (max-width: 950px) {
-  .theme-learn .mobile-nav-contain {
-    margin-top: 20px;
-  }
-}
 
 .portal-pages-nav-auth {
   min-width: 200px;
   text-align: right;
 }
 
+.portal-pages-main-nav.col-9 {
+  float: right;
+}
+
 .portal-pages-main-nav-contain {
   position: relative;
   margin-top: 10px;
+  margin-left: 0;
   text-align: right;
 }
 
 .portal-pages-main-nav-item {
   font-size: 18px;
   display: inline-block;
-  margin-left: 40px;
+  margin-left: 28px;
   position: relative;
 
   &:hover {

@@ -1,6 +1,9 @@
+@media screen and (max-width: 1000px) {
+  @import 'navigation/mq/1000/_main_nav.scss';
+}
+
 @media screen and (max-width: 950px) {
-  @import 'navigation/mq/950/_main_nav.scss',
-          'layout/mq/950/_columns.scss',
+  @import 'layout/mq/950/_columns.scss',
           'layout/mq/950/_skew.scss',
           'helpers/mq/950/_flash.scss',
           'helpers/mq/950/_modal.scss',
