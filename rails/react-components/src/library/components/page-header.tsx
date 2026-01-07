@@ -218,7 +218,7 @@ const PageHeader = Component({
               </div>
             </a>
           </div>
-          <div className="portal-pages-main-nav col-9">
+          <div className="portal-pages-main-nav">
             { navLinks }
             <div className="mobile-nav-contain">
               <div className="mobile-nav-btn">
