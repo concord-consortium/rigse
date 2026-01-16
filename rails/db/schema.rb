@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_29_112600) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_16_105446) do
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
     t.string "access_token"
@@ -1330,11 +1330,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_29_112600) do
     t.datetime "updated_at", precision: nil, null: false
     t.integer "project_id"
     t.boolean "is_archived", default: false, null: false
+    t.index ["project_id"], name: "index_portal_permission_forms_on_project_id"
   end
 
   create_table "portal_runs", charset: "utf8", force: :cascade do |t|
     t.datetime "start_time", precision: nil, null: false
     t.integer "learner_id", null: false
+    t.index ["learner_id", "start_time"], name: "index_portal_runs_on_learner_id_and_start_time"
     t.index ["learner_id"], name: "fk_rails_06fb23e107"
     t.index ["start_time"], name: "index_portal_runs_on_start_time"
   end
@@ -1386,6 +1388,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_29_112600) do
     t.datetime "updated_at", precision: nil, null: false
     t.index ["clazz_id"], name: "index_portal_student_clazzes_on_clazz_id"
     t.index ["student_id", "clazz_id"], name: "student_class_index"
+    t.index ["student_id"], name: "index_portal_student_clazzes_on_student_id"
   end
 
   create_table "portal_student_permission_forms", id: :integer, charset: "utf8", force: :cascade do |t|
