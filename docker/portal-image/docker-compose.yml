@@ -1,6 +1,6 @@
 # This file is meant for testing a built image.
 # It uses dynamically assigned ports so they won't conflict with other services you
-# might have running. You can use `docker-compose port app 80` to find the port
+# might have running. You can use `docker compose port app 80` to find the port
 # Or if you have dinghy-http-proxy installed you can just use app.portalimage.docker
 version: '2.1'
 services:

@@ -12,7 +12,7 @@ This work is being tracked in this [PT Story](https://www.pivotaltracker.com/sto
 This directory is for the backend GraphQL server.
 
 ### Setup
-1. Run docker, and start the Portal using docker-compose up.
+1. Run docker, and start the Portal using docker compose up.
 2. Copy `./sample-ormconfig.json` to `./orgmconfig.json`
 3. Modify `./ormconfig.json` to use the database and credentials used in Portal.
 4. run `npm install` in this directory

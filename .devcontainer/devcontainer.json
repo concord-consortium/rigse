@@ -4,8 +4,8 @@
     "cpus": 4,
     "memory": "8gb"
   },
-  "postCreateCommand": "cp .env-gh-codespaces-sample .env && npm install -g @anthropic-ai/claude-code && docker-compose build && docker-compose pull",
-  "postStartCommand": "docker-compose up -d",
+  "postCreateCommand": "cp .env-gh-codespaces-sample .env && npm install -g @anthropic-ai/claude-code && docker compose pull && docker compose build",
+  "postStartCommand": "docker compose up -d",
   "forwardPorts": [3000],
   "portsAttributes": {
     "3000": {
