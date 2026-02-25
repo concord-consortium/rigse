@@ -27,7 +27,7 @@ At the moment running the admin panel interface is a manual process:
 1. install certificates into `~/.dignhy/certs`
   1.  `mkcert -cert-file graphql.portal.docker.crt -key-file graphql.portal.docker.key graphql.portal.docker`
   1.  `mkcert -cert-file admin.portal.docker.crt -key-file admin.portal.docker.key admin.portal.docker`
-1. Run docker, and start the Portal using `./docker compose up`.
+1. Run docker, and start the Portal using `docker compose up`.
 6. The GraphQL playground should now be running at `https://graphql.portal.docker/graphql`
 6. You should be able to read the schema at the above playground URL but specific
 queries will fail unless you authenticate with the portal first. See "Portal Authentication" section below.
