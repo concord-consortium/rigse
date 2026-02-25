@@ -27,7 +27,7 @@ At the moment running the admin panel interface is a manual process:
 1. install certificates into `~/.dignhy/certs`
   1.  `mkcert -cert-file graphql.portal.docker.crt -key-file graphql.portal.docker.key graphql.portal.docker`
   1.  `mkcert -cert-file admin.portal.docker.crt -key-file admin.portal.docker.key admin.portal.docker`
-1. Run docker, and start the Portal using `./docker-compose up`.
+1. Run docker, and start the Portal using `docker compose up`.
 6. The GraphQL playground should now be running at `https://graphql.portal.docker/graphql`
 6. You should be able to read the schema at the above playground URL but specific
 queries will fail unless you authenticate with the portal first. See "Portal Authentication" section below.
@@ -40,7 +40,7 @@ queries will fail unless you authenticate with the portal first. See "Portal Aut
 1. The client should be configured with Redirect URIS matching
 `https://admin.portal.docker/` and `https://admin.portal.docker/?PORTAL_URL=https://app.portal.docker`
 1. Most of the configuration is done through environment variables, managed by
-1. docker-compose. For the react-admin interface environment variable names must
+1. Docker Compose. For the react-admin interface environment variable names must
 1. start with `REACT_APP` so they get passed down to build process and packaged
 1. for client delivery. To learn more about that, see the
 [create-react-app documentation for custom enviroments](https://create-react-app.dev/docs/adding-custom-environment-variables)

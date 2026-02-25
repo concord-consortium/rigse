@@ -197,9 +197,9 @@ networks:
   portal:
 
 # In this file the web app and solr ports are not published. However, if you run
-# `docker-compose up` (without customizing your environment) the ports will be published
+# `docker compose up` (without customizing your environment) the ports will be published
 # to 3000 and 8983.  This is because the docker-compose.override.yml file will be loaded
-# automatically by docker-compose.
+# automatically by Docker Compose.
 # You will likely want to modify how the ports are published, so they don't conflict.
 # Take a look at the this overlay for more information:
 #   docker/dev/docker-compose-random-ports.yml

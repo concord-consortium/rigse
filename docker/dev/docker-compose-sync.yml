@@ -4,7 +4,7 @@
 # A convient way to overlay this file is to add a `.env` file with the contents:
 #  COMPOSE_FILE=docker-compose.yml:docker/dev/docker-compose-sync.yml
 # if you are making changes to docker-compose.yml or this file it is useful to
-# run `docker-compose config` which shows how the two files get merged together
+# run `docker compose config` which shows how the two files get merged together
 version: '3'
 services:
   app:

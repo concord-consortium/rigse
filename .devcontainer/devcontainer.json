@@ -1,0 +1,17 @@
+{
+  "name": "RIGSE Portal",
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "8gb"
+  },
+  "postCreateCommand": "cp .env-gh-codespaces-sample .env && npm install -g @anthropic-ai/claude-code && docker compose pull && docker compose build",
+  "postStartCommand": "docker compose up -d",
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": {
+      "label": "Portal",
+      "visibility": "public",
+      "onAutoForward": "notify"
+    }
+  }
+}

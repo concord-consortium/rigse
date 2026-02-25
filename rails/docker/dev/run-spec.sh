@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 # Run rspec tests in docker environment:
-#   – Execute like this: `docker-compose run --rm app ./docker/dev/run-spec.sh`
-#   – Or make an alias `alias dspec='docker-compose run --rm app ./docker/dev/run-spec.sh'`
+#   – Execute like this: `docker compose run --rm app ./docker/dev/run-spec.sh`
+#   – Or make an alias `alias dspec='docker compose run --rm app ./docker/dev/run-spec.sh'`
 #        then type `dspec` to start Continuous Integration Testing.
-#   – Or run from shell in docker (`docker-compose run --rm bash` … ./docker/dev/run-psec.sh`)
+#   – Or run from shell in docker (`docker compose run --rm app bash` … ./docker/dev/run-spec.sh`)
 
 #
 # Prepare spec tests

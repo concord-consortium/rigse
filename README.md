@@ -19,17 +19,17 @@ Working git, ruby, and rubygems, wget
 
 ##### Using Docker
 
-Install Docker and make sure that docker-compose is installed too (it should be part of the standard Docker installation).
+Install Docker and make sure that Docker Compose is installed too (it should be part of the standard Docker installation).
 
     git clone git@github.com:concord-consortium/rigse.git portal
     cd portal
-    docker-compose up # this will take 15 minutes to download gems
+    docker compose up # this will take 15 minutes to download gems
 
 Increase memory available to Docker to 4GiB-5GiB (OSX: Preferences... -> Advanced tab).
 
 Now open your browser to [http://0.0.0.0:3000](http://0.0.0.0:3000). On OS X this might
 take more than 5 minutes to load the first page. Look in the terminal where you ran
-`docker-compose up` to monitor progress.
+`docker compose up` to monitor progress.
 
 Visit [the Docker docs](docs/docker.md) for how to use your portal running in docker. This
 also includes: instructions on speeding things up on OS X, using a local dns+proxy system
@@ -75,7 +75,7 @@ for these new features.
 #### SSO Clients and LARA (authoring) integration
 
 These instructions assume that you are setting up LARA and Portal using
-docker-compose files. It also assumes some prerequisites:
+Docker Compose files. It also assumes some prerequisites:
 - You are using an http-proxy dns container: [Setup Dinghy on OSX](https://github.com/concord-consortium/lara/blob/master/README.md#setup-dinghy-on-os-x)
 - You are using https for LARA and the Portal: [Setup https for LARA and Portal](https://github.com/concord-consortium/lara/blob/master/README.md#enabling-ssl-for-dinghy-reverse-proxy-on-os-x)
 - You are logged into docker to gain access to our private images: [Logging into Docker](https://github.com/concord-consortium/lara/blob/master/README.md#getting-started)
@@ -94,20 +94,20 @@ With the following settings you can:
 
 1. in the Portal: `cp .env-osx-sample .env`
 2. in the Portal `.env` set `PORTAL_PROTOCOL=https`
-3. start up the Portal: `docker-compose up`
-4. Add a Firebase App for report-service-dev with `docker-compose exec app bundle exec app:setup:add_report_service_firebase_app`, it will ask for the "private_key", paste in the private key from report-service-dev firebase app in learn.staging.concord.org
+3. start up the Portal: `docker compose up`
+4. Add a Firebase App for report-service-dev with `docker compose exec app bundle exec app:setup:add_report_service_firebase_app`, it will ask for the "private_key", paste in the private key from report-service-dev firebase app in learn.staging.concord.org
 5. in LARA: `cp .env-osx-sample .env`
 6. in LARA `.env`:
     1. set `LARA_PROTOCOL=https`
     2. set `PORTAL_PROTOCOL=https`
-7. start up LARA: `docker-compose up`
+7. start up LARA: `docker compose up`
 8. Setup admin access to LARA using a portal SSO login:
     1. Go to https://app.lara.docker
     2. Click log in, and choose "localhost"
     3. This will take you to the portal (app.portal.docker)
     4. Log in with `admin`, `password`
     5. You are now logged in with admin@concord.org in LARA, however this user is not actually an admin in LARA
-    6. Run the following command in terminal in the LARA folder: `docker-compose exec app bundle exec rake lightweight:admin_last_user`
+    6. Run the following command in terminal in the LARA folder: `docker compose exec app bundle exec rake lightweight:admin_last_user`
 
 Notes:
 - LARA runtime activities published to the portal will automatically have report buttons for teachers and students
@@ -126,7 +126,7 @@ Notes:
     2. If your local portal domain is not `app.portal.docker`, then set `PORTAL_HOST`
     3. set `PORTAL_PROTOCOL=https`
     4. If your lara host name is not app.lara.docker, then set `LARA_HOST`
-2. Stop your portal services if they are running, and update them with `docker-compose up`
+2. Stop your portal services if they are running, and update them with `docker compose up`
 3. In the Portal, as an administrator:
     1. Create or update an "Auth Client". Using the following settings:
         ```
@@ -157,7 +157,7 @@ Notes:
     4. set `LARA_PROTOCOL=https`
     5. Set `REPORT_SERVICE_BEARER_TOKEN` (see the comment in the .env file)
     6. set `REPORT_SERVICE_URL` (see the value in the .env-osx-sample file)
-5. Stop your Lara services if they are running, and update them with `docker-compose up`
+5. Stop your Lara services if they are running, and update them with `docker compose up`
 6. If you want admin access to Lara when signing in with a portal user, you will need to first login to LARA
 with this portal user. And then either:
     - use the rails console in LARA to set the `is_admin` flag of the newly created user.
@@ -194,7 +194,7 @@ When you run the portal-report if you just see a spinner. Here are some steps to
     2. Look in the sources collection
     3. You should see a `app.lara.docker.{$USER}` collection (USER is your local username)
     4. If you don't see this collection then your LARA is not properly publishing the report structure to the report-service. In LARA check the values of `REPORT_SERVICE_BEARER_TOKEN` and `REPORT_SERVICE_URL` (see above). A less common error would be a misconfigured `LARA_HOST` and `TOOL_ID` setup.
-    5. After fixing these values update your lara app so it picks up the variables with `docker-compose up`. And make a change to your activity so it republishes the structure to Firestore. Check that the `app.lara.docker.{$USER}` collection is there now.
+    5. After fixing these values update your lara app so it picks up the variables with `docker compose up`. And make a change to your activity so it republishes the structure to Firestore. Check that the `app.lara.docker.{$USER}` collection is there now.
 2. Verify the resource structure added to firestore has the right URL:
     1. Go to the firebase console and open the report-service-dev firestore.
     2. Inside of the `sources/app.lara.docker.{$USER}` collection will be a `resources` collection. Inside of this will be a document for each activity or sequence that you've published from LARA.
@@ -205,7 +205,7 @@ When you run the portal-report if you just see a spinner. Here are some steps to
         - if this is a AP runtime activity the activity_url will look like: https://activity-player.concord.org/branch/master/?activity=https%3A%2F%2Fapp.lara.docker%2Fapi%2Fv1%2Factivities%2F22.json
         In this case, you need to unescape the activity parameter. Then take the value of the activity param and remove the `/api/v1` and remove the `.json` at the end. The result of that transformation snould exactly match what is in `url` field in firestore.
         - if this is a AP runtime sequence follow the directions for AP activity above except the parameter name is `sequence` instead of `activity`
-    5. To fix the `http:` instead of `https:` problem make sure your `LARA_PROTOCOL` is set to `https` in your lara `.env` file. Then update your lara container with `docker-compose up`. And then make a change to the LARA activity or sequence to republish it. Verify the `url` field in firestore has been updated.
+    5. To fix the `http:` instead of `https:` problem make sure your `LARA_PROTOCOL` is set to `https` in your lara `.env` file. Then update your lara container with `docker compose up`. And then make a change to the LARA activity or sequence to republish it. Verify the `url` field in firestore has been updated.
 
 #### Virtual host settings (currently used for automation)
 If you want to change the portal url from "app.portal.docker" to "learn.dev.docker", please follow the below steps:
@@ -238,32 +238,24 @@ install a Codespaces extension.
 - Your GitHub account needs to have Codespaces activated by the organization admin.
 - Go to the github.com page for the repository you will be working on.
 - Click on the Code button, then click the Codespaces tab, and then click the “Create codespace on master” button.
-- Portal requires 4-core machine because of memory (MySQL server tends to fail randomly on 2-core variant)
 
-Once machine is up and running, most of the steps described for local development are still valid for GH Codespaces.
-The main difference is that you should copy `.env-gh-codespaces-sample` to `.env` (instead of `.env-osx-sample`),
-there's no need for Dinghy setup, and LARA and Portal hosts will be significantly different. However, everything
-you need to do in practice is described below.
+The `.devcontainer/devcontainer.json` file automates most of the setup:
+- Requests a 4-core / 8GB machine (MySQL tends to fail on 2-core variants)
+- Copies `.env-gh-codespaces-sample` to `.env`
+- Builds and pulls Docker images
+- Starts the containers with `docker compose up -d`
+- Forwards port 3000 with public visibility
 
-1. Run:
-    ```
-      cp .env-gh-codespaces-sample .env
-    ```
+Once the codespace finishes initializing, the Portal should be accessible at the URL shown in the
+“Ports” tab. It may take a minute or two for Rails to finish starting up — you can monitor progress
+by running `docker compose logs -f app` in the terminal.
 
-2. Open LARA GitHub Codespace, run `echo ${CODESPACE_NAME}` in terminal, and set `LARA_CODESPACE_NAME` variable
-in Portal's `.env` file.
+##### Additional setup
 
-3. Run
-    ```
-      docker-compose up
-    ```
+1. If you need LARA integration, open your LARA GitHub Codespace, run `echo ${CODESPACE_NAME}` in
+the terminal, and set `LARA_CODESPACE_NAME` in Portal's `.env` file.
 
-4.  Once the app has started, open "Ports" tab in Visual Studio Code. Find a process that uses port 3000 and change its
-visibility to public (right click on "Private" -> Port Visibility -> Public). You should see an updated address in
-"Local Address" column. You can open this URL in the web browser and Portal should load. It seems it's necessary to do it
-each time you run `docker-compose up`.
-
-5. Open Portal, login as `admin` (password: `password`), and go to Admin tab.
+2. Open Portal, login as `admin` (password: `password`), and go to Admin tab.
 
     Go to Firebase Apps and create two new apps:
       - report-service-dev
@@ -364,7 +356,7 @@ Feature specs that require javascript are run by Chrome via Selenium. By default
 
 However, if you would like to run Chrome in **non-headless mode** on your host machine, this is possible by making the following changes:
 
-* set the environment variable `HEADLESS=false` if you are running the tests by using `docker-compose exec app /bin/bash`, then you can set HEADLESS in the shell.
+* set the environment variable `HEADLESS=false` if you are running the tests by using `docker compose exec app /bin/bash`, then you can set HEADLESS in the shell.
 * expose the capybara port by adding the docker-compose-publish-capybara-port overlay to to your .env file
 * install `chromedriver` on your host machine
 * start it with the command: `chromedriver --whitelisted-ips`

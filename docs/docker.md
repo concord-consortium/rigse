@@ -4,63 +4,63 @@ The main readme contains the basic steps to start with Docker:
 
     git clone git@github.com:concord-consortium/rigse.git portal
     cd portal
-    docker-compose up # this will take 15 minutes to download gems
+    docker compose up # this will take 15 minutes to download gems
 
 After this you can browse to [http://0.0.0.0:3000](http://0.0.0.0:3000). On OS X this
 might take more than 5 minutes to load the first page. Look in the terminal where you ran
-`docker-compose up` to monitor progress.
+`docker compose up` to monitor progress.
 
 ## Notes on basic steps
 
-If you have a clean checkout of the portal, `docker-compose up` should just work. If you
+If you have a clean checkout of the portal, `docker compose up` should just work. If you
 have another service running on port 3000 you might get a port conflict.
 
 By default your local portal folder will be mounted inside of the docker app service.
 Any changes you make to your local folder will show up immediately in the docker app
 service. The files `config/database.yml`, `config/settings.yml` and
 `config/app_environment_variables.yml` are automatically copied from their `.sample.yml`
-counterparts when you run `docker-compose up` if they do not exist. If they already
+counterparts when you run `docker compose up` if they do not exist. If they already
 exist, they will not be updated. If they already exist then there is a good chance
 they will not be configured correctly for Docker. If you are not using
 the docker-compose-sync overlay to sync
 your local files (see below), you can delete these files and run
 
-    docker-compose build app # make sure you have the latest app image
-    docker-compose up app    # recreate the app container from this image
+    docker compose build app # make sure you have the latest app image
+    docker compose up app    # recreate the app container from this image
 
 If you are using the docker-compose-sync overlay then you should delete your sync volume first to be safe. You
 can't delete a volume that is still attached to containers, so you also need to delete
 all of the containers using the sync volume (pretty much everything):
 
-    docker-compose down                   # stop all containers and remove them
+    docker compose down                   # stop all containers and remove them
     docker volume ls                      # list all of the volumes
     docker volume rm {portal}_sync-volume # remove the unison volume
-    docker-compose build app              # make sure you have the latest app image
-    docker-compose up                     # start services
+    docker compose build app              # make sure you have the latest app image
+    docker compose up                     # start services
 
-Also, when `config/database.yml` is not present yet, `docker-compose up` will copy it
+Also, when `config/database.yml` is not present yet, `docker compose up` will copy it
 and run `rake db:setup`. This running of `rake db:setup` will erase any data in the
-mysql service created by docker-compose, so be careful if you have data in this docker
+mysql service created by Docker Compose, so be careful if you have data in this docker
 managed database.
 
 ## Docker Compose Overrides
 
-docker-compose supports the concept of
+Docker Compose supports the concept of
 [overrides](https://docs.docker.com/compose/extends/#understanding-multiple-compose-files).
 These are partial docker-compose files that are layered ontop of the main
-docker-compose.yml. With no configuration docker-compose will look for a
+docker-compose.yml. With no configuration Docker Compose will look for a
 `docker-compose.override.yml` file and combine that with `docker-compose.yml`.  To
 change that behavior you can define a `COMPOSE_FILE` environment variable that has a list
 of files to layer on top of each other. If this env variable is defined then
-docker-compose will not automatically load `docker-compose.override.yml`. docker-compose
+Docker Compose will not automatically load `docker-compose.override.yml`. Docker Compose
 will also look for a `.env` file where you can put environment variables like
 `COMPOSE_FILE`.
 
 In this repository we've included a docker-compose.override.yml file which provides the
-default ports for Rails and Solr. This way a simple `docker-compose up` does the expected
+default ports for Rails and Solr. This way a simple `docker compose up` does the expected
 thing.
 
-There are several docker-compose overrides you can use to customize your docker-compose
+There are several docker-compose overrides you can use to customize your Docker Compose
 environment. These can be found in `docker/dev/`. Currently these overrides support:
 
 - `docker-compose-external-mysql.yml`: external mysql server
@@ -74,14 +74,14 @@ To make the initial setup easier there is a .env-osx-sample file that contains t
 
 ```
 cp .env-osx-sample .env
-docker-compose up
+docker compose up
 ```
 
 ## Running Rails and Rake commands
 
 You can run individual commands like this:
 
-    docker-compose run --rm app [command]
+    docker compose run --rm app [command]
 
 The `--rm` tells docker to remove the container after running the command. Otherwise
 docker will save the state of the stopped container, which could take up a lot of space
@@ -89,12 +89,12 @@ for certain commands.
 
 For example to run the migrations you would do:
 
-    docker-compose run --rm app bundle exec rake db:migrate
+    docker compose run --rm app bundle exec rake db:migrate
 
 However if you are doing active portal development you will probably need to run several
 commands. In that case it is more useful to start up a shell and for your commands:
 
-    docker-compose run --rm app bash
+    docker compose run --rm app bash
 
 ## Speeding up OS X
 
@@ -128,7 +128,7 @@ standard Rails and Solr ports. If you want to use random ports see that section 
 and replace `docker-compose.override.yml` in the line above with
 `docker/dev/docker-compose-random-ports.yml`.
 
-Now you can start things up with a simple `docker-compose up`
+Now you can start things up with a simple `docker compose up`
 
 There can be some file conflicts that come up if both sides modify a file at the same
 time. The sync container is configured to choose the host file in this case. Occasionally
@@ -142,14 +142,14 @@ it shouldn't cause any problems.
 
 ## Setting up a DNS and Proxy to avoid port conflicts
 
-You can easily setup a DNS and Proxy system so you can access all of your docker-compose
+You can easily setup a DNS and Proxy system so you can access all of your Docker Compose
 services with urls like: http://app.[folder-name].docker (e.g. http://app.portal.docker)
 
 We use [dingh-http-proxy](https://github.com/codekitchen/dinghy-http-proxy). To install
 on OS X follow the
 [OS X instructions](https://github.com/codekitchen/dinghy-http-proxy#os-x).
 You only need to do this one for your whole machine and it will apply to all of your
-docker-compose projects. Basically you start a docker container that automatically
+Docker Compose projects. Basically you start a docker container that automatically
 restarts. Second you configure the OS X DNS to know about the DNS server of this
 container.
 
@@ -195,7 +195,7 @@ https://docs.docker.com/docker-for-mac/networking/#/i-want-to-connect-from-a-con
 1. Connect to the running docker instance of your "app" service.
 
 ```
-docker-compose exec app bash
+docker compose exec app bash
 ```
 
 2. Then in the container, the first time you need to create the test and feature databases
