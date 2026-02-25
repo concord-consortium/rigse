@@ -238,32 +238,24 @@ install a Codespaces extension.
 - Your GitHub account needs to have Codespaces activated by the organization admin.
 - Go to the github.com page for the repository you will be working on.
 - Click on the Code button, then click the Codespaces tab, and then click the “Create codespace on master” button.
-- Portal requires 4-core machine because of memory (MySQL server tends to fail randomly on 2-core variant)
 
-Once machine is up and running, most of the steps described for local development are still valid for GH Codespaces.
-The main difference is that you should copy `.env-gh-codespaces-sample` to `.env` (instead of `.env-osx-sample`),
-there's no need for Dinghy setup, and LARA and Portal hosts will be significantly different. However, everything
-you need to do in practice is described below.
+The `.devcontainer/devcontainer.json` file automates most of the setup:
+- Requests a 4-core / 8GB machine (MySQL tends to fail on 2-core variants)
+- Copies `.env-gh-codespaces-sample` to `.env`
+- Builds and pulls Docker images
+- Starts the containers with `docker-compose up -d`
+- Forwards port 3000 with public visibility
 
-1. Run:
-    ```
-      cp .env-gh-codespaces-sample .env
-    ```
+Once the codespace finishes initializing, the Portal should be accessible at the URL shown in the
+“Ports” tab. It may take a minute or two for Rails to finish starting up — you can monitor progress
+by running `docker compose logs -f app` in the terminal.
 
-2. Open LARA GitHub Codespace, run `echo ${CODESPACE_NAME}` in terminal, and set `LARA_CODESPACE_NAME` variable
-in Portal's `.env` file.
+##### Additional setup
 
-3. Run
-    ```
-      docker-compose up
-    ```
+1. If you need LARA integration, open your LARA GitHub Codespace, run `echo ${CODESPACE_NAME}` in
+the terminal, and set `LARA_CODESPACE_NAME` in Portal's `.env` file.
 
-4.  Once the app has started, open "Ports" tab in Visual Studio Code. Find a process that uses port 3000 and change its
-visibility to public (right click on "Private" -> Port Visibility -> Public). You should see an updated address in
-"Local Address" column. You can open this URL in the web browser and Portal should load. It seems it's necessary to do it
-each time you run `docker-compose up`.
-
-5. Open Portal, login as `admin` (password: `password`), and go to Admin tab.
+2. Open Portal, login as `admin` (password: `password`), and go to Admin tab.
 
     Go to Firebase Apps and create two new apps:
       - report-service-dev
