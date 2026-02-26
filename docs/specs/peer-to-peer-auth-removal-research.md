@@ -45,12 +45,13 @@ LARA sends `Bearer <app_secret>` in these production code paths:
 
 ### Classification of LARA's peer-to-peer code paths
 
-LARA is still running in production as an **authoring system**, but its student-facing runtime is no longer used directly. Deeper analysis of LARA's codebase reveals that **all outbound peer-to-peer auth is in student runtime code**:
+LARA is still running in production as an **authoring system**, but its student-facing runtime is no longer used directly. Deeper analysis of LARA's codebase reveals that **all outbound peer-to-peer auth is in student runtime or authoring plugin code**:
 
 | Code path | Classification | Direction | Status |
 |---|---|---|---|
 | `portal_sender.rb` (answer posting) | Student runtime | LARA → Portal | **Dead** — confirmed by log analysis |
-| `jwt_controller.rb` (JWT proxying) | Student runtime | LARA → Portal | **Dead** — confirmed by log analysis |
+| `jwt_controller.rb` with `run_id` (JWT proxying, sends `learner_id_or_key`) | Student runtime | LARA → Portal | **Dead** — confirmed by log analysis |
+| `jwt_controller.rb` without `run_id` (JWT proxying, sends `user_id`) | Authoring plugins | LARA → Portal | **Dead** — confirmed by log analysis. Added in LARA PR [#461](https://github.com/concord-consortium/lara/pull/461) (2019-08-27) for authoring plugin Firebase JWT access |
 | `create_collaboration.rb` (collaboration) | Student runtime | LARA → Portal | **Dead** — confirmed by log analysis |
 | `run.rb` / `runs_controller.rb` (admin detail) | Admin diagnostic | LARA → Portal | Rarely used |
 
@@ -201,7 +202,7 @@ Searched for `?user_id=` and `&user_id=` in `Started GET/POST/PUT/DELETE` lines 
 
 | Endpoint | Requests | Peer-to-peer? |
 |---|---|---|
-| `/api/v1/offerings` | 930,920 | Unknown — see below |
+| `/api/v1/offerings` | 930,920 | **No** — see below |
 | `/api/v1/jwt` | 0 | — |
 | `/api/v1/bookmarks` | 0 | — |
 | `/api/v1/external_activities` | 0 | — |
@@ -210,7 +211,13 @@ Searched for `?user_id=` and `&user_id=` in `Started GET/POST/PUT/DELETE` lines 
 
 The 930,920 offerings requests cannot be definitively classified as OAuth vs. peer-to-peer from the logs alone — Rails does not log the `Authorization` header or the referer. ALB access logs (which would include the referer) are not enabled on the Portal load balancers (`learn-ELBv2-I2UXANP07DD5`, `learn-ELBv2-1Q7V4OJM2B6UI`). SQL query logging is also unavailable (production uses `:info` log level; `Client.find_by_app_secret` queries would only appear at `:debug`).
 
-However, the GitHub org-wide search found **no codebase** outside of LARA that sends `app_secret` as a Bearer token, and all of LARA's peer-to-peer `user_id` usage is in dead student runtime code. The volume (~930K requests/year) is also consistent with normal application traffic (teacher dashboards polling for offerings), not peer-to-peer server calls.
+However, multiple lines of evidence indicate these are not peer-to-peer:
+
+1. **Git history:** The `user_id` peer-to-peer path was added in Portal PR [#682](https://github.com/concord-consortium/rigse/pull/682) (commit `07a839e96`, 2019-08-27, Pivotal `#168138043`). The PR comment links to LARA PR [#461](https://github.com/concord-consortium/lara/pull/461), which shows it was created specifically for **LARA authoring plugins** — allowing plugins like `glossary-plugin` to get Firebase JWTs during authoring mode (no student run). LARA's `get_firebase_jwt` action sends `user_id=session[:portal_user_id]` (instead of `learner_id_or_key`) when there is no run. The only Portal endpoint this targets is `/api/v1/jwt/firebase`, not `/api/v1/offerings`.
+2. **GitHub org search:** No codebase outside of LARA sends `app_secret` as a Bearer token.
+3. **LARA's peer-to-peer `user_id` usage is in dead student runtime code** — confirmed by LARA log analysis (zero outbound peer-to-peer traffic over 90 days).
+4. **The offerings controller uses `user_id` as a query filter**, not for authentication. The `index` action (line 79) reads `params[:user_id]` to filter which teacher's offerings to return; authentication is handled separately by `authorize` and `current_user` from the session/OAuth token.
+5. **Volume:** ~930K requests/year is consistent with normal application traffic (teacher dashboards polling for offerings), not peer-to-peer server calls.
 
 **`/admin/learner_detail/` — VERIFIED (Logs Insights, 365 days):**
 Searched `learn-ecs-production` log group over 365 days. Query: `filter @message like /learner_detail/`. Scanned 635,612,653 records (~80 GB). **Zero matches.** This confirms no traffic to `/admin/learner_detail/` over the past year — safe to deploy.
@@ -222,12 +229,10 @@ Searched `learn-ecs-production` log group over 365 days. Query: `filter @message
 - No production Clients other than the LARA clients (2, 3, 4) show evidence of peer-to-peer usage
 - LARA production logs confirm zero traffic to JWT proxy, collaboration, and answer posting endpoints over 90 days
 - Portal production logs over 365 days show 1,101 `learner_id_or_key` requests, but **all on `GET /api/v1/jwt/firebase`** (glossary-plugin, ep-erosion-dev, vortex). Source code analysis indicates these come from the Activity Player using `Bearer/JWT` auth (logs do not reveal auth type directly). **Zero occurrences on any peer-to-peer endpoint.**
-- Portal `user_id=` search (Logs Insights, 365 days): only `/api/v1/offerings` has traffic (930,920 requests). Zero `user_id=` requests on `/api/v1/jwt`, `/api/v1/bookmarks`, `/api/v1/external_activities`, or `/api/v1/teacher_classes`. The offerings requests can't be classified as OAuth vs. peer-to-peer from logs alone (no auth header or referer logged), but the GitHub org search found no codebase sending `app_secret` as Bearer
+- Portal `user_id=` search (Logs Insights, 365 days): only `/api/v1/offerings` has traffic (930,920 requests). Zero `user_id=` requests on `/api/v1/jwt`, `/api/v1/bookmarks`, `/api/v1/external_activities`, or `/api/v1/teacher_classes`. The offerings requests are not peer-to-peer: git history shows the `user_id` peer path was added only for LARA's `/api/v1/jwt/firebase` proxy (PR [#682](https://github.com/concord-consortium/rigse/pull/682)), the offerings controller uses `user_id` as a query filter (not auth), and the volume (~930K/year) matches normal teacher dashboard traffic
 - Activity publishing uses OAuth tokens, not `app_secret`
 - The Activity Player uses Portal JWTs, not `app_secret`, for the `learner_id_or_key` parameter
 
 ## Open Questions
 
 1. **Is the Portal's remote copy/import feature (which calls LARA via peer auth) still enabled?** If disabled, the inbound peer-auth endpoints on LARA are also dead. This is low-priority since the direction is Portal→LARA (inbound to LARA), not LARA→Portal.
-
-2. ~~**Re-run `user_id` Portal log searches with Logs Insights.**~~ **RESOLVED (2026-02-26).** Re-ran with Logs Insights over 365 days. Only `/api/v1/offerings` has `user_id=` traffic (930,920 requests). All other peer-to-peer endpoints: zero. The offerings requests can't be classified as OAuth vs. peer-to-peer from logs (no auth header or referer logged; ALB access logs not enabled; SQL queries not logged at production log level), but the GitHub org search found no codebase using `app_secret` as Bearer for this endpoint.
