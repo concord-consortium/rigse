@@ -235,4 +235,32 @@ Searched `learn-ecs-production` log group over 365 days. Query: `filter @message
 
 ## Open Questions
 
-1. **Is the Portal's remote copy/import feature (which calls LARA via peer auth) still enabled?** If disabled, the inbound peer-auth endpoints on LARA are also dead. This is low-priority since the direction is Portal→LARA (inbound to LARA), not LARA→Portal.
+### Unverified: No log search for `collaborators_data` endpoint traffic
+
+The `collaborators_data` endpoint (`GET /api/v1/collaborations/:id/collaborators_data`) uses its own `request_is_peer?` policy check, not `check_for_auth_token`. LARA log analysis showed zero outbound collaboration requests, but a Portal-side Logs Insights search for `/collaborators_data` would be the direct confirmation.
+
+### Unverified: `model-my-watershed` (Client ID 22, external org) not audited
+
+The GitHub org search only covered `concord-consortium`. Client 22 belongs to `WikiWatershed/model-my-watershed` — an external organization whose code was not searched. Low probability of peer auth usage (it's a public-facing web app, not a server-to-server integration, and peer auth requires knowing a `learner_id_or_key` or `user_id`), but a quick search of the `WikiWatershed/model-my-watershed` repo for `app_secret` or `Bearer` usage would be definitive.
+
+### Unverified: `run.rb` / `runs_controller.rb` "rarely used" classification
+
+Line 56 of the findings lists `run.rb` as an admin diagnostic that provides auth tokens, classified as "rarely used" rather than confirmed dead. Need to clarify whether this path generates actual outbound peer-auth requests to the Portal or just returns a token for manual/display use.
+
+## Resolved Questions
+
+### Does the `republish` endpoint receive any peer-auth traffic?
+
+**Answer: No — the `republish` action was deleted. The endpoint is dead code.**
+
+Both the `publish` and `republish` actions were **deleted** from `ExternalActivitiesController` in commit `31a593e2a` (2023-03-10, same legacy code cleanup that removed `duplicate`). The routes on `routes.rb:277-278` are orphaned — any POST to `/external_activities/republish/:version` would fail with `AbstractController::ActionNotFound`. The `ExternalActivityPolicy#republish?` policy (line 16) and the `pundit_user_not_authorized` handler for `'republish?'` (line 7) are also dead code. No log search is needed — the endpoint cannot receive traffic.
+
+### Is the Portal's remote copy/import feature (which calls LARA via peer auth) still enabled?
+
+**Answer: The remote copy feature is broken; the import feature has surviving code but is admin-only and irrelevant to inbound peer-auth removal.**
+
+**Remote copy (duplicate):** The `ExternalActivity#duplicate` method — including `duplicate_on_remote`, which sent `Bearer <app_secret>` to LARA's `/remote_duplicate` endpoint — was **deleted** in commit `31a593e2a` (2023-03-10, "Remove lots of legacy code related to activity structure"). The `copy` controller action and route still exist (`external_activities_controller.rb:249`), but calling `@external_activity.duplicate(current_visitor, root_url)` would raise a `NoMethodError` at runtime. The "Copy" button may still appear in the UI for some materials (the `external_copyable` check in `data_helpers.rb:314` still gates on `tool.remote_duplicate_url`), but clicking it crashes. **This feature has been non-functional for ~3 years.**
+
+**Import:** The `Import::ImportExternalActivity` job (`rails/app/models/import/import_external_activity.rb:59-68`) still contains code that sends `Bearer <app_secret>` to LARA's `/import/import_portal_activity` endpoint. This is an admin-only feature (gated by `admin_only` in `imports_controller.rb:309`). However, it targets a LARA endpoint that would need to be responsive, and all LARA student runtime traffic is confirmed dead.
+
+**Impact on peer-to-peer auth removal:** Neither feature is relevant. Both are **outbound** (Portal→LARA), not inbound (LARA→Portal). Removing peer-to-peer auth from the Portal's inbound API controllers does not affect these code paths. The remote copy code is already dead; the import code is a separate cleanup item if desired.
