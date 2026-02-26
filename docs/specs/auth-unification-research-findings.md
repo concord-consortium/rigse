@@ -183,6 +183,8 @@ Notes:
 
    Expected result: zero matches confirms safe to deploy.
 
+   **Verification result (2026-02-26):** Searched `learn-ecs-production` log group using CloudWatch Logs Insights over the last **365 days** (vs. the 90 days originally suggested). Query: `filter @message like /learner_detail/`. Scanned 635,612,653 records (~80 GB). **Zero matches.** This confirms no traffic to `/admin/learner_detail/` over the past year — safe to deploy.
+
 ---
 
 ## Research Task 2: Can Client-less Grants Be Replaced with JWTs?
