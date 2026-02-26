@@ -148,9 +148,40 @@ Notes:
 - Activity publishing uses OAuth tokens, not `app_secret`
 - The Activity Player uses Portal JWTs, not `app_secret`, for the `learner_id_or_key` parameter
 
-### Remaining Open Question
+### Remaining Open Questions
 
 1. **Is the Portal's remote copy/import feature (which calls LARA via peer auth) still enabled?** If disabled, the inbound peer-auth endpoints on LARA are also dead. This is low-priority since the direction is Portal→LARA (inbound to LARA), not LARA→Portal.
+
+2. **Verify zero traffic to `/admin/learner_detail/` before peer auth removal is deployed.** The `LearnerDetailPolicy#show?` was gated by `request_is_peer?` (now returns `false`). Unlike the `check_for_auth_token` peer paths, this endpoint doesn't use `learner_id_or_key` or `user_id` params — it only requires a Bearer token matching any Client's `app_secret`. So the Portal log searches for those params would not have caught traffic to this endpoint. The GitHub org search found no repos other than LARA using `app_secret` as a Bearer token, and LARA's related code path (`run.rb` / `runs_controller.rb` — admin diagnostic) was classified as "Rarely used." However, the route (`GET /admin/learner_detail/:id_or_key.:format`) should be searched for directly in Portal request logs to confirm zero traffic over 90 days before deploying.
+
+   **AWS CLI commands to verify** (CloudWatch Logs, `us-east-1`, stream prefix `portal`):
+
+   Replace `<LOG_GROUP>` with the Portal production CloudWatch log group name (the `CloudWatchLogGroup` stack parameter).
+
+   ```bash
+   # Search for any request to the learner_detail endpoint over the last 90 days.
+   # The route is GET /admin/learner_detail/:id_or_key.:format so "learner_detail"
+   # in a request path is unambiguous.
+   aws logs filter-log-events \
+     --log-group-name "<LOG_GROUP>" \
+     --log-stream-name-prefix "portal" \
+     --start-time $(date -d '90 days ago' +%s)000 \
+     --filter-pattern '"learner_detail"' \
+     --region us-east-1 \
+     --output text
+
+   # If the above returns results, narrow to actual HTTP requests (vs. other log lines)
+   # by filtering for the path pattern:
+   aws logs filter-log-events \
+     --log-group-name "<LOG_GROUP>" \
+     --log-stream-name-prefix "portal" \
+     --start-time $(date -d '90 days ago' +%s)000 \
+     --filter-pattern '"GET" "learner_detail"' \
+     --region us-east-1 \
+     --output text
+   ```
+
+   Expected result: zero matches confirms safe to deploy.
 
 ---
 
