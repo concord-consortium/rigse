@@ -3,14 +3,9 @@ class ExternalActivitiesController < ApplicationController
   private
 
   def pundit_user_not_authorized(exception)
-    case exception.query.to_s
-    when 'republish?'
-      json_error('missing or invalid peer token', 401)
-    else
-      logger.warn "Didn't proceed: current_visitor.anonymous? was true" if current_visitor.anonymous?
-      logger.info "Current visitor: #{current_visitor.to_s}"
-      super(exception)
-    end
+    logger.warn "Didn't proceed: current_visitor.anonymous? was true" if current_visitor.anonymous?
+    logger.info "Current visitor: #{current_visitor.to_s}"
+    super(exception)
   end
 
   protected
@@ -28,7 +23,7 @@ class ExternalActivitiesController < ApplicationController
 
   public
 
-  before_action :setup_object, :except => [:index, :publish]
+  before_action :setup_object, :except => [:index]
   before_action :render_scope, :only => [:show]
 
 

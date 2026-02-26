@@ -39,9 +39,6 @@ RailsPortal::Application.routes.draw do
 
   # external_activities can have uuids for ids so this resource needs to lay outside the :id constaint
   resources :external_activities, path: 'eresources' do
-    collection do
-      post :publish
-    end
     member do
       get :matedit
       get :archive

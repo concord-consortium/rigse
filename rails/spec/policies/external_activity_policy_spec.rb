@@ -12,7 +12,6 @@ describe ExternalActivityPolicy do
   let(:activity)          { FactoryBot.create(:external_activity)              }
 
   context "for anonymous" do
-    it { is_expected.not_to permit(:publish)             }
     it { is_expected.not_to permit(:duplicate)           }
     it { is_expected.not_to permit(:matedit)             }
     it { is_expected.not_to permit(:duplicate)           }
@@ -29,7 +28,6 @@ describe ExternalActivityPolicy do
     let(:active_user) { FactoryBot.create(:user) }
 
     it { is_expected.to permit(:copy)                     }
-    it { is_expected.not_to permit(:publish)              }
     it { is_expected.not_to permit(:duplicate)            }
     it { is_expected.not_to permit(:matedit)              }
     it { is_expected.not_to permit(:duplicate)            }
@@ -49,7 +47,6 @@ describe ExternalActivityPolicy do
     end
 
     it { is_expected.to permit(:copy)                     }
-    it { is_expected.to permit(:publish)                  }
     it { is_expected.to permit(:matedit)                  }
     it { is_expected.to permit(:update_basic)             }
     it { is_expected.to permit(:archive)                  }
@@ -65,7 +62,6 @@ describe ExternalActivityPolicy do
     let(:active_user) { FactoryBot.generate(:admin_user)   }
 
     it { is_expected.to permit(:copy)                     }
-    it { is_expected.to permit(:publish)                  }
     it { is_expected.to permit(:matedit)                  }
     it { is_expected.to permit(:update_basic)             }
     it { is_expected.to permit(:archive)                  }
@@ -82,7 +78,6 @@ describe ExternalActivityPolicy do
       active_user.add_role_for_project('admin', project_a)
     end
     it { is_expected.to permit(:copy)                     }
-    it { is_expected.to permit(:publish)                  }
     it { is_expected.to permit(:matedit)                  }
     it { is_expected.to permit(:update_basic)             }
     it { is_expected.to permit(:archive)                  }
@@ -106,26 +101,6 @@ describe ExternalActivityPolicy do
     it { is_expected.to permit(:update)                   }
   end
 
-
-  # TODO: auto-generated
-  describe '#publish?' do
-    it 'publish?' do
-      external_activity_policy = described_class.new(nil, nil)
-      result = external_activity_policy.publish?
-
-      expect(result).to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#republish?' do
-    xit 'republish?' do
-      external_activity_policy = described_class.new(nil, nil)
-      result = external_activity_policy.republish?
-
-      expect(result).not_to be_nil
-    end
-  end
 
   # TODO: auto-generated
   describe '#duplicate?' do
