@@ -22,8 +22,9 @@ Searched the `concord-consortium` GitHub organization for:
 | **rigse** | Server (defines the pattern) | N/A — validates incoming tokens | `api_controller.rb` lines 39-54 |
 | **lara** | Client (sends peer tokens) | **Yes** | Multiple call sites (see below) |
 | **activity-player** | Client (sends the param) | **No** — uses Portal JWT as Bearer | Transitional pattern |
+| **report-service** | Client (fetches collaboration data) | **Yes** | `auto-importer.ts` — see below |
 
-No other repos in the organization use `learner_id_or_key` or the `app_secret`-as-Bearer pattern.
+No other repos in the organization use `learner_id_or_key` or the `app_secret`-as-Bearer pattern for `check_for_auth_token` endpoints. However, the report-service uses `app_secret` as Bearer for the `collaborators_data` endpoint, which has its own `request_is_peer?` policy check.
 
 ### LARA's peer-to-peer auth usage
 
@@ -123,6 +124,47 @@ Note: Production traffic counts are from the 365-day Portal log search for `lear
 
 Production logs confirm that `glossary-plugin` (851 requests), `erosion-interactive` (248), and `vortex` (2) are the only interactives/plugins that triggered the `learner_id_or_key` code path over the past year. Notably, `question-interactives` — the most actively maintained interactive — had zero requests with `learner_id_or_key` despite being actively developed.
 
+### Report-service's peer-to-peer auth usage (ACTIVE)
+
+The report-service's `auto-importer` Cloud Function (`functions/src/auto-importer.ts`) uses peer-to-peer auth to fetch collaboration data from the Portal. This is **active production traffic**.
+
+**How it works:**
+1. The Activity Player creates a collaboration on the Portal via `POST /api/v1/collaborations`, which returns a `collaborators_data_url` (e.g., `https://learn.concord.org/api/v1/collaborations/129848/collaborators_data`)
+2. The Activity Player stores this URL in each student answer written to Firebase (`ltiAnswer.collaborators_data_url`)
+3. The report-service's `auto-importer` detects new/updated answers via Firestore triggers. When an answer has a `collaborators_data_url`, the auto-importer fetches it to discover all collaborators and replicate the answer to each collaborator's parquet file in S3
+
+**Code path** (`functions/src/auto-importer.ts`):
+```typescript
+const fetchCollaborationData = async (collaboratorsDataUrl: string, portalSecret: string) => {
+  const resp = await axios.get(collaboratorsDataUrl, {
+    headers: {"Authorization": `Bearer ${portalSecret}`},
+  });
+```
+
+The `portalSecret` is a Client `app_secret` — this is peer-to-peer auth, gated by `CollaborationPolicy#collaborators_data?` → `request_is_peer?` on the Portal side.
+
+**Which Client?** The report-service has three Portal Clients (IDs 27, 28, 31). The `portalSecret` is configured per-portal in the report-service's Firebase environment. One of these Client `app_secret` values is used as the Bearer token.
+
+**Production traffic (Logs Insights, 365 days):** 1,092 GET requests to `/api/v1/collaborations/:id/collaborators_data`. All from GCP IPs (`34.96.x.x`, `34.34.233.x`) — consistent with GCP Cloud Functions. Monthly distribution:
+
+| Month | Requests |
+|-------|----------|
+| Feb 2026 | 48 |
+| Jan 2026 | 19 |
+| Dec 2025 | 34 |
+| Nov 2025 | 56 |
+| Oct 2025 | 148 |
+| Sep 2025 | 135 |
+| Aug 2025 | 18 |
+| Jul 2025 | 12 |
+| Jun 2025 | 23 |
+| May 2025 | ~211 |
+| Apr 2025 | 168 |
+| Mar 2025 | ~208 |
+| Feb 2025 | 12 |
+
+Traffic correlates with the school year (higher Sep–Nov, Apr–May; lower in summer/winter breaks).
+
 ### Portal-side policy dependencies
 
 The Portal's Pundit policies also check for peer auth:
@@ -130,7 +172,7 @@ The Portal's Pundit policies also check for peer auth:
 - `ApplicationPolicy#request_is_peer?` (lines 153-158) — enumerates all Client `app_secret` values and checks if the Bearer token matches any
 - `API::V1::CollaborationPolicy` (lines 31-36) — duplicates the same check, gates `collaborators_data?`
 
-These would need to be updated or removed if peer-to-peer auth is deprecated.
+The `collaborators_data?` policy is **actively used** by the report-service (see above). The `request_is_peer?` check in `ApplicationPolicy` may also be used elsewhere; further analysis needed.
 
 ### Production Client cross-reference
 
@@ -171,11 +213,13 @@ There are 25 Clients configured on the production Portal. Cross-referencing with
 | 30 | CLUE | `collaborative-learning.concord.org/` | `concord-consortium/collaborative-learning` |
 | 31 | Research Report Server | `report-server.concord.org/` | `concord-consortium/report-service` |
 
-None of these Clients' corresponding codebases were found to use `app_secret` as a Bearer token in the GitHub org search. They all use standard OAuth2 or Bearer token flows.
+**CORRECTION:** The initial GitHub org search missed the report-service's peer auth usage because it searched for `app_secret` as a literal string, not for the pattern of sending a secret as a Bearer token. The report-service stores the portal secret in Firebase config (not as `app_secret` in source), so the search didn't flag it. The `collaborators_data` log search (see Report-service section above) revealed this active usage.
+
+The report-service Clients (IDs 27, 28, 31) **do use `app_secret` as Bearer** for the `collaborators_data` endpoint. All other Clients use standard OAuth2 or Bearer token flows.
 
 Notes:
 - 4 clients are Portal-internal (IDs 1, 11, 12, 14) — created by rake tasks or internal features within `rigse`
-- 3 clients map to `report-service` (IDs 27, 28, 31) — different subdirectories of the same monorepo
+- 3 clients map to `report-service` (IDs 27, 28, 31) — different subdirectories of the same monorepo; **at least one uses peer auth for `collaborators_data`**
 - 2 clients map to `document-store` (IDs 7, 9) — different instances of the same codebase
 - ID 22 (`model-my-watershed`) is the only client outside the `concord-consortium` org
 
@@ -219,25 +263,32 @@ However, multiple lines of evidence indicate these are not peer-to-peer:
 4. **The offerings controller uses `user_id` as a query filter**, not for authentication. The `index` action (line 79) reads `params[:user_id]` to filter which teacher's offerings to return; authentication is handled separately by `authorize` and `current_user` from the session/OAuth token.
 5. **Volume:** ~930K requests/year is consistent with normal application traffic (teacher dashboards polling for offerings), not peer-to-peer server calls.
 
+**`/collaborators_data` — ACTIVE TRAFFIC (Logs Insights, 365 days):**
+1,092 GET requests to `/api/v1/collaborations/:id/collaborators_data`. All source IPs are GCP ranges (`34.96.x.x`, `34.34.233.x`), identified as the report-service's `auto-importer` Cloud Function (see Report-service section above). This endpoint uses `request_is_peer?` policy — the report-service authenticates with `Bearer <portalSecret>` (a Client `app_secret`). **This is active peer-to-peer auth traffic.**
+
 **`/admin/learner_detail/` — VERIFIED (Logs Insights, 365 days):**
 Searched `learn-ecs-production` log group over 365 days. Query: `filter @message like /learner_detail/`. Scanned 635,612,653 records (~80 GB). **Zero matches.** This confirms no traffic to `/admin/learner_detail/` over the past year — safe to deploy.
 
 ## Conclusion
 
-**Peer-to-peer auth can be removed.** Evidence:
-- No repos outside of LARA use `app_secret` as a Bearer token
-- No production Clients other than the LARA clients (2, 3, 4) show evidence of peer-to-peer usage
+**Peer-to-peer auth in `check_for_auth_token` (Cases B and C) can be removed** — no traffic uses that code path. However, **the `request_is_peer?` policy check used by `collaborators_data` is actively used and cannot be removed.**
+
+**Evidence that `check_for_auth_token` peer auth is dead:**
 - LARA production logs confirm zero traffic to JWT proxy, collaboration, and answer posting endpoints over 90 days
 - Portal production logs over 365 days show 1,101 `learner_id_or_key` requests, but **all on `GET /api/v1/jwt/firebase`** (glossary-plugin, ep-erosion-dev, vortex). Source code analysis indicates these come from the Activity Player using `Bearer/JWT` auth (logs do not reveal auth type directly). **Zero occurrences on any peer-to-peer endpoint.**
 - Portal `user_id=` search (Logs Insights, 365 days): only `/api/v1/offerings` has traffic (930,920 requests). Zero `user_id=` requests on `/api/v1/jwt`, `/api/v1/bookmarks`, `/api/v1/external_activities`, or `/api/v1/teacher_classes`. The offerings requests are not peer-to-peer: git history shows the `user_id` peer path was added only for LARA's `/api/v1/jwt/firebase` proxy (PR [#682](https://github.com/concord-consortium/rigse/pull/682)), the offerings controller uses `user_id` as a query filter (not auth), and the volume (~930K/year) matches normal teacher dashboard traffic
 - Activity publishing uses OAuth tokens, not `app_secret`
 - The Activity Player uses Portal JWTs, not `app_secret`, for the `learner_id_or_key` parameter
 
+**Evidence that `collaborators_data` peer auth is ACTIVE:**
+- 1,092 requests over 365 days from the report-service's `auto-importer` Cloud Function (GCP IPs)
+- The report-service sends `Authorization: Bearer <portalSecret>` where `portalSecret` is a Client `app_secret` (`functions/src/auto-importer.ts` line 280)
+- Traffic is ongoing (48 requests in Feb 2026) and correlates with the school year
+- Removing `request_is_peer?` or the `collaborators_data` policy would break collaborative activity reporting in the report-service
+
 ## Open Questions
 
-### Unverified: No log search for `collaborators_data` endpoint traffic
-
-The `collaborators_data` endpoint (`GET /api/v1/collaborations/:id/collaborators_data`) uses its own `request_is_peer?` policy check, not `check_for_auth_token`. LARA log analysis showed zero outbound collaboration requests, but a Portal-side Logs Insights search for `/collaborators_data` would be the direct confirmation.
+(No remaining open questions — all have been resolved.)
 
 ## Resolved Questions
 
@@ -273,3 +324,11 @@ Searched the `WikiWatershed/model-my-watershed` GitHub repo for `app_secret`, `B
 **Import:** The `Import::ImportExternalActivity` job (`rails/app/models/import/import_external_activity.rb:59-68`) still contains code that sends `Bearer <app_secret>` to LARA's `/import/import_portal_activity` endpoint. This is an admin-only feature (gated by `admin_only` in `imports_controller.rb:309`). However, it targets a LARA endpoint that would need to be responsive, and all LARA student runtime traffic is confirmed dead.
 
 **Impact on peer-to-peer auth removal:** Neither feature is relevant. Both are **outbound** (Portal→LARA), not inbound (LARA→Portal). Removing peer-to-peer auth from the Portal's inbound API controllers does not affect these code paths. The remote copy code is already dead; the import code is a separate cleanup item if desired.
+
+### Does the `collaborators_data` endpoint receive any peer-auth traffic?
+
+**Answer: Yes — the report-service's `auto-importer` actively uses peer auth on this endpoint.**
+
+Portal-side Logs Insights search (365 days) found 1,092 GET requests to `/api/v1/collaborations/:id/collaborators_data`, all from GCP IPs (`34.96.x.x`, `34.34.233.x`). Source code analysis of `concord-consortium/report-service` (`functions/src/auto-importer.ts`) confirmed the caller: the `fetchCollaborationData` function sends `Authorization: Bearer ${portalSecret}` where `portalSecret` is a Client `app_secret`. The auto-importer fetches collaboration data to replicate student answers to all collaborators' parquet files in S3. Traffic is ongoing and correlates with the school year.
+
+**Impact on peer-to-peer auth removal:** The `request_is_peer?` policy check in `CollaborationPolicy#collaborators_data?` **cannot be removed** without first migrating the report-service to a different auth mechanism. The `check_for_auth_token` code in `api_controller.rb` (Cases B and C) is a separate code path and can still be removed independently — the `collaborators_data` endpoint does not use `check_for_auth_token`.
