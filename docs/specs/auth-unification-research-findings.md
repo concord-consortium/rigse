@@ -63,8 +63,8 @@ LARA is still running in production as an **authoring system**, but its student-
 - The only `/api/v1/jwt` traffic was Firebase JWT requests (`get_firebase_jwt`), which is a separate code path that does not use peer-to-peer `app_secret` auth
 - 15 matches for `external_activity_data` were all inbound page loads with `returnUrl` query params, not outbound POSTs
 
-**Portal log verification (2026-02-26):** Searched Portal production logs for peer-to-peer auth parameters across 90 days:
-- `learner_id_or_key`: **zero results** (definitive — this parameter is unique to peer-to-peer auth)
+**Portal log verification (2026-02-26):** Searched Portal production logs (`learn-ecs-production`) for peer-to-peer auth parameters. Initial search covered 90 days; expanded to 365 days on 2026-02-26:
+- `learner_id_or_key`: **1,101 requests over 365 days**, but **all on `GET /api/v1/jwt/firebase`** — the Activity Player's JWT-authenticated code path where the Portal ignores this parameter (see Activity Player section below). Breakdown: glossary-plugin (851), ep-erosion-dev (248), vortex (2). No occurrences on any peer-to-peer endpoint (offerings, bookmarks, teacher_classes, etc.). The original 90-day "zero results" was due to search methodology — CloudWatch `filter-log-events` with a narrow filter pattern missed these; CloudWatch Logs Insights found them.
 - `user_id` + `/api/v1/jwt`: false positives only — matches were `target_user_id` (substring match), normal Firebase JWT requests
 - `user_id` + `/api/v1/bookmarks`: zero results
 - `user_id` + `/api/v1/external_activities`: zero results
@@ -96,7 +96,7 @@ So the value comes from an earlier Firebase JWT response, not from the same requ
 
 **The Portal ignores this parameter.** The JWT controller's `handle_initial_auth` calls `check_for_auth_token(params)`, but the `Bearer/JWT` header matches the JWT auth path (Case D), which extracts user/role from JWT claims. Neither `handle_initial_auth` nor the `firebase` action reads `learner_id_or_key` from params — they use `resource_link_id`, `target_user_id`, `class_hash`, etc. The `learner_id_or_key` parameter flows through in the params hash but is never accessed. This was true both before and after the peer-to-peer auth removal.
 
-**Inconsistency with Portal log search:** The Portal log search reported "zero results" for `learner_id_or_key`, but the Activity Player is actively sending it in production. Rails logs request parameters, so occurrences should appear in logs. The most likely explanation is that the original log search methodology (searching for `learner_id_or_key` as a parameter on specific `check_for_auth_token` endpoint paths) was too narrow, or the CloudWatch search pattern didn't match the Rails parameter log format. This does not affect the safety of the peer-to-peer removal — the parameter was always ignored by the Portal's JWT auth path — but the "zero results" claim in the Portal log verification above should be considered unreliable for `learner_id_or_key` specifically.
+**Portal log verification (2026-02-26):** A 365-day CloudWatch Logs Insights search for `learner_id_or_key` in `learn-ecs-production` found **1,101 requests** — all on `GET /api/v1/jwt/firebase`, confirming this code path is active in production. The original 90-day search incorrectly reported "zero results" due to search methodology (CloudWatch `filter-log-events` with a narrow filter pattern). All traffic is JWT-authenticated (not peer-to-peer `app_secret` auth), and the Portal ignores the `learner_id_or_key` parameter on this path. Breakdown by firebase_app: glossary-plugin (851), ep-erosion-dev (248), vortex (2). Monthly distribution: Mar 2025 (4), Apr (509), May (128), Jul (1), Sep (31), Oct (100), Nov (251), Feb 2026 (77).
 
 #### Portal-side policy dependencies
 
@@ -160,7 +160,7 @@ Notes:
 - No repos outside of LARA use `app_secret` as a Bearer token
 - No production Clients other than the LARA clients (2, 3, 4) show evidence of peer-to-peer usage
 - LARA production logs confirm zero traffic to JWT proxy, collaboration, and answer posting endpoints over 90 days
-- Portal production logs found zero `learner_id_or_key` requests over 90 days, though this result is suspect — the Activity Player actively sends `learner_id_or_key` as a query param on `/api/v1/jwt/firebase` (see Activity Player section above). The log search methodology may have been too narrow. Regardless, the Activity Player uses `Bearer/JWT` auth (not peer-to-peer), and the Portal's JWT auth path ignores `learner_id_or_key`
+- Portal production logs over 365 days show 1,101 `learner_id_or_key` requests, but **all on `GET /api/v1/jwt/firebase`** — the Activity Player's JWT-authenticated code path (glossary-plugin, ep-erosion-dev, vortex). The Portal ignores this parameter on the JWT auth path. **Zero occurrences on any peer-to-peer endpoint.**
 - Portal `user_id` on `/api/v1/offerings` is normal OAuth traffic (query parameter filter), not peer-to-peer auth — confirmed by the absence of `learner_id_or_key`
 - Activity publishing uses OAuth tokens, not `app_secret`
 - The Activity Player uses Portal JWTs, not `app_secret`, for the `learner_id_or_key` parameter
@@ -202,13 +202,9 @@ Notes:
 
    **Verification result (2026-02-26):** Searched `learn-ecs-production` log group using CloudWatch Logs Insights over the last **365 days** (vs. the 90 days originally suggested). Query: `filter @message like /learner_detail/`. Scanned 635,612,653 records (~80 GB). **Zero matches.** This confirms no traffic to `/admin/learner_detail/` over the past year — safe to deploy.
 
-3. **Resolve the Activity Player `learner_id_or_key` log discrepancy.** Source code analysis confirms the Activity Player actively sends `learner_id_or_key` as a query parameter on `GET /api/v1/jwt/firebase` for every student Firebase JWT request (`src/portal-utils.ts` line 10, via `getFirebaseJWT()` in `src/portal-api.ts`). The code path is not behind a feature flag and is reached in every authenticated student session. Yet the Portal log search found zero occurrences of `learner_id_or_key` over 90 days. Since the Activity Player is confirmed to be sending this parameter, the "zero results" log finding is suspect.
+3. ~~**Resolve the Activity Player `learner_id_or_key` log discrepancy.**~~ **RESOLVED (2026-02-26).** A 365-day CloudWatch Logs Insights search found **1,101 requests** with `learner_id_or_key` — all on `GET /api/v1/jwt/firebase`. The original 90-day "zero results" was due to search methodology (CloudWatch `filter-log-events` with a narrow filter pattern missed them; Logs Insights found them).
 
-   **Possible explanations:**
-   - **Low-frequency code path (most likely):** The `learner_id_or_key` parameter is only included on *subsequent* Firebase JWT requests — those triggered by embedded interactives via iframe-phone messaging. The initial Activity Player Firebase JWT request on page load does **not** include it (see bootstrap pattern, lines 90-93). If few activities contain interactives that request their own Firebase JWT, or if those activities are used infrequently, it's plausible that no such request occurred during the 90-day search window.
-   - **Search methodology:** The CloudWatch filter pattern may have been too narrow, or didn't match the Rails parameter log format.
-
-   This doesn't affect the safety of the peer-to-peer removal (the Portal's JWT auth path ignores `learner_id_or_key`), but a longer search window or targeted test could confirm which explanation is correct.
+   Breakdown by firebase_app: glossary-plugin (851), ep-erosion-dev (248), vortex (2). Monthly: Mar 2025 (4), Apr (509), May (128), Jul (1), Sep (31), Oct (100), Nov (251), Feb 2026 (77). All traffic is JWT-authenticated — the Portal ignores `learner_id_or_key` on this path. **Zero occurrences on any peer-to-peer endpoint.** This confirms both that the parameter is actively sent (by glossary-plugin and erosion interactives) and that peer-to-peer auth removal is safe.
 
    **GitHub org survey of interactives/plugins requesting Firebase JWTs (2026-02-26):**
 
