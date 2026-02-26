@@ -23,7 +23,7 @@ class ExternalActivitiesController < ApplicationController
 
   public
 
-  before_action :setup_object, :except => [:index, :publish]
+  before_action :setup_object, :except => [:index]
   before_action :render_scope, :only => [:show]
 
 
