@@ -196,13 +196,21 @@ Searched Portal production logs (`learn-ecs-production`). Initial search used Cl
 **`learner_id_or_key` — VERIFIED (Logs Insights, 365 days):**
 1,101 requests, **all on `GET /api/v1/jwt/firebase`**. Source code analysis indicates these come from the Activity Player using `Bearer/JWT` auth (not peer-to-peer), though the logs do not reveal the auth type directly (see Activity Player section above). Breakdown: glossary-plugin (851), ep-erosion-dev (248), vortex (2). No occurrences on any peer-to-peer endpoint. Monthly distribution: Mar 2025 (4), Apr (509), May (128), Jul (1), Sep (31), Oct (100), Nov (251), Feb 2026 (77).
 
-**`user_id` searches — UNVERIFIED (used flawed `filter-log-events` methodology):**
-The following results were obtained with the same `filter-log-events` approach that produced false "zero results" for `learner_id_or_key`. They should be re-run with Logs Insights before being relied upon:
-- `user_id` + `/api/v1/jwt`: false positives only — matches were `target_user_id` (substring match)
-- `user_id` + `/api/v1/bookmarks`: zero results
-- `user_id` + `/api/v1/external_activities`: zero results
-- `user_id` + `/api/v1/offerings`: frequent hits, but assessed as normal OAuth query parameter filters
-- `user_id` + `/api/v1/teacher_classes`: zero results
+**`user_id=` as query parameter — VERIFIED (Logs Insights, 365 days):**
+Searched for `?user_id=` and `&user_id=` in `Started GET/POST/PUT/DELETE` lines across all `/api/v1/` endpoints. This matches `user_id` as a proper query parameter while excluding substring matches like `target_user_id=`. Results:
+
+| Endpoint | Requests | Peer-to-peer? |
+|---|---|---|
+| `/api/v1/offerings` | 930,920 | Unknown — see below |
+| `/api/v1/jwt` | 0 | — |
+| `/api/v1/bookmarks` | 0 | — |
+| `/api/v1/external_activities` | 0 | — |
+| `/api/v1/teacher_classes` | 0 | — |
+| all other `/api/v1/` endpoints | 0 | — |
+
+The 930,920 offerings requests cannot be definitively classified as OAuth vs. peer-to-peer from the logs alone — Rails does not log the `Authorization` header or the referer. ALB access logs (which would include the referer) are not enabled on the Portal load balancers (`learn-ELBv2-I2UXANP07DD5`, `learn-ELBv2-1Q7V4OJM2B6UI`). SQL query logging is also unavailable (production uses `:info` log level; `Client.find_by_app_secret` queries would only appear at `:debug`).
+
+However, the GitHub org-wide search found **no codebase** outside of LARA that sends `app_secret` as a Bearer token, and all of LARA's peer-to-peer `user_id` usage is in dead student runtime code. The volume (~930K requests/year) is also consistent with normal application traffic (teacher dashboards polling for offerings), not peer-to-peer server calls.
 
 **`/admin/learner_detail/` — VERIFIED (Logs Insights, 365 days):**
 Searched `learn-ecs-production` log group over 365 days. Query: `filter @message like /learner_detail/`. Scanned 635,612,653 records (~80 GB). **Zero matches.** This confirms no traffic to `/admin/learner_detail/` over the past year — safe to deploy.
@@ -214,7 +222,7 @@ Searched `learn-ecs-production` log group over 365 days. Query: `filter @message
 - No production Clients other than the LARA clients (2, 3, 4) show evidence of peer-to-peer usage
 - LARA production logs confirm zero traffic to JWT proxy, collaboration, and answer posting endpoints over 90 days
 - Portal production logs over 365 days show 1,101 `learner_id_or_key` requests, but **all on `GET /api/v1/jwt/firebase`** (glossary-plugin, ep-erosion-dev, vortex). Source code analysis indicates these come from the Activity Player using `Bearer/JWT` auth (logs do not reveal auth type directly). **Zero occurrences on any peer-to-peer endpoint.**
-- Portal `user_id` log searches used the flawed `filter-log-events` methodology and need to be re-verified with Logs Insights (see Log Verification section)
+- Portal `user_id=` search (Logs Insights, 365 days): only `/api/v1/offerings` has traffic (930,920 requests). Zero `user_id=` requests on `/api/v1/jwt`, `/api/v1/bookmarks`, `/api/v1/external_activities`, or `/api/v1/teacher_classes`. The offerings requests can't be classified as OAuth vs. peer-to-peer from logs alone (no auth header or referer logged), but the GitHub org search found no codebase sending `app_secret` as Bearer
 - Activity publishing uses OAuth tokens, not `app_secret`
 - The Activity Player uses Portal JWTs, not `app_secret`, for the `learner_id_or_key` parameter
 
@@ -222,4 +230,4 @@ Searched `learn-ecs-production` log group over 365 days. Query: `filter @message
 
 1. **Is the Portal's remote copy/import feature (which calls LARA via peer auth) still enabled?** If disabled, the inbound peer-auth endpoints on LARA are also dead. This is low-priority since the direction is Portal→LARA (inbound to LARA), not LARA→Portal.
 
-2. **Re-run `user_id` Portal log searches with Logs Insights.** The original searches used the flawed `filter-log-events` methodology. Endpoints to re-verify: `/api/v1/jwt`, `/api/v1/bookmarks`, `/api/v1/external_activities`, `/api/v1/offerings`, `/api/v1/teacher_classes`.
+2. ~~**Re-run `user_id` Portal log searches with Logs Insights.**~~ **RESOLVED (2026-02-26).** Re-ran with Logs Insights over 365 days. Only `/api/v1/offerings` has `user_id=` traffic (930,920 requests). All other peer-to-peer endpoints: zero. The offerings requests can't be classified as OAuth vs. peer-to-peer from logs (no auth header or referer logged; ALB access logs not enabled; SQL queries not logged at production log level), but the GitHub org search found no codebase using `app_secret` as Bearer for this endpoint.
