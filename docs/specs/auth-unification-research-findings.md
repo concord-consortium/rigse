@@ -79,7 +79,24 @@ Critically, **activity publishing uses `user.authentication_token` (OAuth), not 
 
 #### Activity Player's usage
 
-The Activity Player (`src/portal-utils.ts`) sends `learner_id_or_key` as a parameter when requesting Firebase JWTs from the Portal, but authenticates with a **Portal JWT** (not `app_secret`) as the Bearer token. This means it uses the `learner_id_or_key` parameter name but does **not** use the peer-to-peer auth mechanism — it goes through the standard JWT auth path (Case D in `check_for_auth_token`).
+The Activity Player sends `learner_id_or_key` as a **query parameter** on `GET /api/v1/jwt/firebase` requests, but authenticates with `Authorization: Bearer/JWT <portalJWT>` (not `app_secret`). This means it does **not** use the peer-to-peer auth mechanism — the `Bearer/JWT` header matches Case D in `check_for_auth_token`, which extracts user identity from the JWT claims and never reads `learner_id_or_key`.
+
+**Code path details** (from `concord-consortium/activity-player` source analysis):
+- `src/portal-utils.ts` line 10: maps `portalData.learnerKey` to `{ learner_id_or_key: learnerKey }` and merges it into the query params for `getFirebaseJWT()`
+- `src/portal-api.ts`: `getFirebaseJWT()` sends `GET {basePortalUrl}/api/v1/jwt/firebase?firebase_app=...&learner_id_or_key=...` with `Authorization: Bearer/JWT {portalJWT}`
+- This code path is **actively used in production** — it runs every time an embedded interactive requests a Firebase JWT during an authenticated student session. There is no feature flag.
+
+**Where `learnerKey` comes from — a bootstrap pattern:**
+1. On page load, the Activity Player calls `getActivityPlayerFirebaseJWT()` which requests a Firebase JWT **without** `learner_id_or_key`
+2. The Portal returns a Firebase JWT whose claims include a deprecated `returnUrl` field (e.g., `https://learn.concord.org/dataservice/external_activity_data/abc123`)
+3. `getStudentLearnerKey()` extracts the last path segment of `returnUrl` as the learner key (only for student sessions)
+4. This `learnerKey` is stored in `portalData` and included as `learner_id_or_key` on all **subsequent** Firebase JWT requests (triggered by embedded interactives via iframe-phone messaging)
+
+So the value comes from an earlier Firebase JWT response, not from the same request — it's bootstrapped from the initial JWT exchange. However, since the Portal ignores `learner_id_or_key` on all requests authenticated via `Bearer/JWT`, this parameter has no effect. It is likely a vestigial pattern inherited from LARA's peer-to-peer auth approach, where the parameter was consumed by Case B in `check_for_auth_token` to establish learner context.
+
+**The Portal ignores this parameter.** The JWT controller's `handle_initial_auth` calls `check_for_auth_token(params)`, but the `Bearer/JWT` header matches the JWT auth path (Case D), which extracts user/role from JWT claims. Neither `handle_initial_auth` nor the `firebase` action reads `learner_id_or_key` from params — they use `resource_link_id`, `target_user_id`, `class_hash`, etc. The `learner_id_or_key` parameter flows through in the params hash but is never accessed. This was true both before and after the peer-to-peer auth removal.
+
+**Inconsistency with Portal log search:** The Portal log search reported "zero results" for `learner_id_or_key`, but the Activity Player is actively sending it in production. Rails logs request parameters, so occurrences should appear in logs. The most likely explanation is that the original log search methodology (searching for `learner_id_or_key` as a parameter on specific `check_for_auth_token` endpoint paths) was too narrow, or the CloudWatch search pattern didn't match the Rails parameter log format. This does not affect the safety of the peer-to-peer removal — the parameter was always ignored by the Portal's JWT auth path — but the "zero results" claim in the Portal log verification above should be considered unreliable for `learner_id_or_key` specifically.
 
 #### Portal-side policy dependencies
 
@@ -143,7 +160,7 @@ Notes:
 - No repos outside of LARA use `app_secret` as a Bearer token
 - No production Clients other than the LARA clients (2, 3, 4) show evidence of peer-to-peer usage
 - LARA production logs confirm zero traffic to JWT proxy, collaboration, and answer posting endpoints over 90 days
-- Portal production logs confirm zero `learner_id_or_key` requests over 90 days (this parameter is unique to peer-to-peer auth)
+- Portal production logs found zero `learner_id_or_key` requests over 90 days, though this result is suspect — the Activity Player actively sends `learner_id_or_key` as a query param on `/api/v1/jwt/firebase` (see Activity Player section above). The log search methodology may have been too narrow. Regardless, the Activity Player uses `Bearer/JWT` auth (not peer-to-peer), and the Portal's JWT auth path ignores `learner_id_or_key`
 - Portal `user_id` on `/api/v1/offerings` is normal OAuth traffic (query parameter filter), not peer-to-peer auth — confirmed by the absence of `learner_id_or_key`
 - Activity publishing uses OAuth tokens, not `app_secret`
 - The Activity Player uses Portal JWTs, not `app_secret`, for the `learner_id_or_key` parameter
@@ -184,6 +201,55 @@ Notes:
    Expected result: zero matches confirms safe to deploy.
 
    **Verification result (2026-02-26):** Searched `learn-ecs-production` log group using CloudWatch Logs Insights over the last **365 days** (vs. the 90 days originally suggested). Query: `filter @message like /learner_detail/`. Scanned 635,612,653 records (~80 GB). **Zero matches.** This confirms no traffic to `/admin/learner_detail/` over the past year — safe to deploy.
+
+3. **Resolve the Activity Player `learner_id_or_key` log discrepancy.** Source code analysis confirms the Activity Player actively sends `learner_id_or_key` as a query parameter on `GET /api/v1/jwt/firebase` for every student Firebase JWT request (`src/portal-utils.ts` line 10, via `getFirebaseJWT()` in `src/portal-api.ts`). The code path is not behind a feature flag and is reached in every authenticated student session. Yet the Portal log search found zero occurrences of `learner_id_or_key` over 90 days. Since the Activity Player is confirmed to be sending this parameter, the "zero results" log finding is suspect.
+
+   **Possible explanations:**
+   - **Low-frequency code path (most likely):** The `learner_id_or_key` parameter is only included on *subsequent* Firebase JWT requests — those triggered by embedded interactives via iframe-phone messaging. The initial Activity Player Firebase JWT request on page load does **not** include it (see bootstrap pattern, lines 90-93). If few activities contain interactives that request their own Firebase JWT, or if those activities are used infrequently, it's plausible that no such request occurred during the 90-day search window.
+   - **Search methodology:** The CloudWatch filter pattern may have been too narrow, or didn't match the Rails parameter log format.
+
+   This doesn't affect the safety of the peer-to-peer removal (the Portal's JWT auth path ignores `learner_id_or_key`), but a longer search window or targeted test could confirm which explanation is correct.
+
+   **GitHub org survey of interactives/plugins requesting Firebase JWTs (2026-02-26):**
+
+   Searched the `concord-consortium` GitHub org for `getFirebaseJWT` and `firebaseJWT`. The iframe-phone protocol uses `"getFirebaseJWT"` (request from interactive to host) and `"firebaseJWT"` (response from host to interactive). Interactives either use the `@concord-consortium/lara-interactive-api` client library or raw `iframe-phone` calls. Plugins use `@concord-consortium/lara-plugin-api` (`context.getFirebaseJwt()`), where the host provides the JWT via the plugin context.
+
+   **Interactives** (embedded in iframe, request JWT from host via iframe-phone):
+
+   | Repo | Method | Uses JWT for | Last commit | Active? |
+   |---|---|---|---|---|
+   | `question-interactives` | `@concord-consortium/lara-interactive-api` | Firestore (student settings) + Token Service | Feb 2026 | Yes |
+   | `erosion-interactive` | `@concord-consortium/lara-interactive-api` | Firestore | Jul 2024 | No |
+   | `vortex` (runtime mode) | `@concord-consortium/lara-interactive-api` | Firebase RTDB | Aug 2024 | No |
+   | `fb-weather-demo` | Raw iframe-phone (pre-library) | Firebase RTDB | May 2024 | No |
+   | `teaching-teamwork` | Raw iframe-phone (pre-library) | Firebase RTDB | May 2024 | No |
+
+   **Plugins** (run alongside interactives, host provides JWT via plugin context):
+
+   | Repo | Uses JWT for | Last commit | Active? |
+   |---|---|---|---|
+   | `glossary-plugin` | Firestore + Token Service | May 2025 | Somewhat |
+   | `lara-sharing-plugin` | Firestore (shared state) | May 2024 | No |
+   | `lara-debugging-plugin` | Display/debugging only | Oct 2020 | No |
+
+   **Hosts** (handle `"getFirebaseJWT"` messages, call Portal API):
+
+   | Repo | Notes |
+   |---|---|
+   | `activity-player` | Primary modern host |
+   | `lara` | Original host (student runtime dead); also publishes the `@concord-consortium/lara-interactive-api` client library |
+   | `portal-report` | Host for report-mode interactives |
+   | `question-interactives` | Sub-host — carousel/side-by-side/scaffolded-question re-proxy to nested child iframes |
+
+   **Services** (call Portal API directly, not via iframe-phone — these do **not** trigger the `learner_id_or_key` code path):
+
+   | Repo | Notes |
+   |---|---|
+   | `collaborative-learning` | Top-level app, not embedded in iframe |
+   | `report-service` | Researcher reports |
+   | `token-service` | Example app only |
+
+   Most interactives/plugins that request Firebase JWTs are inactive. The most likely candidates to still trigger the `learner_id_or_key` code path in production are `question-interactives` (student settings) and `glossary-plugin` — but only when students use activities containing these components, and only when those components actually need Firebase access during the session.
 
 ---
 
