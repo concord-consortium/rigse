@@ -286,6 +286,94 @@ Searched `learn-ecs-production` log group over 365 days. Query: `filter @message
 - Traffic is ongoing (48 requests in Feb 2026) and correlates with the school year
 - Removing `request_is_peer?` or the `collaborators_data` policy would break collaborative activity reporting in the report-service
 
+## Report-service: full Cloud Function audit
+
+Reviewed all 4 Cloud Functions and 8 API endpoints in `concord-consortium/report-service` (`functions/src/`). The `fetchCollaborationData` call in `auto-importer.ts` is the **only** outbound HTTP request to the Portal.
+
+| Function | Type | Portal requests? | What it does |
+|---|---|---|---|
+| `api` → `POST /import_run` | HTTPS | **No** | Writes run data to Firestore |
+| `api` → `POST /import_structure` | HTTPS | **No** | Writes resource structure to Firestore |
+| `api` → `POST /move_student_work` | HTTPS | **No** | Updates Firestore docs (called BY Portal) |
+| `api` → `GET /resource` | HTTPS | **No** | Reads from Firestore |
+| `api` → `GET /answer` | HTTPS | **No** | Reads from Firestore |
+| `api` → `GET /plugin_states` | HTTPS | **No** | Reads from Firestore |
+| `api` → `GET /student_feedback_metadata` | HTTPS | **No** | Reads from Firestore |
+| `api` → `GET /fakeAnswer` | HTTPS | **No** | Writes test data to Firestore |
+| `createSyncDocAfterAnswerWritten` | Firestore trigger | **Yes** | Fetches `collaborators_data` with `Bearer <portalSecret>` |
+| `monitorSyncDocCount` | Scheduled (cron) | **No** | Batch-updates sync docs in Firestore |
+| `syncToS3AfterSyncDocWritten` | Firestore trigger | **No** | Uploads Parquet files to AWS S3 |
+
+The `api` function *receives* requests from the Portal (e.g., `/import_run`, `/import_structure`, `/move_student_work`) authenticated via `AUTH_BEARER_TOKEN`, but never calls back. The only HTTP client library (`axios`) is imported exclusively in `auto-importer.ts`.
+
+## Collaborative-learning: Cloud Function audit
+
+Reviewed all 18 Cloud Functions across three codebases in `concord-consortium/collaborative-learning`:
+
+**None of the functions make HTTP requests to the Portal.**
+
+| Codebase | Functions | External HTTP targets |
+|---|---|---|
+| `functions-v1` (4 functions) | `getImageData_v1`, `publishSupport_v1`, `getNetworkDocument_v1`, `getNetworkResources_v1` | None — Firebase Realtime Database and Firestore only |
+| `functions-v2` (13 functions) | `createFirestoreMetadataDocument_v2`, `postDocumentComment_v2`, `postExemplarComment_v2`, `getAiContent_v2`, `generateClassData_v2`, `onUserDocWritten`, `onDocumentTagged`, `onDocumentSummarized`, `atMidnight`, `onAnalyzableTestDocWritten`, `onAnalyzableProdDocWritten`, `onAnalysisDocumentPending`, `onAnalysisDocumentImaged`, `onClassDataDocWritten` | OpenAI API, Shutterbug (`api.concord.org/shutterbug-production`) |
+| `authoring-api` (1 function) | `api` (Express app, 11 routes) | GitHub API, GitHub raw content |
+
+The word "portal" appears frequently in the codebase but only as a **database path namespace** (e.g., `authed/portals/learn_concord_org/classes/...`), derived from JWT claims set during client-side Portal authentication. No `axios`, `portalSecret`, `app_secret`, or `learner_id_or_key` references exist in any of the function codebases. None of the three `package.json` files include HTTP client libraries.
+
+## Migrating report-service away from `request_is_peer?`
+
+### The problem
+
+The `collaborators_data` endpoint is the **only** active consumer of `request_is_peer?`. To fully remove peer-to-peer auth from the Portal, the report-service needs an alternative auth mechanism.
+
+### Current architecture
+
+The policy (`CollaborationPolicy#collaborators_data?`) checks only `request_is_peer?` — it does not need user context. The `ShowCollaboratorsData` service takes `collaboration_id`, `host_with_port`, and `protocol` as input and never references `current_user`.
+
+### Why AccessGrant tokens are not a drop-in replacement
+
+Every `AccessGrant` in the Portal is tied to a `User` (required `user_id` foreign key). The Portal supports only two OAuth2 flows (`response_type=token` for implicit, `response_type=code` for authorization code) — both require browser-based user interaction. There is no `client_credentials` grant type for machine-to-machine auth.
+
+The Warden strategy (`bearer_token_authenticatable.rb`) resolves `Authorization: Bearer <token>` to a User via `AccessGrant.find_by_access_token`. When the report-service currently sends `Bearer <app_secret>`, this strategy fires first, fails (because `app_secret` is not in the `access_grants` table), and falls through to `request_is_peer?` in the policy.
+
+### Migration options
+
+**Option A: Service account + role-based policy (simplest)**
+
+Create a dedicated "service account" User in the Portal with a role (e.g., `service`). Pre-provision an AccessGrant via `Client#updated_grant_for(user)` using a rake task. Update the policy:
+
+```ruby
+def collaborators_data?
+  (user && user.has_role?('service')) || request_is_peer?
+end
+```
+
+The report-service would use this `access_token` as Bearer. The Warden strategy resolves it to the service account user, and the policy authorizes based on role.
+
+Downsides: AccessGrants expire after 1 week (`ExpireTime = 1.week`). No headless way to renew — would need a rake task or admin API for token rotation. Conceptually awkward (a fake "user" for a machine).
+
+**Option B: Implement `client_credentials` grant type (cleanest OAuth2)**
+
+Add a `POST /auth/token` endpoint that accepts `client_id` + `client_secret` and issues an AccessGrant without a user. Requires making `user_id` nullable on `access_grants` (schema change) or creating a synthetic service user, plus Warden strategy updates.
+
+Downsides: Significant Portal changes for a single endpoint with ~1,092 requests/year.
+
+**Option C: Keep `request_is_peer?` scoped to this endpoint (pragmatic)**
+
+Leave the `CollaborationPolicy#collaborators_data?` policy as-is. The `request_is_peer?` check is self-contained — it does not depend on `check_for_auth_token` in `api_controller.rb`. Removing Cases B and C from `check_for_auth_token` (the main peer-to-peer auth removal) can proceed independently.
+
+If desired, refactor `request_is_peer?` to use a dedicated API key mechanism rather than raw `app_secret` comparison, but this is optional since the current approach works and the blast radius is limited to one endpoint.
+
+| Aspect | Option A (service account) | Option B (`client_credentials`) | Option C (keep scoped) |
+|---|---|---|---|
+| Portal changes | Policy + service account setup | New grant type + schema | None (or optional refactor) |
+| Report-service changes | Token provisioning + refresh | Token exchange + refresh | None |
+| Token expiry handling | Weekly rotation needed | Configurable | N/A (static secret) |
+| Complexity | Low | High | None |
+| Blocks peer-auth removal? | No | No | No — `check_for_auth_token` removal is independent |
+
+**Recommendation:** Option C is sufficient for the current scope. The `check_for_auth_token` peer-to-peer auth removal (Cases B and C in `api_controller.rb`) can proceed without any changes to the `collaborators_data` endpoint. The `request_is_peer?` policy check is isolated to `CollaborationPolicy` and does not interact with the `check_for_auth_token` code path. Migrating the report-service to a different auth mechanism can be treated as a separate, lower-priority initiative.
+
 ## Open Questions
 
 (No remaining open questions — all have been resolved.)
