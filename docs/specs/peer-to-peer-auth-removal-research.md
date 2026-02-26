@@ -53,7 +53,7 @@ LARA is still running in production as an **authoring system**, but its student-
 | `jwt_controller.rb` with `run_id` (JWT proxying, sends `learner_id_or_key`) | Student runtime | LARA → Portal | **Dead** — confirmed by log analysis |
 | `jwt_controller.rb` without `run_id` (JWT proxying, sends `user_id`) | Authoring plugins | LARA → Portal | **Dead** — confirmed by log analysis. Added in LARA PR [#461](https://github.com/concord-consortium/lara/pull/461) (2019-08-27) for authoring plugin Firebase JWT access |
 | `create_collaboration.rb` (collaboration) | Student runtime | LARA → Portal | **Dead** — confirmed by log analysis |
-| `run.rb` / `runs_controller.rb` (admin detail) | Admin diagnostic | LARA → Portal | Rarely used |
+| `run.rb` / `runs_controller.rb` (admin detail) | Admin diagnostic | LARA → Portal | **Dead** — Portal logs show zero `/admin/learner_detail/` traffic over 365 days |
 
 The two authoring-related uses of peer auth are **inbound** (Portal sends `Bearer <app_secret>` to LARA, not vice versa):
 - `remote_duplicate_support.rb` — Portal calls LARA to copy an activity (likely disabled — broke and was not fixed)
@@ -239,21 +239,30 @@ Searched `learn-ecs-production` log group over 365 days. Query: `filter @message
 
 The `collaborators_data` endpoint (`GET /api/v1/collaborations/:id/collaborators_data`) uses its own `request_is_peer?` policy check, not `check_for_auth_token`. LARA log analysis showed zero outbound collaboration requests, but a Portal-side Logs Insights search for `/collaborators_data` would be the direct confirmation.
 
-### Unverified: `model-my-watershed` (Client ID 22, external org) not audited
-
-The GitHub org search only covered `concord-consortium`. Client 22 belongs to `WikiWatershed/model-my-watershed` — an external organization whose code was not searched. Low probability of peer auth usage (it's a public-facing web app, not a server-to-server integration, and peer auth requires knowing a `learner_id_or_key` or `user_id`), but a quick search of the `WikiWatershed/model-my-watershed` repo for `app_secret` or `Bearer` usage would be definitive.
-
-### Unverified: `run.rb` / `runs_controller.rb` "rarely used" classification
-
-Line 56 of the findings lists `run.rb` as an admin diagnostic that provides auth tokens, classified as "rarely used" rather than confirmed dead. Need to clarify whether this path generates actual outbound peer-auth requests to the Portal or just returns a token for manual/display use.
-
 ## Resolved Questions
+
+### Is `run.rb` / `runs_controller.rb` actually dead or just "rarely used"?
+
+**Answer: Dead — confirmed by existing log analysis in this document.**
+
+LARA's `run.rb` provides `lara_to_portal_secret_auth` which generates a `Bearer <app_secret>` token. This token is used in two code paths that make **actual outbound HTTP requests** (not just display tokens):
+
+1. **`remote_info`** in `runs_controller.rb` — an admin-only action (`authorize! :inspect, Run`) that makes an HTTParty GET to the Portal's `/admin/learner_detail/:id.txt` with `Authorization: Bearer <app_secret>`. The Portal log search (Logs Insights, 365 days) found **zero matches** for `/admin/learner_detail/` (see Log Verification section above).
+2. **`send_to_portal`** — delegates to `PortalSender` to POST student answers. Already classified as "Dead" in the findings table and confirmed by LARA log analysis (zero outbound PortalSender traffic over 90 days).
+
+The "Rarely used" classification in the findings table should be upgraded to **Dead — confirmed by log analysis**.
 
 ### Does the `republish` endpoint receive any peer-auth traffic?
 
 **Answer: No — the `republish` action was deleted. The endpoint is dead code.**
 
 Both the `publish` and `republish` actions were **deleted** from `ExternalActivitiesController` in commit `31a593e2a` (2023-03-10, same legacy code cleanup that removed `duplicate`). The routes on `routes.rb:277-278` are orphaned — any POST to `/external_activities/republish/:version` would fail with `AbstractController::ActionNotFound`. The `ExternalActivityPolicy#republish?` policy (line 16) and the `pundit_user_not_authorized` handler for `'republish?'` (line 7) are also dead code. No log search is needed — the endpoint cannot receive traffic.
+
+### Does `model-my-watershed` (Client ID 22, external org) use peer-to-peer auth?
+
+**Answer: No. The repo uses Django REST Framework token auth — completely unrelated to the Portal's peer-to-peer pattern.**
+
+Searched the `WikiWatershed/model-my-watershed` GitHub repo for `app_secret`, `Bearer`, `learner_id_or_key`, and `concord`. Zero results for all terms. The codebase uses Django REST Framework's built-in token authentication (see [ADR-005](https://github.com/WikiWatershed/model-my-watershed/blob/master/doc/arch/adr-005-api-client-app-auth.md)), which is a self-contained token system with no integration to the Concord Portal's auth mechanisms.
 
 ### Is the Portal's remote copy/import feature (which calls LARA via peer auth) still enabled?
 
