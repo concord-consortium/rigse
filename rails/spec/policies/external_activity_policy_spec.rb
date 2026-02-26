@@ -108,26 +108,6 @@ describe ExternalActivityPolicy do
 
 
   # TODO: auto-generated
-  describe '#publish?' do
-    it 'publish?' do
-      external_activity_policy = described_class.new(nil, nil)
-      result = external_activity_policy.publish?
-
-      expect(result).to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#republish?' do
-    xit 'republish?' do
-      external_activity_policy = described_class.new(nil, nil)
-      result = external_activity_policy.republish?
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#duplicate?' do
     it 'duplicate?' do
       external_activity_policy = described_class.new(nil, nil)

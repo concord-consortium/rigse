@@ -9,14 +9,6 @@ class ExternalActivityPolicy < ApplicationPolicy
     end
   end
 
-  def publish?
-    new_or_create? || author?
-  end
-
-  def republish?
-    request_is_peer?
-  end
-
   def duplicate?
     new_or_create? || (teacher? && record.teacher_copyable)
   end
