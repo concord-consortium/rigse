@@ -920,17 +920,6 @@ protected
   end
 
   # TODO: auto-generated
-  describe '#create_access_token_with_learner_valid_for' do
-    xit 'create_access_token_with_learner_valid_for' do
-      user = described_class.new
-      time = 2.days
-      result = user.create_access_token_with_learner_valid_for(time, Portal::Learner.new)
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#active_for_authentication?' do
     it 'active_for_authentication?' do
       user = described_class.new
