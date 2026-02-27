@@ -25,21 +25,7 @@ class API::APIController < ApplicationController
 
   def check_for_auth_token(params)
     header = request.headers["Authorization"]
-    if header && header =~ /^Bearer (.*)$/i
-      token = $1
-      grant = AccessGrant.find_by_access_token(token)
-
-      if grant
-        if grant.access_token_expires_at >= Time.now
-          return [grant.user, {:learner => grant.learner, :teacher => grant.teacher}]
-        else
-          raise StandardError, 'AccessGrant has expired'
-        end
-      else
-        raise StandardError, "Cannot find AccessGrant for requested token"
-      end
-
-    elsif header && header =~ /^Bearer\/JWT (.*)$/i
+    if header && (header =~ /^Bearer\/JWT (.*)$/i || (header =~ /^Bearer (.+\..+)$/i))
       portal_token = $1
       # if invalid this will raise a SignedJwt::Error which is a subclass of StandardError that the caller should be listening for
       # the expiration is checked within the JWT.decode function
@@ -55,6 +41,20 @@ class API::APIController < ApplicationController
         return [user, role]
       else
         raise StandardError, 'User in token not found'
+      end
+
+    elsif header && header =~ /^Bearer (.*)$/i
+      token = $1
+      grant = AccessGrant.find_by_access_token(token)
+
+      if grant
+        if grant.access_token_expires_at >= Time.now
+          return [grant.user, {:learner => grant.learner, :teacher => grant.teacher}]
+        else
+          raise StandardError, 'AccessGrant has expired'
+        end
+      else
+        raise StandardError, "Cannot find AccessGrant for requested token"
       end
 
     elsif current_user
