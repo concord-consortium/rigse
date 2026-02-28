@@ -10,6 +10,12 @@
 
 Replace the two sites that create client-less `AccessGrant` records (short-lived launch tokens with a learner but no client) with stateless JWTs. This eliminates unnecessary database writes on every activity launch while keeping the same external behavior — runtimes treat the token as opaque.
 
+## Context: this is a stepping stone
+
+The longer-term direction is for the Portal to launch external activities using OAuth2 initialization parameters instead of any single-use token (see Next Steps, Steps 3-5 in `portal-authentication-unification-design.md`). Several runtimes (CLUE, Activity Player, portal-report) already support this OAuth2 pattern — see the "SPA OAuth2 initialization pattern" section in `docs/external-services.md`.
+
+Replacing client-less grants with JWTs is an interim step that delivers immediate benefits (eliminates DB writes, removes client-less grants from the codebase, simplifies `check_for_auth_token`) without requiring changes to any external runtime. It also establishes the JWT-based token exchange that will continue to be used even after OAuth2 launches are adopted — runtimes will still call `JwtController` to get Firebase tokens and longer-lived Portal JWTs, just with an OAuth2 AccessGrant token instead of a launch JWT.
+
 ## Why client-less grants are problematic
 
 Client-less grants are `AccessGrant` records created without a `client_id`. They cause three problems documented in `portal-authentication-unification-design.md`:
@@ -78,10 +84,10 @@ end
 
 ## What's NOT changing
 
-- **Devise strategies** — `bearer_token_authenticatable` and `jwt_bearer_token_authenticatable` are untouched.
+- **Devise strategies** — `bearer_token_authenticatable` and `jwt_bearer_token_authenticatable` are untouched. Note: the `bearer_token_authenticatable` strategy matches `Bearer (.*)` and will attempt an `AccessGrant.find_by_access_token` lookup with the JWT string before falling through. This query returns no results (JWTs are not in the `access_grants` table) and the strategy is skipped, after which `check_for_auth_token` handles the JWT correctly. This is a wasted database query per request but is benign — it will be addressed in the follow-up authentication unification work.
 - **`Bearer/JWT` prefix** — existing callers that send `Authorization: Bearer/JWT <token>` continue to work.
 - **External runtimes** — no changes needed (all three active runtimes treat the token as opaque per the research doc).
-- **`AccessGrant` model** — still used by OAuth clients with `client_id`.
+- **`AccessGrant` model** — still used by OAuth clients with `client_id`. In particular, report launches (`ExternalReport#url_for_offering`, `ExternalReport#url_for_class`) create AccessGrant tokens via `client.updated_grant_for` — these are proper client-backed grants (2-hour lifetime) and are not affected by this change.
 
 ## JWT in URL parameters
 
@@ -89,13 +95,30 @@ The launch token is passed as a `?token=...` URL parameter. This is the existing
 
 - **Server logs / browser history** — the same exposure exists today with the hex tokens. The 3-minute expiry limits the window.
 - **URL length** — JWTs are longer than the 32-char hex tokens (~200-300 chars for a simple HS256 JWT), but well within URL limits (~2000 chars).
-- **Referer header leakage** — all three active runtimes strip the token from the URL after extracting it (per the research doc).
+- **Referer header leakage** — collaborative-learning and geniventure strip the token from the URL after extracting it. Activity Player does not strip it (verified 2026-02-27), but the 3-minute expiry limits exposure.
 - **Token lifetime** — the runtime immediately exchanges the launch token for a longer-lived JWT via `api/v1/jwt/portal` or `api/v1/jwt/firebase`. The launch token is used once and expires in 3 minutes.
 
 The security properties are arguably better than the current hex tokens: JWTs are cryptographically signed (can't be forged) and carry their own expiration (can't be replayed after expiry without a database check).
 
 ## Testing
 
+### Automated tests
+
 - Unit tests for `check_for_auth_token`: JWT-as-Bearer routing, existing AccessGrant path still works.
 - Update `external_activity` and `create_collaboration` specs to expect JWTs.
 - Integration: verify jwt/portal and jwt/firebase endpoints work when the initial Bearer token is a JWT.
+
+### Manual verification
+
+Launch an activity from the portal and verify the following. See `docs/testing-activity-player-locally.md` for full setup instructions.
+
+**Token format:** The `token` URL parameter should be a JWT (three dot-separated Base64 segments) rather than the old 32-character hex AccessGrant token.
+
+**Token exchange (browser DevTools):** Open the Network tab before launching. Look for:
+
+1. `GET /api/v1/jwt/portal` — the Activity Player exchanging the launch token for a longer-lived portal JWT. Should return 200 with a JWT in the response body.
+2. `GET /api/v1/jwt/firebase?firebase_app=...` — the Activity Player requesting a Firebase token. Should return 201 with a Firebase token.
+
+**Portal logs:** Watch the Rails logs (`docker compose logs -f app`) for the request to `/api/v1/jwt/portal` and verify it's being handled by the JWT branch in `check_for_auth_token` (the `Bearer (.+\..+)` regex match) rather than the AccessGrant lookup path.
+
+**Firebase / student answers:** If Firebase is configured, interact with the activity and verify that answers are being saved. The Network tab should show successful Firestore API calls.

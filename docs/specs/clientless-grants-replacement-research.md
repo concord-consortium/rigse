@@ -45,6 +45,7 @@ All three active runtimes treat the Portal bearer token as **fully opaque**:
 - Variable is named `rawToken`, emphasizing it is used as-is
 - Never parsed, decoded, or inspected — only truthiness check (`if (bearerToken)`)
 - After exchange for a Portal JWT, the original token is never used again
+- Does **not** strip the token from the URL after extracting it (verified with both hex tokens on production and JWTs on a local portal, 2026-02-27)
 - Test mocks use simple strings like `"goodStudentToken"` — confirming no format assumptions
 
 **collaborative-learning** (repo: `concord-consortium/collaborative-learning`)
