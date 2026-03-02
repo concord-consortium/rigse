@@ -2,7 +2,7 @@
 
 **Date:** 2026-02-26
 **Status:** Approved
-**Related:** `portal-authentication-unification-design.md` (Option B), `clientless-grants-replacement-research.md`
+**Related:** `../portal-authentication-unification-design.md` (Option B), `2026-02-26-clientless-grants-replacement-research.md`
 
 ---
 
@@ -12,13 +12,13 @@ Replace the two sites that create client-less `AccessGrant` records (short-lived
 
 ## Context: this is a stepping stone
 
-The longer-term direction is for the Portal to launch external activities using OAuth2 initialization parameters instead of any single-use token (see Next Steps, Steps 3-5 in `portal-authentication-unification-design.md`). Several runtimes (CLUE, Activity Player, portal-report) already support this OAuth2 pattern — see the "SPA OAuth2 initialization pattern" section in `docs/external-services.md`.
+The longer-term direction is for the Portal to launch external activities using OAuth2 initialization parameters instead of any single-use token (see Next Steps, Steps 3-5 in `../portal-authentication-unification-design.md`). Several runtimes (CLUE, Activity Player, portal-report) already support this OAuth2 pattern — see the "SPA OAuth2 initialization pattern" section in `docs/external-services.md`.
 
 Replacing client-less grants with JWTs is an interim step that delivers immediate benefits (eliminates DB writes, removes client-less grants from the codebase, simplifies `check_for_auth_token`) without requiring changes to any external runtime. It also establishes the JWT-based token exchange that will continue to be used even after OAuth2 launches are adopted — runtimes will still call `JwtController` to get Firebase tokens and longer-lived Portal JWTs, just with an OAuth2 AccessGrant token instead of a launch JWT.
 
 ## Why client-less grants are problematic
 
-Client-less grants are `AccessGrant` records created without a `client_id`. They cause three problems documented in `portal-authentication-unification-design.md`:
+Client-less grants are `AccessGrant` records created without a `client_id`. They cause three problems documented in `../portal-authentication-unification-design.md`:
 
 1. **Authentication divergence.** The Portal has two parallel auth systems: Devise strategies (setting `current_user`) and the manual `check_for_auth_token` method. The Devise bearer strategy requires `grant.client` — so it rejects client-less grants entirely. These tokens can *only* be authenticated by `check_for_auth_token`, meaning any endpoint that relies on `current_user` cannot accept them. This creates a split where the same `Authorization: Bearer` header produces different results depending on which code path handles it.
 

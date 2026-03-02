@@ -5,7 +5,7 @@
 
 ## Overview
 
-While designing the OIDC authentication strategy (see `portal-oidc-authentication-design.md`), we identified an "overlap problem" between Devise's `current_user` and the manual `check_for_auth_token` method in `API::APIController`. Investigation revealed the problem is deeper than initially described in Section 4 of that document.
+While designing the OIDC authentication strategy (see `specs/2026-02-25-portal-oidc-authentication-design.md`), we identified an "overlap problem" between Devise's `current_user` and the manual `check_for_auth_token` method in `API::APIController`. Investigation revealed the problem is deeper than initially described in Section 4 of that document.
 
 The Portal's API authentication has two parallel systems that evolved independently:
 
@@ -70,7 +70,7 @@ A manual method that parses the `Authorization` header and returns a `[user, rol
 - When no Authorization header matches, falls back to `current_user`
 - Returns: `[current_user, nil]` (role is nil)
 
-> **History:** Prior to 2026-02-27, this method had two additional cases for peer-to-peer authentication (Cases B and C in the original document). These were removed after research confirmed no production traffic used them. See `peer-to-peer-auth-removal-research.md` for details.
+> **History:** Prior to 2026-02-27, this method had two additional cases for peer-to-peer authentication (Cases B and C in the original document). These were removed after research confirmed no production traffic used them. See `specs/2026-02-26-peer-to-peer-auth-removal-research.md` for details.
 
 ### 1.3 Wrapper Helpers
 
@@ -95,7 +95,7 @@ The remaining divergence is **role context**, not user identity — see Section 
 
 ### 2.1 Client-less AccessGrants (Resolved)
 
-**Status: Eliminated.** The two creation sites that produced client-less AccessGrants (`external_activity.rb` and `create_collaboration.rb`) now mint short-lived Portal JWTs via `SignedJwt::create_portal_token` instead. The `User#create_access_token_with_learner_valid_for` method has been removed. See `2026-02-26-clientless-grants-jwt-replacement-design.md` for the full design and `clientless-grants-replacement-research.md` for the runtime compatibility research.
+**Status: Eliminated.** The two creation sites that produced client-less AccessGrants (`external_activity.rb` and `create_collaboration.rb`) now mint short-lived Portal JWTs via `SignedJwt::create_portal_token` instead. The `User#create_access_token_with_learner_valid_for` method has been removed. See `specs/2026-02-26-clientless-grants-jwt-replacement-design.md` for the full design and `specs/2026-02-26-clientless-grants-replacement-research.md` for the runtime compatibility research.
 
 The `check_for_auth_token` method was updated to route `Bearer <token>` to JWT decoding when the token contains dots (JWTs always have dots; hex AccessGrant tokens never do). This means launch tokens now flow through Case 1 (JWT) rather than Case 2 (AccessGrant).
 
@@ -103,7 +103,7 @@ Client-backed AccessGrants (created by OAuth clients via `Client#updated_grant_f
 
 ### 2.2 Peer-to-peer Authentication (Resolved)
 
-**Status: Removed from `check_for_auth_token`.** Research confirmed zero production traffic used the peer-to-peer code path (Cases B and C in the original method). See `peer-to-peer-auth-removal-research.md` for the full investigation, including GitHub org search, production client cross-reference, and 365-day log analysis.
+**Status: Removed from `check_for_auth_token`.** Research confirmed zero production traffic used the peer-to-peer code path (Cases B and C in the original method). See `specs/2026-02-26-peer-to-peer-auth-removal-research.md` for the full investigation, including GitHub org search, production client cross-reference, and 365-day log analysis.
 
 **Note:** The `request_is_peer?` policy check in `CollaborationPolicy#collaborators_data?` remains active — it is used by the report-service's `auto-importer` Cloud Function (~1,092 requests/year). This is independent of `check_for_auth_token` and was not affected by the removal.
 
@@ -247,9 +247,14 @@ The referer check is **only applied by the Devise bearer strategy**, not by `che
 - Client-backed grants authenticated via Devise get referer validation
 - The same grants authenticated via `check_for_auth_token` do **not** get referer validation
 
-Launch tokens are now JWTs (not AccessGrants), so they bypass the Devise bearer strategy entirely — the referer check is not relevant for them. If we unify authentication into Devise for the remaining AccessGrant paths, we'd need to decide whether to enforce referer checks on currently-unchecked paths. This could break external services in two ways:
-- The service doesn't send referer headers at all (e.g., server-to-server calls)
-- The Client's `domain_matchers` are not configured (or not configured correctly) for the service's domain — since `check_for_auth_token` never enforced this, incorrect `domain_matchers` would have gone unnoticed
+Launch tokens are now JWTs (not AccessGrants), so they bypass the Devise bearer strategy entirely — the referer check is not relevant for them. If we unify authentication into Devise for the remaining AccessGrant paths, we'd need to decide whether to enforce referer checks on currently-unchecked paths.
+
+**Research conclusion (see `specs/2026-03-02-referer-validation-research.md`):** This is **not a concern for Step 1**. Investigation of the four controllers being migrated found that none of their callers are affected by the referer check:
+- `BookmarksController` and `TeacherClassesController` are called only by the Portal's own React frontend using session cookies (no Bearer token involved)
+- `ExternalActivitiesController` is called only by LARA, whose Clients (IDs 2, 3, 4) have blank `domain_matchers` — the referer check is a no-op
+- `OfferingsController`'s `create_for_external_activity` is called only by CLUE Standalone, which sends a Portal JWT via `Bearer/JWT` (not an AccessGrant) — the referer check is never reached
+
+Of 25 production Clients, 10 enforce referer checks — but all 10 are report/dashboard SPAs whose tokens are used on endpoints that already authenticate via `current_user` or that remain on `check_for_auth_token` (JwtController).
 
 ---
 
@@ -257,12 +262,12 @@ Launch tokens are now JWTs (not AccessGrants), so they bypass the Devise bearer 
 
 ### What's been done
 
-**Client-less grants replaced with JWTs (original Option B).** See `2026-02-26-clientless-grants-jwt-replacement-design.md` for the design. The key changes:
+**Client-less grants replaced with JWTs (original Option B).** See `specs/2026-02-26-clientless-grants-jwt-replacement-design.md` for the design. The key changes:
 - `external_activity.rb` and `create_collaboration.rb` now mint JWTs via `SignedJwt::create_portal_token` instead of creating client-less AccessGrants
 - `check_for_auth_token` routes `Bearer <token-with-dots>` to JWT decoding before attempting AccessGrant lookup
 - `User#create_access_token_with_learner_valid_for` has been removed
 
-**Peer-to-peer auth (Cases B/C) removed from `check_for_auth_token`.** See `peer-to-peer-auth-removal-research.md` for the research that confirmed zero production traffic.
+**Peer-to-peer auth (Cases B/C) removed from `check_for_auth_token`.** See `specs/2026-02-26-peer-to-peer-auth-removal-research.md` for the research that confirmed zero production traffic.
 
 ### What remains
 
@@ -338,13 +343,13 @@ The nil role is fine — `handle_initial_auth` already handles nil role via para
 
 ## 7. Discussion Questions
 
-1. ~~**Client-less grants — can we eliminate them?**~~ **Resolved.** Replaced with JWTs. See `2026-02-26-clientless-grants-jwt-replacement-design.md`.
+1. ~~**Client-less grants — can we eliminate them?**~~ **Resolved.** Replaced with JWTs. See `specs/2026-02-26-clientless-grants-jwt-replacement-design.md`.
 
-2. ~~**Peer-to-peer auth — is it actively used?**~~ **Resolved.** No production traffic used the `check_for_auth_token` peer-to-peer path. Cases B and C have been removed. The `request_is_peer?` policy check for `collaborators_data` remains (active report-service traffic). See `peer-to-peer-auth-removal-research.md`.
+2. ~~**Peer-to-peer auth — is it actively used?**~~ **Resolved.** No production traffic used the `check_for_auth_token` peer-to-peer path. Cases B and C have been removed. The `request_is_peer?` policy check for `collaborators_data` remains (active report-service traffic). See `specs/2026-02-26-peer-to-peer-auth-removal-research.md`.
 
 3. ~~**OIDC + JwtController — is it needed for the button interactive?**~~ **Yes.** OIDC callers will need to create JWTs. The unification steps in Section 6 (migrate controllers to `current_user`, then separate role extraction from authentication in JwtController) will enable this.
 
-4. **Referer validation — what would break?** Still relevant for client-backed AccessGrant tokens. `check_for_auth_token` does not enforce referer checks; the Devise bearer strategy does. If we migrate controllers to use `current_user` (Step 1 in Section 6), endpoints that currently accept AccessGrant tokens via `check_for_auth_token` without referer validation would instead go through the Devise bearer strategy, which enforces it. This could break external services that don't send referer headers or whose Client's `domain_matchers` are misconfigured.
+4. ~~**Referer validation — what would break?**~~ **Resolved.** Nothing would break for Step 1. Research confirmed that none of the four migrated controllers' callers are affected: two use session cookies (no Bearer token), one caller's Clients have blank `domain_matchers` (referer check is a no-op), and one caller uses Portal JWTs (bypasses the referer check entirely). See `specs/2026-03-02-referer-validation-research.md`.
 
 5. ~~**Role extraction approach — which is better?**~~ **Resolved.** Accept the double token parsing temporarily. Token-embedded role is a pattern we want to deprecate, not formalize. `check_for_auth_token` stays as JwtController's sole auth method until clients migrate to parameter-based role resolution, at which point the method is deleted. See Section 6 Step 2.
 
@@ -354,15 +359,17 @@ The nil role is fine — `handle_initial_auth` already handles nil role via para
 
 ### Completed
 
-1. **Peer-to-peer auth removed from `check_for_auth_token`.** Research confirmed zero production traffic. Cases B and C deleted. See `peer-to-peer-auth-removal-research.md`.
+1. **Peer-to-peer auth removed from `check_for_auth_token`.** Research confirmed zero production traffic. Cases B and C deleted. See `specs/2026-02-26-peer-to-peer-auth-removal-research.md`.
 
-2. **Client-less grants replaced with JWTs.** Both creation sites (`external_activity.rb`, `create_collaboration.rb`) now mint Portal JWTs. `check_for_auth_token` routes `Bearer <token-with-dots>` to JWT decoding. `User#create_access_token_with_learner_valid_for` removed. See `2026-02-26-clientless-grants-jwt-replacement-design.md`.
+2. **Client-less grants replaced with JWTs.** Both creation sites (`external_activity.rb`, `create_collaboration.rb`) now mint Portal JWTs. `check_for_auth_token` routes `Bearer <token-with-dots>` to JWT decoding. `User#create_access_token_with_learner_valid_for` removed. See `specs/2026-02-26-clientless-grants-jwt-replacement-design.md`.
 
 3. **`check_for_auth_token` simplified** from 5 cases to 3: JWT (with dot detection) → AccessGrant → session fallback.
 
+4. **Referer validation researched for Step 1.** Confirmed that none of the four controllers' callers are affected by the Devise bearer strategy's referer check. See `specs/2026-03-02-referer-validation-research.md`.
+
 ### Next steps
 
-1. **Migrate four controllers to `current_user`** (Section 6 Step 1). Replace `check_for_auth_token` with `current_user` in `BookmarksController`, `TeacherClassesController`, `ExternalActivitiesController`, and `OfferingsController`, keeping their existing authorization logic. These controllers will then work with OIDC automatically.
+1. **Migrate four controllers to `current_user`** (Section 6 Step 1). Replace `check_for_auth_token` with `current_user` in `BookmarksController`, `TeacherClassesController`, `ExternalActivitiesController`, and `OfferingsController`, keeping their existing authorization logic. These controllers will then work with OIDC automatically. Referer validation has been confirmed as not a concern — see `specs/2026-03-02-referer-validation-research.md`.
 
 2. **Add OIDC fallback to `check_for_auth_token`** (Section 6 Step 2). Wrap the JWT decode in a rescue so OIDC tokens fall through to the session fallback. This unblocks OIDC callers for JwtController.
 

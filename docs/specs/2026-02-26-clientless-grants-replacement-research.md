@@ -2,7 +2,7 @@
 
 **Date:** 2026-02-26
 **Status:** In Progress
-**Related:** `portal-authentication-unification-design.md` Section 8 (Next Steps)
+**Related:** `../portal-authentication-unification-design.md` Section 8 (Next Steps)
 
 ---
 
