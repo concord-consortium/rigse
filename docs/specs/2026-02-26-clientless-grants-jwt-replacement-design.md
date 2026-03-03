@@ -84,7 +84,7 @@ end
 
 ## What's NOT changing
 
-- **Devise strategies** — `bearer_token_authenticatable` and `jwt_bearer_token_authenticatable` are untouched. Note: the `bearer_token_authenticatable` strategy matches `Bearer (.*)` and will attempt an `AccessGrant.find_by_access_token` lookup with the JWT string before falling through. This query returns no results (JWTs are not in the `access_grants` table) and the strategy is skipped, after which `check_for_auth_token` handles the JWT correctly. This is a wasted database query per request but is benign — it will be addressed in the follow-up authentication unification work.
+- **Devise strategies** — Updated so that `jwt_bearer_token_authenticatable` now accepts plain `Bearer <token>` when the token contains dots (in addition to the existing `Bearer/JWT` prefix). This means Devise correctly sets `current_user` for JWT launch tokens. The `bearer_token_authenticatable` strategy skips tokens with dots to avoid a wasted `AccessGrant.find_by_access_token` lookup.
 - **`Bearer/JWT` prefix** — existing callers that send `Authorization: Bearer/JWT <token>` continue to work.
 - **External runtimes** — no changes needed (all three active runtimes treat the token as opaque per the research doc).
 - **`AccessGrant` model** — still used by OAuth clients with `client_id`. In particular, report launches (`ExternalReport#url_for_offering`, `ExternalReport#url_for_class`) create AccessGrant tokens via `client.updated_grant_for` — these are proper client-backed grants (2-hour lifetime) and are not affected by this change.

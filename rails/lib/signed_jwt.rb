@@ -80,6 +80,13 @@ module SignedJwt
     return true
   end
 
+  # JWTs always contain dots (header.payload.signature); AccessGrant tokens
+  # are SecureRandom.hex(16) and never contain dots. This lets callers route
+  # Bearer tokens to the right handler without decoding.
+  def self.probably_jwt?(token)
+    token.include?('.')
+  end
+
   private
 
   def self.hmac_algorithm

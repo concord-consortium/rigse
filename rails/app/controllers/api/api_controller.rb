@@ -25,7 +25,7 @@ class API::APIController < ApplicationController
 
   def check_for_auth_token(params)
     header = request.headers["Authorization"]
-    if header && (header =~ /^Bearer\/JWT (.*)$/i || (header =~ /^Bearer (.+\..+)$/i))
+    if header && (header =~ /^Bearer\/JWT (.*)$/i || (header =~ /^Bearer (.+)$/i && SignedJwt.probably_jwt?($1)))
       portal_token = $1
       # if invalid this will raise a SignedJwt::Error which is a subclass of StandardError that the caller should be listening for
       # the expiration is checked within the JWT.decode function

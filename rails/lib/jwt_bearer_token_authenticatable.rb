@@ -14,19 +14,25 @@ module JwtBearerTokenAuthenticatable
     protected
 
     def decode_token
-      return nil unless has_jwt_bearer_token?()
-      strategy, token = get_strategy_and_token()
+      token = jwt_token_value
+      return nil unless token
       SignedJwt::decode_portal_token(token) rescue nil
     end
 
     def has_jwt_bearer_token?
-      strategy, token = get_strategy_and_token()
-      strategy.downcase == 'bearer/jwt'  # use bearer/jwt to distingush from client bearer tokens
+      jwt_token_value.present?
     end
 
-    def get_strategy_and_token
-      strategy, token = (request.headers['Authorization'] || '').split(' ')
-      [(strategy || ''), (token || '')]
+    # Extracts the JWT from the Authorization header. Matches both the
+    # explicit Bearer/JWT scheme and plain Bearer when the token looks
+    # like a JWT (contains dots).
+    def jwt_token_value
+      header = request.headers['Authorization'] || ''
+      if header =~ /^Bearer\/JWT (.+)$/i
+        $1
+      elsif header =~ /^Bearer (.+)$/i && SignedJwt.probably_jwt?($1)
+        $1
+      end
     end
 
   end
