@@ -158,6 +158,8 @@ The Portal adds several parameters onto the URL provided by the ExternalReport. 
 ## Authorization
 When a report is launched from the Portal, the Portal creates an AccessGrant with the ExternalReport's Client and passes the token to the report as a URL parameter. The report can use this token to call back to the Portal. Since the token has a client, it can be used with any Portal API.
 
+**Note:** Unlike resource launches (which exchange a short-lived JWT for a longer-lived Portal JWT via `JwtController`), portal-report does not exchange its AccessGrant token for a JWT after launch. It continues to use the AccessGrant token directly for Portal API calls throughout its session.
+
 When an ExternalReport is set up in the Portal a Client is needed and must have the correct settings. Our teacher reports are normally SPAs, so the Client should have a type of `public`, and it should specify the domain of the SPA.
 
 If the SPA report also supports OAuth2 (so it can be run without being launched from the Portal with a token), then the Client's `redirect_uris` must also be specified. See the OAuth2 Authorization section under Runtime Environments above for details on the OAuth2 flow.

@@ -227,6 +227,8 @@ This means we have no visibility into how often the referer check is currently r
 
 The database query shows the four migrated controllers are safe, so this is **not a blocker for Step 1**. However, temporary logging in the Devise bearer strategy could still be independently useful — it would surface silent auth failures across the entire app (e.g., for report launches where 10 of 25 Clients DO enforce referer). This is an optional improvement, not a prerequisite.
 
+**Note on portal-report exposure:** Portal-report is the most exposed SPA to referer validation issues because it never exchanges its AccessGrant token for a Portal JWT. Unlike the CLUE dashboard (which exchanges immediately after launch and uses the JWT for all subsequent calls), portal-report sends the raw AccessGrant token as `Authorization: Bearer <hex-token>` on every API call throughout its session. This means every request goes through the Devise `BearerTokenAuthenticatable` strategy and its referer check. The portal-report Clients (IDs 12 and 26) both enforce referer via `domain_matchers`, so if the referer is missing or doesn't match, those requests would fail silently. The endpoints portal-report calls (`api/v1/offerings` show/index/update, `api/v1/jwt/firebase`, etc.) already use `current_user` — so this is an existing concern, not one introduced by Step 1 — but temporary logging would help confirm these requests are succeeding in production.
+
 ---
 
 ## Conclusion

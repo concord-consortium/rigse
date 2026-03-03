@@ -181,13 +181,15 @@ The activity JSON just needs to be publicly accessible — the Activity Player f
 
 ### 7a. Assign and launch
 
-Follow the steps in [Assign and launch the activity](#assign-and-launch-the-activity) below.
+Follow the steps in [Testing as a teacher and student](#testing-as-a-teacher-and-student) below.
 
 ---
 
 ## CLUE
 
 **Important**: CLUE launching from a local portal currently requires changing the access rules in the collaborative-learning-staging firebase project. Until that is fixed, this isn't a convenient setup. See step 8b (firebase rules) for more details.
+
+**Additional Codespaces issue**: The Firebase JWT's `claims.platform_id` comes from `APP_CONFIG[:site_url]`, which in Codespaces is set to the public codespace URL (e.g., `https://<codespace-name>-3000.app.github.dev`). Even if you access the portal via `http://localhost:3000` (so the launch `domain` parameter is `localhost:3000`), the `platform_id` in the Firebase token will still be the codespace URL. CLUE uses `platform_id` to build the Firestore document path, and the Firebase rules only allow specific portal hostnames (see step 8b). The codespace hostname is not in that list, so Firebase writes will be rejected. This means that even with the `localhost:3000` workaround for the Firebase rules, the `platform_id` mismatch will cause permission failures.
 
 Follow the shared setup steps above, then complete the steps below.
 
@@ -284,15 +286,19 @@ The CLUE firestore rules only match specific portals. The portal hostname is esc
 - learn_portal_staging_concord_org
 - learn-migrate_concord_org
 
-However the `localhost:3000` entry was added manually to these staging rules. If someone redeploys the rules from the official set in the CLUE repo this entry will go away. 
+However the `localhost:3000` entry was added manually to these staging rules. If someone redeploys the rules from the official set in the CLUE repo this entry will go away.
+
+Additionally, even if `localhost:3000` is in the rules, the portal sets `claims.platform_id` in the Firebase JWT from `APP_CONFIG[:site_url]` (see `jwt_controller.rb`), not from the request URL. In Codespaces, `SITE_URL` is the public codespace hostname, so `platform_id` will not match `localhost:3000`. You would need to also add the codespace hostname to the Firebase rules, which is impractical since it changes per codespace.
+
+TODO: The hardcoded hostname list in the Firebase Realtime Database rules could potentially be replaced with a dynamic allow list. RTDB rules support reading other database nodes via `root.child()`, so allowed `platform_id` values could be stored in a node (e.g., `/config/allowedPortals`) and checked at evaluation time. The staging project could allow all domains, while the production project would only list known portal hostnames. This would make local/Codespaces testing possible without modifying the deployed rules.
 
 ### 9b. Assign and launch
 
-Follow the steps in [Assign and launch the activity](#assign-and-launch-the-activity) below.
+Follow the steps in [Testing as a teacher and student](#testing-as-a-teacher-and-student) below.
 
 ---
 
-## Assign and launch the activity
+## Testing as a teacher and student
 
 ### Create test user accounts
 
@@ -331,6 +337,29 @@ The portal will redirect to a URL like:
   &domain=http://127.0.0.1:3000/
   &domain_uid=<user_id>
 ```
+
+### Test reports
+
+If you set up external reports (step 5a for AP, step 6b for CLUE), report buttons will appear on the offering in the teacher's class view.
+
+**What to expect:**
+
+Reports launched from the portal receive an AccessGrant token as a URL parameter. The behavior after launch differs by report:
+
+- **CLUE dashboard:** Exchanges its AccessGrant token for a Portal JWT via `GET /api/v1/jwt/portal`, then uses the JWT for subsequent API calls. It will then attempt to access Firebase Realtime Database, which will fail for the same reasons described in the CLUE section (platform_id mismatch in Firebase rules).
+
+- **portal-report:** Uses the AccessGrant token directly for all Portal API calls (it does not exchange for a JWT). It will successfully call Portal endpoints like `/api/v1/offerings` and `/api/v1/jwt/firebase`. However, the report will not fully load because the activity structure has not been published to the report-service — that requires LARA, which we are not running locally. You can still validate the auth flow by checking the Network tab for successful Portal API calls (200 responses).
+
+**What you can verify without LARA:**
+
+- Portal API calls succeed (offerings, JWT endpoints return 200)
+- The AccessGrant token / JWT exchange works correctly
+- Firebase token is issued (if FirebaseApp is configured)
+
+**What requires LARA to fully test:**
+
+- Report rendering with actual student data
+- Activity structure display in portal-report
 
 ## Troubleshooting
 
