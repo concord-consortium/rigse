@@ -286,7 +286,7 @@ Resources:
         HostedZoneId: !Ref "HostedZoneId"
         AccessLogsS3Enabled: !If [EnableALBAccessLogsCond, "true", "false"]
         AccessLogsS3Bucket: !If [EnableALBAccessLogsCond, !Ref ALBAccessLogsBucket, ""]
-        AccessLogsS3Prefix: alb-logs/portal
+        AccessLogsS3Prefix: !Sub "alb-logs/${ShortName}-${Environment}"
 
   AppService:
     Type: AWS::ECS::Service
