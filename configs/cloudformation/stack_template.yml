@@ -251,10 +251,22 @@ Parameters:
     Default: authoring.concord.org
     Description: Source collection for report service data (use authoring.lara.staging.concord.org for staging)
 
+  EnableALBAccessLogs:
+    Type: String
+    Default: "false"
+    AllowedValues: ["true", "false"]
+    Description: Enable ALB access logs to S3
+  ALBAccessLogsBucket:
+    Type: String
+    Default: concord-aws-logs
+    Description: S3 bucket for ALB access logs
+
 Conditions:
   PortalPagesLibraryDefined: !Not [!Equals [!Ref PortalPagesLibraryVersion, ""]]
   CreateLoadBalancerHTTPRedirectCond:
     !Equals [!Ref CreateLoadBalancerHTTPRedirect, "true"]
+  EnableALBAccessLogsCond:
+    !Equals [!Ref EnableALBAccessLogs, "true"]
 
 Resources:
   LoadBalancerStack:
@@ -272,6 +284,9 @@ Resources:
         Subnets:
           { "Fn::ImportValue": !Sub "${ClusterStackName}-ClusterSubnets" }
         HostedZoneId: !Ref "HostedZoneId"
+        AccessLogsS3Enabled: !If [EnableALBAccessLogsCond, "true", "false"]
+        AccessLogsS3Bucket: !If [EnableALBAccessLogsCond, !Ref ALBAccessLogsBucket, ""]
+        AccessLogsS3Prefix: alb-logs/portal
 
   AppService:
     Type: AWS::ECS::Service
