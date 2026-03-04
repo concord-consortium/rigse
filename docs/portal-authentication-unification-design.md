@@ -1,6 +1,6 @@
 # Portal API Authentication — Current State & Unification Options
 
-**Date:** 2026-02-25 (updated 2026-02-27)
+**Date:** 2026-02-25 (updated 2026-03-04)
 **Status:** Draft / Discussion
 
 ## Overview
@@ -143,13 +143,13 @@ We audited every caller of `check_for_auth_token`:
 
 | Controller | Calls | Uses `role`? | How it determines role instead |
 |---|---|---|---|
-| `BookmarksController` | `check_for_auth_token` via `check_auth` | **No** | `user.portal_teacher` (database) |
-| `TeacherClassesController` | `check_for_auth_token` via `auth_teacher` | **No** | `user.portal_teacher` (database) |
-| `ExternalActivitiesController` | `check_for_auth_token` directly | **No** | Only uses `user` for ownership |
-| `OfferingsController` | `check_for_auth_token` directly | **No** | `clazz.is_teacher?(user)` (database) |
+| `BookmarksController` | ~~`check_for_auth_token` via `check_auth`~~ **Migrated to `current_user`** | **No** | `current_user.portal_teacher` (database) |
+| `TeacherClassesController` | ~~`check_for_auth_token` via `auth_teacher`~~ **Migrated to `current_user`** | **No** | `current_user.portal_teacher` (database) |
+| `ExternalActivitiesController` | ~~`check_for_auth_token` directly~~ **Migrated to `current_user`** | **No** | Only uses `current_user` for ownership |
+| `OfferingsController` | ~~`check_for_auth_token` directly~~ **Migrated to `current_user`** | **No** | `clazz.is_teacher?(current_user)` (database) |
 | **`JwtController`** | `check_for_auth_token` via `handle_initial_auth` | **Yes** | Needs learner/teacher to mint new JWTs with role claims |
 
-Only `JwtController` genuinely needs the token-embedded role. The other four controllers use `check_for_auth_token` as an **authentication mechanism** (to get the user), then derive role information from the database.
+Only `JwtController` genuinely needs the token-embedded role. The other four controllers have been migrated to use `current_user` directly (see `specs/2026-03-04-controller-migration-design.md`).
 
 Note: even `auth_teacher` — which sounds role-related — checks `user.portal_teacher` (a database lookup), not the `:teacher` value from the role hash.
 
@@ -273,25 +273,24 @@ Of 25 production Clients, 10 enforce referer checks — but all 10 are report/da
 
 ### What remains
 
-The simplified `check_for_auth_token` now has three straightforward cases (JWT → AccessGrant → session fallback). Two complementary steps would move toward full unification:
+With all four non-role controllers migrated, `JwtController` is the sole consumer of `check_for_auth_token`. One step remains for full OIDC compatibility:
 
-1. **Migrate non-role controllers to `current_user`** — eliminate `check_for_auth_token` as an authentication mechanism for the four controllers that don't use the role
-2. **Keep `check_for_auth_token` for JwtController only** — it still needs role extraction from the token, but add an OIDC fallback so it handles unrecognized JWTs gracefully. Token-embedded role is a deprecated pattern; clients should migrate to parameter-based role resolution over time.
+1. **Add OIDC fallback to `check_for_auth_token` for JwtController** — it still needs role extraction from the token, but must handle unrecognized JWTs gracefully. Token-embedded role is a deprecated pattern; clients should migrate to parameter-based role resolution over time.
 
-### Step 1: Migrate controllers off `check_for_auth_token`
+### Step 1: Migrate controllers off `check_for_auth_token` — COMPLETED
 
-The four controllers that use `check_for_auth_token` only for authentication (not role) can be migrated to use `current_user` instead. Replace the `check_for_auth_token` call with `current_user` and keep each controller's existing authorization logic as-is.
+The four controllers that used `check_for_auth_token` only for authentication (not role) have been migrated to use `current_user` instead. Each controller's existing authorization logic was preserved as-is.
 
-An alternative would be to also convert each controller's authorization to Pundit at the same time. Two of the four (`ExternalActivitiesController`, `OfferingsController`) already use Pundit, but `BookmarksController` and `TeacherClassesController` use custom helpers (`check_auth`, `auth_teacher`, `changeable?`, class ownership checks). Converting those to Pundit would produce a more uniform codebase, but it mixes two refactors in one step — changing the user source and changing the authorization logic — making the change harder to verify. By only swapping the user source and preserving existing authorization, we change one thing and keep the scope small and low-risk.
+The original design proposed Devise's `authenticate_user!`, but implementation used a custom `require_api_user!` guard instead because `CustomFailure` redirects HTML-format requests. The custom guard uses the existing `error()` JSON pattern for consistency. See `specs/2026-03-04-controller-migration-design.md` for details.
 
-| Controller | Current auth | After |
+| Controller | Previous auth | Current auth |
 |---|---|---|
-| `BookmarksController` | `check_for_auth_token` via `check_auth` | `current_user` + existing `changeable?` checks |
-| `TeacherClassesController` | `check_for_auth_token` via `auth_teacher` | `current_user` + existing class ownership helpers |
-| `ExternalActivitiesController` | `check_for_auth_token` directly | `current_user` + existing Pundit policies |
-| `OfferingsController` | `check_for_auth_token` directly | `current_user` + existing Pundit policies / `is_teacher?` |
+| `BookmarksController` | `check_for_auth_token` via `check_auth` | `require_api_user!` + `current_user` + `authorize_class_teacher!` |
+| `TeacherClassesController` | `check_for_auth_token` via `auth_teacher` | `require_api_user!` + `require_teacher!` + `current_user` + existing class ownership helpers |
+| `ExternalActivitiesController` | `check_for_auth_token` directly | `require_api_user!` + `current_user` + existing Pundit policies |
+| `OfferingsController` | `check_for_auth_token` directly | `current_user` + existing Pundit policies / `is_teacher?` (no `require_api_user!` — Pundit handles guest rejection) |
 
-Each migration needs careful testing to verify identical behavior. These controllers would then automatically work with OIDC (and any future Devise strategy) without any changes to `check_for_auth_token`. Converting `BookmarksController` and `TeacherClassesController` to Pundit can be a separate step later if desired.
+**Status: Completed.** All four controllers have been migrated. See `specs/2026-03-04-controller-migration-design.md` for implementation details and PR #1469. These controllers now automatically work with OIDC (and any future Devise strategy) without any changes to `check_for_auth_token`. Converting `BookmarksController` and `TeacherClassesController` to Pundit can be a separate step later if desired.
 
 ### Step 2: JwtController — keep `check_for_auth_token` as a deprecated role source
 
@@ -369,9 +368,11 @@ The nil role is fine — `handle_initial_auth` already handles nil role via para
 
 4. **Referer validation researched for Step 1.** Confirmed that none of the four controllers' callers are affected by the Devise bearer strategy's referer check. See `specs/2026-03-02-referer-validation-research.md`.
 
+5. **Four controllers migrated to `current_user`** (Section 6 Step 1). All four controllers (`BookmarksController`, `TeacherClassesController`, `ExternalActivitiesController`, `OfferingsController`) now use `current_user` instead of `check_for_auth_token`. A custom `require_api_user!` guard in `API::APIController` returns JSON 401 for unauthenticated requests (Devise's `authenticate_user!` was not used because `CustomFailure` redirects HTML-format requests instead of returning JSON). `JwtController` is now the sole consumer of `check_for_auth_token`. See `specs/2026-03-04-controller-migration-design.md` and PR #1469.
+
 ### Next steps
 
-1. **Migrate four controllers to `current_user`** (Section 6 Step 1). Replace `check_for_auth_token` with `current_user` in `BookmarksController`, `TeacherClassesController`, `ExternalActivitiesController`, and `OfferingsController`, keeping their existing authorization logic. These controllers will then work with OIDC automatically. Referer validation has been confirmed as not a concern — see `specs/2026-03-02-referer-validation-research.md`.
+1. ~~**Migrate four controllers to `current_user`**~~ **Done.** See Completed item 5 above.
 
 2. **Add OIDC fallback to `check_for_auth_token`** (Section 6 Step 2). Wrap the JWT decode in a rescue so OIDC tokens fall through to the session fallback. This unblocks OIDC callers for JwtController.
 
