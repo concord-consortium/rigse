@@ -18,7 +18,7 @@ describe API::V1::BookmarksController do
     [:create, :update, :destroy, :sort].each do |method|
       it "returns error for #{method}" do
         post method, params: { id: 1, clazz_id: 1 }
-        expect(response.status).to eql(400)
+        expect(response.status).to eql(401)
         json = JSON.parse(response.body)
         expect(json["message"]).to eq("You must be logged in to use this endpoint")
       end

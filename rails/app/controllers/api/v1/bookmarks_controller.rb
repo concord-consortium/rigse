@@ -1,15 +1,17 @@
 class API::V1::BookmarksController < API::APIController
 
+  before_action :require_api_user!
+
   # POST api/v1/bookmarks
   def create
-    auth = check_auth(params)
+    auth = authorize_class_teacher!(params)
     return error(auth[:error]) if auth[:error]
 
     name = params[:name] || 'My bookmark'
     url = params[:url] || 'http://concord.org'
 
     bookmark = Portal::GenericBookmark.new({name: name, url: url})
-    bookmark.user = auth[:user]
+    bookmark.user = current_user
     bookmark.clazz = auth[:portal_class]
     authorize bookmark
 
@@ -22,7 +24,7 @@ class API::V1::BookmarksController < API::APIController
 
   # PUT api/v1/bookmarks
   def update
-    auth = check_auth(params)
+    auth = authorize_class_teacher!(params)
     return error(auth[:error]) if auth[:error]
 
     bookmark = Portal::Bookmark.find_by_id(params['id'])
@@ -30,7 +32,7 @@ class API::V1::BookmarksController < API::APIController
       return error('Invalid bookmark id')
     end
 
-    if bookmark && bookmark.changeable?(auth[:user])
+    if bookmark && bookmark.changeable?(current_user)
       %w[name url is_visible].each do |param|
         if params.has_key?(param)
           bookmark.update_attribute(param, params[param])
@@ -48,14 +50,14 @@ class API::V1::BookmarksController < API::APIController
 
   # DELETE api/v1/bookmarks
   def destroy
-    auth = check_auth(params)
+    auth = authorize_class_teacher!(params)
     return error(auth[:error]) if auth[:error]
 
     bookmark = Portal::Bookmark.find_by_id(params['id'])
     if !bookmark
       return error('Invalid bookmark id')
     end
-    if !bookmark.changeable?(auth[:user])
+    if !bookmark.changeable?(current_user)
       return error('You are not authorized to delete the bookmark')
     end
 
@@ -68,7 +70,7 @@ class API::V1::BookmarksController < API::APIController
 
   # POST api/v1/bookmarks/sort
   def sort
-    auth = check_auth(params)
+    auth = authorize_class_teacher!(params)
     return error(auth[:error]) if auth[:error]
 
     ids = params['ids']
@@ -79,7 +81,7 @@ class API::V1::BookmarksController < API::APIController
     bookmarks = ids.map { |i| Portal::Bookmark.find(i) }
     position = 1
     bookmarks.each do |bookmark|
-      if bookmark.changeable?(auth[:user])
+      if bookmark.changeable?(current_user)
         bookmark.position = position
         position = position + 1
         bookmark.save
@@ -106,32 +108,21 @@ class API::V1::BookmarksController < API::APIController
     }, :status => :ok
   end
 
-  def check_auth(params)
-    begin
-      user, role = check_for_auth_token(params)
-    rescue StandardError => e
-      return {error: e.message}
+  def authorize_class_teacher!(params)
+    clazz_id = params["clazz_id"]
+    if !clazz_id
+      return {error: 'Missing clazz_id param'}
     end
 
-    begin
-      clazz_id = params["clazz_id"]
-      if !clazz_id
-        raise StandardError, 'Missing clazz_id param'
-      end
-
-      portal_class = Portal::Clazz.find_by_id(clazz_id)
-      if !portal_class
-        raise StandardError, 'Invalid clazz_id param'
-      end
-
-      if !user.portal_teacher || !user.portal_teacher.has_clazz?(portal_class)
-        raise StandardError, 'You are not authorized to edit bookmarks for this class'
-      end
-
-      return {user: user, portal_class: portal_class, error: nil}
-
-    rescue StandardError => e
-      return {error: e.message}
+    portal_class = Portal::Clazz.find_by_id(clazz_id)
+    if !portal_class
+      return {error: 'Invalid clazz_id param'}
     end
+
+    if !current_user.portal_teacher || !current_user.portal_teacher.has_clazz?(portal_class)
+      return {error: 'You are not authorized to edit bookmarks for this class'}
+    end
+
+    return {portal_class: portal_class, error: nil}
   end
 end
