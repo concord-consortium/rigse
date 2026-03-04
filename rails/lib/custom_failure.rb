@@ -18,6 +18,10 @@ class CustomFailure < Devise::FailureApp
 
   # You need to override respond to eliminate recall
   def respond
+    message = warden.message || warden_options[:message]
+    Rails.logger.warn(
+      "Devise auth failure: message=#{message}, path=#{request.path}"
+    )
     if params[:user]
       unless User.verified_imported_user?(params[:user][:login])
         session[:login] = params[:user][:login]
