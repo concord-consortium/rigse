@@ -106,6 +106,13 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def append_info_to_payload(payload)
+    super
+    payload[:user_id] = current_user&.id
+    payload[:auth_strategy] = request.env['portal.auth_strategy']
+    payload[:auth_client] = request.env['portal.auth_client']
+  end
+
   def setup_container
     @container_type = self.class.name[/(.+)sController/,1]
     @container_id =  request.path_parameters.symbolize_keys[:id]
