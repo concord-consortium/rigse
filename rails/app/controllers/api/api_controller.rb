@@ -25,11 +25,26 @@ class API::APIController < ApplicationController
 
   def check_for_auth_token(params)
     header = request.headers["Authorization"]
-    if header && (header =~ /^Bearer\/JWT (.*)$/i || (header =~ /^Bearer (.+)$/i && SignedJwt.probably_jwt?($1)))
+    is_bearer_jwt = header && header =~ /^Bearer\/JWT (.*)$/i
+    is_plain_bearer_jwt = !is_bearer_jwt && header && header =~ /^Bearer (.+)$/i && SignedJwt.probably_jwt?($1)
+    if is_bearer_jwt || is_plain_bearer_jwt
       portal_token = $1
       # if invalid this will raise a SignedJwt::Error which is a subclass of StandardError that the caller should be listening for
       # the expiration is checked within the JWT.decode function
-      decoded_token = SignedJwt::decode_portal_token(portal_token)
+      begin
+        decoded_token = SignedJwt::decode_portal_token(portal_token)
+      rescue SignedJwt::Error
+        # For explicit Bearer/JWT tokens, re-raise — these are Portal JWTs.
+        raise if is_bearer_jwt
+        # For plain Bearer tokens that look like JWTs but aren't Portal-signed
+        # (e.g., OIDC tokens already authenticated by Devise), fall through to
+        # current_user without overwriting the auth strategy tag.
+        if current_user
+          return [current_user, nil]
+        else
+          raise StandardError, 'You must be logged in to use this endpoint'
+        end
+      end
       data = decoded_token[:data]
 
       user = User.find_by_id(data["uid"])
