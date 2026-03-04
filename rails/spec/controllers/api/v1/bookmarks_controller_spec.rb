@@ -10,6 +10,39 @@ describe API::V1::BookmarksController do
   let(:clazz1)         { FactoryBot.create(:portal_clazz, teachers: [teacher1]) }
   let(:clazz2)         { FactoryBot.create(:portal_clazz, teachers: [teacher2]) }
 
+  describe "when not logged in" do
+    before(:each) do
+      logout_user
+    end
+
+    [:create, :update, :destroy, :sort].each do |method|
+      it "returns error for #{method}" do
+        post method, params: { id: 1, clazz_id: 1 }
+        expect(response.status).to eql(400)
+        json = JSON.parse(response.body)
+        expect(json["message"]).to eq("You must be logged in to use this endpoint")
+      end
+    end
+  end
+
+  describe "when logged in as a non-teacher user" do
+    let(:simple_user) { FactoryBot.create(:confirmed_user, login: "bm_simple_user") }
+
+    before(:each) do
+      sign_in simple_user
+    end
+
+    [:create, :update, :destroy, :sort].each do |method|
+      it "returns auth error for #{method} with valid clazz_id" do
+        clazz1 # force creation
+        post method, params: { id: 1, clazz_id: clazz1.id }
+        expect(response.status).to eql(400)
+        json = JSON.parse(response.body)
+        expect(json["message"]).to eq("You are not authorized to edit bookmarks for this class")
+      end
+    end
+  end
+
   describe "As a non-teacher of the class" do
     before(:each) do
       sign_in teacher_user2

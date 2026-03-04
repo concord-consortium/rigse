@@ -18,6 +18,30 @@ describe API::V1::TeacherClassesController do
   let(:other_clazz)         { FactoryBot.create(:portal_clazz, name: 'other class', teachers: [other_teacher]) }
 
   describe "GET #show" do
+    describe "when not logged in" do
+      it "returns error" do
+        get :show, params: { id: 1 }
+        expect(response.status).to eql(400)
+        json = JSON.parse(response.body)
+        expect(json["message"]).to eq("You must be logged in to use this endpoint")
+      end
+    end
+
+    describe "when logged in as a non-teacher user" do
+      before(:each) do
+        sign_in student.user
+      end
+
+      it "returns error" do
+        get :show, params: { id: 1 }
+        expect(response.status).to eql(400)
+        json = JSON.parse(response.body)
+        expect(json["message"]).to eq("You must be logged in as a teacher to use this endpoint")
+      end
+    end
+  end
+
+  describe "GET #show (as teacher)" do
     before (:each) do
       # initialize the clazz
       clazz
