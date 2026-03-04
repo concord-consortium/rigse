@@ -140,11 +140,30 @@
 - After a JWT is obtained via `/api/v1/jwt/portal`, the activity uses it for subsequent API calls
 - **Verify (Rails logs):** `Auth: user=<id> auth=api_jwt GET /api/v1/...` appears
 
-### 8e. Auth failure warn logs
-- Attempt an API call with an invalid or expired token
-- **Verify (Rails logs):** A `WARN` level message like `API auth failed:` or `JwtBearerToken: decode error` appears
+### 8e. JWT auth failure warn logs
+- Run: `curl -H "Authorization: Bearer/JWT invalid.token.here" http://localhost:3000/api/v1/jwt/portal`
+- **Verify (Rails logs):** `JwtBearerToken: decode error` and `JwtBearerToken: token decode failed or missing uid` warn messages appear
 
-### 8f. Unauthenticated requests
+### 8f. Bearer token referer rejection warn log
+- Create an AccessGrant for a client that has `domain_matchers` set (e.g., `Portal Report SPA`):
+  ```
+  docker compose exec app bundle exec rails runner "
+    user = User.first
+    client = Client.find_by(name: 'Portal Report SPA')
+    grant = AccessGrant.create!(user: user, client: client, state: 'access_token',
+      access_token: SecureRandom.hex(20), access_token_expires_at: 1.hour.from_now)
+    puts grant.access_token
+  "
+  ```
+- Run: `curl -H "Authorization: Bearer <token>" -H "Referer: https://evil.example.com" http://localhost:3000/`
+- **Verify (Rails logs):** `BearerToken: referer rejected - client=Portal Report SPA, referer=https://evil.example.com, matchers=portal-report.concord.org, GET /` appears
+- **Note:** Warden re-evaluates the bearer token strategy multiple times per request, so you will see duplicate warn lines for a single curl request. This is expected.
+
+### 8g. API auth failure warn log
+- Run: `curl -H "Authorization: Bearer invalid-token-here" http://localhost:3000/api/v1/teacher_classes/1`
+- **Verify (Rails logs):** `API auth failed: Cannot find AccessGrant for requested token, path=/api/v1/teacher_classes/1` appears
+
+### 8h. Unauthenticated requests
 - Visit a public page without logging in
 - **Verify (Rails logs):** No `Auth:` line appears for the request
 

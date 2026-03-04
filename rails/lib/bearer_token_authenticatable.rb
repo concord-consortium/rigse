@@ -29,7 +29,8 @@ module BearerTokenAuthenticatable
           "BearerToken: referer rejected" \
           " - client=#{@grant.client.name}" \
           ", referer=#{referer}" \
-          ", matchers=#{@grant.client.domain_matchers}"
+          ", matchers=#{@grant.client.domain_matchers}" \
+          ", #{request.request_method} #{request.path}"
         )
         return false
       end
