@@ -21,7 +21,7 @@ describe API::V1::TeacherClassesController do
     describe "when not logged in" do
       it "returns error" do
         get :show, params: { id: 1 }
-        expect(response.status).to eql(400)
+        expect(response.status).to eql(401)
         json = JSON.parse(response.body)
         expect(json["message"]).to eq("You must be logged in to use this endpoint")
       end
@@ -73,7 +73,7 @@ describe API::V1::TeacherClassesController do
     [:sort, :copy].each do |action|
       it "should fail as anonymous" do
         post action, params: {id: 1}
-        expect(response).to have_http_status(:bad_request)
+        expect(response).to have_http_status(:unauthorized)
         expect(JSON.parse(response.body)["message"]).to eq "You must be logged in to use this endpoint"
       end
 
