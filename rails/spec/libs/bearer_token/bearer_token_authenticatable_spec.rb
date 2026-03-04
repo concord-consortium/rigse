@@ -63,6 +63,8 @@ describe BearerTokenAuthenticatable::BearerToken do
     allow(request).to receive(:headers).and_return(user_headers)
     allow(request).to receive(:env).and_return({'HTTP_REFERER' => referrer})
     allow(request).to receive(:params).and_return(params)
+    allow(request).to receive(:request_method).and_return('GET')
+    allow(request).to receive(:path).and_return('/test')
     allow(strategy).to receive(:mapping).and_return(mapping)
     allow(strategy).to receive(:request).and_return(request)
   }
