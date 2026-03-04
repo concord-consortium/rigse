@@ -305,16 +305,4 @@ RSpec.describe ApplicationPolicy do
     end
   end
 
-  # TODO: auto-generated
-  describe '#request_is_peer?' do
-    xit 'request_is_peer?' do
-      context = nil # double('context')
-      record = nil
-      application_policy = described_class.new(context, record)
-      result = application_policy.request_is_peer?
-
-      expect(result).to be_nil
-    end
-  end
-
 end

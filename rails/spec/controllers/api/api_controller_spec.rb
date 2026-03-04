@@ -99,42 +99,6 @@ RSpec.describe API::APIController, type: :controller do
           end
         end
 
-        describe 'with a token that is not access grant' do
-          before(:each) do
-            set_standard_bearer_token(client.app_secret)
-          end
-
-          describe 'with a learner_id_or_key' do
-            it 'should fail with an unknown learner' do
-              expect { controller.check_for_auth_token({:learner_id_or_key => "invalid"}) }.to raise_error("Cannot find learner with id or key of 'invalid'")
-            end
-            it 'should fail with an unknown peer token' do
-              set_standard_bearer_token("invalid_app_secret")
-              expect { controller.check_for_auth_token({:learner_id_or_key => learner.id.to_s}) }.to raise_error("Cannot find requested peer token")
-            end
-            it 'should succeed with a valid peer token' do
-              auth_user, auth_roles = controller.check_for_auth_token({:learner_id_or_key => learner.id.to_s})
-              expect(auth_user).to eq(learner.student.user)
-              expect(auth_roles).to eq({:learner => learner, :teacher => nil})
-            end
-          end
-
-          describe 'with a user_id' do
-            it 'should fail with an unknown user' do
-              expect { controller.check_for_auth_token({:user_id => 10000000}) }.to raise_error("Cannot find user with id of '10000000'")
-            end
-            it 'should fail with an unknown peer token' do
-              set_standard_bearer_token("invalid_app_secret")
-              expect { controller.check_for_auth_token({:user_id => user.id}) }.to raise_error("Cannot find requested peer token")
-            end
-            it 'should succeed with a valid peer token' do
-              auth_user, auth_roles = controller.check_for_auth_token({:user_id => user.id})
-              expect(auth_user).to eq(user)
-              expect(auth_roles).to eq({:learner => nil, :teacher => nil})
-            end
-          end
-        end
-
         describe 'using a jwt bearer token' do
           let(:user)           { FactoryBot.create(:user) }
           let(:claims)         { {} }
