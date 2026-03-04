@@ -13,7 +13,7 @@ failures), production logs provide almost no visibility. Devise strategy
 failures are silent, API auth errors are swallowed, and there are no ALB access
 logs to fall back on.
 
-The referer-validation research (see `docs/specs/referer-validation-research.md`)
+The referer-validation research (see `docs/specs/2026-03-02-referer-validation-research.md`)
 identified this as a critical blind spot: when a bearer token fails validation
 for any reason, nothing is logged.
 
@@ -63,38 +63,32 @@ request.env['portal.auth_client'] = grant.client&.name
 request.env['portal.auth_strategy'] = 'api_session'
 ```
 
-### Change 2: `append_info_to_payload` in ApplicationController
+### Change 2: Auth Log Subscriber (reads from `request.env`)
 
-Override `append_info_to_payload` to include auth info in every request's
-completion log line.
+A custom `AuthLogSubscriber` prepended to `ActionController::LogSubscriber`
+reads auth info directly from `request.env` on each completed request and
+emits a separate `Auth:` log line. This avoids the need to override
+`append_info_to_payload` in `ApplicationController`.
 
-**`rails/app/controllers/application_controller.rb`**:
-```ruby
-def append_info_to_payload(payload)
-  super
-  payload[:user_id] = current_user&.id
-  payload[:auth_strategy] = request.env['portal.auth_strategy']
-  payload[:auth_client] = request.env['portal.auth_client']
-end
-```
-
-Note: `current_user` can be nil for unauthenticated requests. The `&.` safe
-navigation handles this — `user_id` will be nil in the log.
-
-**`rails/config/initializers/auth_log_subscriber.rb`** — custom log subscriber
-to append the extra payload fields to the "Completed 200 OK in 45ms" line:
+**`rails/config/initializers/auth_log_subscriber.rb`**:
 ```ruby
 module AuthLogSubscriber
   def process_action(event)
-    super
-    payload = event.payload
+    req = event.payload[:request]
+    return super unless req
+
+    env = req.env
     additions = []
-    additions << "user=#{payload[:user_id]}" if payload[:user_id]
-    additions << "auth=#{payload[:auth_strategy]}" if payload[:auth_strategy]
-    additions << "client=#{payload[:auth_client]}" if payload[:auth_client]
+    additions << "user=#{env['warden'].user&.id}" if env['warden']&.user
+    additions << "auth=#{env['portal.auth_strategy']}" if env['portal.auth_strategy']
+    additions << "client=#{env['portal.auth_client']}" if env['portal.auth_client']
+    additions << "#{req.request_method} #{req.path}" if additions.any?
     info("  Auth: #{additions.join(' ')}") if additions.any?
+    super
   end
 end
+
+ActionController::LogSubscriber.prepend(AuthLogSubscriber)
 ```
 
 ### Change 3: Targeted Warn Logs at Failure Points

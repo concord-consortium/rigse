@@ -1,6 +1,8 @@
 module AuthLogSubscriber
   def process_action(event)
     req = event.payload[:request]
+    return super unless req
+
     additions = []
     additions << "user=#{req.env['warden'].user&.id}" if req.env['warden']&.user
     additions << "auth=#{req.env['portal.auth_strategy']}" if req.env['portal.auth_strategy']

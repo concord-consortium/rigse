@@ -102,7 +102,7 @@
 ### 6b. Collaboration data endpoint (preserved)
 - The `collaborators_data` endpoint used by report-service's auto-importer should still work
 - This peer auth path was intentionally kept
-- This should be testable by running an AP activity as a group, and then run it as the second user by themselves. The answers should show up in this second user's activty. Also running the teacher report should show the second user's work. 
+- This should be testable by running an AP activity as a group, and then run it as the second user by themselves. The answers should show up in this second user's activity. Also running the teacher report should show the second user's work. 
 - **Verify:** Report-service auto-importer can still fetch collaboration data (if testable on staging)
 
 ---

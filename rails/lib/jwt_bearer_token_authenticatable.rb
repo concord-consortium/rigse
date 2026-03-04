@@ -28,7 +28,7 @@ module JwtBearerTokenAuthenticatable
       return nil unless has_jwt_bearer_token?()
       token = jwt_token_value
       SignedJwt::decode_portal_token(token)
-    rescue => e
+    rescue SignedJwt::Error => e
       Rails.logger.warn("JwtBearerToken: decode error - #{e.message}")
       nil
     end
