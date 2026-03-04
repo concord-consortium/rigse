@@ -41,6 +41,13 @@ RSpec.describe API::APIController, type: :controller do
   end
 
   describe '#check_for_auth_token' do
+    describe '#auth_not_anonymous' do
+      it 'should log a warning when auth fails' do
+        expect(Rails.logger).to receive(:warn).with(/API auth failed:.*path=/)
+        controller.send(:auth_not_anonymous, {})
+      end
+    end
+
     it 'should fail without an authorization header or current_user' do
       expect { controller.check_for_auth_token({}) }.to raise_error('You must be logged in to use this endpoint')
     end
@@ -54,6 +61,11 @@ RSpec.describe API::APIController, type: :controller do
 
       it 'should return the current_user' do
         expect(controller.check_for_auth_token({})).to eq([user, nil])
+      end
+
+      it 'should set api_session strategy' do
+        controller.check_for_auth_token({})
+        expect(request.env['portal.auth_strategy']).to eq('api_session')
       end
     end
 
@@ -88,6 +100,15 @@ RSpec.describe API::APIController, type: :controller do
         it 'should fail with an invalid token' do
           set_standard_bearer_token('invalid')
           expect { controller.check_for_auth_token({}) }.to raise_error('Cannot find AccessGrant for requested token')
+        end
+
+        describe 'auth strategy tagging' do
+          it 'should set api_access_grant strategy for standard bearer token' do
+            set_standard_bearer_token(user_token)
+            controller.check_for_auth_token({})
+            expect(request.env['portal.auth_strategy']).to eq('api_access_grant')
+            expect(request.env['portal.auth_client']).to eq('test_api_client')
+          end
         end
 
         describe 'with an expired token that is an access grant' do
@@ -132,6 +153,11 @@ RSpec.describe API::APIController, type: :controller do
                 auth_user, auth_roles = controller.check_for_auth_token({})
                 expect(auth_user).to eq(user)
                 expect(auth_roles).to eq({:learner => nil, :teacher => nil})
+              end
+
+              it 'should set api_jwt strategy for JWT bearer token' do
+                auth_user, _ = controller.check_for_auth_token({})
+                expect(request.env['portal.auth_strategy']).to eq('api_jwt')
               end
             end
             describe 'with learner claims' do
