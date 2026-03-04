@@ -83,6 +83,12 @@ class API::APIController < ApplicationController
     render :json => error_body, :status => status
   end
 
+  def require_api_user!
+    unless current_user
+      error('You must be logged in to use this endpoint', 401)
+    end
+  end
+
   def pundit_user_not_authorized(exception)
     render status: 403, json: {
       success: false,
