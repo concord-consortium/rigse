@@ -130,8 +130,10 @@ The report-service's `auto-importer` Cloud Function (`functions/src/auto-importe
 
 **How it works:**
 1. The Activity Player creates a collaboration on the Portal via `POST /api/v1/collaborations`, which returns a `collaborators_data_url` (e.g., `https://learn.concord.org/api/v1/collaborations/129848/collaborators_data`)
-2. The Activity Player stores this URL in each student answer written to Firebase (`ltiAnswer.collaborators_data_url`)
-3. The report-service's `auto-importer` detects new/updated answers via Firestore triggers. When an answer has a `collaborators_data_url`, the auto-importer fetches it to discover all collaborators and replicate the answer to each collaborator's parquet file in S3
+2. The Activity Player stores this URL in each student answer written to Firestore (`ltiAnswer.collaborators_data_url`)
+3. The report-service's `auto-importer` Cloud Function (`createSyncDocAfterAnswerWritten`) fires on every Firestore answer write. When the answer has a `collaborators_data_url` and the writer is the `collaboration_owner_id`, the auto-importer fetches the Portal endpoint to discover all collaborators
+4. For each collaborator (other than the owner), the auto-importer **writes a copy of the answer to Firestore** with that collaborator's `platform_user_id` (see `handleCollaborativeUrl` in `auto-importer.ts`). This Firestore replication is what makes collaborative answers visible in student runtimes and teacher reports
+5. Each collaborator's Firestore write triggers the same Cloud Function again, which creates a sync doc. A separate scheduled function (`monitorSyncDocCount`) batches these, and `syncToS3AfterSyncDocWritten` uploads parquet files to S3 for researcher reports
 
 **Code path** (`functions/src/auto-importer.ts`):
 ```typescript
@@ -417,6 +419,6 @@ Searched the `WikiWatershed/model-my-watershed` GitHub repo for `app_secret`, `B
 
 **Answer: Yes — the report-service's `auto-importer` actively uses peer auth on this endpoint.**
 
-Portal-side Logs Insights search (365 days) found 1,092 GET requests to `/api/v1/collaborations/:id/collaborators_data`, all from GCP IPs (`34.96.x.x`, `34.34.233.x`). Source code analysis of `concord-consortium/report-service` (`functions/src/auto-importer.ts`) confirmed the caller: the `fetchCollaborationData` function sends `Authorization: Bearer ${portalSecret}` where `portalSecret` is a Client `app_secret`. The auto-importer fetches collaboration data to replicate student answers to all collaborators' parquet files in S3. Traffic is ongoing and correlates with the school year.
+Portal-side Logs Insights search (365 days) found 1,092 GET requests to `/api/v1/collaborations/:id/collaborators_data`, all from GCP IPs (`34.96.x.x`, `34.34.233.x`). Source code analysis of `concord-consortium/report-service` (`functions/src/auto-importer.ts`) confirmed the caller: the `fetchCollaborationData` function sends `Authorization: Bearer ${portalSecret}` where `portalSecret` is a Client `app_secret`. The auto-importer fetches collaboration data to replicate student answers to Firestore for each collaborator (enabling student/teacher views), which in turn triggers S3 sync for researcher reports. Traffic is ongoing and correlates with the school year.
 
 **Impact on peer-to-peer auth removal:** The `request_is_peer?` policy check in `CollaborationPolicy#collaborators_data?` **cannot be removed** without first migrating the report-service to a different auth mechanism. The `check_for_auth_token` code in `api_controller.rb` (Cases B and C) is a separate code path and can still be removed independently — the `collaborators_data` endpoint does not use `check_for_auth_token`.
