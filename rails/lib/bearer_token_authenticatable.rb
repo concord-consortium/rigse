@@ -12,6 +12,8 @@ module BearerTokenAuthenticatable
 
       if validate(resource)
         resource.after_token_authentication
+        request.env['portal.auth_strategy'] = 'bearer_token'
+        request.env['portal.auth_client'] = @grant.client.name
         success!(resource)
       end
     end
@@ -20,9 +22,17 @@ module BearerTokenAuthenticatable
     def token_valid?
       token = token_value
       return false unless token
-      grant = AccessGrant.find_by_access_token(token)
-      return false unless grant && grant.client
-      return false unless grant.client.valid_from_referer?(referer)
+      @grant = AccessGrant.find_by_access_token(token)
+      return false unless @grant && @grant.client
+      unless @grant.client.valid_from_referer?(referer)
+        Rails.logger.warn(
+          "BearerToken: referer rejected" \
+          " - client=#{@grant.client.name}" \
+          ", referer=#{referer}" \
+          ", matchers=#{@grant.client.domain_matchers}"
+        )
+        return false
+      end
       return true
     end
 
