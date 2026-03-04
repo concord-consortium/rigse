@@ -8,7 +8,7 @@
 
 ## Purpose
 
-Section 6 Step 1 of the auth unification design calls for migrating four controllers from `check_for_auth_token` to `current_user`. This changes the HTTP status code for authentication failures from **400** to **403** on some actions (the `error()` helper defaults to 400; Pundit returns 403).
+Section 6 Step 1 of the auth unification design calls for migrating four controllers from `check_for_auth_token` to `require_api_user!`/`current_user`. This changes the HTTP status code for unauthenticated requests from **400** (via the `error()` helper) to **401**, while authorization failures continue to return **403** on some actions via Pundit.
 
 This document inventories every affected route, identifies all callers (internal and external), and determines whether any caller depends on specific HTTP status codes or error messages.
 
@@ -71,7 +71,7 @@ error: (jqXHR, textStatus, error) => {
 
 The `showError` method displays `err.message` if present. **No status code checking.** The component does not differentiate between 400, 403, or any other error status.
 
-### Impact of 400→403 change
+### Impact of 400→401 change
 
 **None.** The sole caller uses session cookies (not Bearer tokens), so auth failures from `check_for_auth_token` are only hit when the session is invalid. After migration to `current_user`, the session path is identical. The status code change is unobservable to this caller.
 
@@ -116,7 +116,7 @@ error: (jqXHR, textStatus, error) => {
 
 Errors are caught by a `window.onerror`-style handler and displayed via `window.alert()`. **No status code checking.** The component parses the response body for a message but does not branch on the HTTP status.
 
-### Impact of 400→403 change
+### Impact of 400→401 change
 
 **None.** Same reasoning as BookmarksController — session-only caller, status code not checked.
 
@@ -167,11 +167,11 @@ response = HTTParty.post(url,
 
 **No status code differentiation for errors.** LARA checks `response.code == 201` (or 200) for success. Any other status code — whether 400, 403, 422, or 500 — results in `success: false`. The response is stored for debugging but the status code is not used for branching or retry logic.
 
-### Impact of 400→403 change
+### Impact of 400→401 change
 
-- **`create`**: Auth failure changes from 400 to 403. LARA treats both as `success: false`. **No impact.**
-- **`update_by_url`**: Already returns 403 for auth failures. **No change.**
-- **`update_basic`**: Already returns 403 for auth failures, and has no known callers. **No impact.**
+- **`create`**: Auth failure changes from 400 to 401. LARA treats both as `success: false`. **No impact.**
+- **`update_by_url`**: Changes from 403 to 401 for auth failures. LARA treats both as `success: false`. **No impact.**
+- **`update_basic`**: Changes from 403 to 401 for auth failures, and has no known callers. **No impact.**
 
 ---
 
@@ -224,7 +224,7 @@ export const getErrorMessage = (err: any, res: superagent.Response) => {
 
 **No status code checking.** Errors are rejected with the response body's `message` field (or the raw error object). The caller displays a generic error state in the UI. No branching on 400 vs 403.
 
-### Impact of 400→403 change
+### Impact of 400→401 change
 
 **None.** CLUE does not check the status code. It extracts the error message from the response body, which may change text (e.g., from "You must be logged in..." to "Not authorized") but is only displayed as a generic error string.
 
@@ -248,7 +248,7 @@ export const getErrorMessage = (err: any, res: superagent.Response) => {
 
 ### Conclusion
 
-**Changing auth failure responses from 400 to 403 will not break any caller.** No caller in the concord-consortium organization checks for specific HTTP error status codes. All callers use generic error handling that treats any non-success response uniformly.
+**Changing auth failure responses from 400 to 401 will not break any caller.** No caller in the concord-consortium organization checks for specific HTTP error status codes. All callers use generic error handling that treats any non-success response uniformly.
 
 Additionally:
 - BookmarksController and TeacherClassesController callers use **session cookies only**, so the Bearer token auth path in `check_for_auth_token` is never exercised for these endpoints.
