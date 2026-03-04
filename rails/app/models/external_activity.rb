@@ -146,8 +146,7 @@ class ExternalActivity < ApplicationRecord
         append_query(uri, "learner=#{learner.id}") if append_learner_id_to_url
         append_query(uri, "c=#{learner.user.id}") if append_survey_monkey_uid
         if append_auth_token
-          AccessGrant.prune!
-          token = learner.user.create_access_token_with_learner_valid_for(3.minutes, learner)
+          token = SignedJwt::create_portal_token(learner.user, {learner_id: learner.id, user_type: "learner"}, 180)
           append_query(uri, "token=#{token}")
           append_query(uri, "domain=#{domain}&domain_uid=#{learner.user.id}") if domain
         end

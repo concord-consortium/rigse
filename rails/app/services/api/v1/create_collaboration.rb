@@ -78,8 +78,7 @@ class API::V1::CreateCollaboration
 
       # append authentication token info if needed
       if @offering.runnable.append_auth_token
-        AccessGrant.prune!
-        token = @owner_learner.user.create_access_token_with_learner_valid_for(3.minutes, @owner_learner)
+        token = SignedJwt::create_portal_token(@owner_learner.user, {learner_id: @owner_learner.id, user_type: "learner"}, 180)
         external_activity_url = add_param(external_activity_url, 'token', token)
       end
 

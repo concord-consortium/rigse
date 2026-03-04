@@ -50,6 +50,19 @@ describe JwtBearerTokenAuthenticatable::BearerToken do
     end
   end
 
+  context 'a JWT sent as plain Bearer (token with dots)' do
+    let(:headers) { {"Authorization" => "Bearer #{token}"} }
+
+    it 'should authenticate the user' do
+      expect(strategy.authenticate!).to eql :success
+    end
+
+    it 'should not match a non-JWT Bearer token (no dots)' do
+      allow(request).to receive(:headers).and_return({"Authorization" => "Bearer abc123def456"})
+      expect(strategy.valid?).to be false
+    end
+  end
+
   context 'a user with an expired authentication token' do
     let(:expires_in) { -10.minutes.to_i}
     it 'should NOT authenticate the user' do

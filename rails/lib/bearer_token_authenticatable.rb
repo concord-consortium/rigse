@@ -33,7 +33,10 @@ module BearerTokenAuthenticatable
     def token_value
       header = request.headers["Authorization"]
       if header && header =~ /^Bearer (.*)$/
-        $1
+        token = $1
+        # Skip JWTs — they're handled by jwt_bearer_token_authenticatable.
+        return nil if SignedJwt.probably_jwt?(token)
+        token
       else
         nil
       end

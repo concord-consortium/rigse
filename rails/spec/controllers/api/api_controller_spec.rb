@@ -173,6 +173,26 @@ RSpec.describe API::APIController, type: :controller do
           end
         end
       end
+
+      describe 'standard bearer token with JWT (dot-containing token)' do
+        it 'should decode a JWT sent as a plain Bearer token' do
+          claims = {user_type: "learner", learner_id: learner.id}
+          jwt_token = SignedJwt.create_portal_token(user, claims, 3600)
+          set_standard_bearer_token(jwt_token)
+          auth_user, auth_roles = controller.check_for_auth_token({})
+          expect(auth_user).to eq(user)
+          expect(auth_roles[:learner]).to eq(learner)
+          expect(auth_roles[:teacher]).to be_nil
+        end
+
+        it 'should still route hex tokens to AccessGrant lookup' do
+          token = addTokenForLearner(user, client, learner, 1.hour.from_now)
+          set_standard_bearer_token(token)
+          auth_user, auth_roles = controller.check_for_auth_token({})
+          expect(auth_user).to eq(user)
+          expect(auth_roles[:learner]).to eq(learner)
+        end
+      end
     end
   end
 end

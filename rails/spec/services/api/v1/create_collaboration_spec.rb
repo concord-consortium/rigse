@@ -118,7 +118,11 @@ describe API::V1::CreateCollaboration do
           # this assumes the token is the last parameter in the url
           token_param, token = query.pop()
           expect(token_param).to eq("token")
-          expect(token).not_to be_nil
+          expect(token).to include(".")
+          decoded = SignedJwt.decode_portal_token(token)
+          expect(decoded[:data]["uid"]).to eq(student1.user.id)
+          expect(decoded[:data]["learner_id"]).not_to be_nil
+          expect(decoded[:data]["user_type"]).to eq("learner")
 
           data_url_param = ['collaborators_data_url', result[:collaborators_data_url]]
           domain_param = ['domain', domain]

@@ -50,6 +50,24 @@ describe ExternalActivity do
       activity.url = url
       expect(activity.url(learner)).to eql("http://www.concord.org/?learner=34#3")
     end
+
+    it "should append a JWT token when append_auth_token is true" do
+      user = FactoryBot.create(:confirmed_user)
+      real_learner = mock_model(Portal::Learner, id: 34, user: user)
+      activity.append_auth_token = true
+      url = activity.url(real_learner)
+      uri = URI.parse(url)
+      query = URI.decode_www_form(uri.query)
+      token_param = query.find { |k, _| k == "token" }
+      expect(token_param).not_to be_nil
+      # JWT tokens contain dots (header.payload.signature)
+      expect(token_param[1]).to include(".")
+      # Verify it's a valid portal JWT with learner claims
+      decoded = SignedJwt.decode_portal_token(token_param[1])
+      expect(decoded[:data]["uid"]).to eq(user.id)
+      expect(decoded[:data]["learner_id"]).to eq(34)
+      expect(decoded[:data]["user_type"]).to eq("learner")
+    end
   end
 
   describe '#full_title' do
