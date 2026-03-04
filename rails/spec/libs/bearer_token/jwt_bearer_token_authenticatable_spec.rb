@@ -11,9 +11,11 @@ describe JwtBearerTokenAuthenticatable::BearerToken do
   let(:headers)       { {"Authorization" => "Bearer/JWT #{token}"} }
   let(:user)          { FactoryBot.create(:user) }
   let(:params)        { {} }
+  let(:env_hash)      { {} }
   before(:each) {
     allow(request).to receive(:headers).and_return(headers)
     allow(request).to receive(:params).and_return(params)
+    allow(request).to receive(:env).and_return(env_hash)
     allow(strategy).to receive(:mapping).and_return(mapping)
     allow(strategy).to receive(:request).and_return(request)
   }
@@ -84,6 +86,29 @@ describe JwtBearerTokenAuthenticatable::BearerToken do
       it "authentication should fail" do
         expect(strategy.authenticate!).to eql :failure
       end
+    end
+  end
+
+  context 'auth strategy tagging' do
+    it 'should set portal.auth_strategy env on success' do
+      strategy.authenticate!
+      expect(request.env['portal.auth_strategy']).to eq('jwt_bearer_token')
+    end
+  end
+
+  context 'warn logging on failure' do
+    it 'should log when token decode fails' do
+      allow(request).to receive(:headers).and_return({"Authorization" => "Bearer/JWT invalid.token.here"})
+      expect(Rails.logger).to receive(:warn).with(/JwtBearerToken:/).at_least(:once)
+      strategy.authenticate!
+    end
+
+    it 'should log when user not found' do
+      bad_user = OpenStruct.new(id: 999999)
+      bad_token = SignedJwt.create_portal_token(bad_user, {}, 10.minutes.to_i)
+      allow(request).to receive(:headers).and_return({"Authorization" => "Bearer/JWT #{bad_token}"})
+      expect(Rails.logger).to receive(:warn).with(/JwtBearerToken: user not found/)
+      strategy.authenticate!
     end
   end
 
