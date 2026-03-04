@@ -63,6 +63,8 @@ describe BearerTokenAuthenticatable::BearerToken do
     allow(request).to receive(:headers).and_return(user_headers)
     allow(request).to receive(:env).and_return({'HTTP_REFERER' => referrer})
     allow(request).to receive(:params).and_return(params)
+    allow(request).to receive(:request_method).and_return('GET')
+    allow(request).to receive(:path).and_return('/test')
     allow(strategy).to receive(:mapping).and_return(mapping)
     allow(strategy).to receive(:request).and_return(request)
   }
@@ -88,6 +90,16 @@ describe BearerTokenAuthenticatable::BearerToken do
       it 'should not authenticate the user' do
         expect(strategy.authenticate!).to eql :failure
       end
+      it 'should log a warning about referer rejection' do
+        expect(Rails.logger).to receive(:warn).with(/BearerToken: referer rejected/)
+        strategy.authenticate!
+      end
+    end
+
+    it 'should set portal.auth_strategy and portal.auth_client env on success' do
+      strategy.authenticate!
+      expect(request.env['portal.auth_strategy']).to eq('bearer_token')
+      expect(request.env['portal.auth_client']).to eq('test_api_client')
     end
   end
 

@@ -106,6 +106,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+
   def setup_container
     @container_type = self.class.name[/(.+)sController/,1]
     @container_id =  request.path_parameters.symbolize_keys[:id]

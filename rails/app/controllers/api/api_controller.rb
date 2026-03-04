@@ -38,6 +38,7 @@ class API::APIController < ApplicationController
           :learner => data["user_type"] == "learner" ? Portal::Learner.find_by_id(data["learner_id"]) : nil,
           :teacher => data["user_type"] == "teacher" ? Portal::Teacher.find_by_id(data["teacher_id"]) : nil
         }
+        request.env['portal.auth_strategy'] = 'api_jwt'
         return [user, role]
       else
         raise StandardError, 'User in token not found'
@@ -49,6 +50,8 @@ class API::APIController < ApplicationController
 
       if grant
         if grant.access_token_expires_at >= Time.now
+          request.env['portal.auth_strategy'] = 'api_access_grant'
+          request.env['portal.auth_client'] = grant.client&.name
           return [grant.user, {:learner => grant.learner, :teacher => grant.teacher}]
         else
           raise StandardError, 'AccessGrant has expired'
@@ -58,6 +61,7 @@ class API::APIController < ApplicationController
       end
 
     elsif current_user
+      request.env['portal.auth_strategy'] = 'api_session'
       return [current_user, nil]
     else
       raise StandardError, 'You must be logged in to use this endpoint'
@@ -104,6 +108,7 @@ class API::APIController < ApplicationController
     begin
       user, role = check_for_auth_token(params)
     rescue StandardError => e
+      Rails.logger.warn("API auth failed: #{e.message}, path=#{request.path}")
       return {error: e.message}
     end
 

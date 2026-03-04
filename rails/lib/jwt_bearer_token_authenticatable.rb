@@ -7,16 +7,30 @@ module JwtBearerTokenAuthenticatable
 
     def authenticate!
       decoded_token = decode_token
-      return fail! unless decoded_token && decoded_token[:data].has_key?("uid")
-      success! User.find_by_id(decoded_token[:data]["uid"])
+      unless decoded_token && decoded_token[:data].has_key?("uid")
+        Rails.logger.warn("JwtBearerToken: token decode failed or missing uid")
+        return fail!
+      end
+      user = User.find_by_id(decoded_token[:data]["uid"])
+      unless user
+        Rails.logger.warn(
+          "JwtBearerToken: user not found for uid=#{decoded_token[:data]['uid']}"
+        )
+        return fail!
+      end
+      request.env['portal.auth_strategy'] = 'jwt_bearer_token'
+      success!(user)
     end
 
     protected
 
     def decode_token
+      return nil unless has_jwt_bearer_token?()
       token = jwt_token_value
-      return nil unless token
-      SignedJwt::decode_portal_token(token) rescue nil
+      SignedJwt::decode_portal_token(token)
+    rescue SignedJwt::Error => e
+      Rails.logger.warn("JwtBearerToken: decode error - #{e.message}")
+      nil
     end
 
     def has_jwt_bearer_token?
