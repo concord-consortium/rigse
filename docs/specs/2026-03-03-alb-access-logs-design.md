@@ -91,15 +91,23 @@ Append to the existing `LoadBalancerAttributes` on the `ELBv2` resource:
 ```yaml
 - Key: access_logs.s3.enabled
   Value: !Ref AccessLogsS3Enabled
-- Key: access_logs.s3.bucket
-  Value: !Ref AccessLogsS3Bucket
-- Key: access_logs.s3.prefix
-  Value: !Ref AccessLogsS3Prefix
+- !If
+  - AccessLogsEnabled
+  - Key: access_logs.s3.bucket
+    Value: !Ref AccessLogsS3Bucket
+  - !Ref "AWS::NoValue"
+- !If
+  - AccessLogsEnabled
+  - Key: access_logs.s3.prefix
+    Value: !Ref AccessLogsS3Prefix
+  - !Ref "AWS::NoValue"
 ```
 
-No condition is needed — when `enabled=false`, ALB ignores the other
-attributes. All existing consumers (portal-ecs, lara-ecs, portal-app-only,
-rigse internal ALB) keep working without changes.
+The `access_logs.s3.enabled` attribute is always emitted so that toggling from
+`true` to `false` explicitly disables logging. The bucket and prefix are
+conditionally omitted via `AWS::NoValue` when disabled, because CloudFormation
+rejects an empty bucket value. All existing consumers (portal-ecs, lara-ecs,
+portal-app-only, rigse internal ALB) keep working without changes.
 
 ### PR 2: `rigse` — `stack_template.yml`
 
@@ -130,7 +138,7 @@ EnableALBAccessLogsCond:
 ```yaml
 AccessLogsS3Enabled: !If [EnableALBAccessLogsCond, "true", "false"]
 AccessLogsS3Bucket: !If [EnableALBAccessLogsCond, !Ref ALBAccessLogsBucket, ""]
-AccessLogsS3Prefix: alb-logs/portal
+AccessLogsS3Prefix: !Sub "alb-logs/${AWS::StackName}"
 ```
 
 No new S3 resources — the existing `concord-aws-logs` bucket is reused.
@@ -140,10 +148,11 @@ No new S3 resources — the existing `concord-aws-logs` bucket is reused.
 Logs will be written to:
 
 ```
-s3://concord-aws-logs/alb-logs/portal/AWSLogs/612297603577/elasticloadbalancing/us-east-1/YYYY/MM/DD/
+s3://concord-aws-logs/alb-logs/<stack-name>/AWSLogs/612297603577/elasticloadbalancing/us-east-1/YYYY/MM/DD/
 ```
 
-Future stacks would use their own sub-prefix (e.g., `alb-logs/lara`).
+For example, `alb-logs/learn-ecs-production/` or `alb-logs/learn-portal-staging/`.
+Each stack automatically gets its own sub-prefix based on its CloudFormation stack name.
 
 ### Log retention
 
@@ -178,7 +187,7 @@ is explicitly set to `true`.
 
 - Verify the nested template change doesn't break existing stacks (deploy with
   defaults, confirm no diff)
-- Enable access logs on a QA stack and verify logs appear in
-  `s3://concord-aws-logs/alb-logs/portal/`
+- Enable access logs on staging and verify logs appear in
+  `s3://concord-aws-logs/alb-logs/learn-portal-staging/`
 - Confirm log entries contain expected fields (client IP, status code, request
   path, response time)
