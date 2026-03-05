@@ -1,0 +1,29 @@
+%div{id: dom_id_for(oidc_client), class: 'container_element'}
+  .action_menu
+    .action_menu_header_left
+      %h3= oidc_client.name
+    .action_menu_header_right
+      %ul.menu
+        %li
+          %a{href: edit_admin_oidc_client_path(oidc_client)} edit
+        %li
+          %a{href: url_for(action: :destroy, id: oidc_client.id), data: {method: 'delete', confirm: "Delete this OIDC client?"}} delete
+  %div{id: dom_id_for(oidc_client, :item), class: 'item'}
+    %div{id: dom_id_for(oidc_client, :details), class: 'content'}
+      %p
+        %ul.menu_v
+          %li
+            Name:
+            = oidc_client.name
+          %li
+            Sub:
+            = oidc_client.sub
+          %li
+            Email:
+            = oidc_client.email
+          %li
+            User ID:
+            = oidc_client.user_id
+          %li
+            Active:
+            = oidc_client.active ? 'Yes' : 'No'
