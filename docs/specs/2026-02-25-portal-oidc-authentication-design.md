@@ -33,11 +33,11 @@ A new Devise/Warden strategy that intercepts `Authorization: Bearer <token>` req
 
 ### Detection logic
 
-The existing `BearerTokenAuthenticatable` Devise strategy also matches `Authorization: Bearer <token>` and looks up an `AccessGrant`. To avoid conflict, the OIDC strategy distinguishes tokens by format: OIDC JWTs contain dots (header.payload.signature) while AccessGrant tokens are opaque strings.
+Each JWT-based strategy uses issuer-based detection in `valid?` to determine token ownership before attempting authentication. The OIDC strategy peeks at the unverified JWT payload and only claims tokens whose `iss` matches one of Google's issuers (`accounts.google.com` or `https://accounts.google.com`). Similarly, the JWT strategy only claims tokens whose `iss` matches `APP_CONFIG[:site_url]` (or, for backward compatibility, tokens with a `uid` claim but no `iss`). This issuer-based routing replaces the earlier approach of distinguishing tokens purely by format (dots vs no dots).
 
 ### Strategy flow
 
-1. **`valid?`** — Returns `true` if `Authorization: Bearer <token>` is present, the token contains dots (looks like a JWT), and the scheme is NOT `Bearer/JWT` (which is reserved for Portal JWTs). The `Bearer/JWT` exclusion is checked first to avoid interfering with the existing JWT strategy.
+1. **`valid?`** — Returns `true` if `Authorization: Bearer <token>` is present, the scheme is NOT `Bearer/JWT`, and the unverified JWT payload has an `iss` matching one of `GoogleOidcVerifier::VALID_ISSUERS`.
 2. **`authenticate!`** — Delegates to `GoogleOidcVerifier.verify(token)` which decodes the JWT, fetches Google's JWKS, verifies the signature and claims (see Section 2). On success, looks up the `sub` claim in the service account mapping table (see Section 3). If a mapped active Portal user is found, sets `request.env['portal.auth_strategy']` and `request.env['portal.auth_client']`, then calls `success!(user)` which sets `current_user`. On any failure (verification error, no matching client, inactive client), logs at warn level and calls `fail(:invalid_token)` (non-halting, allows Warden to try the next strategy).
 
 ### Registration
@@ -53,15 +53,16 @@ devise :database_authenticatable, :registerable, :token_authenticatable,
 
 ### Strategy ordering
 
-Devise/Warden tries strategies in declaration order. Both the JWT and OIDC strategies use non-halting `fail` (without bang), which allows Warden to cascade through all strategies when one fails. This means ordering doesn't matter for correctness — each strategy gets a chance regardless of which runs first.
+Devise/Warden tries strategies in declaration order. Each strategy's `valid?` method uses issuer-based detection to determine whether a token belongs to it, so strategies only fire for their own tokens. This means ordering doesn't affect correctness — each strategy is selective and only one will claim any given token.
 
-> **Implementation note:** The JWT strategy (`JwtBearerTokenAuthenticatable`) originally used `fail!` (with bang), which halts the Warden chain. This was changed to `fail` (non-halting) as part of this work to enable strategy cascading. Both OIDC and JWT strategies match `Bearer <jwt-shaped-token>` (tokens with dots), so halting on failure in either one would prevent the other from running.
+The JWT strategy uses halting `fail!` (with bang) because its `valid?` check guarantees the token is a portal token (by checking `iss` matches `APP_CONFIG[:site_url]`). If a portal token is expired or has an invalid signature, the chain should halt — no other strategy can help. The OIDC strategy uses non-halting `fail` (without bang) since it is the last JWT-based strategy in the chain.
 
 The `valid?` check ensures each strategy only fires when appropriate:
 
 - `Bearer <opaque-string>` — handled by `BearerTokenAuthenticatable` (AccessGrant lookup)
-- `Bearer/JWT <token>` — handled by `JwtBearerTokenAuthenticatable` (Portal HMAC JWT)
-- `Bearer <jwt-with-dots>` — tried by `JwtBearerTokenAuthenticatable` first (Portal JWT), then by `OidcBearerTokenAuthenticatable` (Google OIDC) if JWT decode fails. The OIDC strategy's `valid?` explicitly excludes `Bearer/JWT` scheme.
+- `Bearer/JWT <token>` — handled by `JwtBearerTokenAuthenticatable` (Portal HMAC JWT; `iss` matches `APP_CONFIG[:site_url]`)
+- `Bearer <portal-jwt>` — handled by `JwtBearerTokenAuthenticatable` (Portal JWT sent as plain Bearer; `iss` matches `APP_CONFIG[:site_url]`, or legacy tokens with `uid` but no `iss`)
+- `Bearer <google-oidc-jwt>` — handled by `OidcBearerTokenAuthenticatable` (Google OIDC; `iss` is `accounts.google.com` or `https://accounts.google.com`)
 
 ### Why `Bearer` and not a custom scheme like `Bearer/OIDC`
 
@@ -325,7 +326,7 @@ Controller spec (`spec/requests/api/v1/oidc_auth_spec.rb`) that verifies the ful
 
 ### Fail-closed validation
 
-Any verification failure (signature, expiration, issuer, audience, missing `sub`, no matching `Admin::OidcClient`, inactive client) results in the strategy calling `fail(:invalid_token)`. Warden moves on to the next strategy. If no strategy succeeds, the request is unauthenticated and Pundit's `authorize` call returns 403.
+Any OIDC verification failure (signature, expiration, issuer, audience, missing `sub`, no matching `Admin::OidcClient`, inactive client) results in the strategy calling `fail(:invalid_token)` (non-halting). The JWT strategy uses halting `fail!` with distinct messages (`:token_expired` vs `:invalid_token`) since its `valid?` guarantees the token is a portal token. If no strategy succeeds, the request is unauthenticated and Pundit's `authorize` call returns 403.
 
 The strategy never raises exceptions that leak token contents or verification details to the caller. Error responses are generic: `{ success: false, message: "Not authorized" }`.
 
@@ -382,6 +383,7 @@ OIDC-authenticated requests are API calls with bearer tokens, not browser sessio
 | Create | `rails/spec/libs/bearer_token/oidc_bearer_token_authenticatable_spec.rb` | Strategy unit tests (14 examples) |
 | Create | `rails/spec/requests/api/v1/oidc_auth_spec.rb` | Integration test (5 examples) |
 | Modify | `rails/app/models/user.rb` | Add `:oidc_bearer_token_authenticatable` to devise declaration |
-| Modify | `rails/lib/jwt_bearer_token_authenticatable.rb` | Change `fail!` to `fail` (non-halting) to enable strategy cascading |
+| Modify | `rails/lib/jwt_bearer_token_authenticatable.rb` | Add `iss`-based ownership check in `valid?`, use halting `fail!` with distinct `:token_expired` / `:invalid_token` messages |
+| Modify | `rails/lib/signed_jwt.rb` | Add `iss: APP_CONFIG[:site_url]` to portal JWT payload |
 | Modify | `rails/config/routes.rb` | Add `resources :oidc_clients` under `namespace :admin` |
 | Modify | `rails/app/controllers/api/api_controller.rb` | Add OIDC fallback rescue in `check_for_auth_token` for plain Bearer tokens only (see Section 4) |

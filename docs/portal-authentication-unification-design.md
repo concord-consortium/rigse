@@ -1,6 +1,6 @@
 # Portal API Authentication — Current State & Unification Options
 
-**Date:** 2026-02-25 (updated 2026-03-04)
+**Date:** 2026-02-25 (updated 2026-03-05)
 **Status:** Draft / Discussion
 
 ## Overview
@@ -34,10 +34,11 @@ Devise tries strategies in declaration order (see `app/models/user.rb`). Each st
 - Sets `current_user` to `grant.user`
 
 **`JwtBearerTokenAuthenticatable`** (`lib/jwt_bearer_token_authenticatable.rb`)
-- Matches: `Authorization: Bearer/JWT <token>`
-- Decodes token via `SignedJwt::decode_portal_token`
+- Matches: `Authorization: Bearer/JWT <token>` or `Authorization: Bearer <jwt-with-dots>` when the unverified `iss` claim matches `APP_CONFIG[:site_url]` (or for legacy tokens, when `uid` is present but `iss` is absent)
+- Decodes token via `JWT.decode` with the portal's HMAC secret
 - Extracts `uid` claim, sets `current_user` to `User.find_by_id(uid)`
 - Does **not** extract role claims (learner_id, teacher_id, user_type)
+- Uses halting `fail!` with distinct messages: `:token_expired` for expired tokens, `:invalid_token` for signature failures or missing user — since `valid?` guarantees the token is ours, all failures are definitive
 
 **Session-based** (Devise's built-in `database_authenticatable`)
 - Standard cookie/session authentication
@@ -356,7 +357,27 @@ The nil role is fine — `handle_initial_auth` already handles nil role via para
 
 ---
 
-## 8. Completed Work and Next Steps
+## 8. Auth Failure Error Responses
+
+### The inconsistency
+
+The two auth paths produce different error responses when authentication fails:
+
+**`check_for_auth_token` path** (used by `JwtController`): Token failures raise exceptions (`SignedJwt::Error`, `StandardError`), and `JwtController`'s `rescue_from` renders the exception message directly. Clients see specific error messages like `"Signature has expired"` or `"AccessGrant has expired"`.
+
+**Devise strategy path** (used by all other API controllers via `current_user`): When a strategy calls `fail!(:token_expired)` or `fail!(:invalid_token)`, Warden stores the message symbol internally. But `CustomFailure` (the Warden failure app, `lib/custom_failure.rb`) does not surface these symbols in JSON responses — it only uses them for redirect decisions and logging. For API requests, the client receives a generic 401 with no body indicating the failure reason. For Pundit-protected endpoints, the response is a generic 403.
+
+This means:
+- **`JwtController` endpoints**: Clients see specific error reasons (expired, invalid signature, user not found, etc.)
+- **All other API endpoints**: Clients see only a generic 401/403 with no information about _why_ authentication failed
+
+### Impact
+
+For debugging and client-side error handling, clients cannot distinguish between an expired token (which should trigger a refresh) and an invalid token (which indicates a configuration or security problem). The Devise strategies now store this distinction internally (`:token_expired` vs `:invalid_token`), but it doesn't reach the HTTP response.
+
+---
+
+## 9. Completed Work and Next Steps
 
 ### Completed
 
@@ -370,6 +391,8 @@ The nil role is fine — `handle_initial_auth` already handles nil role via para
 
 5. **Four controllers migrated to `current_user`** (Section 6 Step 1). All four controllers (`BookmarksController`, `TeacherClassesController`, `ExternalActivitiesController`, `OfferingsController`) now use `current_user` instead of `check_for_auth_token`. A custom `require_api_user!` guard in `API::APIController` returns JSON 401 for unauthenticated requests (Devise's `authenticate_user!` was not used because `CustomFailure` redirects HTML-format requests instead of returning JSON). `JwtController` is now the sole consumer of `check_for_auth_token`. See `specs/2026-03-04-controller-migration-design.md` and PR #1469.
 
+6. **Issuer-based strategy routing and distinct error messages.** Portal JWTs now include an `iss: APP_CONFIG[:site_url]` claim. Both the JWT and OIDC Devise strategies check the unverified `iss` claim in `valid?` to determine token ownership — the JWT strategy claims tokens with a matching portal issuer (or legacy tokens with `uid` but no `iss`), while the OIDC strategy claims tokens with a Google issuer. The JWT strategy now uses halting `fail!` with distinct messages (`:token_expired` vs `:invalid_token`) since `valid?` guarantees the token is ours. See `specs/2026-03-05-portal-jwt-iss-claim-plan.md`.
+
 ### Next steps
 
 1. ~~**Migrate four controllers to `current_user`**~~ **Done.** See Completed item 5 above.
@@ -381,3 +404,7 @@ The nil role is fine — `handle_initial_auth` already handles nil role via para
 4. **Update clients to support standard OAuth2 launch parameters.** Update external runtimes (CLUE, Activity Player, etc.) to support the standardized parameter names defined in step 3, and switch their ExternalActivity configurations in the Portal to use the new OAuth2 launch option. CLUE and Activity Player already support OAuth2 initialization parameters (see `docs/external-services.md`), so this is primarily a matter of aligning on the standard names.
 
 5. **Remove single-use token launching.** Once all ExternalActivities are migrated to OAuth2 launches, remove the short-lived JWT launch path from `external_activity.rb` and `create_collaboration.rb`. At this point `check_for_auth_token`'s JWT case is only needed for JwtController's own token refresh, and the method can potentially be eliminated entirely if role is fully resolved via parameters.
+
+6. **Unified JSON error responses for API auth failures** (see Section 8). Surface the Warden failure reason (`:token_expired`, `:invalid_token`, etc.) in the JSON response for API requests, so all API endpoints return consistent, informative error messages. Two possible approaches:
+   - Update `CustomFailure` to return a JSON body with the failure symbol for API-format requests (e.g., `{ "error": "token_expired" }`)
+   - Add a `before_action` in `API::APIController` that checks `warden.message` after failed authentication and renders a JSON error before Pundit runs

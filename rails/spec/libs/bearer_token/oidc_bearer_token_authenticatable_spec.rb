@@ -33,9 +33,25 @@ describe OidcBearerTokenAuthenticatable::BearerToken do
       expect(strategy.valid?).to be false
     end
 
-    it 'returns true for Bearer with JWT-shaped token (has dots)' do
-      allow(request).to receive(:headers).and_return({'Authorization' => 'Bearer header.payload.signature'})
+    it 'returns true for Bearer with Google OIDC token (iss is accounts.google.com)' do
+      payload = { iss: 'https://accounts.google.com', sub: '12345', exp: Time.now.to_i + 600 }
+      token = JWT.encode(payload, 'key', 'HS256')
+      allow(request).to receive(:headers).and_return({'Authorization' => "Bearer #{token}"})
       expect(strategy.valid?).to be true
+    end
+
+    it 'returns false for Bearer with non-Google JWT (different iss)' do
+      payload = { iss: APP_CONFIG[:site_url], uid: 1, exp: Time.now.to_i + 600 }
+      token = JWT.encode(payload, 'key', 'HS256')
+      allow(request).to receive(:headers).and_return({'Authorization' => "Bearer #{token}"})
+      expect(strategy.valid?).to be false
+    end
+
+    it 'returns false for Bearer with JWT that has no iss' do
+      payload = { uid: 1, exp: Time.now.to_i + 600 }
+      token = JWT.encode(payload, 'key', 'HS256')
+      allow(request).to receive(:headers).and_return({'Authorization' => "Bearer #{token}"})
+      expect(strategy.valid?).to be false
     end
   end
 

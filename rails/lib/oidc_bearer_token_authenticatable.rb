@@ -4,7 +4,11 @@ module OidcBearerTokenAuthenticatable
   class BearerToken < Devise::Strategies::Authenticatable
 
     def valid?
-      oidc_token_value.present?
+      return false unless oidc_token_value.present?
+      # Peek at unverified payload to check issuer is Google
+      unverified = JWT.decode(oidc_token_value, nil, false).first rescue nil
+      return false unless unverified
+      GoogleOidcVerifier::VALID_ISSUERS.include?(unverified['iss'])
     end
 
     def authenticate!

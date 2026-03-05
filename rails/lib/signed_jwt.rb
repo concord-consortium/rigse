@@ -9,6 +9,7 @@ module SignedJwt
     now = Time.now.to_i
     payload = {
       alg: self.hmac_algorithm,
+      iss: APP_CONFIG[:site_url],
       iat: now,
       exp: now + expires_in,
       uid: user.id

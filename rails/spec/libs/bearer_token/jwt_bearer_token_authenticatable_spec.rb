@@ -31,7 +31,9 @@ describe JwtBearerTokenAuthenticatable::BearerToken do
 
     it 'the token should expire 12 minutes into the future' do
       Delorean.jump(12 * 60) # move 12 minutes into the future
-      expect(strategy.authenticate!).to eql :failure
+      strategy.authenticate!
+      expect(strategy).to be_halted
+      expect(strategy.message).to eq(:token_expired)
     end
 
     it 'the token should have a uid set' do
@@ -66,9 +68,29 @@ describe JwtBearerTokenAuthenticatable::BearerToken do
   end
 
   context 'a user with an expired authentication token' do
-    let(:expires_in) { -10.minutes.to_i}
+    let(:expires_in) { -10.minutes.to_i }
     it 'should NOT authenticate the user' do
       expect(strategy.authenticate!).to eql :failure
+    end
+    it 'should halt the chain with fail!' do
+      strategy.authenticate!
+      expect(strategy).to be_halted
+    end
+    it 'should set :token_expired message' do
+      strategy.authenticate!
+      expect(strategy.message).to eq(:token_expired)
+    end
+  end
+
+  context 'a token with invalid signature' do
+    let(:token) { JWT.encode({ uid: user.id, iss: APP_CONFIG[:site_url], exp: Time.now.to_i + 600 }, 'wrong-secret', 'HS256') }
+    it 'should halt the chain with fail!' do
+      strategy.authenticate!
+      expect(strategy).to be_halted
+    end
+    it 'should set :invalid_token message' do
+      strategy.authenticate!
+      expect(strategy.message).to eq(:invalid_token)
     end
   end
 
@@ -82,10 +104,32 @@ describe JwtBearerTokenAuthenticatable::BearerToken do
       end
     end
     context 'when sending the expired token' do
-      let(:token){ expired_token }
-      it "authentication should fail" do
-        expect(strategy.authenticate!).to eql :failure
+      let(:token) { expired_token }
+      it "authentication should fail and halt" do
+        strategy.authenticate!
+        expect(strategy).to be_halted
+        expect(strategy.message).to eq(:token_expired)
       end
+    end
+  end
+
+  context 'valid? with token ownership' do
+    it 'returns true for a token with matching iss' do
+      expect(strategy.valid?).to be true
+    end
+
+    it 'returns true for a legacy token without iss but with uid (backward compat)' do
+      legacy_payload = { alg: 'HS256', iat: Time.now.to_i, exp: Time.now.to_i + 600, uid: user.id }
+      legacy_token = JWT.encode(legacy_payload, ENV['JWT_HMAC_SECRET'], 'HS256')
+      allow(request).to receive(:headers).and_return({"Authorization" => "Bearer/JWT #{legacy_token}"})
+      expect(strategy.valid?).to be true
+    end
+
+    it 'returns false for a token with a different iss and no uid' do
+      other_payload = { iss: 'https://accounts.google.com', sub: '12345', exp: Time.now.to_i + 600 }
+      other_token = JWT.encode(other_payload, 'wrong-key', 'HS256')
+      allow(request).to receive(:headers).and_return({"Authorization" => "Bearer #{other_token}"})
+      expect(strategy.valid?).to be false
     end
   end
 
