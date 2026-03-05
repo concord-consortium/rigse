@@ -25,42 +25,37 @@ class API::APIController < ApplicationController
 
   def check_for_auth_token(params)
     header = request.headers["Authorization"]
-    is_bearer_jwt = header && header =~ /^Bearer\/JWT (.*)$/i
-    is_plain_bearer_jwt = !is_bearer_jwt && header && header =~ /^Bearer (.+)$/i && SignedJwt.probably_jwt?($1)
-    if is_bearer_jwt || is_plain_bearer_jwt
-      portal_token = $1
-      # if invalid this will raise a SignedJwt::Error which is a subclass of StandardError that the caller should be listening for
-      # the expiration is checked within the JWT.decode function
-      begin
-        decoded_token = SignedJwt::decode_portal_token(portal_token)
-      rescue SignedJwt::Error
-        # For explicit Bearer/JWT tokens, re-raise — these are Portal JWTs.
-        raise if is_bearer_jwt
-        # For plain Bearer tokens that look like JWTs but aren't Portal-signed
-        # (e.g., OIDC tokens already authenticated by Devise), fall through to
-        # current_user without overwriting the auth strategy tag.
+    token = extract_bearer_token(header)
+
+    if token && (header =~ /^Bearer\/JWT/i || SignedJwt.probably_jwt?(token))
+      if SignedJwt.portal_token?(token)
+        # Portal JWT — decode and authenticate. Errors raise SignedJwt::Error
+        # which callers should be listening for.
+        decoded_token = SignedJwt::decode_portal_token(token)
+        data = decoded_token[:data]
+
+        user = User.find_by_id(data["uid"])
+        if user
+          role = {
+            :learner => data["user_type"] == "learner" ? Portal::Learner.find_by_id(data["learner_id"]) : nil,
+            :teacher => data["user_type"] == "teacher" ? Portal::Teacher.find_by_id(data["teacher_id"]) : nil
+          }
+          request.env['portal.auth_strategy'] = 'api_jwt'
+          return [user, role]
+        else
+          raise StandardError, 'User in token not found'
+        end
+      else
+        # Non-portal JWT (e.g., OIDC) — already authenticated by Devise strategy
         if current_user
           return [current_user, nil]
         else
           raise StandardError, 'You must be logged in to use this endpoint'
         end
       end
-      data = decoded_token[:data]
 
-      user = User.find_by_id(data["uid"])
-      if user
-        role = {
-          :learner => data["user_type"] == "learner" ? Portal::Learner.find_by_id(data["learner_id"]) : nil,
-          :teacher => data["user_type"] == "teacher" ? Portal::Teacher.find_by_id(data["teacher_id"]) : nil
-        }
-        request.env['portal.auth_strategy'] = 'api_jwt'
-        return [user, role]
-      else
-        raise StandardError, 'User in token not found'
-      end
-
-    elsif header && header =~ /^Bearer (.*)$/i
-      token = $1
+    elsif token
+      # Not a JWT, so treat as an opaque AccessGrant token
       grant = AccessGrant.find_by_access_token(token)
 
       if grant
@@ -80,6 +75,15 @@ class API::APIController < ApplicationController
       return [current_user, nil]
     else
       raise StandardError, 'You must be logged in to use this endpoint'
+    end
+  end
+
+  # Extracts the token value from an Authorization header.
+  # Supports both "Bearer/JWT <token>" and "Bearer <token>".
+  def extract_bearer_token(header)
+    return nil unless header
+    if header =~ /^Bearer(?:\/JWT)?\s+(.+)$/i
+      $1
     end
   end
 

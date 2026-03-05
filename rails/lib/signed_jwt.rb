@@ -88,6 +88,16 @@ module SignedJwt
     token.include?('.')
   end
 
+  # Peeks at the unverified JWT payload to determine if this is a
+  # Portal-issued token. Returns true if the iss matches the site URL,
+  # or for legacy tokens that have uid but no iss claim.
+  def self.portal_token?(token)
+    return false unless probably_jwt?(token)
+    unverified = JWT.decode(token, nil, false).first rescue nil
+    return false unless unverified
+    unverified['iss'] == APP_CONFIG[:site_url] || (unverified.key?('uid') && !unverified.key?('iss'))
+  end
+
   private
 
   def self.hmac_algorithm

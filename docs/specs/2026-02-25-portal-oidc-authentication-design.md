@@ -33,7 +33,7 @@ A new Devise/Warden strategy that intercepts `Authorization: Bearer <token>` req
 
 ### Detection logic
 
-Each JWT-based strategy uses issuer-based detection in `valid?` to determine token ownership before attempting authentication. The OIDC strategy peeks at the unverified JWT payload and only claims tokens whose `iss` matches one of Google's issuers (`accounts.google.com` or `https://accounts.google.com`). Similarly, the JWT strategy only claims tokens whose `iss` matches `APP_CONFIG[:site_url]` (or, for backward compatibility, tokens with a `uid` claim but no `iss`). This issuer-based routing replaces the earlier approach of distinguishing tokens purely by format (dots vs no dots).
+Each JWT-based strategy uses issuer-based detection in `valid?` to determine token ownership before attempting authentication. The portal JWT check is extracted into a shared method — `SignedJwt.portal_token?(token)` — which peeks at the unverified JWT payload and returns true if `iss` matches `APP_CONFIG[:site_url]` (or, for backward compatibility, if `uid` is present but `iss` is absent). The JWT strategy's `valid?` delegates to this method; the OIDC strategy checks for Google issuers (`accounts.google.com` or `https://accounts.google.com`). Both `check_for_auth_token` in `API::APIController` and the Devise strategies use `SignedJwt.portal_token?` for consistent routing.
 
 ### Strategy flow
 
@@ -207,9 +207,16 @@ This was investigated in detail in `docs/portal-authentication-unification-desig
 
 **Controller migration (completed).** The four non-role controllers (`BookmarksController`, `TeacherClassesController`, `ExternalActivitiesController`, `OfferingsController`) have been migrated from `check_for_auth_token` to `current_user`. These endpoints now work with OIDC automatically through the Devise strategy. See `specs/2026-03-04-controller-migration-design.md` for details.
 
-**OIDC fallback in `check_for_auth_token` (part of this work).** `JwtController` is the sole remaining consumer of `check_for_auth_token`. OIDC tokens contain dots, so they match the JWT branch and fail at `SignedJwt::decode_portal_token` (wrong signing key). The fix: wrap the JWT decode in a rescue for `SignedJwt::Error` and fall through to `current_user` when it is already set (by the OIDC Devise strategy). The nil role is fine — `handle_initial_auth` already supports parameter-based role resolution (`resource_link_id`, `target_user_id`, etc.).
+**Explicit routing in `check_for_auth_token` (part of this work).** `JwtController` is the sole remaining consumer of `check_for_auth_token`. The method uses the same `SignedJwt.portal_token?` check as the Devise strategies to determine whether a JWT belongs to the portal. The flow is:
 
-**Important implementation detail:** The rescue only applies to plain `Bearer` tokens, not `Bearer/JWT` tokens. When the header uses the explicit `Bearer/JWT` scheme, the token is known to be a Portal JWT, so `SignedJwt::Error` should propagate as before (e.g., expired Portal JWTs still return an error). The code tracks `is_bearer_jwt` vs `is_plain_bearer_jwt` and re-raises in the `Bearer/JWT` case. The fallback also preserves any `portal.auth_strategy` tag already set by the Devise strategy, so auth logging correctly attributes the request to OIDC.
+1. Extract the token from the `Authorization` header (supports both `Bearer/JWT` and `Bearer` schemes).
+2. If the header uses `Bearer/JWT` or the token looks like a JWT (contains dots): check `SignedJwt.portal_token?`.
+   - If it's a portal token: decode via `SignedJwt::decode_portal_token` and extract user + role.
+   - If it's not a portal token (e.g., OIDC): fall through to `current_user` (already set by the Devise strategy).
+3. If the token is not a JWT (no dots): treat as an opaque AccessGrant token.
+4. If no token: fall back to session (`current_user`).
+
+The nil role for OIDC tokens is fine — `handle_initial_auth` already supports parameter-based role resolution (`resource_link_id`, `target_user_id`, etc.). The fallback preserves any `portal.auth_strategy` tag already set by the Devise strategy, so auth logging correctly attributes the request to OIDC.
 
 See `docs/portal-authentication-unification-design.md` Section 6 for the full design.
 
@@ -383,7 +390,7 @@ OIDC-authenticated requests are API calls with bearer tokens, not browser sessio
 | Create | `rails/spec/libs/bearer_token/oidc_bearer_token_authenticatable_spec.rb` | Strategy unit tests (14 examples) |
 | Create | `rails/spec/requests/api/v1/oidc_auth_spec.rb` | Integration test (5 examples) |
 | Modify | `rails/app/models/user.rb` | Add `:oidc_bearer_token_authenticatable` to devise declaration |
-| Modify | `rails/lib/jwt_bearer_token_authenticatable.rb` | Add `iss`-based ownership check in `valid?`, use halting `fail!` with distinct `:token_expired` / `:invalid_token` messages |
-| Modify | `rails/lib/signed_jwt.rb` | Add `iss: APP_CONFIG[:site_url]` to portal JWT payload |
+| Modify | `rails/lib/jwt_bearer_token_authenticatable.rb` | Delegate `valid?` to `SignedJwt.portal_token?`, use halting `fail!` with distinct `:token_expired` / `:invalid_token` messages |
+| Modify | `rails/lib/signed_jwt.rb` | Add `iss: APP_CONFIG[:site_url]` to portal JWT payload; add `portal_token?` shared detection method |
 | Modify | `rails/config/routes.rb` | Add `resources :oidc_clients` under `namespace :admin` |
-| Modify | `rails/app/controllers/api/api_controller.rb` | Add OIDC fallback rescue in `check_for_auth_token` for plain Bearer tokens only (see Section 4) |
+| Modify | `rails/app/controllers/api/api_controller.rb` | Use `SignedJwt.portal_token?` for explicit JWT routing in `check_for_auth_token` (see Section 4) |

@@ -2,12 +2,7 @@ module JwtBearerTokenAuthenticatable
   class BearerToken < Devise::Strategies::Authenticatable
 
     def valid?
-      return false unless has_jwt_bearer_token?
-      # Peek at unverified payload to check ownership
-      unverified = JWT.decode(jwt_token_value, nil, false).first rescue nil
-      return false unless unverified
-      # Ours if iss matches, or legacy token with uid but no iss
-      unverified['iss'] == APP_CONFIG[:site_url] || (unverified.key?('uid') && !unverified.key?('iss'))
+      has_jwt_bearer_token? && SignedJwt.portal_token?(jwt_token_value)
     end
 
     def authenticate!
