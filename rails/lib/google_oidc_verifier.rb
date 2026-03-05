@@ -2,6 +2,12 @@ require 'jwt'
 require 'net/http'
 require 'json'
 
+# Custom Google OIDC token verifier. Google provides the google-id-token gem for
+# this purpose, but it pulls in large dependencies (google-apis-core, etc.) and
+# the verification logic is straightforward: fetch Google's public JWKS, match
+# the key by `kid`, and let the ruby-jwt gem handle RS256 signature and claim
+# validation. Keeping this in-house avoids the extra dependency surface while
+# giving us full control over caching, error handling, and clock-skew settings.
 module GoogleOidcVerifier
   class Error < StandardError; end
 
@@ -84,7 +90,10 @@ module GoogleOidcVerifier
 
     unless response.is_a?(Net::HTTPSuccess)
       if @jwks_keys
-        # Use stale cache rather than rejecting all requests
+        # Use stale cache rather than rejecting all requests.
+        # Update fetched_at so we don't retry on every request during an outage.
+        @jwks_fetched_at = Time.now
+        Rails.logger.warn("GoogleOidcVerifier: JWKS refresh failed (HTTP #{response.code}), serving stale keys")
         return @jwks_keys
       end
       raise Error, "Failed to fetch JWKS: HTTP #{response.code}"
@@ -96,6 +105,9 @@ module GoogleOidcVerifier
     @jwks_keys
   rescue StandardError => e
     if @jwks_keys
+      # Update fetched_at so we don't retry on every request during an outage.
+      @jwks_fetched_at = Time.now
+      Rails.logger.warn("GoogleOidcVerifier: JWKS refresh failed (#{e.message}), serving stale keys")
       return @jwks_keys
     end
     raise Error, "Failed to fetch JWKS: #{e.message}"

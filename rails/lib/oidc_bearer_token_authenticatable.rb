@@ -15,13 +15,14 @@ module OidcBearerTokenAuthenticatable
       token = oidc_token_value
       payload = GoogleOidcVerifier.verify(token)
 
-      oidc_client = Admin::OidcClient.active.find_by(sub: payload['sub'])
+      oidc_client = Admin::OidcClient.find_by(sub: payload['sub'])
       unless oidc_client
-        if Admin::OidcClient.find_by(sub: payload['sub'])
-          Rails.logger.warn("OidcBearer: inactive client=#{Admin::OidcClient.find_by(sub: payload['sub']).name}")
-        else
-          Rails.logger.warn("OidcBearer: no client found sub=#{payload['sub']} email=#{payload['email']}")
-        end
+        Rails.logger.warn("OidcBearer: no client found sub=#{payload['sub']} email=#{payload['email']}")
+        return fail(:invalid_token)
+      end
+
+      unless oidc_client.active?
+        Rails.logger.warn("OidcBearer: inactive client=#{oidc_client.name}")
         return fail(:invalid_token)
       end
 

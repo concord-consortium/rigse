@@ -78,15 +78,6 @@ class API::APIController < ApplicationController
     end
   end
 
-  # Extracts the token value from an Authorization header.
-  # Supports both "Bearer/JWT <token>" and "Bearer <token>".
-  def extract_bearer_token(header)
-    return nil unless header
-    if header =~ /^Bearer(?:\/JWT)?\s+(.+)$/i
-      $1
-    end
-  end
-
   protected
 
   # NOTE: this approach requires you to return from the
@@ -154,5 +145,14 @@ class API::APIController < ApplicationController
     end
 
     return auth
+  end
+
+  # Extracts the token value from an Authorization header.
+  # Supports both "Bearer/JWT <token>" and "Bearer <token>".
+  def extract_bearer_token(header)
+    return nil unless header
+    if header =~ /^Bearer(?:\/JWT)?\s+(.+)$/i
+      $1
+    end
   end
 end

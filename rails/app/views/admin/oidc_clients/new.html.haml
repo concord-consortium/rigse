@@ -1,2 +1,2 @@
-= form_for(@oidc_client, url: url_for(controller: 'oidc_clients', action: 'create')) do |f|
+= form_for([:admin, @oidc_client]) do |f|
   = render partial: 'form', locals: { oidc_client: @oidc_client, f: f }

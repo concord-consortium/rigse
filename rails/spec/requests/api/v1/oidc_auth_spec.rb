@@ -63,12 +63,12 @@ RSpec.describe API::V1::JwtController, type: :controller do
         expect(decoded[:data]['uid']).to eq(admin_user.id)
       end
 
-      it 'maps OIDC sub to the correct Portal user via check_for_auth_token' do
+      it 'routes OIDC token via portal_token? and uses current_user from Devise strategy' do
         allow(controller).to receive(:current_user).and_return(admin_user)
         request.headers['Authorization'] = "Bearer #{oidc_token}"
 
-        # Verify the fallback works: SignedJwt fails, falls through to current_user
-        allow(SignedJwt).to receive(:decode_portal_token).and_raise(SignedJwt::Error, 'invalid')
+        # OIDC tokens are not portal tokens, so decode_portal_token should never be called
+        expect(SignedJwt).not_to receive(:decode_portal_token)
         user, role = controller.send(:check_for_auth_token, {})
         expect(user).to eq(admin_user)
         expect(role).to be_nil
@@ -79,8 +79,8 @@ RSpec.describe API::V1::JwtController, type: :controller do
       it 'rejects the request when no current_user' do
         allow(controller).to receive(:current_user).and_return(nil)
         request.headers['Authorization'] = "Bearer #{oidc_token}"
-        allow(SignedJwt).to receive(:decode_portal_token).and_raise(SignedJwt::Error, 'invalid')
 
+        expect(SignedJwt).not_to receive(:decode_portal_token)
         expect { controller.send(:check_for_auth_token, {}) }
           .to raise_error(StandardError, 'You must be logged in to use this endpoint')
       end
@@ -94,8 +94,8 @@ RSpec.describe API::V1::JwtController, type: :controller do
       it 'OIDC strategy fails and request is rejected' do
         allow(controller).to receive(:current_user).and_return(nil)
         request.headers['Authorization'] = "Bearer #{oidc_token}"
-        allow(SignedJwt).to receive(:decode_portal_token).and_raise(SignedJwt::Error, 'invalid')
 
+        expect(SignedJwt).not_to receive(:decode_portal_token)
         expect { controller.send(:check_for_auth_token, {}) }
           .to raise_error(StandardError, 'You must be logged in to use this endpoint')
       end
