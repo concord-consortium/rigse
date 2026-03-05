@@ -1,6 +1,6 @@
 # Portal OIDC Authentication — Detailed Design
 
-**Date:** 2026-02-25
+**Date:** 2026-02-25 (updated 2026-03-04)
 **Status:** Draft
 
 ## Overview
@@ -193,22 +193,19 @@ The form includes text fields for `name`, `sub`, `email`, and `user_id` (integer
 
 The OIDC Devise strategy sets `current_user` automatically. Any endpoint that uses Pundit authorization via `current_user` directly — such as `add_to_class` — works with OIDC out of the box. No changes to `check_for_auth_token` are needed for these endpoints.
 
-### The overlap problem
+### The overlap problem (resolved)
 
-Several existing API endpoints bypass Devise's `current_user` and instead call `check_for_auth_token()` manually (defined in `API::APIController`) to extract both the user and a role hash (learner/teacher context) from the token. These endpoints include offerings, external activities, teacher classes, bookmarks, and JWT.
+Several API endpoints previously bypassed Devise's `current_user` and instead called `check_for_auth_token()` manually (defined in `API::APIController`) to extract both the user and a role hash (learner/teacher context) from the token.
 
-OIDC-authenticated callers (such as the button interactive's Cloud Function) will likely need access to some of these endpoints in the future — at least offerings and teacher classes.
+This was investigated in detail in `docs/portal-authentication-unification-design.md`. The key finding: only `JwtController` genuinely needs the token-embedded role. The other four controllers (`BookmarksController`, `TeacherClassesController`, `ExternalActivitiesController`, `OfferingsController`) used `check_for_auth_token` only for authentication and derived role information from the database. Those four have since been migrated to `current_user`.
 
-The overlap is problematic because:
+### Resolution
 
-- `check_for_auth_token` parses the `Authorization` header independently from Devise, using its own matching logic.
-- It returns role information (learner/teacher associations) embedded in the token — information that doesn't exist in an OIDC token and isn't captured by the Devise strategy.
-- Simply reordering branches (e.g., checking `current_user` first) would break the JWT path, which depends on extracting role data from the token claims.
-- The two auth paths (Devise strategies vs. manual `check_for_auth_token`) have subtly different behavior (e.g., referer checking) that makes unification non-trivial.
+**Controller migration (completed).** The four non-role controllers (`BookmarksController`, `TeacherClassesController`, `ExternalActivitiesController`, `OfferingsController`) have been migrated from `check_for_auth_token` to `current_user`. These endpoints now work with OIDC automatically through the Devise strategy. See `specs/2026-03-04-controller-migration-design.md` for details.
 
-### Decision
+**OIDC fallback in `check_for_auth_token` (part of this work).** `JwtController` is the sole remaining consumer of `check_for_auth_token`. OIDC tokens contain dots, so they match the JWT branch and fail at `SignedJwt::decode_portal_token` (wrong signing key). The fix: wrap the JWT decode in a rescue for `SignedJwt::Error` and fall through to the session fallback when `current_user` is already set (by the OIDC Devise strategy). The nil role is fine — `handle_initial_auth` already supports parameter-based role resolution (`resource_link_id`, `target_user_id`, etc.).
 
-Don't modify `check_for_auth_token` as part of this work. The initial set of endpoints that OIDC callers need (e.g., `add_to_class`) work through Devise/Pundit without it. A separate design doc will investigate options for resolving the overlap before OIDC callers need endpoints that go through `check_for_auth_token`.
+See `docs/portal-authentication-unification-design.md` Section 6 for the full design.
 
 ---
 
@@ -316,7 +313,6 @@ Request spec that sends a `Bearer` OIDC token to `POST /api/v1/students/add_to_c
 ### What's NOT tested here
 
 - Real Google OIDC tokens against real JWKS — that's the manual verification from Section 5, done during deployment to staging.
-- The `check_for_auth_token` overlap — out of scope per Section 4.
 
 ---
 
@@ -330,9 +326,24 @@ The strategy never raises exceptions that leak token contents or verification de
 
 ### Logging
 
-- Log successful OIDC authentications at `info` level: the `Admin::OidcClient` name and mapped user ID (not the token itself).
-- Log verification failures at `warn` level: the failure reason (expired, wrong audience, unknown sub, etc.) and the `email` claim if available for debugging — never the full token.
-- Never log token values, signatures, or JWKS key material.
+The Portal now has auth logging infrastructure (see `specs/2026-03-02-auth-launch-logging-design.md`) that the OIDC strategy should integrate with:
+
+**Auth strategy tagging.** On successful authentication, set `request.env['portal.auth_strategy']` so the existing `AuthLogSubscriber` picks it up automatically:
+
+```ruby
+request.env['portal.auth_strategy'] = 'oidc_bearer_token'
+request.env['portal.auth_client'] = oidc_client.name
+```
+
+This produces log lines like: `Auth: user=123 auth=oidc_bearer_token client=Button Function (staging) POST /api/v1/students/add_to_class`
+
+**Warn-level failure logs.** Following the pattern established by the other strategies, log verification failures at `warn` level with enough context to diagnose issues:
+
+- OIDC verification failure (expired, wrong audience, wrong issuer, signature invalid): log the failure reason and the `email` claim if available for debugging
+- No matching `Admin::OidcClient` for a valid OIDC token: log the `sub` and `email` claims
+- Inactive `Admin::OidcClient`: log the client name
+
+**Never log** token values, signatures, or JWKS key material.
 
 ### Token replay
 
@@ -367,3 +378,4 @@ OIDC-authenticated requests are API calls with bearer tokens, not browser sessio
 | Create | `rails/spec/requests/api/v1/oidc_auth_spec.rb` | Integration test |
 | Modify | `rails/app/models/user.rb` | Add `:oidc_bearer_token_authenticatable` to devise declaration |
 | Modify | `rails/config/routes.rb` | Add `resources :oidc_clients` under `namespace :admin` |
+| Modify | `rails/app/controllers/api/api_controller.rb` | Add OIDC fallback rescue in `check_for_auth_token` (see Section 4) |
