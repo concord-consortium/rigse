@@ -234,7 +234,7 @@ Content-Type: application/json
 
 ### What happens on the Portal side
 
-1. Devise tries strategies in order. `BearerTokenAuthenticatable` finds no matching `AccessGrant` — fails, moves on. `JwtBearerTokenAuthenticatable` tries to decode the token as a Portal JWT — fails (wrong signing key), uses non-halting `fail`, moves on. `OidcBearerTokenAuthenticatable` detects a JWT-shaped Bearer token (not `Bearer/JWT`), verifies the OIDC signature via JWKS, looks up the `sub` in `admin_oidc_clients`, finds the mapped Portal user, calls `success!(user)`.
+1. Devise tries strategies in order. `BearerTokenAuthenticatable` sees dots in the token and skips it (`valid?` returns false). `JwtBearerTokenAuthenticatable` peeks at the unverified `iss` claim, sees it's not `APP_CONFIG[:site_url]`, and skips it (`valid?` returns false). `OidcBearerTokenAuthenticatable` peeks at the unverified `iss` claim, sees it matches a Google issuer, claims the token, verifies the OIDC signature via JWKS, looks up the `sub` in `admin_oidc_clients`, finds the mapped Portal user, calls `success!(user)`.
 2. `current_user` is now the mapped Portal user (e.g., a project admin account).
 3. The `add_to_class` action calls `authorize portal_clazz, :update_roster?` — Pundit checks whether the mapped user has permission to modify this class's roster.
 4. It calls `authorize student, :show?` — Pundit checks whether the mapped user can see this student.
