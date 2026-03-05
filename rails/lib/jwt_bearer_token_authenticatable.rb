@@ -9,14 +9,14 @@ module JwtBearerTokenAuthenticatable
       decoded_token = decode_token
       unless decoded_token && decoded_token[:data].has_key?("uid")
         Rails.logger.warn("JwtBearerToken: token decode failed or missing uid")
-        return fail!
+        return fail(:invalid_token)
       end
       user = User.find_by_id(decoded_token[:data]["uid"])
       unless user
         Rails.logger.warn(
           "JwtBearerToken: user not found for uid=#{decoded_token[:data]['uid']}"
         )
-        return fail!
+        return fail(:invalid_token)
       end
       request.env['portal.auth_strategy'] = 'jwt_bearer_token'
       success!(user)
