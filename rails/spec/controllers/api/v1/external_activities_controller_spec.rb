@@ -18,7 +18,7 @@ describe API::V1::ExternalActivitiesController do
 
       it "fails with valid parameters" do
         post :create, params: { :name => "test", :url => "http://example.com/" }
-        expect(response.status).to eql(403)
+        expect(response.status).to eql(401)
       end
     end
 
@@ -140,7 +140,7 @@ describe API::V1::ExternalActivitiesController do
 
       it "fails with valid parameters" do
         post :update_basic, params: valid_parameters
-        expect(response.status).to eql(403)
+        expect(response.status).to eql(401)
       end
     end
 
@@ -204,7 +204,7 @@ describe API::V1::ExternalActivitiesController do
 
       it "fails with valid parameters" do
         post :update_by_url, params: valid_parameters
-        expect(response.status).to eql(403)
+        expect(response.status).to eql(401)
       end
     end
 

@@ -1,11 +1,10 @@
 class API::V1::TeacherClassesController < API::APIController
 
-  def show
-    auth = auth_teacher(params)
-    return error(auth[:error]) if auth[:error]
-    user = auth[:user]
+  before_action :require_api_user!
+  before_action :require_teacher!
 
-    class_ownership = verify_teacher_class_ownership(user, params)
+  def show
+    class_ownership = verify_teacher_class_ownership(current_user, params)
     return error(class_ownership[:error]) if class_ownership[:error]
     teacher_clazz = class_ownership[:teacher_clazz]
 
@@ -13,10 +12,6 @@ class API::V1::TeacherClassesController < API::APIController
   end
 
   def sort
-    auth = auth_teacher(params)
-    return error(auth[:error]) if auth[:error]
-    user = auth[:user]
-
     ids = params[:ids]
     if !ids
       return error('Missing ids parameter')
@@ -30,11 +25,11 @@ class API::V1::TeacherClassesController < API::APIController
       rescue ActiveRecord::RecordNotFound => e
         return error("Invalid class id: #{id}")
       end
-      return error("You are not a teacher of class: #{id}") if !clazz.is_teacher?(user)
+      return error("You are not a teacher of class: #{id}") if !clazz.is_teacher?(current_user)
     end
 
     ids.each_with_index do |id,idx|
-      teacher_clazz = Portal::TeacherClazz.where(:clazz_id => id, :teacher_id => user.portal_teacher.id).first
+      teacher_clazz = Portal::TeacherClazz.where(:clazz_id => id, :teacher_id => current_user.portal_teacher.id).first
       return error("TeacherClazz not found") if !teacher_clazz
       teacher_clazz.update(:position => idx + 1)
     end
@@ -43,11 +38,7 @@ class API::V1::TeacherClassesController < API::APIController
   end
 
   def copy
-    auth = auth_teacher(params)
-    return error(auth[:error]) if auth[:error]
-    user = auth[:user]
-
-    class_ownership = verify_class_ownership(user, params)
+    class_ownership = verify_class_ownership(current_user, params)
     return error(class_ownership[:error]) if class_ownership[:error]
     class_to_copy = class_ownership[:clazz]
 
@@ -56,7 +47,7 @@ class API::V1::TeacherClassesController < API::APIController
       :class_word => params[:classWord],
       :description => params[:description],
       :grades => class_to_copy.grades,
-      :teacher => user.portal_teacher,
+      :teacher => current_user.portal_teacher,
       :course => class_to_copy.course
     )
 
@@ -68,7 +59,6 @@ class API::V1::TeacherClassesController < API::APIController
       return error(error_messages)
     end
 
-
     class_to_copy.offerings.each do |offering|
       new_offering = Portal::Offering.where(clazz_id: new_clazz.id, runnable_type: offering.runnable_type, runnable_id: offering.runnable_id).first_or_create
       new_offering.status = offering.status
@@ -76,12 +66,18 @@ class API::V1::TeacherClassesController < API::APIController
       new_offering.save!
     end
 
-    new_teacher_clazz = Portal::TeacherClazz.where(teacher_id: user.portal_teacher.id, clazz_id: new_clazz.id).first
+    new_teacher_clazz = Portal::TeacherClazz.where(teacher_id: current_user.portal_teacher.id, clazz_id: new_clazz.id).first
 
     render_teacher_clazz(new_teacher_clazz)
   end
 
   private
+
+  def require_teacher!
+    unless current_user.portal_teacher
+      error('You must be logged in as a teacher to use this endpoint')
+    end
+  end
 
   def render_ok
     render :json => { success: true }, :status => :ok

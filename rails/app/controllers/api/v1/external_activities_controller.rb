@@ -1,6 +1,7 @@
 class API::V1::ExternalActivitiesController < API::APIController
 
   skip_before_action :verify_authenticity_token
+  before_action :require_api_user!
 
   def find_tool(tool_id)
     return nil if tool_id.nil?
@@ -9,12 +10,6 @@ class API::V1::ExternalActivitiesController < API::APIController
 
   def create
     authorize [:api, :v1, :external_activity]
-
-    begin
-      user, role = check_for_auth_token(params)
-    rescue StandardError => e
-      return error(e.message)
-    end
 
     name = params.require(:name)
     url = params.require(:url)
@@ -48,7 +43,7 @@ class API::V1::ExternalActivitiesController < API::APIController
       :url                    => url,
       :material_type          => material_type,
       :publication_status     => params[:publication_status] || "published",
-      :user                   => user,
+      :user                   => current_user,
       :append_auth_token      => params[:append_auth_token] || false,
       :author_url             => params[:author_url],
       :print_url              => params[:print_url],
@@ -77,12 +72,6 @@ class API::V1::ExternalActivitiesController < API::APIController
   end
 
   def update_by_url
-    begin
-      user, role = check_for_auth_token(params)
-    rescue StandardError => e
-      return error(e.message, 403)
-    end
-
     external_activity = ExternalActivity.where(url: params[:url]).first
     authorize external_activity
 
@@ -97,12 +86,6 @@ class API::V1::ExternalActivitiesController < API::APIController
 
 
   def update_basic
-    begin
-      user, role = check_for_auth_token(params)
-    rescue StandardError => e
-      return error(e.message, 403)
-    end
-
     external_activity = ExternalActivity.find(params[:id])
     authorize external_activity
 

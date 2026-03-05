@@ -129,12 +129,6 @@ class API::V1::OfferingsController < API::APIController
   def create_for_external_activity
     authorize Portal::Offering, :api_create_for_external_activity?
 
-    begin
-      user, role = check_for_auth_token(params)
-    rescue StandardError => e
-      return error(e.message)
-    end
-
     return error("A class_id is required") unless params[:class_id].present?
     return error("A name is required") unless params[:name].present?
     return error("An url is required") unless params[:url].present?
@@ -148,7 +142,7 @@ class API::V1::OfferingsController < API::APIController
 
     # make sure the user is a teacher for the class
     clazz = Portal::Clazz.find(params[:class_id])
-    if !user.has_role?('admin') && !clazz.is_teacher?(user)
+    if !current_user.has_role?('admin') && !clazz.is_teacher?(current_user)
       # Only admin can create offerings for somebody else's class.
       return error('You are not a teacher of the specified class', 403)
     end

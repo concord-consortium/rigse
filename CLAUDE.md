@@ -26,6 +26,8 @@ docker compose restart app
 
 Use `exec` when the app container is already running. Use `run --rm` for one-off commands (it starts a new container and removes it after).
 
+**Important:** Never run `bundle exec`, `rails`, `rake`, or `rspec` commands directly on the host — always use `docker compose run --rm app` or `docker compose exec app`.
+
 ## Running tests
 
 ```bash

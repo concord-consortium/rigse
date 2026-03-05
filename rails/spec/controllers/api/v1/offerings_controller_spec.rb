@@ -519,6 +519,15 @@ describe API::V1::OfferingsController do
   end
 
   describe "POST create_for_external_activity" do
+    describe "as a guest" do
+      before(:each) { logout_user }
+
+      it "should fail" do
+        post :create_for_external_activity, params: { class_id: clazz.id, name: 'Test', url: 'http://test.com' }
+        expect(response.status).to eql(403)
+      end
+    end
+
     describe "as a student" do
       it "should fail" do
         sign_in student_a.user
