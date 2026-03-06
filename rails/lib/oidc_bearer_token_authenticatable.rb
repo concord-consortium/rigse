@@ -6,7 +6,11 @@ module OidcBearerTokenAuthenticatable
     def valid?
       return false unless oidc_token_value.present?
       # Peek at unverified payload to check issuer is Google
-      unverified = JWT.decode(oidc_token_value, nil, false).first rescue nil
+      unverified = begin
+        JWT.decode(oidc_token_value, nil, false).first
+      rescue JWT::DecodeError
+        nil
+      end
       return false unless unverified
       GoogleOidcVerifier::VALID_ISSUERS.include?(unverified['iss'])
     end

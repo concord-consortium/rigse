@@ -6,7 +6,7 @@ module JwtBearerTokenAuthenticatable
     end
 
     def authenticate!
-      decoded_token = decode_token
+      decoded_token = SignedJwt.decode_portal_token(jwt_token_value)
       unless decoded_token && decoded_token[:data].key?("uid")
         Rails.logger.warn("JwtBearerToken: token decode failed or missing uid")
         return fail!(:invalid_token)
@@ -29,17 +29,6 @@ module JwtBearerTokenAuthenticatable
     end
 
     protected
-
-    def decode_token
-      return nil unless has_jwt_bearer_token?
-      token = jwt_token_value
-      decoded = JWT.decode(token, SignedJwt.send(:hmac_secret), true, { algorithm: SignedJwt.send(:hmac_algorithm) })
-      { data: decoded[0], header: decoded[1] }
-    rescue JWT::ExpiredSignature
-      raise
-    rescue StandardError => e
-      raise SignedJwt::Error.new(e.message)
-    end
 
     def has_jwt_bearer_token?
       jwt_token_value.present?

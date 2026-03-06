@@ -26,6 +26,8 @@ module SignedJwt
   def self.decode_portal_token(token)
     begin
       decoded = JWT.decode token, self.hmac_secret, true, {algorithm: self.hmac_algorithm}
+    rescue JWT::ExpiredSignature
+      raise
     rescue StandardError => e
       raise SignedJwt::Error.new(e.message)
     end
@@ -93,7 +95,11 @@ module SignedJwt
   # or for legacy tokens that have uid but no iss claim.
   def self.portal_token?(token)
     return false unless probably_jwt?(token)
-    unverified = JWT.decode(token, nil, false).first rescue nil
+    unverified = begin
+      JWT.decode(token, nil, false).first
+    rescue JWT::DecodeError
+      nil
+    end
     return false unless unverified
     unverified['iss'] == APP_CONFIG[:site_url] || (unverified.key?('uid') && !unverified.key?('iss'))
   end
