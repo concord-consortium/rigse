@@ -7,6 +7,7 @@ class User < ApplicationRecord
   has_many :favorites
 
   devise :database_authenticatable, :registerable, :token_authenticatable, :confirmable, :bearer_token_authenticatable, :jwt_bearer_token_authenticatable,
+         :oidc_bearer_token_authenticatable,
          :recoverable, :timeoutable, :trackable, :validatable,:encryptable, :encryptor => :restful_authentication_sha1
   devise :omniauthable, :omniauth_providers => Devise.omniauth_providers
 

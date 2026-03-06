@@ -9,6 +9,7 @@ module SignedJwt
     now = Time.now.to_i
     payload = {
       alg: self.hmac_algorithm,
+      iss: APP_CONFIG[:site_url],
       iat: now,
       exp: now + expires_in,
       uid: user.id
@@ -25,6 +26,8 @@ module SignedJwt
   def self.decode_portal_token(token)
     begin
       decoded = JWT.decode token, self.hmac_secret, true, {algorithm: self.hmac_algorithm}
+    rescue JWT::ExpiredSignature
+      raise
     rescue StandardError => e
       raise SignedJwt::Error.new(e.message)
     end
@@ -85,6 +88,20 @@ module SignedJwt
   # Bearer tokens to the right handler without decoding.
   def self.probably_jwt?(token)
     token.include?('.')
+  end
+
+  # Peeks at the unverified JWT payload to determine if this is a
+  # Portal-issued token. Returns true if the iss matches the site URL,
+  # or for legacy tokens that have uid but no iss claim.
+  def self.portal_token?(token)
+    return false unless probably_jwt?(token)
+    unverified = begin
+      JWT.decode(token, nil, false).first
+    rescue JWT::DecodeError
+      nil
+    end
+    return false unless unverified
+    unverified['iss'] == APP_CONFIG[:site_url] || (unverified.key?('uid') && !unverified.key?('iss'))
   end
 
   private

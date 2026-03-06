@@ -231,6 +231,7 @@ RailsPortal::Application.routes.draw do
       resources :cohorts
       resources :project_links
       resources :clients
+      resources :oidc_clients
       resources :tools
       resources :external_reports
       resources :permission_forms

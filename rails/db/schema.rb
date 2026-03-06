@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_16_105446) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_04_231115) do
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
     t.string "access_token"
@@ -82,6 +82,18 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_16_105446) do
     t.datetime "last_collapsed_at_time", precision: nil
     t.boolean "collapsed_status"
     t.index ["user_id"], name: "index_admin_notice_user_display_statuses_on_user_id"
+  end
+
+  create_table "admin_oidc_clients", charset: "utf8", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "sub", null: false
+    t.string "email"
+    t.integer "user_id", null: false
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sub"], name: "index_admin_oidc_clients_on_sub", unique: true
+    t.index ["user_id"], name: "index_admin_oidc_clients_on_user_id"
   end
 
   create_table "admin_project_links", id: :integer, charset: "utf8", force: :cascade do |t|
