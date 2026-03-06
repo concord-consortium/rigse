@@ -30,7 +30,7 @@ class API::APIController < ApplicationController
     if token && (header =~ /^Bearer\/JWT/i || SignedJwt.probably_jwt?(token))
       if SignedJwt.portal_token?(token)
         # Portal JWT — decode and authenticate. Errors raise SignedJwt::Error
-        # which callers should be listening for.
+        # or JWT::ExpiredSignature, which callers should be listening for.
         decoded_token = SignedJwt::decode_portal_token(token)
         data = decoded_token[:data]
 
