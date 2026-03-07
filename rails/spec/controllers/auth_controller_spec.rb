@@ -64,6 +64,63 @@ RSpec.describe AuthController, type: :controller do
       end
 
     end
+
+    context 'with a logged in user' do
+      let(:user) { FactoryBot.create(:confirmed_user) }
+      let(:client) { FactoryBot.create(:client, name: 'Test App', app_id: 'test-client', :redirect_uris => 'http://test.host/redirect') }
+
+      before(:each) do
+        sign_in user
+        # Stub the redirect URI generation so oauth_authorize can proceed
+        allow(AccessGrant).to receive(:get_authorize_redirect_uri)
+          .and_return("http://test.host/redirect#access_token=test&token_type=bearer")
+      end
+
+      context 'without login_hint' do
+        let(:params) { { client_id: client.app_id, redirect_uri: 'http://test.host/redirect', response_type: 'token' } }
+
+        it 'redirects normally' do
+          get :oauth_authorize, params: params
+          expect(response).to have_http_status(:redirect)
+        end
+      end
+
+      context 'with login_hint matching current user' do
+        let(:params) { { client_id: client.app_id, redirect_uri: 'http://test.host/redirect', response_type: 'token', login_hint: user.id.to_s } }
+
+        it 'redirects normally' do
+          get :oauth_authorize, params: params
+          expect(response).to have_http_status(:redirect)
+          expect(response.location).to include('access_token')
+        end
+      end
+
+      context 'with login_hint not matching current user' do
+        let(:params) { { client_id: client.app_id, redirect_uri: 'http://test.host/redirect', response_type: 'token', login_hint: '99999' } }
+
+        it 'renders the login_hint_mismatch page' do
+          get :oauth_authorize, params: params
+          expect(response).to have_http_status(:ok)
+          expect(response).to render_template('auth/login_hint_mismatch')
+        end
+
+        it 'passes the current user name to the view' do
+          get :oauth_authorize, params: params
+          expect(assigns(:user_name)).to eq(user.name)
+        end
+
+        it 'passes a continue URL without login_hint' do
+          get :oauth_authorize, params: params
+          expect(assigns(:continue_url)).not_to include('login_hint')
+          expect(assigns(:continue_url)).to include('client_id')
+        end
+
+        it 'passes a switch user URL without login_hint' do
+          get :oauth_authorize, params: params
+          expect(assigns(:switch_user_url)).not_to include('login_hint')
+        end
+      end
+    end
   end
 
   # TODO: auto-generated
