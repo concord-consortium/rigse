@@ -54,6 +54,21 @@ class AuthController < ApplicationController
       return
     end
 
+    # Check login_hint: if present and doesn't match current user, show warning
+    if params[:login_hint].present? && current_user.id.to_s != params[:login_hint]
+      @user_name = current_user.name
+
+      # Build continue URL: same params minus login_hint
+      continue_params = request.query_parameters.except("login_hint")
+      @continue_url = "#{request.path}?#{continue_params.to_query}"
+
+      # Build switch user URL: logout then login, with after_sign_in_path to oauth_authorize without login_hint
+      @switch_user_url = logout_path(after_sign_in_path: @continue_url)
+
+      render 'auth/login_hint_mismatch', layout: false
+      return
+    end
+
     # Note that we'll get to this point only if user is currently logged in.
     # If user is not logged in, we'll redirect back here after first
     # logging in the user. This redirect happens when in

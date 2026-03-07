@@ -1,6 +1,6 @@
 # Portal API Authentication — Current State & Unification Options
 
-**Date:** 2026-02-25 (updated 2026-03-04)
+**Date:** 2026-02-25 (updated 2026-03-05)
 **Status:** Draft / Discussion
 
 ## Overview
@@ -34,21 +34,22 @@ Devise tries strategies in declaration order (see `app/models/user.rb`). Each st
 - Sets `current_user` to `grant.user`
 
 **`JwtBearerTokenAuthenticatable`** (`lib/jwt_bearer_token_authenticatable.rb`)
-- Matches: `Authorization: Bearer/JWT <token>`
-- Decodes token via `SignedJwt::decode_portal_token`
+- Matches: `Authorization: Bearer/JWT <token>` or `Authorization: Bearer <jwt-with-dots>` when `SignedJwt.portal_token?` returns true (checks unverified `iss` matches `APP_CONFIG[:site_url]`, or for legacy tokens, `uid` present without `iss`)
+- Decodes token via `JWT.decode` with the portal's HMAC secret
 - Extracts `uid` claim, sets `current_user` to `User.find_by_id(uid)`
 - Does **not** extract role claims (learner_id, teacher_id, user_type)
+- Uses halting `fail!` with distinct messages: `:token_expired` for expired tokens, `:invalid_token` for signature failures or missing user — since `valid?` guarantees the token is ours, all failures are definitive
 
 **Session-based** (Devise's built-in `database_authenticatable`)
 - Standard cookie/session authentication
 - Sets `current_user` from the session
 
-### 1.2 `check_for_auth_token` (`app/controllers/api/api_controller.rb:26-65`)
+### 1.2 `check_for_auth_token` (`app/controllers/api/api_controller.rb:26-84`)
 
-A manual method that parses the `Authorization` header and returns a `[user, role]` tuple. It handles three cases:
+A manual method that parses the `Authorization` header and returns a `[user, role]` tuple. It extracts the token via `extract_bearer_token`, then routes based on token type using the same `SignedJwt.portal_token?` check as the Devise strategies:
 
-**Case 1: Portal JWT** (lines 28-44)
-- Matches: `Authorization: Bearer/JWT <token>` **or** `Authorization: Bearer <token>` when the token contains dots (JWTs always contain dots; hex AccessGrant tokens never do)
+**Case 1: Portal JWT** (lines 31-47)
+- Matches: `Authorization: Bearer/JWT <token>` **or** `Authorization: Bearer <token>` when `SignedJwt.portal_token?` returns true (checks unverified `iss` matches the portal, or legacy tokens with `uid` but no `iss`)
 - Decodes JWT and extracts role claims:
   ```ruby
   role = {
@@ -59,14 +60,19 @@ A manual method that parses the `Authorization` header and returns a `[user, rol
 - Returns: `[User.find(data["uid"]), role]`
 - This is now the **primary** auth path for launch tokens (see Section 2.1)
 
-**Case 2: AccessGrant Bearer token** (lines 46-58)
-- Matches: `Authorization: Bearer <token>` where the token has no dots (hex format)
+**Case 2: Non-portal JWT** (lines 48-55)
+- Matches: JWT-shaped tokens (contains dots or `Bearer/JWT` scheme) where `SignedJwt.portal_token?` returns false (e.g., OIDC tokens)
+- Falls through to `current_user` (already authenticated by the OIDC Devise strategy)
+- Returns: `[current_user, nil]` (role is nil — OIDC callers use parameter-based role resolution)
+
+**Case 3: AccessGrant Bearer token** (lines 57-72)
+- Matches: `Authorization: Bearer <token>` where the token is not a JWT (no dots)
 - Looks up `AccessGrant.find_by_access_token(token)`
 - Returns: `[grant.user, {:learner => grant.learner, :teacher => grant.teacher}]`
 - **Does not** check for a client or validate the referer
 - Used for client-backed grants from OAuth flows (e.g., report launches)
 
-**Case 3: Session fallback** (lines 60-64)
+**Case 4: Session fallback** (lines 78-83)
 - When no Authorization header matches, falls back to `current_user`
 - Returns: `[current_user, nil]` (role is nil)
 
@@ -202,11 +208,7 @@ The OIDC caller (the button interactive's Cloud Function) may need to call JwtCo
 
 So JwtController should work with OIDC **if** the caller provides the right params. The main issue is how `check_for_auth_token` handles the `Authorization: Bearer <oidc-token>` header.
 
-**Current failure mode (post-simplification):** OIDC tokens are JWTs — they contain dots. The current `check_for_auth_token` routes any `Bearer <token-with-dots>` to `SignedJwt::decode_portal_token` (Case 1). An OIDC token would fail this decode (wrong signing key / different issuer), raising a `SignedJwt::Error`. The method never reaches the session fallback where Devise has already set `current_user`.
-
-This is a different failure point than described in the original analysis (which expected failure at the AccessGrant lookup), but the fundamental problem is the same: `check_for_auth_token` does not know how to fall through gracefully when it encounters a JWT it doesn't recognize.
-
-**Fix:** Wrap the JWT decode in Case 1 with a rescue for `SignedJwt::Error`, and when the decode fails and `current_user` is already set (by the OIDC Devise strategy), fall through to the session fallback returning `[current_user, nil]`. This is a small, targeted change.
+**Resolved.** `check_for_auth_token` now uses `SignedJwt.portal_token?` to explicitly identify portal JWTs before attempting to decode them. Non-portal JWTs (e.g., OIDC tokens) are routed to a separate branch that falls through to `current_user` (already set by the Devise strategy). This avoids the need for try/catch-based routing and uses the same shared detection logic as the Devise strategies.
 
 ---
 
@@ -316,26 +318,26 @@ The double parsing is a minor cost:
 
 When all launches use OAuth2 with parameter-based role resolution (see Next Steps, Step 5), the method can be deleted entirely — and the double parsing goes away with it. There's no point optimizing throwaway code.
 
-#### What OIDC compatibility requires
+#### What OIDC compatibility requires — COMPLETED
 
-For `JwtController` to work with OIDC, `check_for_auth_token` needs to handle OIDC JWTs gracefully. OIDC tokens contain dots, so they'll match the JWT branch and fail at `SignedJwt::decode_portal_token` (wrong signing key). The fix: wrap the JWT decode in a rescue for `SignedJwt::Error` and fall through to the session fallback when `current_user` is already set:
+`check_for_auth_token` now uses `SignedJwt.portal_token?` — the same shared method used by the Devise JWT strategy — to explicitly identify portal JWTs before attempting decode. Non-portal JWTs (OIDC, etc.) are routed to a separate branch that falls through to `current_user`:
 
 ```ruby
-if header && (header =~ /^Bearer\/JWT (.*)$/i || (header =~ /^Bearer (.+\..+)$/i))
-  portal_token = $1
-  begin
-    decoded_token = SignedJwt::decode_portal_token(portal_token)
-    # ... existing JWT logic ...
-  rescue SignedJwt::Error
-    # Not a Portal JWT (e.g., OIDC token) — fall through to session
-    if current_user
-      return [current_user, nil]
-    else
-      raise StandardError, 'You must be logged in to use this endpoint'
-    end
+token = extract_bearer_token(header)
+
+if token && (header =~ /^Bearer\/JWT/i || SignedJwt.probably_jwt?(token))
+  if SignedJwt.portal_token?(token)
+    # Portal JWT — decode and extract user + role
+    decoded_token = SignedJwt::decode_portal_token(token)
+    # ...
+  else
+    # Non-portal JWT (e.g., OIDC) — already authenticated by Devise
+    return [current_user, nil] if current_user
+    raise StandardError, 'You must be logged in to use this endpoint'
   end
-elsif header && header =~ /^Bearer (.*)$/i
-  # ... existing AccessGrant logic ...
+elsif token
+  # Not a JWT — opaque AccessGrant token
+  # ...
 ```
 
 The nil role is fine — `handle_initial_auth` already handles nil role via parameter-based resolution (`resource_link_id`, `target_user_id`, etc.). OIDC callers would need to provide these parameters, which is the direction we want to move all callers toward anyway.
@@ -356,7 +358,27 @@ The nil role is fine — `handle_initial_auth` already handles nil role via para
 
 ---
 
-## 8. Completed Work and Next Steps
+## 8. Auth Failure Error Responses
+
+### The inconsistency
+
+The two auth paths produce different error responses when authentication fails:
+
+**`check_for_auth_token` path** (used by `JwtController`): Token failures raise exceptions (`SignedJwt::Error`, `StandardError`), and `JwtController`'s `rescue_from` renders the exception message directly. Clients see specific error messages like `"Signature has expired"` or `"AccessGrant has expired"`.
+
+**Devise strategy path** (used by all other API controllers via `current_user`): When a strategy calls `fail!(:token_expired)` or `fail!(:invalid_token)`, Warden stores the message symbol internally. But `CustomFailure` (the Warden failure app, `lib/custom_failure.rb`) does not surface these symbols in JSON responses — it only uses them for redirect decisions and logging. For API requests, the client receives a generic 401 with no body indicating the failure reason. For Pundit-protected endpoints, the response is a generic 403.
+
+This means:
+- **`JwtController` endpoints**: Clients see specific error reasons (expired, invalid signature, user not found, etc.)
+- **All other API endpoints**: Clients see only a generic 401/403 with no information about _why_ authentication failed
+
+### Impact
+
+For debugging and client-side error handling, clients cannot distinguish between an expired token (which should trigger a refresh) and an invalid token (which indicates a configuration or security problem). The Devise strategies now store this distinction internally (`:token_expired` vs `:invalid_token`), but it doesn't reach the HTTP response.
+
+---
+
+## 9. Completed Work and Next Steps
 
 ### Completed
 
@@ -370,14 +392,22 @@ The nil role is fine — `handle_initial_auth` already handles nil role via para
 
 5. **Four controllers migrated to `current_user`** (Section 6 Step 1). All four controllers (`BookmarksController`, `TeacherClassesController`, `ExternalActivitiesController`, `OfferingsController`) now use `current_user` instead of `check_for_auth_token`. A custom `require_api_user!` guard in `API::APIController` returns JSON 401 for unauthenticated requests (Devise's `authenticate_user!` was not used because `CustomFailure` redirects HTML-format requests instead of returning JSON). `JwtController` is now the sole consumer of `check_for_auth_token`. See `specs/2026-03-04-controller-migration-design.md` and PR #1469.
 
+6. **Issuer-based strategy routing and distinct error messages.** Portal JWTs now include an `iss: APP_CONFIG[:site_url]` claim. The portal token detection logic is extracted into `SignedJwt.portal_token?`, a shared method used by both the JWT Devise strategy's `valid?` and `check_for_auth_token`. The OIDC strategy checks for Google issuers. The JWT strategy uses halting `fail!` with distinct messages (`:token_expired` vs `:invalid_token`) since `valid?` guarantees the token is ours.
+
+7. **OIDC fallback in `check_for_auth_token` — COMPLETED.** `check_for_auth_token` now uses `SignedJwt.portal_token?` to explicitly route portal JWTs vs non-portal JWTs (e.g., OIDC). Non-portal JWTs fall through to `current_user` (already set by the Devise strategy) instead of failing at `SignedJwt::decode_portal_token`. This unblocks OIDC callers for JwtController.
+
 ### Next steps
 
 1. ~~**Migrate four controllers to `current_user`**~~ **Done.** See Completed item 5 above.
 
-2. **Add OIDC fallback to `check_for_auth_token`** (Section 6 Step 2). Wrap the JWT decode in a rescue so OIDC tokens fall through to the session fallback. This unblocks OIDC callers for JwtController.
+2. ~~**Add OIDC fallback to `check_for_auth_token`**~~ **Done.** See Completed item 7 above.
 
-3. **Add OAuth2 launch support to ExternalActivities.** Add a new launch option in the ExternalActivity settings as an alternative to the current "auth token" approach. Instead of minting a short-lived JWT and passing it as a `token` parameter, the Portal would generate a launch URL with a standard set of OAuth2 initialization parameters (auth domain, resource link ID, class/offering context, etc.). The SPA handles authentication via the OAuth2 implicit grant redirect on first load — see the "SPA OAuth2 initialization pattern" in `docs/external-services.md` for the existing client-side pattern. The exact parameter naming convention (camelCase, kebab-case, or snake_case) can be decided at implementation time. The Portal does not need to know the SPA's OAuth2 Client — each SPA already hardcodes its own `client_id` (e.g., CLUE uses `"clue"`, portal-report uses `"portal-report"`) and initiates the OAuth2 redirect itself.
+3. **Add OAuth2 launch support to ExternalActivities — DESIGNED AND IMPLEMENTED.** The Tool model now has a `launch_method` column. When set to `"oauth2"`, `ExternalActivity#url` appends `authDomain`, `resourceLinkId`, and `loginHint` (camelCase) instead of the legacy `token`/`domain`/`domain_uid` parameters. The `oauth_authorize` endpoint now supports `login_hint` (snake_case) — when present and mismatched with the current user, it shows a warning page instead of proceeding with the wrong account. See `specs/2026-03-06-oauth2-launch-design.md` for the full design. **Note:** Collaboration launches are deferred — they continue using JWT tokens. OAuth2 launch URLs are reloadable/bookmarkable, but collaborations want fresh group selection on each launch, so `collaborators_data_url` in a persistent URL is problematic.
 
 4. **Update clients to support standard OAuth2 launch parameters.** Update external runtimes (CLUE, Activity Player, etc.) to support the standardized parameter names defined in step 3, and switch their ExternalActivity configurations in the Portal to use the new OAuth2 launch option. CLUE and Activity Player already support OAuth2 initialization parameters (see `docs/external-services.md`), so this is primarily a matter of aligning on the standard names.
 
 5. **Remove single-use token launching.** Once all ExternalActivities are migrated to OAuth2 launches, remove the short-lived JWT launch path from `external_activity.rb` and `create_collaboration.rb`. At this point `check_for_auth_token`'s JWT case is only needed for JwtController's own token refresh, and the method can potentially be eliminated entirely if role is fully resolved via parameters.
+
+6. **Unified JSON error responses for API auth failures** (see Section 8). Surface the Warden failure reason (`:token_expired`, `:invalid_token`, etc.) in the JSON response for API requests, so all API endpoints return consistent, informative error messages. Two possible approaches:
+   - Update `CustomFailure` to return a JSON body with the failure symbol for API-format requests (e.g., `{ "error": "token_expired" }`)
+   - Add a `before_action` in `API::APIController` that checks `warden.message` after failed authentication and renders a JSON error before Pundit runs

@@ -39,6 +39,8 @@ The runtime environment will likely need to use Portal APIs. It might need them 
 ### Non LARA Runtime
 For a non LARA launch the Portal generates a short-lived Portal JWT (via `SignedJwt::create_portal_token`) that includes the student's learner ID and user type as claims. This JWT is passed to the runtime as a URL parameter. The runtime can send this token back to the Portal in an Authorization header. If the runtime needs to access more APIs after the initial launch it can exchange this short-lived JWT for a longer-lived Portal JWT that can be renewed.
 
+**Note:** Collaboration launches (via `create_collaboration.rb`) are not yet migrated to OAuth2 and continue using JWT tokens. See the OAuth2 launch section below for details.
+
 The JWT can be used with any Portal API endpoint — both the API Controller's `check_for_auth_token` and Devise's bearer token authentication recognize JWTs.
 
 References (search for these strings)
@@ -79,6 +81,8 @@ This pattern is used by portal-report, collaborative-learning (CLUE), and Activi
 | Resource link | (derived from `offering` URL) | `resourceLinkId` | Portal offering ID, used when requesting JWTs |
 
 The naming difference is purely conventional — portal-report uses kebab-case, CLUE uses camelCase. Both use the same underlying OAuth2 implicit grant flow and the same Portal endpoint.
+
+**Portal standard OAuth2 launch parameters:** The Portal's standard OAuth2 launch URL uses camelCase parameter names: `authDomain`, `resourceLinkId`, and `loginHint`. These are controlled by the Tool model's `launch_method` field — when set to `"oauth2"`, `ExternalActivity#url` appends these parameters instead of the legacy `token`/`domain`/`domain_uid`. The `loginHint` contains the Portal user ID and is passed as `login_hint` (snake_case) to the Portal's `oauth_authorize` endpoint. When `login_hint` is present and doesn't match the currently logged-in user, the Portal shows a warning page allowing the user to continue or switch accounts.
 
 CLUE also has a `convertURLToOAuth2()` function that rewrites the URL after an initial token-based launch: it removes the `token` parameter and adds `authDomain` + `resourceLinkId`. This way if the user reloads the page, the OAuth2 flow re-authenticates instead of trying to reuse the expired launch token.
 
@@ -171,6 +175,24 @@ Additionally if the user is a teacher then the teacher object is added to the ac
 # Researcher Reports
 
 **TODO**
+
+# Standalone OAuth2 Clients
+
+Some external services are not launched from the Portal (not as assignments or reports). Instead, users navigate directly to the app, and it uses OAuth2 to authenticate the user against the Portal. These are all SPAs using the implicit grant flow described above.
+
+Each app needs to know which Portal to authenticate with. The parameter name for this varies by client:
+
+| Client | Repo | OAuth2 `client_id` | Auth domain parameter | Grant type |
+|---|---|---|---|---|
+| glossary-plugin | `concord-consortium/glossary-plugin` | `glossary-plugin` | `portal` (query param) | Implicit |
+| vortex | `concord-consortium/vortex` | `vortex` | `portalUrl` (query param, or derived from hostname) | Implicit |
+| report-service (researcher-reports SPA) | `concord-consortium/report-service` | `research-report-server` | Configured in app | Implicit |
+| token-service (example app) | `concord-consortium/token-service` | `token-service-example-app` | Configured via UI input | Implicit |
+| aws-learner-logs | `concord-consortium/aws-learner-logs` | Environment variable | Environment variable | Authorization code (confidential) |
+
+The implicit-grant clients all use the same Portal endpoint (`/auth/oauth_authorize`) and the same `client-oauth2` JS library. After obtaining an access token, most of them exchange it for a Firebase JWT via `/api/v1/jwt/firebase` to access Firestore or Firebase Realtime Database.
+
+Note that the portal-launched clients (CLUE, Activity Player, portal-report) also support standalone OAuth2 — see the "SPA OAuth2 initialization pattern" section above. Their `client_id` values are `clue`, `activity-player`, and `portal-report` respectively. Their auth domain parameters are `authDomain` (CLUE) and `auth-domain` (Activity Player, portal-report).
 
 # SSO clients
 
