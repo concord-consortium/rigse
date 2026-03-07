@@ -94,6 +94,9 @@ describe ExternalActivity do
         expect(auth_domain[1]).to eq("https://learn.concord.org/")
         expect(resource_link_id).not_to be_nil
         expect(resource_link_id[1]).to eq("99")
+        login_hint = query.find { |k, _| k == "loginHint" }
+        expect(login_hint).not_to be_nil
+        expect(login_hint[1]).to eq(user.id.to_s)
       end
 
       it "should NOT append token, domain, or domain_uid for oauth2 launch" do
@@ -124,6 +127,7 @@ describe ExternalActivity do
         query_string = uri.query || ""
         expect(query_string).not_to include("authDomain")
         expect(query_string).to include("resourceLinkId=99")
+        expect(query_string).to include("loginHint=")
       end
     end
 
