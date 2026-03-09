@@ -209,7 +209,7 @@ RSpec.describe API::APIController, type: :controller do
 
         it 'falls through to current_user for unrecognized JWTs' do
           request.headers['Authorization'] = 'Bearer header.payload.signature'
-          allow(SignedJwt).to receive(:decode_portal_token).and_raise(SignedJwt::Error, 'Signature verification failed')
+          expect(SignedJwt).not_to receive(:decode_portal_token)
 
           user_result, role = controller.send(:check_for_auth_token, {})
           expect(user_result).to eq(user)
@@ -219,7 +219,7 @@ RSpec.describe API::APIController, type: :controller do
         it 'preserves the existing auth strategy tag set by Devise' do
           request.headers['Authorization'] = 'Bearer header.payload.signature'
           request.env['portal.auth_strategy'] = 'oidc_bearer_token'
-          allow(SignedJwt).to receive(:decode_portal_token).and_raise(SignedJwt::Error, 'Signature verification failed')
+          expect(SignedJwt).not_to receive(:decode_portal_token)
 
           controller.send(:check_for_auth_token, {})
           expect(request.env['portal.auth_strategy']).to eq('oidc_bearer_token')
