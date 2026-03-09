@@ -31,7 +31,7 @@ class API::APIController < ApplicationController
       if SignedJwt.portal_token?(token)
         # Portal JWT — decode and authenticate. Errors raise SignedJwt::Error
         # or JWT::ExpiredSignature, which callers should be listening for.
-        decoded_token = SignedJwt::decode_portal_token(token)
+        decoded_token = SignedJwt.decode_portal_token(token)
         data = decoded_token[:data]
 
         user = User.find_by_id(data["uid"])
