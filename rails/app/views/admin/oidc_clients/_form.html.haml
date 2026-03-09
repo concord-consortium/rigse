@@ -1,0 +1,25 @@
+.item
+  .content
+    - if oidc_client.errors.any?
+      %ul.menu_v.error-explanation
+        %li OIDC client can't be saved, there are errors in form:
+        - oidc_client.errors.each do |error|
+          %li= error.message
+    %p
+      %ul.menu_v
+        %li
+          Name:
+          = f.text_field :name
+        %li
+          Sub (Google service account unique ID):
+          = f.text_field :sub
+        %li
+          Email (for display only):
+          = f.text_field :email
+        %li
+          User ID (Portal user this service account acts as):
+          = f.number_field :user_id
+        %li
+          Active:
+          = f.check_box :active
+      = submit_tag

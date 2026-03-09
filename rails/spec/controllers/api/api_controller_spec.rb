@@ -200,6 +200,46 @@ RSpec.describe API::APIController, type: :controller do
         end
       end
 
+      describe 'when Bearer token is a non-Portal JWT and current_user is set' do
+        let(:user) { FactoryBot.create(:user) }
+
+        before do
+          allow(controller).to receive(:current_user).and_return(user)
+        end
+
+        it 'falls through to current_user for unrecognized JWTs' do
+          request.headers['Authorization'] = 'Bearer header.payload.signature'
+          expect(SignedJwt).not_to receive(:decode_portal_token)
+
+          user_result, role = controller.send(:check_for_auth_token, {})
+          expect(user_result).to eq(user)
+          expect(role).to be_nil
+        end
+
+        it 'preserves the existing auth strategy tag set by Devise' do
+          request.headers['Authorization'] = 'Bearer header.payload.signature'
+          request.env['portal.auth_strategy'] = 'oidc_bearer_token'
+          expect(SignedJwt).not_to receive(:decode_portal_token)
+
+          controller.send(:check_for_auth_token, {})
+          expect(request.env['portal.auth_strategy']).to eq('oidc_bearer_token')
+        end
+      end
+
+      describe 'when Bearer token is a non-Portal JWT and current_user is nil' do
+        before do
+          allow(controller).to receive(:current_user).and_return(nil)
+        end
+
+        it 'raises an error' do
+          request.headers['Authorization'] = 'Bearer header.payload.signature'
+          allow(SignedJwt).to receive(:decode_portal_token).and_raise(SignedJwt::Error, 'Signature verification failed')
+
+          expect { controller.send(:check_for_auth_token, {}) }
+            .to raise_error(StandardError, 'You must be logged in to use this endpoint')
+        end
+      end
+
       describe 'standard bearer token with JWT (dot-containing token)' do
         it 'should decode a JWT sent as a plain Bearer token' do
           claims = {user_type: "learner", learner_id: learner.id}

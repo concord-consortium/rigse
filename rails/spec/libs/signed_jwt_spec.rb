@@ -31,4 +31,14 @@ gpZlAvdO9CFaBcBKsAcJnNDQBY2lhFsSeqYs78PoW7Zz
 
   end
 
+  describe "#create_portal_token" do
+    let(:user) { FactoryBot.create(:user) }
+
+    it 'includes iss claim set to APP_CONFIG[:site_url]' do
+      token = SignedJwt.create_portal_token(user, {}, 3600)
+      decoded = JWT.decode(token, nil, false).first
+      expect(decoded['iss']).to eq(APP_CONFIG[:site_url])
+    end
+  end
+
 end

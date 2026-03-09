@@ -3,6 +3,7 @@
 **PRs:**
 - [#1465 — Remove peer-to-peer auth from check_for_auth_token](https://github.com/concord-consortium/rigse/pull/1465)
 - [#1466 — Replace client-less AccessGrants with JWT launch tokens](https://github.com/concord-consortium/rigse/pull/1466)
+- [#1470 — Add Google OIDC bearer token authentication](https://github.com/concord-consortium/rigse/pull/1470)
 
 **What changed in summary:**
 - Activity launch tokens are now stateless JWTs instead of database-backed AccessGrant records
@@ -166,6 +167,67 @@
 ### 8h. Unauthenticated requests
 - Visit a public page without logging in
 - **Verify (Rails logs):** No `Auth:` line appears for the request
+
+---
+
+## 9. OIDC Authentication
+
+**Prerequisites:** A Google Cloud service account and gcloud CLI access with `roles/iam.serviceAccountTokenCreator` on the service account. See `specs/2026-02-25-portal-oidc-authentication-design.md` Section 5 for detailed setup instructions.
+
+### 9a. Admin OIDC client management
+
+- Log in as an admin
+- Navigate to Admin > OIDC Clients
+- **Verify:** The OIDC clients index page loads
+- Create a new OIDC client: set a name, the service account's `sub` claim, the service account email, and map it to an admin/project user
+- **Verify:** The record is created and appears in the list
+- Edit the record, toggle `active` off, save
+- **Verify:** The record shows as inactive
+
+### 9b. Successful OIDC authentication
+
+- Ensure the OIDC client record from 9a is active
+- Check the staging audience value: `APP_CONFIG[:site_url]`
+- Obtain an OIDC token:
+  ```
+  gcloud auth print-identity-token \
+    --impersonate-service-account=<service-account-email> \
+    --audiences=<APP_CONFIG[:site_url]>
+  ```
+- Call an API endpoint:
+  ```
+  curl -H "Authorization: Bearer <oidc-token>" \
+    https://<staging-url>/api/v1/jwt/portal
+  ```
+- **Verify:** Request succeeds (200/201) and returns a Portal JWT
+- **Verify (Rails logs):** `Auth: user=<id> auth=oidc_bearer_token client=<name>` appears
+
+### 9c. OIDC authentication with inactive client
+
+- Set the OIDC client record to `active: false`
+- Obtain a fresh OIDC token and call the same endpoint
+- **Verify:** Request fails (401/403), not a 500
+- **Verify (Rails logs):** `OidcBearer: inactive client=<name>` warn message appears
+
+### 9d. OIDC token with wrong audience
+
+- Obtain an OIDC token with a different `--audiences` value (e.g., `https://wrong-audience.example.com`)
+- Call the same endpoint
+- **Verify:** Request fails (401/403), not a 500
+- **Verify (Rails logs):** `OidcBearer: verification failed` warn message appears
+
+### 9e. OIDC token with no matching client
+
+- Obtain an OIDC token from a service account that has no `Admin::OidcClient` record
+- Call the same endpoint
+- **Verify:** Request fails (401/403), not a 500
+- **Verify (Rails logs):** `OidcBearer: no client found sub=<sub> email=<email>` warn message appears
+
+### 9f. OIDC auth logging
+
+- After a successful OIDC request (9b), check the Rails logs
+- **Verify:** `Auth: user=<id> auth=oidc_bearer_token client=<name> GET /api/v1/jwt/portal` appears
+- **Verify:** No `auth=api_jwt` or `auth=bearer_token` lines appear for the same request (only the OIDC strategy should fire)
 
 ---
 

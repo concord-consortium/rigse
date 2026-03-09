@@ -2,36 +2,33 @@ module JwtBearerTokenAuthenticatable
   class BearerToken < Devise::Strategies::Authenticatable
 
     def valid?
-      has_jwt_bearer_token?()
+      has_jwt_bearer_token? && SignedJwt.portal_token?(jwt_token_value)
     end
 
     def authenticate!
-      decoded_token = decode_token
-      unless decoded_token && decoded_token[:data].has_key?("uid")
+      decoded_token = SignedJwt.decode_portal_token(jwt_token_value)
+      unless decoded_token && decoded_token[:data].key?("uid")
         Rails.logger.warn("JwtBearerToken: token decode failed or missing uid")
-        return fail!
+        return fail!(:invalid_token)
       end
       user = User.find_by_id(decoded_token[:data]["uid"])
       unless user
         Rails.logger.warn(
           "JwtBearerToken: user not found for uid=#{decoded_token[:data]['uid']}"
         )
-        return fail!
+        return fail!(:invalid_token)
       end
       request.env['portal.auth_strategy'] = 'jwt_bearer_token'
       success!(user)
+    rescue JWT::ExpiredSignature => e
+      Rails.logger.warn("JwtBearerToken: token expired - #{e.message}")
+      fail!(:token_expired)
+    rescue SignedJwt::Error => e
+      Rails.logger.warn("JwtBearerToken: decode error - #{e.message}")
+      fail!(:invalid_token)
     end
 
     protected
-
-    def decode_token
-      return nil unless has_jwt_bearer_token?()
-      token = jwt_token_value
-      SignedJwt::decode_portal_token(token)
-    rescue SignedJwt::Error => e
-      Rails.logger.warn("JwtBearerToken: decode error - #{e.message}")
-      nil
-    end
 
     def has_jwt_bearer_token?
       jwt_token_value.present?
