@@ -356,6 +356,11 @@ RailsPortal::Application.routes.draw do
             get :collaborators_data
           end
         end
+        resources :emails, only: [] do
+          collection do
+            post :oidc_send
+          end
+        end
         namespace :passwords do
           post  :reset_password
         end
