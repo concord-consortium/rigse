@@ -5,6 +5,7 @@ RSpec.describe API::V1::EmailsController, type: :controller do
 
   before(:each) do
     generate_default_settings_with_mocks
+    ActionMailer::Base.deliveries.clear
     # Default: simulate OIDC authentication
     sign_in user
     request.env['portal.auth_strategy'] = 'oidc_bearer_token'
