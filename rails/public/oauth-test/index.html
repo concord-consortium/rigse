@@ -24,23 +24,35 @@
       if (!hash || hash.length <= 1) return params;
       const pairs = hash.substring(1).split('&');
       for (const pair of pairs) {
-        const [key, value] = pair.split('=').map(decodeURIComponent);
+        const eqIdx = pair.indexOf('=');
+        if (eqIdx === -1) { params[decodeURIComponent(pair)] = ''; continue; }
+        const key = decodeURIComponent(pair.substring(0, eqIdx));
+        const value = decodeURIComponent(pair.substring(eqIdx + 1));
         params[key] = value;
       }
       return params;
     }
 
     function showStatus(msg) {
-      statusEl.innerHTML += '<p>' + msg + '</p>';
+      const p = document.createElement('p');
+      p.textContent = msg;
+      statusEl.appendChild(p);
     }
 
     function showResult(msg) {
-      resultEl.innerHTML = '<h2>' + msg + '</h2>';
+      resultEl.textContent = '';
+      const h2 = document.createElement('h2');
+      h2.textContent = msg;
+      resultEl.appendChild(h2);
     }
 
     function showDebug(label, data) {
-      debugEl.innerHTML += '<h3>' + label + '</h3><pre>' +
-        JSON.stringify(data, null, 2) + '</pre>';
+      const h3 = document.createElement('h3');
+      h3.textContent = label;
+      const pre = document.createElement('pre');
+      pre.textContent = JSON.stringify(data, null, 2);
+      debugEl.appendChild(h3);
+      debugEl.appendChild(pre);
     }
 
     function showInstructions() {
@@ -109,7 +121,7 @@
       sessionStorage.setItem(STORAGE_PARAMS_KEY, JSON.stringify(paramsObj));
 
       // Generate and save state
-      const state = Math.random().toString(36).substring(2);
+      const state = crypto.randomUUID();
       sessionStorage.setItem(STORAGE_STATE_KEY, state);
 
       // Build redirect URI (just the page, no query or hash)
