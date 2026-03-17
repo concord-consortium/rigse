@@ -210,7 +210,7 @@ RSpec.describe API::V1::StudentsController, type: :controller do
       sign_in teacher_user
       post :add_to_class, params: { clazz_id: clazz.id }
       expect(response).to have_http_status(:bad_request)
-      expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Missing student_id parameter"}')
+      expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Missing student_id or user_id parameter"}')
     end
 
     it 'should fail with and invalid student_id parameter' do
@@ -284,6 +284,70 @@ RSpec.describe API::V1::StudentsController, type: :controller do
         expect(response).to have_http_status(:ok)
         expect(response.body).to eq('{"success":true}')
         expect(clazz.students.include? student).to eq true
+      end
+    end
+
+    describe 'with user_id parameter' do
+      it 'should fail with an invalid user_id parameter' do
+        sign_in teacher_user
+        post :add_to_class, params: { clazz_id: clazz.id, user_id: 0 }
+        expect(response).to have_http_status(:bad_request)
+        expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Invalid user_id: 0"}')
+      end
+
+      it 'should fail if user is not a student' do
+        non_student_user = FactoryBot.create(:confirmed_user)
+        sign_in teacher_user
+        post :add_to_class, params: { clazz_id: clazz.id, user_id: non_student_user.id }
+        expect(response).to have_http_status(:bad_request)
+        expect(response.body).to eq("{\"success\":false,\"response_type\":\"ERROR\",\"message\":\"User #{non_student_user.id} is not a student\"}")
+      end
+
+      it 'should fail if teacher does not have this student in any classes' do
+        new_student = FactoryBot.create(:full_portal_student)
+        sign_in teacher_user
+        post :add_to_class, params: { clazz_id: clazz.id, user_id: new_student.user.id }
+        expect(response).to have_http_status(:forbidden)
+        expect(response.body).to eq('{"success":false,"message":"Not authorized"}')
+      end
+
+      it 'should succeed with a valid user_id' do
+        sign_in teacher_user
+        expect(clazz_with_student.students.include? student).to eq true
+        expect(clazz.students.include? student).to eq false
+        post :add_to_class, params: { clazz_id: clazz.id, user_id: student.user.id }
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to eq('{"success":true}')
+        expect(clazz.students.include? student).to eq true
+      end
+
+      it 'should succeed silently when re-enrolling an already-enrolled student' do
+        sign_in teacher_user
+        expect(clazz_with_student.students.include? student).to eq true
+        student.add_clazz(clazz)
+        expect(clazz.students.include? student).to eq true
+        expect {
+          post :add_to_class, params: { clazz_id: clazz.id, user_id: student.user.id }
+        }.not_to change { Portal::StudentClazz.count }
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to eq('{"success":true}')
+      end
+
+      it 'should use student_id when both student_id and user_id are provided' do
+        sign_in teacher_user
+        expect(clazz_with_student.students.include? student).to eq true
+        expect(clazz.students.include? student).to eq false
+        post :add_to_class, params: { clazz_id: clazz.id, student_id: student.id, user_id: student.user.id }
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to eq('{"success":true}')
+        expect(clazz.students.include? student).to eq true
+      end
+
+      it 'should fail on invalid student_id even when user_id is valid' do
+        sign_in teacher_user
+        post :add_to_class, params: { clazz_id: clazz.id, student_id: 0, user_id: student.user.id }
+        expect(response).to have_http_status(:bad_request)
+        expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Invalid student_id: 0"}')
       end
     end
   end
