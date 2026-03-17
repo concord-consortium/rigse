@@ -20,7 +20,7 @@
             = tool.source_type
           %li
             Launch Method:
-            = tool.launch_method || "Use ExternalActivity settings"
+            = tool.launch_method.presence || "Use ExternalActivity settings"
           %li
             Tool ID:
             = tool.tool_id
