@@ -37,6 +37,12 @@
         margin-bottom: 1em;
         padding: 30px 40px 40px;
       }
+      img {
+        display: block;
+        height: auto;
+        margin: 0 auto 30px;
+        width: 180px;
+      }
       p { font-size: 1em; margin-bottom: 1em; line-height: 1.4; }
       .button {
         background: #ea6d2f;
@@ -63,7 +69,10 @@
         %p
           You are currently logged in as
           %strong= @user_name
-          \. The application expected a different user.
+          - if @app_name.present?
+            \. The #{@app_name} application expected a different user.
+          - else
+            \. The application expected a different user.
         %a.button{:href => @continue_url}
           Continue as #{@user_name}
         %a.button.button-secondary{:href => @switch_user_url}

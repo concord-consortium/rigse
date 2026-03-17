@@ -64,6 +64,7 @@ class AuthController < ApplicationController
     # Check login_hint: if present and doesn't match current user, show warning
     if params[:login_hint].present? && current_user.id.to_s != params[:login_hint]
       @user_name = current_user.name
+      @app_name = Client.where(app_id: params[:client_id]).first&.name
 
       # Build continue URL: same params minus login_hint
       continue_params = request.query_parameters.except("login_hint")
