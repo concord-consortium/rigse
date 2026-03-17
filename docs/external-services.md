@@ -20,7 +20,9 @@ In all cases the launch sends the student's browser to the external runtime envi
 
 If the `ExternalActivity#tool_id` value matches the ID of a tool with a source type of 'LARA', then the Portal will use a LARA specific launch. The added parameters can be seen here: https://github.com/concord-consortium/rigse/blob/d81d5a1da69253418abde7e0aa7baac4a1831a66/rails/app/controllers/portal/offerings_controller.rb#L62
 
-Otherwise, the `ExternalActivity#url` is used. The added parameters can be seen here:
+If the ExternalActivity's Tool has `launch_method` set to `"oauth2"`, the Portal appends OAuth2 parameters (`authDomain`, `resourceLinkId`, `loginHint`) instead of the legacy token parameters. The runtime then authenticates via the standard OAuth2 redirect flow. See the "Non LARA Runtime" authorization section below for details.
+
+Otherwise, the `ExternalActivity#url` is used with a short-lived JWT token. The added parameters can be seen here:
 https://github.com/concord-consortium/rigse/blob/d81d5a1da69253418abde7e0aa7baac4a1831a66/rails/app/models/external_activity.rb#L162
 
 ## Publishing
@@ -37,11 +39,15 @@ More details on reports are below.
 The runtime environment will likely need to use Portal APIs. It might need them to find out who the members of the class are. Or it might want the portal to generate a JWT the runtime can use with Firebase.
 
 ### Non LARA Runtime
-For a non LARA launch the Portal generates a short-lived Portal JWT (via `SignedJwt::create_portal_token`) that includes the student's learner ID and user type as claims. This JWT is passed to the runtime as a URL parameter. The runtime can send this token back to the Portal in an Authorization header. If the runtime needs to access more APIs after the initial launch it can exchange this short-lived JWT for a longer-lived Portal JWT that can be renewed.
+There are two authorization approaches for non-LARA launches, controlled by the Tool's `launch_method` field:
 
-**Note:** Collaboration launches (via `create_collaboration.rb`) are not yet migrated to OAuth2 and continue using JWT tokens. See the OAuth2 launch section below for details.
+**JWT launch (default):** The Portal generates a short-lived Portal JWT (via `SignedJwt::create_portal_token`) that includes the student's learner ID and user type as claims. This JWT is passed to the runtime as a URL parameter. The runtime can send this token back to the Portal in an Authorization header. If the runtime needs to access more APIs after the initial launch it can exchange this short-lived JWT for a longer-lived Portal JWT that can be renewed.
 
-The JWT can be used with any Portal API endpoint — both the API Controller's `check_for_auth_token` and Devise's bearer token authentication recognize JWTs.
+**OAuth2 launch** (`launch_method: "oauth2"`): The Portal appends `authDomain`, `resourceLinkId`, and `loginHint` to the launch URL instead of a token. The runtime uses these to initiate a standard OAuth2 implicit grant flow (see the OAuth2 Authorization section below). This avoids the short-lived token problem — the runtime can re-authenticate via OAuth2 at any time (e.g., on page reload).
+
+**Note:** Collaboration launches (via `create_collaboration.rb`) are not yet migrated to OAuth2 and continue using JWT tokens.
+
+JWTs and OAuth2 access tokens can both be used with any Portal API endpoint — both the API Controller's `check_for_auth_token` and Devise's bearer token authentication recognize them.
 
 References (search for these strings)
 - token generation: `SignedJwt::create_portal_token` (called from `external_activity.rb` and `create_collaboration.rb`)
@@ -86,7 +92,7 @@ The naming difference is purely conventional — portal-report uses kebab-case, 
 
 CLUE also has a `convertURLToOAuth2()` function that rewrites the URL after an initial token-based launch: it removes the `token` parameter and adds `authDomain` + `resourceLinkId`. This way if the user reloads the page, the OAuth2 flow re-authenticates instead of trying to reuse the expired launch token.
 
-For the Portal to support direct OAuth2 launches (instead of the current short-lived JWT approach), it would need to generate launch URLs with `auth-domain`/`authDomain` pointing to itself and include the other context parameters the SPA needs (class, offering, etc.), without a `token` parameter. The SPA would then handle authentication via the OAuth2 redirect flow on first load.
+The Portal supports direct OAuth2 launches via the Tool model's `launch_method` field. When set to `"oauth2"`, the Portal generates launch URLs with `authDomain` pointing to itself along with `resourceLinkId` and `loginHint`, without a `token` parameter. The SPA then handles authentication via the OAuth2 redirect flow on first load. See the "Non LARA Runtime" authorization section above for details.
 
 #### Authorization code flow (server-side apps)
 
