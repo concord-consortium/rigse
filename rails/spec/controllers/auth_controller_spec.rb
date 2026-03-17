@@ -115,10 +115,34 @@ RSpec.describe AuthController, type: :controller do
           expect(assigns(:continue_url)).to include('client_id')
         end
 
-        it 'passes a switch user URL without login_hint' do
+        it 'passes a switch user URL that goes through reauth' do
           get :oauth_authorize, params: params
+          expect(assigns(:switch_user_url)).to include('/auth/reauth')
           expect(assigns(:switch_user_url)).not_to include('login_hint')
         end
+      end
+    end
+  end
+
+  describe '#reauth' do
+    context 'with a logged in user' do
+      let(:user) { FactoryBot.create(:confirmed_user) }
+      let(:after_sign_in_path) { '/auth/oauth_authorize?client_id=test&redirect_uri=http%3A%2F%2Flocalhost%2Fredirect&response_type=token' }
+
+      before(:each) { sign_in user }
+
+      it 'signs out the current user and redirects to login' do
+        get :reauth, params: { after_sign_in_path: after_sign_in_path }
+        expect(response).to redirect_to(auth_login_path(after_sign_in_path: after_sign_in_path))
+        expect(controller.current_user).to be_nil
+      end
+    end
+
+    context 'without a logged in user' do
+      it 'redirects to login with after_sign_in_path' do
+        after_sign_in_path = '/auth/oauth_authorize?client_id=test'
+        get :reauth, params: { after_sign_in_path: after_sign_in_path }
+        expect(response).to redirect_to(auth_login_path(after_sign_in_path: after_sign_in_path))
       end
     end
   end

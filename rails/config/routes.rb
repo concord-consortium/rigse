@@ -15,6 +15,7 @@ RailsPortal::Application.routes.draw do
   match '/auth/login' => 'auth#login', :as => :auth_login, via: [:get, :post]
   match '/oauth/token' => 'auth#access_token', via: [:get, :post]
   get   '/auth/failure' => 'auth#failure'
+  get   '/auth/reauth' => 'auth#reauth', :as => :auth_reauth
   get   '/auth/isalive' => 'auth#isalive'
   get   '/auth/oauth_authorize' => 'auth#oauth_authorize'
   get   '/auth/user' => 'auth#user'
