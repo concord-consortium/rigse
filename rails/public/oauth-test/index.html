@@ -85,8 +85,9 @@
       sessionStorage.removeItem(STORAGE_PARAMS_KEY);
       sessionStorage.removeItem(STORAGE_STATE_KEY);
 
-      // Clean URL
-      history.replaceState(null, '', window.location.pathname);
+      // Restore original launch params in URL so reload triggers re-auth
+      const query = new URLSearchParams(savedParams).toString();
+      history.replaceState(null, '', window.location.pathname + '?' + query);
 
       const accessToken = hashParams.access_token;
       const authDomain = savedParams.authDomain;
