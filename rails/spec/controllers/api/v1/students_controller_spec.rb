@@ -206,7 +206,7 @@ RSpec.describe API::V1::StudentsController, type: :controller do
   # Now only students that the current user can view are allowed to be added to classes
   # the current user can manage.
   describe '#add_to_class' do
-    it 'should fail without a student_id parameter' do
+    it 'should fail without student_id or user_id' do
       sign_in teacher_user
       post :add_to_class, params: { clazz_id: clazz.id }
       expect(response).to have_http_status(:bad_request)

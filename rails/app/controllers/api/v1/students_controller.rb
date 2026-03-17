@@ -275,19 +275,19 @@ class API::V1::StudentsController < API::APIController
 
     if student_id
       student = Portal::Student.find_by_id(student_id)
-      return { error: "Invalid student_id: #{student_id}" } if !student
-      return { student: student }
+      return {error: "Invalid student_id: #{student_id}"} if !student
+      return {student: student}
     end
 
     if user_id
       user = User.find_by_id(user_id)
-      return { error: "Invalid user_id: #{user_id}" } if !user
+      return {error: "Invalid user_id: #{user_id}"} if !user
       student = user.portal_student
-      return { error: "User #{user_id} is not a student" } if !student
-      return { student: student }
+      return {error: "User #{user_id} is not a student"} if !student
+      return {student: student}
     end
 
-    { error: "Missing student_id or user_id parameter" }
+    {error: "Missing student_id or user_id parameter"}
   end
 
   def get_portal_clazz_by_id(params)
