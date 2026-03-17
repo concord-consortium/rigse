@@ -22,13 +22,28 @@ module GoogleOidcVerifier
     # Decode header to get kid (without verification)
     header = JWT.decode(token, nil, false)[1]
     kid = header['kid']
+    Rails.logger.info("GoogleOidcVerifier: verifying token kid=#{kid} alg=#{header['alg']}")
+
+    # Peek at unverified claims for diagnostic logging
+    unverified_payload = JWT.decode(token, nil, false)[0]
+    token_aud = unverified_payload['aud']
+    token_iss = unverified_payload['iss']
+    token_sub = unverified_payload['sub']
+    token_exp = unverified_payload['exp']
+    token_email = unverified_payload['email']
+    Rails.logger.info("GoogleOidcVerifier: token claims iss=#{token_iss} sub=#{token_sub} aud=#{token_aud} email=#{token_email} exp=#{token_exp} (#{Time.at(token_exp).utc rescue 'invalid'})")
 
     # Find the matching public key
     key = find_key(kid)
-    raise Error, "Could not find public key for kid=#{kid}" unless key
+    unless key
+      Rails.logger.warn("GoogleOidcVerifier: no public key found for kid=#{kid}, available kids=#{cached_kids.join(',')}")
+      raise Error, "Could not find public key for kid=#{kid}"
+    end
+    Rails.logger.info("GoogleOidcVerifier: found public key for kid=#{kid}")
 
     # Verify the token
     expected_audience = APP_CONFIG[:site_url]
+    Rails.logger.info("GoogleOidcVerifier: expected_audience=#{expected_audience} token_audience=#{token_aud} match=#{token_aud == expected_audience}")
     decoded = JWT.decode(
       token,
       key,
@@ -49,14 +64,19 @@ module GoogleOidcVerifier
       raise Error, "Invalid issuer: #{payload['iss']}"
     end
 
+    Rails.logger.info("GoogleOidcVerifier: token verified successfully sub=#{payload['sub']}")
     payload
   rescue JWT::ExpiredSignature => e
+    Rails.logger.warn("GoogleOidcVerifier: token expired - exp=#{token_exp} (#{Time.at(token_exp).utc rescue 'invalid'}) now=#{Time.now.utc}")
     raise Error, e.message
   rescue JWT::InvalidIssuerError => e
+    Rails.logger.warn("GoogleOidcVerifier: invalid issuer - token_iss=#{token_iss} valid_issuers=#{VALID_ISSUERS}")
     raise Error, e.message
   rescue JWT::InvalidAudError => e
+    Rails.logger.warn("GoogleOidcVerifier: audience mismatch - token_aud=#{token_aud} expected_aud=#{APP_CONFIG[:site_url]}")
     raise Error, "Invalid audience: #{e.message}"
   rescue JWT::DecodeError => e
+    Rails.logger.warn("GoogleOidcVerifier: decode error - #{e.class}: #{e.message}")
     raise Error, e.message
   end
 
@@ -68,8 +88,13 @@ module GoogleOidcVerifier
     return key if key
 
     # Key not found — try refreshing once (handles key rotation)
+    Rails.logger.info("GoogleOidcVerifier: kid=#{kid} not in cache, refreshing JWKS")
     keys = fetch_keys!
     key_for_kid(keys, kid)
+  end
+
+  def self.cached_kids
+    (@jwks_keys || []).map { |k| k[:kid] || k['kid'] }
   end
 
   def self.key_for_kid(keys, kid)
@@ -78,22 +103,24 @@ module GoogleOidcVerifier
 
   def self.cached_keys
     if @jwks_keys && @jwks_fetched_at && (Time.now - @jwks_fetched_at) < JWKS_CACHE_TTL
+      age = (Time.now - @jwks_fetched_at).round
+      Rails.logger.info("GoogleOidcVerifier: using cached JWKS (age=#{age}s, keys=#{@jwks_keys.size})")
       return @jwks_keys
     end
 
+    Rails.logger.info("GoogleOidcVerifier: JWKS cache miss or expired, fetching fresh keys")
     fetch_keys!
   end
 
   def self.fetch_keys!
     uri = URI(JWKS_URI)
+    Rails.logger.info("GoogleOidcVerifier: fetching JWKS from #{JWKS_URI}")
     response = Net::HTTP.get_response(uri)
 
     unless response.is_a?(Net::HTTPSuccess)
       if @jwks_keys
-        # Use stale cache rather than rejecting all requests.
-        # Update fetched_at so we don't retry on every request during an outage.
         @jwks_fetched_at = Time.now
-        Rails.logger.warn("GoogleOidcVerifier: JWKS refresh failed (HTTP #{response.code}), serving stale keys")
+        Rails.logger.warn("GoogleOidcVerifier: JWKS refresh failed (HTTP #{response.code}), serving #{@jwks_keys.size} stale keys")
         return @jwks_keys
       end
       raise Error, "Failed to fetch JWKS: HTTP #{response.code}"
@@ -102,14 +129,16 @@ module GoogleOidcVerifier
     jwks_data = JSON.parse(response.body)
     @jwks_keys = jwks_data['keys']
     @jwks_fetched_at = Time.now
+    kids = @jwks_keys.map { |k| k[:kid] || k['kid'] }
+    Rails.logger.info("GoogleOidcVerifier: JWKS fetched successfully, #{@jwks_keys.size} keys: #{kids.join(', ')}")
     @jwks_keys
   rescue StandardError => e
     if @jwks_keys
-      # Update fetched_at so we don't retry on every request during an outage.
       @jwks_fetched_at = Time.now
-      Rails.logger.warn("GoogleOidcVerifier: JWKS refresh failed (#{e.message}), serving stale keys")
+      Rails.logger.warn("GoogleOidcVerifier: JWKS refresh failed (#{e.class}: #{e.message}), serving #{@jwks_keys.size} stale keys")
       return @jwks_keys
     end
+    Rails.logger.error("GoogleOidcVerifier: JWKS fetch failed with no cache available: #{e.class}: #{e.message}")
     raise Error, "Failed to fetch JWKS: #{e.message}"
   end
 end
