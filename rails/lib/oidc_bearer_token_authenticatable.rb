@@ -22,7 +22,8 @@ module OidcBearerTokenAuthenticatable
 
       issuer = unverified['iss']
       is_google = GoogleOidcVerifier::VALID_ISSUERS.include?(issuer)
-      Rails.logger.info("OidcBearer: valid? issuer=#{issuer} is_google=#{is_google} sub=#{unverified['sub']} aud=#{unverified['aud']}")
+      Rails.logger.info("OidcBearer: valid? issuer=#{sanitize_log(issuer)} is_google=#{is_google}")
+      Rails.logger.debug("OidcBearer: valid? sub=#{sanitize_log(unverified['sub'])} aud=#{sanitize_log(unverified['aud'])}")
       is_google
     end
 
@@ -31,7 +32,8 @@ module OidcBearerTokenAuthenticatable
       Rails.logger.info("OidcBearer: authenticate! starting verification")
 
       payload = GoogleOidcVerifier.verify(token)
-      Rails.logger.info("OidcBearer: authenticate! token verified successfully sub=#{payload['sub']} email=#{payload['email']} aud=#{payload['aud']}")
+      Rails.logger.info("OidcBearer: authenticate! token verified successfully")
+      Rails.logger.debug("OidcBearer: authenticate! sub=#{payload['sub']} email=#{payload['email']} aud=#{payload['aud']}")
 
       oidc_client = Admin::OidcClient.find_by(sub: payload['sub'])
       unless oidc_client
@@ -54,6 +56,11 @@ module OidcBearerTokenAuthenticatable
     end
 
     private
+
+    def sanitize_log(value)
+      str = value.to_s[0, 100]
+      str.gsub(/[\r\n]/, ' ')
+    end
 
     def oidc_token_value
       header = request.headers['Authorization'] || ''

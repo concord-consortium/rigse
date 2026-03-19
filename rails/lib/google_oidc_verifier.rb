@@ -19,19 +19,17 @@ module GoogleOidcVerifier
   # Verifies a Google OIDC token and returns the decoded payload.
   # Raises GoogleOidcVerifier::Error on any failure.
   def self.verify(token)
-    # Decode header to get kid (without verification)
-    header = JWT.decode(token, nil, false)[1]
+    # Decode header and payload without verification (single decode)
+    unverified = JWT.decode(token, nil, false)
+    unverified_payload = unverified[0]
+    header = unverified[1]
     kid = header['kid']
-    Rails.logger.info("GoogleOidcVerifier: verifying token kid=#{kid} alg=#{header['alg']}")
-
-    # Peek at unverified claims for diagnostic logging
-    unverified_payload = JWT.decode(token, nil, false)[0]
     token_aud = unverified_payload['aud']
     token_iss = unverified_payload['iss']
     token_sub = unverified_payload['sub']
     token_exp = unverified_payload['exp']
-    token_email = unverified_payload['email']
-    Rails.logger.info("GoogleOidcVerifier: token claims iss=#{token_iss} sub=#{token_sub} aud=#{token_aud} email=#{token_email} exp=#{token_exp} (#{Time.at(token_exp).utc rescue 'invalid'})")
+    Rails.logger.info("GoogleOidcVerifier: verifying token kid=#{sanitize_log(kid)} alg=#{sanitize_log(header['alg'])}")
+    Rails.logger.debug("GoogleOidcVerifier: token claims iss=#{sanitize_log(token_iss)} sub=#{sanitize_log(token_sub)} aud=#{sanitize_log(token_aud)} exp=#{token_exp} (#{Time.at(token_exp).utc rescue 'invalid'})")
 
     # Find the matching public key
     key = find_key(kid)
@@ -43,7 +41,8 @@ module GoogleOidcVerifier
 
     # Verify the token
     expected_audience = APP_CONFIG[:site_url]
-    Rails.logger.info("GoogleOidcVerifier: expected_audience=#{expected_audience} token_audience=#{token_aud} match=#{token_aud == expected_audience}")
+    aud_match = Array(token_aud).include?(expected_audience)
+    Rails.logger.info("GoogleOidcVerifier: expected_audience=#{expected_audience} token_audience=#{sanitize_log(token_aud)} match=#{aud_match}")
     decoded = JWT.decode(
       token,
       key,
@@ -81,6 +80,11 @@ module GoogleOidcVerifier
   end
 
   private
+
+  def self.sanitize_log(value)
+    str = value.to_s[0, 100]
+    str.gsub(/[\r\n]/, ' ')
+  end
 
   def self.find_key(kid)
     keys = cached_keys
