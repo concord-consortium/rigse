@@ -28,7 +28,7 @@ module GoogleOidcVerifier
     token_iss = unverified_payload['iss']
     token_sub = unverified_payload['sub']
     token_exp = unverified_payload['exp']
-    Rails.logger.info("GoogleOidcVerifier: verifying token kid=#{sanitize_log(kid)} alg=#{sanitize_log(header['alg'])}")
+    Rails.logger.debug("GoogleOidcVerifier: verifying token kid=#{sanitize_log(kid)} alg=#{sanitize_log(header['alg'])}")
     Rails.logger.debug("GoogleOidcVerifier: token claims iss=#{sanitize_log(token_iss)} sub=#{sanitize_log(token_sub)} aud=#{sanitize_log(token_aud)} exp=#{token_exp} (#{Time.at(token_exp).utc rescue 'invalid'})")
 
     # Find the matching public key
@@ -37,12 +37,12 @@ module GoogleOidcVerifier
       Rails.logger.warn("GoogleOidcVerifier: no public key found for kid=#{kid}, available kids=#{cached_kids.join(',')}")
       raise Error, "Could not find public key for kid=#{kid}"
     end
-    Rails.logger.info("GoogleOidcVerifier: found public key for kid=#{kid}")
+    Rails.logger.debug("GoogleOidcVerifier: found public key for kid=#{kid}")
 
     # Verify the token
     expected_audience = APP_CONFIG[:site_url]
     aud_match = Array(token_aud).include?(expected_audience)
-    Rails.logger.info("GoogleOidcVerifier: expected_audience=#{expected_audience} token_audience=#{sanitize_log(token_aud)} match=#{aud_match}")
+    Rails.logger.debug("GoogleOidcVerifier: expected_audience=#{expected_audience} token_audience=#{sanitize_log(token_aud)} match=#{aud_match}")
     decoded = JWT.decode(
       token,
       key,
@@ -63,7 +63,7 @@ module GoogleOidcVerifier
       raise Error, "Invalid issuer: #{payload['iss']}"
     end
 
-    Rails.logger.info("GoogleOidcVerifier: token verified successfully sub=#{payload['sub']}")
+    Rails.logger.debug("GoogleOidcVerifier: token verified successfully sub=#{payload['sub']}")
     payload
   rescue JWT::ExpiredSignature => e
     Rails.logger.warn("GoogleOidcVerifier: token expired - exp=#{token_exp} (#{Time.at(token_exp).utc rescue 'invalid'}) now=#{Time.now.utc}")
@@ -108,7 +108,7 @@ module GoogleOidcVerifier
   def self.cached_keys
     if @jwks_keys && @jwks_fetched_at && (Time.now - @jwks_fetched_at) < JWKS_CACHE_TTL
       age = (Time.now - @jwks_fetched_at).round
-      Rails.logger.info("GoogleOidcVerifier: using cached JWKS (age=#{age}s, keys=#{@jwks_keys.size})")
+      Rails.logger.debug("GoogleOidcVerifier: using cached JWKS (age=#{age}s, keys=#{@jwks_keys.size})")
       return @jwks_keys
     end
 

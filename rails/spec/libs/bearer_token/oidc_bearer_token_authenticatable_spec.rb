@@ -97,6 +97,14 @@ describe OidcBearerTokenAuthenticatable::BearerToken do
         strategy.authenticate!
         expect(request.env['portal.auth_client']).to eq('Test SA')
       end
+
+      it 'sets portal.auth_details with sub, email, and aud' do
+        strategy.authenticate!
+        details = request.env['portal.auth_details']
+        expect(details[:sub]).to eq(oidc_sub)
+        expect(details[:email]).to eq(oidc_email)
+        expect(details[:aud]).to eq('http://localhost:3000')
+      end
     end
 
     context 'with valid OIDC token but no matching OidcClient' do

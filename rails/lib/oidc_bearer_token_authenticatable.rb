@@ -11,29 +11,24 @@ module OidcBearerTokenAuthenticatable
       unverified = begin
         JWT.decode(token, nil, false).first
       rescue JWT::DecodeError => e
-        Rails.logger.info("OidcBearer: valid? JWT decode failed: #{e.message}")
+        # Token looked like it should be handled by this strategy (Bearer + dots)
+        # but failed to parse — worth logging since it's unexpected
+        Rails.logger.warn("OidcBearer: valid? JWT decode failed: #{e.message}")
         nil
       end
 
-      unless unverified
-        Rails.logger.info("OidcBearer: valid? could not decode token, skipping strategy")
-        return false
-      end
+      return false unless unverified
 
       issuer = unverified['iss']
       is_google = GoogleOidcVerifier::VALID_ISSUERS.include?(issuer)
-      Rails.logger.info("OidcBearer: valid? issuer=#{sanitize_log(issuer)} is_google=#{is_google}")
-      Rails.logger.debug("OidcBearer: valid? sub=#{sanitize_log(unverified['sub'])} aud=#{sanitize_log(unverified['aud'])}")
+      Rails.logger.debug("OidcBearer: valid? issuer=#{sanitize_log(issuer)} is_google=#{is_google}")
       is_google
     end
 
     def authenticate!
       token = oidc_token_value
-      Rails.logger.info("OidcBearer: authenticate! starting verification")
 
       payload = GoogleOidcVerifier.verify(token)
-      Rails.logger.info("OidcBearer: authenticate! token verified successfully")
-      Rails.logger.debug("OidcBearer: authenticate! sub=#{payload['sub']} email=#{payload['email']} aud=#{payload['aud']}")
 
       oidc_client = Admin::OidcClient.find_by(sub: payload['sub'])
       unless oidc_client
@@ -46,9 +41,9 @@ module OidcBearerTokenAuthenticatable
         return fail(:invalid_token)
       end
 
-      Rails.logger.info("OidcBearer: authenticate! success user_id=#{oidc_client.user_id} client=#{oidc_client.name}")
       request.env['portal.auth_strategy'] = 'oidc_bearer_token'
       request.env['portal.auth_client'] = oidc_client.name
+      request.env['portal.auth_details'] = { sub: payload['sub'], email: payload['email'], aud: payload['aud'] }
       success!(oidc_client.user)
     rescue GoogleOidcVerifier::Error => e
       Rails.logger.warn("OidcBearer: authenticate! verification failed - #{e.message}")
