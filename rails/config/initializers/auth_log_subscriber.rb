@@ -7,6 +7,9 @@ module AuthLogSubscriber
     additions << "user=#{req.env['warden'].user&.id}" if req.env['warden']&.user
     additions << "auth=#{req.env['portal.auth_strategy']}" if req.env['portal.auth_strategy']
     additions << "client=#{req.env['portal.auth_client']}" if req.env['portal.auth_client']
+    if (details = req.env['portal.auth_details'])
+      details.each { |k, v| additions << "#{k}=#{v}" }
+    end
     additions << "#{req.request_method} #{req.path}" if additions.any?
     info("  Auth: #{additions.join(' ')}") if additions.any?
     super
