@@ -126,7 +126,18 @@ namespace :app do
       )
     end
 
-    task :local_setup => [:create_default_external_reports, :create_default_tools, 'sso:add_dev_client']
+    desc "create OAuth test SPA client"
+    task :create_oauth_test_client => :environment do
+      Client.where(name: "OAuth Test SPA").first_or_create(
+        app_id: "oauth-test-spa",
+        app_secret: SecureRandom.uuid(),
+        client_type: "public",
+        domain_matchers: "localhost.*",
+        redirect_uris: "http://localhost:3000/oauth-test/index.html"
+      )
+    end
+
+    task :local_setup => [:create_default_external_reports, :create_default_tools, :create_oauth_test_client, 'sso:add_dev_client']
 
     #######################################################################
     #
