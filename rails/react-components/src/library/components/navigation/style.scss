@@ -254,7 +254,7 @@
         padding-bottom: 0;
         transition-duration: 400ms;
 
-        .teacherProjectViews__list {
+        .teacherProjectViewsList {
           height: 1px;
           transition-duration: 400ms;
         }
@@ -288,16 +288,16 @@
     padding: 10px 20px;
     text-align: center;
   }
-  .teacherProjectViews__list {
+  .teacherProjectViewsList {
 
-    .teacherProjectViews__list_item {
+    .teacherProjectViewsListItem {
       font-size: 14px;
       padding-bottom: 0;
       overflow: hidden;
 
       a {
 
-        .teacherProjectViews__list_item_img {
+        .teacherProjectViewsListItemImg {
           background-position: center center;
           background-size: cover;
           float: left;
@@ -305,7 +305,7 @@
           margin: 0 10px 0 0;
           width: 50px;
         }
-        .teacherProjectViews__list_item_name {
+        .teacherProjectViewsListItemName {
           float: right;
           width: calc(100% - 60px);
         }
