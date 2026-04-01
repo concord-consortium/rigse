@@ -14,7 +14,7 @@
   }
 }
 
-.alertBar__Text {
+.alertBarText {
   font-size: 15px;
   font-family: $font-museo-sans;
   max-width: 1170px;
@@ -29,7 +29,7 @@
   }
 }
 
-.alertBar__Close {
+.alertBarClose {
   float: right;
   margin-right: 40px;
   transition: .2s;
