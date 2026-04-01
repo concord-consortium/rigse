@@ -63,17 +63,17 @@ export default class TeacherProjectViews extends React.Component<any, any> {
         return null;
       }
       return (
-        <ul className={css.teacherProjectViews__list}>
+        <ul className={css.teacherProjectViewsList}>
           {
             Object.keys(teacherProjectViews).map(key => {
               const imgStyle = {
                 backgroundImage: "url(" + teacherProjectViews[key].project_card_image_url + ")"
               };
               return (
-                <li className={css.teacherProjectViews__list_item} key={teacherProjectViews[key].id}>
+                <li className={css.teacherProjectViewsListItem} key={teacherProjectViews[key].id}>
                   <a href={"/" + teacherProjectViews[key].landing_page_slug}>
-                    <span className={css.teacherProjectViews__list_item_img} style={imgStyle} />
-                    <span className={css.teacherProjectViews__list_item_name}>
+                    <span className={css.teacherProjectViewsListItemImg} style={imgStyle} />
+                    <span className={css.teacherProjectViewsListItemName}>
                       { teacherProjectViews[key].name }
                     </span>
                   </a>
