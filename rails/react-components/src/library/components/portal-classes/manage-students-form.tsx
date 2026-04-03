@@ -8,6 +8,7 @@ interface ManageStudentsFormProps {
   students: any[];
   totalStudents: number;
   className: string;
+  classId: number
   teacherIds: string[];
   onFormClose: () => void;
 }
@@ -20,7 +21,7 @@ function errorWithMessage(error: unknown): error is { message: string } {
 }
 
 export const ManageStudentsForm = (
-  { students, totalStudents, className, teacherIds, onFormClose }: ManageStudentsFormProps
+  { students, totalStudents, className, classId, teacherIds, onFormClose }: ManageStudentsFormProps
 ) => {
   const [classes, setClasses] = React.useState<any[] | undefined>(undefined);
   const [classFetchError, setClassFetchError] = React.useState<string | undefined>(undefined);
@@ -70,17 +71,19 @@ export const ManageStudentsForm = (
       const uniqueClasses: any[] = [];
       results.flat().forEach((currentClass) => {
         if (currentClass == null) return;
+        // Skip the class the manage students form is being shown for
+        if (currentClass.id === classId) return;
         if (uniqueClasses.find((item:any) => item.id === currentClass.id)) return;
         uniqueClasses.push(currentClass);
       });
       setClasses(uniqueClasses);
-    }
+    };
     fetchData();
     return () => {
       isMounted = false;
       abortController.abort();
     };
-  }, [teacherIds]);
+  }, [teacherIds, classId]);
 
   const addStudentsToSelectedClasses = async () => {
     const errorsAddingStudents: any[] = [];
@@ -183,7 +186,7 @@ export const ManageStudentsForm = (
       <div className={css.formRow}>
         Select class(es) to add student(s) to:
       </div>
-      <div className={css.formRow}>
+      <div className={classNames([css.formRow, css.classListRow])}>
         {renderClasses()}
       </div>
       <div className={css.formRow}>
@@ -202,4 +205,4 @@ export const ManageStudentsForm = (
       </div>
     </div>
   );
-}
+};
