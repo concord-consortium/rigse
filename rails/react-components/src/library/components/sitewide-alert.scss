@@ -20,8 +20,11 @@
   max-width: 1170px;
   margin: 0 auto;
   padding: 0 15px;
-  a { color: #444; }
-  a:hover { opacity: .8; }
+  a, a:visited, a:active, a:focus { color: #444; }
+  a:hover {
+    color: #444;
+    opacity: .8;
+  }
 
   span {
     display: inline-block;
