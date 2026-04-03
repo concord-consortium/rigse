@@ -81,6 +81,6 @@ class Admin::ToolsController < ApplicationController
   end
 
   def tool_strong_params(params)
-    params && params.permit(:name, :source_type, :remote_duplicate_url, :tool_id)
+    params && params.permit(:launch_method, :name, :source_type, :remote_duplicate_url, :tool_id)
   end
 end

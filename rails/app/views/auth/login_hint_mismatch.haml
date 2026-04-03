@@ -1,0 +1,81 @@
+!!!
+%html{:lang => "en"}
+  %head
+    %meta{:charset => "utf-8"}/
+    %title Account Mismatch
+    %script{:src => "https://use.typekit.com/juj7nhw.js"}
+    %script
+      try{Typekit.load({ async: true });}catch(e){}
+    :css
+      html, body, div, span, h1, h2, p, a {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+      }
+      a:link, a:visited {
+        color: #fff;
+        text-decoration: none;
+      }
+      a:active, a:hover {
+        color: #ffc320;
+      }
+      body {
+        line-height: 1;
+        background: #f1f1f1;
+        color: #3f3f3f;
+        font: 300 100% museo-sans, helvetica, arial, sans-serif;
+      }
+      #page-wrap {
+        margin: 2em auto;
+        width: 24em;
+      }
+      #mismatch-box {
+        background: #fff;
+        margin-bottom: 1em;
+        padding: 30px 40px 40px;
+      }
+      img {
+        display: block;
+        height: auto;
+        margin: 0 auto 30px;
+        width: 180px;
+      }
+      p { font-size: 1em; margin-bottom: 1em; line-height: 1.4; }
+      .button {
+        background: #ea6d2f;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        display: block;
+        font-family: lato, arial, helvetica, sans-serif;
+        font-size: 1em;
+        font-weight: 500;
+        margin-bottom: 10px;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+      }
+      .button-secondary {
+        background: #0592af;
+      }
+      strong { font-weight: 700; }
+  %body
+    #page-wrap
+      #mismatch-box
+        = render_themed_partial 'shared/logo'
+        %p
+          You are currently logged in as
+          %strong= @user_name
+          \.
+          - if @app_name.present?
+            = "The #{h @app_name} application expected a different user."
+          - else
+            The application expected a different user.
+        %a.button{:href => @continue_url}
+          Continue as
+          = @user_name
+        %a.button.button-secondary{:href => @switch_user_url}
+          Log in as a different user

@@ -16,4 +16,11 @@ FactoryBot.define do
     f.name {"Activity Player"}
     f.tool_id {"http://ap.test.host/"}
   end
+
+  factory :oauth2_tool, class: Tool do |f|
+    f.source_type {"OAuth2 Tool Type"}
+    f.name {"OAuth2 Tool"}
+    f.tool_id {"http://oauth2-tool.test.host/"}
+    f.launch_method {"oauth2"}
+  end
 end

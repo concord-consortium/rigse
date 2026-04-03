@@ -2,7 +2,8 @@ class AuthController < ApplicationController
 
   before_action :verify_logged_in, :except => [ :access_token,
                                                 :login,
-                                                :oauth_authorize ]
+                                                :oauth_authorize,
+                                                :reauth ]
 
   skip_before_action :authenticate_user!, :only => [:authorize], :raise => false  # this is handled by verify_logged_in
   skip_before_action :verify_authenticity_token, :only => [:access_token]
@@ -39,6 +40,12 @@ class AuthController < ApplicationController
     end
   end
 
+  def reauth
+    sign_out(current_user) if current_user
+    after_sign_in_path = params[:after_sign_in_path]
+    redirect_to auth_login_path(after_sign_in_path: after_sign_in_path)
+  end
+
   def oauth_authorize
     if current_user.nil?
       validation = AccessGrant.validate_oauth_authorize(params)
@@ -51,6 +58,22 @@ class AuthController < ApplicationController
       # we send the clients name to the login box so it can display a helpful name
       app_name = validation.client.name
       redirect_to auth_login_path(after_sign_in_path: request.fullpath, app_name: app_name)
+      return
+    end
+
+    # Check login_hint: if present and doesn't match current user, show warning
+    if params[:login_hint].present? && current_user.id.to_s != params[:login_hint]
+      @user_name = current_user.name
+      @app_name = Client.where(app_id: params[:client_id]).first&.name
+
+      # Build continue URL: same params minus login_hint
+      continue_params = request.query_parameters.except("login_hint")
+      @continue_url = "#{request.path}?#{continue_params.to_query}"
+
+      # Build switch user URL: reauth signs out then redirects to login with after_sign_in_path
+      @switch_user_url = auth_reauth_path(after_sign_in_path: @continue_url)
+
+      render 'auth/login_hint_mismatch', layout: false
       return
     end
 
