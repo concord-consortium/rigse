@@ -31,6 +31,35 @@ gpZlAvdO9CFaBcBKsAcJnNDQBY2lhFsSeqYs78PoW7Zz
 
   end
 
+  describe "#create_firebase_token" do
+    let(:firebase_app_name) { FirebaseTestHelper::FIREBASE_TEST_APP_NAME }
+
+    before do
+      FirebaseTestHelper.create_test_firebase_app
+    end
+
+    it 'backdates iat and keeps token lifetime within expires_in' do
+      now = Time.now.to_i
+      allow(Time).to receive(:now).and_return(Time.at(now))
+      token = SignedJwt.create_firebase_token('test-uid', firebase_app_name, 3600)
+      decoded = SignedJwt.decode_firebase_token(token, firebase_app_name)
+      payload = decoded[:data]
+
+      expect(payload['iat']).to eq(now - SignedJwt::CLOCK_SKEW_ALLOWANCE)
+      expect(payload['exp'] - payload['iat']).to eq(3600)
+    end
+
+    it 'respects custom expires_in with backdated iat' do
+      now = Time.now.to_i
+      allow(Time).to receive(:now).and_return(Time.at(now))
+      token = SignedJwt.create_firebase_token('test-uid', firebase_app_name, 1800)
+      decoded = SignedJwt.decode_firebase_token(token, firebase_app_name)
+      payload = decoded[:data]
+
+      expect(payload['exp'] - payload['iat']).to eq(1800)
+    end
+  end
+
   describe "#create_portal_token" do
     let(:user) { FactoryBot.create(:user) }
 
