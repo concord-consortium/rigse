@@ -44,7 +44,7 @@ module SignedJwt
       iss: app.client_email,
       sub: app.client_email,
       aud: 'https://identitytoolkit.googleapis.com/google.identity.identitytoolkit.v1.IdentityToolkit',
-      iat: now,
+      iat: now - 30,  # backdate to account for possible clock skew between server and Google
       exp: now + expires_in,
       uid: uid
     }
