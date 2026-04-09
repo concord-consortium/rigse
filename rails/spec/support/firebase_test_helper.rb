@@ -1,0 +1,41 @@
+# Shared test RSA key and FirebaseApp setup for specs.
+# This key is randomly generated and not used anywhere outside tests.
+module FirebaseTestHelper
+  FIREBASE_TEST_APP_NAME = "test app"
+
+  FIREBASE_TEST_PRIVATE_KEY = "-----BEGIN RSA PRIVATE KEY-----
+MIIEoQIBAAKCAQEAvdCMEYgVdmohS2w7yqPDxQhwKkK+15zDvOY1LgJNnLPoxxEP
+uqQ++BHbfEaGp0jDsLG/f+CjKY2dCP+EHxOuyaAA0IV6eF5rMX0sz8EythpgZDLd
+3mZnChBmP8EQYVAKvY9c8BTvYJFpuFkacxNzCJNop+PGXGlh5hl4FKC7AjF3KvQj
+JHYhh9rE+DX58eQTs+vjjAq65/6+ep8GeDu644sn9HkjrQRvUiQgZhSOsNFl/01O
+chGxLWlFrLO+YdyPlNHRhlEwonr+yI+BvtUoOfrFCstgcY8vvvApplx+efp5Cd4S
+tGUwdn+zqFieeIKz8hUeM6xE2KX1+kXPd6MA+wIDAQABAoIBAGWQgFIlKa7JzPTp
+ffjItcjo4fOK8Ui3ZfjeiRgMPXEaxvQ1SeBJYDQmgfW2WviJs8QI5/nJviRO1Pbq
+mcxzILRb+/OXaFed1eeOHfswWi0cYfVbTmJhEsNM0RlN+bDIPmb9nfIMkaVvSU1N
+yBxJDOVK0tX6x7nM3YhcmmcXNdlOqJX/8YTK6nuNzw2wHkl+RErvO+KycWMitDCx
+ra6ygcgYf30JisilaQ5CvhhCbFx1I8tdep9ppy+JlaMU4q40PcVda5uKzW9ASF0u
+LGjtW4Q95bPZDuy018nedK0noonxkqFgJ759ir6sW9xkRm3IJHyxS9ZmQ/t3Q1aC
+MKUtfOkCgYEA3pSNyQ+d8KYh/8Jywi3ygU7JGeme3MPPDREI7/DmWNyvWABrW4Jc
+bkSX8kHzNvYb+cn/DcOKZq5sB1oujLp6kTz0IxL++bUoDoEd/3dMN52l+qvf+I9K
+wAXNwiWSNGoDbDeGiqJcn7/8oog7jlyKWspqEQnT7usnxFfp9iIsFJ8CgYEA2lCP
+qRoXGl8Wfp6jOINLm6/X6r3rUsCWZhIBYp32jkFGEGdkJzcd0Za1ERI/fQrGW4m1
+ujQZqkgzu1A7QhYQORHega9r7wh/b9HF50sIkWcnGShYG+0D3I7t9HP50ujmd4X7
+c6stYubj8Ci4N74CzONTAXw016f8Igrb35ZoOiUCf3jaMCH7WMZRbiRwb97/E60i
+Gg73ykoUB1gQ58lgA7I8IPinQaNuJMG6fMYNCQHOn2IBS3stsPgPvJhBXwUKO4Kg
+le51YfwzYIx/jsom/Ds2Xei9ad6L7wpUHGROAhRze2hGvcaIYcJbe9DEJ5IkrPqe
+7PhTXb9b7zusgFwkMcsCgYEAsKNyOV5Uxw+cwcJVSgphiIxUZShZWNFeXyO+Xy50
+KVGDAQ7GqDweMlCAHFnpaKDpMXNQyGITSgW1ZZ9a8vOrGKHuqHtpFzSG99CBEc1S
+F2Og7OgJsj6pWzGCMsILpqyunJKZi1M7G8S5NL2dn+xrk59yr8bxcnQGuvySPmwR
+1MkCgYATo5WUro9o1XgEFVMjpwnzxFRED6n9yE13IcL8WH4mbmoVS7fg805A6Vci
+RseUb0vhcp7NWNl86Tm7zWQW8B4RRDNJX4HiKAVzy55x8Azss1P8dPyf4I3c9hNw
+SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
+-----END RSA PRIVATE KEY-----".freeze
+
+  def self.create_test_firebase_app(name: FIREBASE_TEST_APP_NAME)
+    FirebaseApp.create!(
+      name: name,
+      client_email: "user@example.com",
+      private_key: FIREBASE_TEST_PRIVATE_KEY
+    )
+  end
+end

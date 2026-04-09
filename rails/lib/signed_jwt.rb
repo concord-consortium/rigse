@@ -2,6 +2,10 @@ module SignedJwt
 
   require 'jwt'
 
+  # Seconds to backdate the issued-at (iat) claim in Firebase JWTs,
+  # compensating for clock skew between this server and Google.
+  CLOCK_SKEW_ALLOWANCE = 30
+
   class Error < StandardError
   end
 
@@ -39,13 +43,14 @@ module SignedJwt
     raise SignedJwt::Error.new("Unknown firebase app name: #{firebase_app_name}") if app.nil?
 
     now = Time.now.to_i
+    iat = now - CLOCK_SKEW_ALLOWANCE
     payload = {
       alg: self.rsa_algorithm,
       iss: app.client_email,
       sub: app.client_email,
       aud: 'https://identitytoolkit.googleapis.com/google.identity.identitytoolkit.v1.IdentityToolkit',
-      iat: now,
-      exp: now + expires_in,
+      iat: iat,
+      exp: iat + expires_in,
       uid: uid
     }
 
