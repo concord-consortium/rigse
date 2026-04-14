@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OAuth Test SPA</title>
+</head>
+<body>
+  <h1>OAuth Test SPA</h1>
+  <div id="status"></div>
+  <div id="result"></div>
+  <div id="debug"></div>
+
+  <script>
+    const STORAGE_PARAMS_KEY = 'oauth_test_spa_params';
+    const STORAGE_STATE_KEY = 'oauth_test_spa_state';
+    const CLIENT_ID = 'oauth-test-spa';
+
+    const statusEl = document.getElementById('status');
+    const resultEl = document.getElementById('result');
+    const debugEl = document.getElementById('debug');
+
+    function parseHash(hash) {
+      const params = {};
+      if (!hash || hash.length <= 1) return params;
+      const pairs = hash.substring(1).split('&');
+      for (const pair of pairs) {
+        const eqIdx = pair.indexOf('=');
+        if (eqIdx === -1) { params[decodeURIComponent(pair)] = ''; continue; }
+        const key = decodeURIComponent(pair.substring(0, eqIdx));
+        const value = decodeURIComponent(pair.substring(eqIdx + 1));
+        params[key] = value;
+      }
+      return params;
+    }
+
+    function showStatus(msg) {
+      const p = document.createElement('p');
+      p.textContent = msg;
+      statusEl.appendChild(p);
+    }
+
+    function showResult(msg) {
+      resultEl.textContent = '';
+      const h2 = document.createElement('h2');
+      h2.textContent = msg;
+      resultEl.appendChild(h2);
+    }
+
+    function showDebug(label, data) {
+      const h3 = document.createElement('h3');
+      h3.textContent = label;
+      const pre = document.createElement('pre');
+      pre.textContent = JSON.stringify(data, null, 2);
+      debugEl.appendChild(h3);
+      debugEl.appendChild(pre);
+    }
+
+    function showInstructions() {
+      const exampleUrl = window.location.origin + window.location.pathname +
+        '?authDomain=' + encodeURIComponent(window.location.origin) +
+        '&resourceLinkId=123&loginHint=1';
+      statusEl.innerHTML =
+        '<h2>Usage</h2>' +
+        '<p>Open this page with OAuth2 launch parameters:</p>' +
+        '<p><a href="' + exampleUrl + '">' + exampleUrl + '</a></p>' +
+        '<p>Parameters:</p>' +
+        '<ul>' +
+        '<li><b>authDomain</b> (required) — Portal URL for OAuth2</li>' +
+        '<li><b>resourceLinkId</b> (optional) — Offering ID</li>' +
+        '<li><b>loginHint</b> (optional) — Expected user ID</li>' +
+        '</ul>';
+    }
+
+    async function handleCallback(hashParams) {
+      const savedState = sessionStorage.getItem(STORAGE_STATE_KEY);
+      if (hashParams.state !== savedState) {
+        showStatus('Error: state mismatch (expected ' + savedState +
+          ', got ' + hashParams.state + ')');
+        return;
+      }
+
+      const savedParamsJson = sessionStorage.getItem(STORAGE_PARAMS_KEY);
+      const savedParams = savedParamsJson ? JSON.parse(savedParamsJson) : {};
+
+      sessionStorage.removeItem(STORAGE_PARAMS_KEY);
+      sessionStorage.removeItem(STORAGE_STATE_KEY);
+
+      // Restore original launch params in URL so reload triggers re-auth
+      const query = new URLSearchParams(savedParams).toString();
+      history.replaceState(null, '', window.location.pathname + '?' + query);
+
+      const accessToken = hashParams.access_token;
+      const authDomain = savedParams.authDomain;
+
+      showStatus('Authenticated. Fetching user info...');
+      showDebug('Access Token', accessToken);
+      showDebug('Restored Launch Params', savedParams);
+
+      try {
+        const response = await fetch(authDomain + '/auth/user', {
+          headers: { 'Authorization': 'Bearer ' + accessToken }
+        });
+        if (!response.ok) {
+          throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+        }
+        const user = await response.json();
+        showResult('Welcome ' + user.extra.full_name);
+        showDebug('User Info', user);
+      } catch (err) {
+        showStatus('Error fetching user: ' + err.message);
+      }
+    }
+
+    function startOAuth(params) {
+      const authDomain = params.get('authDomain');
+
+      // Prevent open-redirect: only allow same-origin authDomain
+      try {
+        if (new URL(authDomain).origin !== window.location.origin) {
+          showStatus('Error: authDomain must match this site\'s origin (' + window.location.origin + ')');
+          return;
+        }
+      } catch (e) {
+        showStatus('Error: invalid authDomain URL');
+        return;
+      }
+
+      showStatus('Launch params detected. Redirecting to Portal for authentication...');
+      showDebug('Launch Params', Object.fromEntries(params));
+
+      // Save params
+      const paramsObj = Object.fromEntries(params);
+      sessionStorage.setItem(STORAGE_PARAMS_KEY, JSON.stringify(paramsObj));
+
+      // Generate and save state
+      const state = crypto.randomUUID();
+      sessionStorage.setItem(STORAGE_STATE_KEY, state);
+
+      // Build redirect URI (just the page, no query or hash)
+      const redirectUri = window.location.origin + window.location.pathname;
+
+      // Build authorize URL
+      const authorizeUrl = authDomain + '/auth/oauth_authorize?' +
+        'client_id=' + encodeURIComponent(CLIENT_ID) +
+        '&redirect_uri=' + encodeURIComponent(redirectUri) +
+        '&response_type=token' +
+        '&state=' + encodeURIComponent(state) +
+        (params.get('loginHint')
+          ? '&login_hint=' + encodeURIComponent(params.get('loginHint'))
+          : '');
+
+      window.location.href = authorizeUrl;
+    }
+
+    // Main
+    (function() {
+      const hashParams = parseHash(window.location.hash);
+      const searchParams = new URLSearchParams(window.location.search);
+
+      if (hashParams.access_token) {
+        // State B: OAuth2 callback
+        handleCallback(hashParams);
+      } else if (searchParams.get('authDomain')) {
+        // State A: Launch detected
+        startOAuth(searchParams);
+      } else {
+        // State C: No params
+        showInstructions();
+      }
+    })();
+  </script>
+</body>
+</html>

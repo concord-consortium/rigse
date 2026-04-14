@@ -20,7 +20,9 @@ In all cases the launch sends the student's browser to the external runtime envi
 
 If the `ExternalActivity#tool_id` value matches the ID of a tool with a source type of 'LARA', then the Portal will use a LARA specific launch. The added parameters can be seen here: https://github.com/concord-consortium/rigse/blob/d81d5a1da69253418abde7e0aa7baac4a1831a66/rails/app/controllers/portal/offerings_controller.rb#L62
 
-Otherwise, the `ExternalActivity#url` is used. The added parameters can be seen here:
+If the ExternalActivity's Tool has `launch_method` set to `"oauth2"`, the Portal appends OAuth2 parameters (`authDomain`, `resourceLinkId`, `loginHint`) instead of the legacy token parameters. The runtime then authenticates via the standard OAuth2 redirect flow. See the "Non LARA Runtime" authorization section below for details.
+
+Otherwise, the `ExternalActivity#url` is used with a short-lived JWT token. The added parameters can be seen here:
 https://github.com/concord-consortium/rigse/blob/d81d5a1da69253418abde7e0aa7baac4a1831a66/rails/app/models/external_activity.rb#L162
 
 ## Publishing
@@ -37,9 +39,15 @@ More details on reports are below.
 The runtime environment will likely need to use Portal APIs. It might need them to find out who the members of the class are. Or it might want the portal to generate a JWT the runtime can use with Firebase.
 
 ### Non LARA Runtime
-For a non LARA launch the Portal generates a short-lived Portal JWT (via `SignedJwt::create_portal_token`) that includes the student's learner ID and user type as claims. This JWT is passed to the runtime as a URL parameter. The runtime can send this token back to the Portal in an Authorization header. If the runtime needs to access more APIs after the initial launch it can exchange this short-lived JWT for a longer-lived Portal JWT that can be renewed.
+There are two authorization approaches for non-LARA launches, controlled by the Tool's `launch_method` field:
 
-The JWT can be used with any Portal API endpoint — both the API Controller's `check_for_auth_token` and Devise's bearer token authentication recognize JWTs.
+**JWT launch (default):** The Portal generates a short-lived Portal JWT (via `SignedJwt::create_portal_token`) that includes the student's learner ID and user type as claims. This JWT is passed to the runtime as a URL parameter. The runtime can send this token back to the Portal in an Authorization header. If the runtime needs to access more APIs after the initial launch it can exchange this short-lived JWT for a longer-lived Portal JWT that can be renewed.
+
+**OAuth2 launch** (`launch_method: "oauth2"`): The Portal appends `authDomain`, `resourceLinkId`, and `loginHint` to the launch URL instead of a token. The runtime uses these to initiate a standard OAuth2 implicit grant flow (see the OAuth2 Authorization section below). This avoids the short-lived token problem — the runtime can re-authenticate via OAuth2 at any time (e.g., on page reload).
+
+**Note:** Collaboration launches (via `create_collaboration.rb`) are not yet migrated to OAuth2 and continue using JWT tokens.
+
+JWTs and OAuth2 access tokens can both be used with any Portal API endpoint — both the API Controller's `check_for_auth_token` and Devise's bearer token authentication recognize them.
 
 References (search for these strings)
 - token generation: `SignedJwt::create_portal_token` (called from `external_activity.rb` and `create_collaboration.rb`)
@@ -80,9 +88,11 @@ This pattern is used by portal-report, collaborative-learning (CLUE), and Activi
 
 The naming difference is purely conventional — portal-report uses kebab-case, CLUE uses camelCase. Both use the same underlying OAuth2 implicit grant flow and the same Portal endpoint.
 
+**Portal standard OAuth2 launch parameters:** The Portal's standard OAuth2 launch URL uses camelCase parameter names: `authDomain`, `resourceLinkId`, and `loginHint`. These are controlled by the Tool model's `launch_method` field — when set to `"oauth2"`, `ExternalActivity#url` appends these parameters instead of the legacy `token`/`domain`/`domain_uid`. The `loginHint` contains the Portal user ID and is passed as `login_hint` (snake_case) to the Portal's `oauth_authorize` endpoint. When `login_hint` is present and doesn't match the currently logged-in user, the Portal shows a warning page allowing the user to continue or switch accounts.
+
 CLUE also has a `convertURLToOAuth2()` function that rewrites the URL after an initial token-based launch: it removes the `token` parameter and adds `authDomain` + `resourceLinkId`. This way if the user reloads the page, the OAuth2 flow re-authenticates instead of trying to reuse the expired launch token.
 
-For the Portal to support direct OAuth2 launches (instead of the current short-lived JWT approach), it would need to generate launch URLs with `auth-domain`/`authDomain` pointing to itself and include the other context parameters the SPA needs (class, offering, etc.), without a `token` parameter. The SPA would then handle authentication via the OAuth2 redirect flow on first load.
+The Portal supports direct OAuth2 launches via the Tool model's `launch_method` field. When set to `"oauth2"`, the Portal generates launch URLs with `authDomain` pointing to itself along with `resourceLinkId` and `loginHint`, without a `token` parameter. The SPA then handles authentication via the OAuth2 redirect flow on first load. See the "Non LARA Runtime" authorization section above for details.
 
 #### Authorization code flow (server-side apps)
 
@@ -171,6 +181,24 @@ Additionally if the user is a teacher then the teacher object is added to the ac
 # Researcher Reports
 
 **TODO**
+
+# Standalone OAuth2 Clients
+
+Some external services are not launched from the Portal (not as assignments or reports). Instead, users navigate directly to the app, and it uses OAuth2 to authenticate the user against the Portal. These are all SPAs using the implicit grant flow described above.
+
+Each app needs to know which Portal to authenticate with. The parameter name for this varies by client:
+
+| Client | Repo | OAuth2 `client_id` | Auth domain parameter | Grant type |
+|---|---|---|---|---|
+| glossary-plugin | `concord-consortium/glossary-plugin` | `glossary-plugin` | `portal` (query param) | Implicit |
+| vortex | `concord-consortium/vortex` | `vortex` | `portalUrl` (query param, or derived from hostname) | Implicit |
+| report-service (researcher-reports SPA) | `concord-consortium/report-service` | `research-report-server` | Configured in app | Implicit |
+| token-service (example app) | `concord-consortium/token-service` | `token-service-example-app` | Configured via UI input | Implicit |
+| aws-learner-logs | `concord-consortium/aws-learner-logs` | Environment variable | Environment variable | Authorization code (confidential) |
+
+The implicit-grant clients all use the same Portal endpoint (`/auth/oauth_authorize`) and the same `client-oauth2` JS library. After obtaining an access token, most of them exchange it for a Firebase JWT via `/api/v1/jwt/firebase` to access Firestore or Firebase Realtime Database.
+
+Note that the portal-launched clients (CLUE, Activity Player, portal-report) also support standalone OAuth2 — see the "SPA OAuth2 initialization pattern" section above. Their `client_id` values are `clue`, `activity-player`, and `portal-report` respectively. Their auth domain parameters are `authDomain` (CLUE) and `auth-domain` (Activity Player, portal-report).
 
 # SSO clients
 

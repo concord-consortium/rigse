@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_04_231115) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_06_223205) do
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
     t.string "access_token"
@@ -1602,6 +1602,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_04_231115) do
     t.string "source_type"
     t.text "tool_id"
     t.string "remote_duplicate_url"
+    t.string "launch_method"
   end
 
   create_table "user_offering_metadata", charset: "utf8", force: :cascade do |t|

@@ -68,6 +68,89 @@ describe ExternalActivity do
       expect(decoded[:data]["learner_id"]).to eq(34)
       expect(decoded[:data]["user_type"]).to eq("learner")
     end
+
+    describe "with oauth2 tool" do
+      let(:oauth2_tool) { Tool.create!(
+        name: "OAuth2 Tool",
+        source_type: "OAuth2 Tool Type",
+        tool_id: "http://oauth2-tool.test.host/",
+        launch_method: "oauth2"
+      )}
+      let(:offering) { mock_model(Portal::Offering, id: 99) }
+      let(:user) { FactoryBot.create(:confirmed_user) }
+      let(:oauth2_learner) { mock_model(Portal::Learner, id: 34, user: user, offering: offering) }
+
+      before do
+        activity.tool = oauth2_tool
+      end
+
+      it "should append authDomain and resourceLinkId when tool launch_method is oauth2" do
+        url = activity.url(oauth2_learner, "https://learn.concord.org/")
+        uri = URI.parse(url)
+        query = URI.decode_www_form(uri.query)
+        auth_domain = query.find { |k, _| k == "authDomain" }
+        resource_link_id = query.find { |k, _| k == "resourceLinkId" }
+        expect(auth_domain).not_to be_nil
+        expect(auth_domain[1]).to eq("https://learn.concord.org/")
+        expect(resource_link_id).not_to be_nil
+        expect(resource_link_id[1]).to eq("99")
+        login_hint = query.find { |k, _| k == "loginHint" }
+        expect(login_hint).not_to be_nil
+        expect(login_hint[1]).to eq(user.id.to_s)
+      end
+
+      it "should NOT append token, domain, or domain_uid for oauth2 launch" do
+        activity.append_auth_token = true
+        url = activity.url(oauth2_learner, "https://learn.concord.org/")
+        uri = URI.parse(url)
+        query = URI.decode_www_form(uri.query)
+        param_keys = query.map(&:first)
+        expect(param_keys).not_to include("token")
+        expect(param_keys).not_to include("domain")
+        expect(param_keys).not_to include("domain_uid")
+      end
+
+      it "should NOT append learner id or survey monkey uid for oauth2 launch" do
+        activity.append_learner_id_to_url = true
+        activity.append_survey_monkey_uid = true
+        url = activity.url(oauth2_learner, "https://learn.concord.org/")
+        uri = URI.parse(url)
+        query = URI.decode_www_form(uri.query)
+        param_keys = query.map(&:first)
+        expect(param_keys).not_to include("learner")
+        expect(param_keys).not_to include("c")
+      end
+
+      it "should return the base url without authDomain when domain is nil" do
+        url = activity.url(oauth2_learner, nil)
+        uri = URI.parse(url)
+        query_string = uri.query || ""
+        expect(query_string).not_to include("authDomain")
+        expect(query_string).to include("resourceLinkId=99")
+        expect(query_string).to include("loginHint=")
+      end
+    end
+
+    describe "with nil launch_method tool" do
+      let(:nil_launch_tool) { Tool.create!(
+        name: "Legacy Tool",
+        source_type: "Legacy",
+        tool_id: "http://legacy.test.host/",
+        launch_method: nil
+      )}
+
+      it "should use ExternalActivity flags when tool launch_method is nil" do
+        activity.tool = nil_launch_tool
+        activity.append_learner_id_to_url = true
+        expect(activity.url(learner)).to eql(valid_attributes[:url] + "?learner=34")
+      end
+    end
+
+    it "should use ExternalActivity flags when there is no tool" do
+      activity.tool = nil
+      activity.append_learner_id_to_url = true
+      expect(activity.url(learner)).to eql(valid_attributes[:url] + "?learner=34")
+    end
   end
 
   describe '#full_title' do

@@ -143,6 +143,13 @@ class ExternalActivity < ApplicationRecord
     begin
       uri = URI.parse(read_attribute(:url))
       if learner
+        if self.tool&.launch_method == "oauth2"
+          append_query(uri, "authDomain=#{domain}") if domain
+          append_query(uri, "resourceLinkId=#{learner.offering.id}")
+          append_query(uri, "loginHint=#{learner.user.id}")
+          return uri.to_s
+        end
+
         append_query(uri, "learner=#{learner.id}") if append_learner_id_to_url
         append_query(uri, "c=#{learner.user.id}") if append_survey_monkey_uid
         if append_auth_token
