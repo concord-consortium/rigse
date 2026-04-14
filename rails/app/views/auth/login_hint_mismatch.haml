@@ -77,5 +77,6 @@
         %a.button{:href => @continue_url}
           Continue as
           = @user_name
-        %a.button.button-secondary{:href => @switch_user_url}
-          Log in as a different user
+        = form_tag @switch_user_url, method: :post do
+          %button.button.button-secondary{:type => "submit"}
+            Log in as a different user

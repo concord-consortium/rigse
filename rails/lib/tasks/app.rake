@@ -133,7 +133,7 @@ namespace :app do
         app_secret: SecureRandom.uuid(),
         client_type: "public",
         domain_matchers: "localhost.*",
-        redirect_uris: "http://localhost:3000/oauth-test/index.html"
+        redirect_uris: "#{ENV.fetch('PORTAL_URL', 'http://localhost:3000')}/oauth-test/index.html"
       )
     end
 
