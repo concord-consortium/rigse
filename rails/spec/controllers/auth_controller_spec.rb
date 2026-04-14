@@ -120,6 +120,11 @@ RSpec.describe AuthController, type: :controller do
           expect(assigns(:switch_user_url)).to include('/auth/reauth')
           expect(assigns(:switch_user_url)).not_to include('login_hint')
         end
+
+        it 'passes the app name from the client_id' do
+          get :oauth_authorize, params: params
+          expect(assigns(:app_name)).to eq('Test App')
+        end
       end
     end
   end
@@ -132,7 +137,7 @@ RSpec.describe AuthController, type: :controller do
       before(:each) { sign_in user }
 
       it 'signs out the current user and redirects to login' do
-        get :reauth, params: { after_sign_in_path: after_sign_in_path }
+        post :reauth, params: { after_sign_in_path: after_sign_in_path }
         expect(response).to redirect_to(auth_login_path(after_sign_in_path: after_sign_in_path))
         expect(controller.current_user).to be_nil
       end
@@ -141,7 +146,7 @@ RSpec.describe AuthController, type: :controller do
     context 'without a logged in user' do
       it 'redirects to login with after_sign_in_path' do
         after_sign_in_path = '/auth/oauth_authorize?client_id=test'
-        get :reauth, params: { after_sign_in_path: after_sign_in_path }
+        post :reauth, params: { after_sign_in_path: after_sign_in_path }
         expect(response).to redirect_to(auth_login_path(after_sign_in_path: after_sign_in_path))
       end
     end
