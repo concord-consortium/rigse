@@ -28,15 +28,15 @@ en:
         zero: external activities
         one: external activity
         other: external activities
-      Interactive: Model
+      Interactive: Simulation
       interactive:
-        zero: models
-        one: model
-        other: models
+        zero: simulations
+        one: simulation
+        other: simulations
   collection: collection
   investigation: sequence
   activity: activity
-  interactive: model
+  interactive: simulation
   material: material
   instructional_materials: Instructional Materials
   assignments: Assignments

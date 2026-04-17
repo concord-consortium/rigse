@@ -6,7 +6,7 @@ const ResourceType = Component({
   render () {
     const resource = this.props.resource;
     const materialTypeLabels: any = {
-      "Interactive": "model",
+      "Interactive": "simulation",
       "Activity": "activity",
       "Investigation": "sequence",
       "Collection": "collection"
