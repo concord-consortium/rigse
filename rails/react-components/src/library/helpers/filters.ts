@@ -15,7 +15,7 @@ const filters: any = {
   featureFilters: [
     { key: "sequence", title: "Sequence", searchMaterialType: "Investigation" },
     { key: "activity", title: "Activity", searchMaterialType: "Activity" },
-    { key: "model", title: "Model", searchMaterialType: "Interactive" },
+    { key: "simulation", title: "Simulation", searchMaterialType: "Interactive" },
     { key: "browser-based", title: "Browser-Based", searchMaterialProperty: "Runs in browser" },
     { key: "sensors", title: "Sensor-Based", searchSensors: ["Force", "Humidity (relative)", "Light", "Motion", "Temperature", "Voltage"] }
   ],
