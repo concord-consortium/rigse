@@ -68,30 +68,10 @@ describe Browse::ExternalActivitiesController do
         expect(response).not_to be_successful
       end
   
-      xit "should return 200 when a valid interactive is used" do
-        get :show, params: { :type => "interactive", :id_or_filter_value => interactive.id }
-        expect(response).to redirect_to stem_resources_url(interactive.external_activity_id, activity.name.parameterize)
-        get :show, params: { :type => "interactive", :id_or_filter_value => interactive.id, :slug => "test" }
-        expect(response).to redirect_to stem_resources_url(interactive.external_activity_id, activity.name.parameterize)
-      end
-  
-      it "should return 404 when an unknown interactive is used" do
-        get :show, params: { :type => "interactive", :id_or_filter_value => 999999999999999 }
-        expect(response).not_to be_successful
-        get :show, params: { :type => "interactive", :id_or_filter_value => 999999999999999, :slug => "test" }
-        expect(response).not_to be_successful
-      end
-  
-      #
-      # This should fall through to the home page as a search filter.
-      #
-      xit "should return 200 when an unknown type is used" do
-        get :show, params: { :type => "unknown-type", :id_or_filter_value => 1 }
-        expect(response).to be_successful
-        get :show, params: { :type => "unknown-type", :id_or_filter_value => 1, :slug => "test" }
-        expect(response).to be_successful
-      end
-  
+      # Tests for /resources/:type/:id_or_filter_value (interactive + unknown-type)
+      # have moved to home_controller_spec.rb — the route now points at
+      # home#stem_resources rather than this controller.
+
       xit "should set the start of the page title to the resource name" do
         get :show, params: { :id => activity.id }
         puts @response.inspect

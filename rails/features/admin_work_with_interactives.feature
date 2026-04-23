@@ -100,7 +100,7 @@ Feature: Admin can work with interactives
       When I enter search text "Geometry" on the search instructional materials page
       And I close the search suggestions
       And I uncheck "Sequence"
-      And I uncheck "Interactive"
+      And I uncheck "Simulation"
       And I check "Activity"
       And I press "Go"
       And I wait 2 seconds
@@ -110,7 +110,7 @@ Feature: Admin can work with interactives
       And I close the search suggestions
       And I check "Sequence"
       And I uncheck "Activity"
-      And I uncheck "Interactive"
+      And I uncheck "Simulation"
       And I press "Go"
       And I wait 2 seconds
       Then I should see "Radioactivity"
@@ -119,7 +119,7 @@ Feature: Admin can work with interactives
       And I close the search suggestions
       And I uncheck "Sequence"
       And I uncheck "Activity"
-      And I check "Interactive"
+      And I check "Simulation"
       And I press "Go"
       And I wait 2 seconds
       Then I should see "Interactive"

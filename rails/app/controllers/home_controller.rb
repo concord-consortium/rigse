@@ -212,7 +212,7 @@ class HomeController < ApplicationController
 
     if ! params[:id]
       case params[:type]
-      when "activity", "sequence"
+      when "activity", "sequence", "assessment"
 
         # logger.info("INFO loading external_activity")
 

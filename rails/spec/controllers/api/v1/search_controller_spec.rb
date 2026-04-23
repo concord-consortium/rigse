@@ -209,6 +209,43 @@ describe API::V1::SearchController do
     end
   end
 
+  describe "GET #search with Assessment material_type" do
+    before(:each) do
+      FactoryBot.create(:external_activity,
+        publication_status: 'published',
+        material_type: 'Assessment',
+        name: 'Quiz Two')
+      FactoryBot.create(:external_activity,
+        publication_status: 'published',
+        material_type: 'Activity',
+        name: 'Plain Two')
+      FactoryBot.create(:external_activity,
+        publication_status: 'published',
+        material_type: 'Investigation',
+        name: 'Sequence Two')
+      FactoryBot.create(:external_activity,
+        publication_status: 'published',
+        material_type: 'Interactive',
+        name: 'Simulation Two')
+      FactoryBot.create(:external_activity,
+        publication_status: 'published',
+        material_type: 'Collection',
+        name: 'Collection Two')
+      reindex_all
+    end
+
+    it "returns only Assessment materials when filtered" do
+      get :search, params: { material_types: ['Assessment'] }, format: :json
+      body = JSON.parse(response.body)
+      all_names = body["results"].flat_map { |r| r["materials"].map { |m| m["name"] } }
+      expect(all_names).to include('Quiz Two')
+      expect(all_names).not_to include('Plain Two')
+      expect(all_names).not_to include('Sequence Two')
+      expect(all_names).not_to include('Simulation Two')
+      expect(all_names).not_to include('Collection Two')
+    end
+  end
+
   describe "GET search_suggestions" do
     it "should fail without a search_term parameter" do
       get :search_suggestions

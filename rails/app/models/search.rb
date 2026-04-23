@@ -13,10 +13,12 @@ class Search
   attr_accessor :investigation_page
   attr_accessor :interactive_page
   attr_accessor :collection_page
+  attr_accessor :assessment_page
   attr_accessor :activity_per_page
   attr_accessor :investigation_per_page
   attr_accessor :interactive_per_page
   attr_accessor :collection_per_page
+  attr_accessor :assessment_per_page
   attr_accessor :per_page
   attr_accessor :user_id
   attr_accessor :user
@@ -44,7 +46,8 @@ class Search
   ActivityMaterial        = "Activity"
   InteractiveMaterial     = "Interactive"
   CollectionMaterial      = "Collection"
-  AllMaterials            = [InvestigationMaterial, ActivityMaterial, InteractiveMaterial, CollectionMaterial]
+  AssessmentMaterial      = "Assessment"
+  AllMaterials            = [InvestigationMaterial, ActivityMaterial, InteractiveMaterial, CollectionMaterial, AssessmentMaterial]
 
   AllSearchableModels       = [ ExternalActivity, Interactive ]
 
@@ -144,10 +147,12 @@ class Search
     self.investigation_page     = opts[:investigation_page]     || 1
     self.interactive_page       = opts[:interactive_page]       || 1
     self.collection_page        = opts[:collection_page]        || 1
+    self.assessment_page        = opts[:assessment_page]        || 1
     self.activity_per_page      = opts[:activity_per_page]      || self.per_page
     self.investigation_per_page = opts[:investigation_per_page] || self.per_page
     self.interactive_per_page   = opts[:interactive_per_page]   || self.per_page
     self.collection_per_page    = opts[:collection_per_page]    || self.per_page
+    self.assessment_per_page    = opts[:assessment_per_page]    || self.per_page
     self.without_teacher_only   = opts[:without_teacher_only]   || true
     self.material_properties    = opts[:material_properties]    || []
     self.include_contributed    = opts[:include_contributed]    || false
@@ -267,6 +272,8 @@ class Search
           s.paginate(:page => self.interactive_page, :per_page => self.interactive_per_page)
         elsif (type == CollectionMaterial)
           s.paginate(:page => self.collection_page, :per_page => self.collection_per_page)
+        elsif (type == AssessmentMaterial)
+          s.paginate(:page => self.assessment_page, :per_page => self.assessment_per_page)
         end
 
       end

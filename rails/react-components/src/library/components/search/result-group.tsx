@@ -84,6 +84,10 @@ export default class SearchResultGroup extends React.Component<any, any> {
         this.materialType = "Collection";
         this.pageParam = "collection_page";
         break;
+      case "assessments":
+        this.materialType = "Assessment";
+        this.pageParam = "assessment_page";
+        break;
       default:
         throw new Error("unknown group type");
     }

@@ -36,6 +36,7 @@
       = f.select :material_type,
         [ [ "Activity", "Activity"       ],
           [ "Sequence",  "Investigation"  ],
+          [ t(:assessment).titleize,     "Assessment" ],
           [ t(:collection).titleize, 'Collection' ],
           [ Interactive.display_name,    Interactive.name    ] ]
       %br

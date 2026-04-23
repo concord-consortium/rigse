@@ -222,6 +222,33 @@
           content: '\f0c0';
         }
       }
+
+      &#simulation {
+        &:before {
+          content: "\f3f2";
+        }
+      }
+      &#assessment {
+        &:before {
+          content: "\f559";
+        }
+      }
+      &#activity {
+        &:before {
+          content: "\f14b";
+        }
+      }
+      &#sequence {
+        &:before {
+          content: "\f5fd";
+        }
+      }
+      &#collection {
+        &:before {
+          content: "\f49c";
+          left: 7px;
+        }
+      }
     }
   }
 }

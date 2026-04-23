@@ -16,6 +16,12 @@ import css from "./stem-finder.scss";
 
 const DISPLAY_LIMIT_INCREMENT = 6;
 
+const SMALL_SCREEN_MAX_WIDTH = 768;
+const SECTION_KEYS = ["keywords", "subject", "grade-level", "resource-type", "advanced"] as const;
+type SectionKey = typeof SECTION_KEYS[number];
+const defaultSectionsOpen = (open: boolean): Record<SectionKey, boolean> =>
+  SECTION_KEYS.reduce((acc, k) => { acc[k] = open; return acc; }, {} as Record<SectionKey, boolean>);
+
 interface SubjectArea {
   key: string;
   title: string;
@@ -30,10 +36,17 @@ interface GradeLevel {
   searchGroups: string[];
 }
 
+interface ResourceType {
+  key: string;
+  searchMaterialType: string;
+  title: string;
+}
+
 interface Props {
   hideFeatured?: boolean;
   subjectAreaKey?: string;
   gradeLevelKey?: string;
+  resourceTypeKey?: string;
   sortOrder?: string;
 }
 
@@ -50,6 +63,7 @@ interface State {
   includeMine: boolean,
   initPage: boolean,
   isSmallScreen: boolean,
+  sectionsOpen: Record<SectionKey, boolean>,
   keyword: string,
   lastSearchResultCount: number,
   noResourcesFound: boolean,
@@ -63,6 +77,8 @@ interface State {
   sortOrder: string,
   subjectAreasSelected: SubjectArea[],
   subjectAreasSelectedMap: Record<string, SubjectArea|undefined>,
+  resourceTypesSelected: ResourceType[],
+  resourceTypesSelectedMap: Record<string, ResourceType|undefined>,
   usersAuthoredResourcesCount: number,
   showAllCollections: boolean,
 }
@@ -75,9 +91,10 @@ class StemFinder extends React.Component<Props, State> {
     const hideFeatured = this.props.hideFeatured || false;
     let subjectAreaKey = this.props.subjectAreaKey;
     let gradeLevelKey = this.props.gradeLevelKey;
+    let resourceTypeKey = this.props.resourceTypeKey;
     const sortOrder = this.props.sortOrder || "";
 
-    if (!subjectAreaKey && !gradeLevelKey) {
+    if (!subjectAreaKey && !gradeLevelKey && !resourceTypeKey) {
       //
       // If we are not passed props indicating filters to pre-populate
       // then attempt to see if this information is available in the URL.
@@ -85,6 +102,7 @@ class StemFinder extends React.Component<Props, State> {
       const params = this.getFiltersFromURL();
       subjectAreaKey = params.subject;
       gradeLevelKey = params["grade-level"];
+      resourceTypeKey = params["resource-type"];
 
       subjectAreaKey = this.mapSubjectArea(subjectAreaKey);
     }
@@ -92,7 +110,7 @@ class StemFinder extends React.Component<Props, State> {
     //
     // Scroll to stem finder if we have filters specified.
     //
-    if (subjectAreaKey || gradeLevelKey) {
+    if (subjectAreaKey || gradeLevelKey || resourceTypeKey) {
       // this.scrollToFinder()
     }
 
@@ -125,6 +143,21 @@ class StemFinder extends React.Component<Props, State> {
       }
     }
 
+    const resourceTypesSelected: ResourceType[] = [];
+    const resourceTypesSelectedMap: Record<string, ResourceType|undefined> = {};
+
+    if (resourceTypeKey) {
+      const resourceTypesConfig: ResourceType[] = filters.resourceTypeFilters;
+      const match = resourceTypesConfig.find(rt => rt.key === resourceTypeKey);
+      if (match) {
+        resourceTypesSelected.push(match);
+        resourceTypesSelectedMap[match.key] = match;
+      }
+      // Unknown keys (e.g., /resources/resource-type/foo-unknown) are silently ignored.
+    }
+
+    const initialIsSmallScreen = window.innerWidth <= SMALL_SCREEN_MAX_WIDTH;
+
     this.state = {
       collections: [],
       displayLimit: DISPLAY_LIMIT_INCREMENT,
@@ -137,7 +170,8 @@ class StemFinder extends React.Component<Props, State> {
       includeContributed: false,
       includeMine: false,
       initPage: true,
-      isSmallScreen: window.innerWidth <= 768,
+      isSmallScreen: initialIsSmallScreen,
+      sectionsOpen: defaultSectionsOpen(!initialIsSmallScreen),
       keyword: "",
       lastSearchResultCount: 0,
       noResourcesFound: false,
@@ -151,6 +185,8 @@ class StemFinder extends React.Component<Props, State> {
       sortOrder,
       subjectAreasSelected,
       subjectAreasSelectedMap,
+      resourceTypesSelected,
+      resourceTypesSelectedMap,
       usersAuthoredResourcesCount: 0,
       showAllCollections: false,
     };
@@ -217,6 +253,14 @@ class StemFinder extends React.Component<Props, State> {
     }
   };
 
+  private handleResize = () => {
+    const isSmallScreen = window.innerWidth <= SMALL_SCREEN_MAX_WIDTH;
+    this.setState({
+      isSmallScreen,
+      sectionsOpen: defaultSectionsOpen(!isSmallScreen)
+    });
+  };
+
   componentDidMount () {
     if (document.getElementById("pprfl")) {
       document.getElementById("pprfl")?.addEventListener("scroll", this.handleLightboxScroll);
@@ -224,9 +268,7 @@ class StemFinder extends React.Component<Props, State> {
       document.addEventListener("scroll", this.handlePageScroll);
     }
 
-    window.addEventListener("resize", () => {
-      this.setState({ isSmallScreen: window.innerWidth <= 768 });
-    });
+    window.addEventListener("resize", this.handleResize);
   }
 
   componentWillUnmount () {
@@ -235,31 +277,46 @@ class StemFinder extends React.Component<Props, State> {
     } else {
       document.removeEventListener("scroll", this.handlePageScroll);
     }
+
+    window.removeEventListener("resize", this.handleResize);
   }
 
   getQueryParams = (incremental: any, keyword: any) => {
     const searchPage = incremental ? this.state.searchPage + 1 : 1;
     let query = keyword !== undefined ? ["search_term=", encodeURIComponent(keyword)] : [];
+
+    const selectedRTs = this.state.resourceTypesSelected;
+    // "Collection" joins on the first (non-incremental) search only. See legacy behaviour below.
+    const defaultIncrementalTypes = ["Investigation", "Activity", "Interactive", "Assessment"];
+
+    let requestedTypes: string[];
+    if (selectedRTs.length === 0) {
+      // no filter → legacy default
+      requestedTypes = incremental
+        ? defaultIncrementalTypes.slice()
+        : defaultIncrementalTypes.concat(["Collection"]);
+    } else {
+      requestedTypes = selectedRTs.map(rt => rt.searchMaterialType);
+    }
+
     query = query.concat([
       "&skip_lightbox_reloads=true",
       "&sort_order=Alphabetical",
-      "&material_types[]=Investigation",
-      "&material_types[]=Activity",
-      "&material_types[]=Interactive",
       "&include_related=0",
-      "&investigation_page=",
-      String(searchPage),
-      "&activity_page=",
-      String(searchPage),
-      "&interactive_page=",
-      String(searchPage),
-      "&per_page=",
-      String(DISPLAY_LIMIT_INCREMENT)
+      "&investigation_page=", String(searchPage),
+      "&activity_page=",      String(searchPage),
+      "&interactive_page=",   String(searchPage),
+      "&assessment_page=",    String(searchPage),
+      "&per_page=",           String(DISPLAY_LIMIT_INCREMENT)
     ]);
 
-    // only search collections on first search and gather all of them at once
-    if (!incremental) {
-      query.push("&material_types[]=Collection");
+    requestedTypes.forEach(t => {
+      query.push("&material_types[]=");
+      query.push(t);
+    });
+
+    if (!incremental && requestedTypes.indexOf("Collection") !== -1) {
+      // The Collections section component handles its own "show more" UI client-side.
       query.push("&collection_page=1");
       query.push("&collection_per_page=1000");
     }
@@ -398,39 +455,32 @@ class StemFinder extends React.Component<Props, State> {
   }
 
   noOptionsSelected () {
-    if (
-      this.state.subjectAreasSelected.length === 0 &&
-      this.state.gradeLevelsSelected.length === 0
-    ) {
-      return true;
-    } else {
-      return false;
-    }
+    return this.state.subjectAreasSelected.length === 0 &&
+           this.state.gradeLevelsSelected.length === 0 &&
+           this.state.resourceTypesSelected.length === 0;
   }
 
   renderLogo (subjectArea: any) {
     const filterId = this.buildFilterId(subjectArea.key);
-    const selected = this.state.subjectAreasSelectedMap[subjectArea.key];
-    const className = selected ? css.selected : null;
+    const selected = !!this.state.subjectAreasSelectedMap[subjectArea.key];
+    const className = selected ? css.selected : undefined;
 
     const clicked = () => {
       this.setState((prev) => {
         const subjectAreasSelected = prev.subjectAreasSelected.slice();
-        const subjectAreasSelectedMap = prev.subjectAreasSelectedMap;
+        const subjectAreasSelectedMap = { ...prev.subjectAreasSelectedMap };
         const index = subjectAreasSelected.indexOf(subjectArea);
 
         if (index === -1) {
           subjectAreasSelectedMap[subjectArea.key] = subjectArea;
           subjectAreasSelected.push(subjectArea);
-          jQuery("#" + css[filterId]).addClass(css.selected);
           gtag("event", "click", {
             "category": "Home Page Filter",
             "label": subjectArea.title
           });
         } else {
-          subjectAreasSelectedMap[subjectArea.key] = undefined;
+          delete subjectAreasSelectedMap[subjectArea.key];
           subjectAreasSelected.splice(index, 1);
-          jQuery("#" + css[filterId]).removeClass(css.selected);
         }
         this.scrollToFinder();
         return {
@@ -442,40 +492,52 @@ class StemFinder extends React.Component<Props, State> {
       }, this.search);
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLLIElement>) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        clicked();
+      }
+    };
+
     return (
-      <li key={subjectArea.key} id={css[filterId]} className={className} onClick={clicked}>
+      <li
+        key={subjectArea.key}
+        id={css[filterId]}
+        className={className}
+        onClick={clicked}
+        onKeyDown={handleKeyDown}
+        role="button"
+        tabIndex={0}
+        aria-pressed={selected}
+      >
         { subjectArea.title }
       </li>
     );
   }
 
   renderGLLogo (gradeLevel: any) {
-    let className = "portal-pages-finder-form-filters-logo";
+    const baseClassName = "portal-pages-finder-form-filters-logo";
     const filterId = this.buildFilterId(gradeLevel.key);
 
-    const selected = this.state.gradeLevelsSelectedMap[gradeLevel.key];
-    if (selected) {
-      className += " " + css.selected;
-    }
+    const selected = !!this.state.gradeLevelsSelectedMap[gradeLevel.key];
+    const className = selected ? `${baseClassName} ${css.selected}` : baseClassName;
 
     const clicked = () => {
       this.setState((prev) => {
         const gradeLevelsSelected = prev.gradeLevelsSelected.slice();
-        const gradeLevelsSelectedMap = prev.gradeLevelsSelectedMap;
+        const gradeLevelsSelectedMap = { ...prev.gradeLevelsSelectedMap };
         const index = gradeLevelsSelected.indexOf(gradeLevel);
 
         if (index === -1) {
           gradeLevelsSelectedMap[gradeLevel.key] = gradeLevel;
           gradeLevelsSelected.push(gradeLevel);
-          jQuery("#" + css[filterId]).addClass(css.selected);
           gtag("event", "click", {
             "category": "Home Page Filter",
             "label": gradeLevel.title
           });
         } else {
-          gradeLevelsSelectedMap[gradeLevel.key] = undefined;
+          delete gradeLevelsSelectedMap[gradeLevel.key];
           gradeLevelsSelected.splice(index, 1);
-          jQuery("#" + css[filterId]).removeClass(css.selected);
         }
         this.scrollToFinder();
         return {
@@ -487,37 +549,164 @@ class StemFinder extends React.Component<Props, State> {
       }, this.search);
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLLIElement>) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        clicked();
+      }
+    };
+
     return (
-      <li key={gradeLevel.key} id={css[filterId]} className={className} onClick={clicked}>
+      <li
+        key={gradeLevel.key}
+        id={css[filterId]}
+        className={className}
+        onClick={clicked}
+        onKeyDown={handleKeyDown}
+        role="button"
+        tabIndex={0}
+        aria-pressed={selected}
+      >
         { gradeLevel.title }
       </li>
     );
   }
 
+  renderRTLogo (resourceType: ResourceType) {
+    const filterId = this.buildFilterId(resourceType.key);
+    const selected = !!this.state.resourceTypesSelectedMap[resourceType.key];
+    const className = selected ? css.selected : undefined;
+
+    const toggle = () => {
+      this.setState((prev) => {
+        const resourceTypesSelected = prev.resourceTypesSelected.slice();
+        const resourceTypesSelectedMap = { ...prev.resourceTypesSelectedMap };
+        const index = resourceTypesSelected.indexOf(resourceType);
+
+        if (index === -1) {
+          resourceTypesSelectedMap[resourceType.key] = resourceType;
+          resourceTypesSelected.push(resourceType);
+          gtag("event", "click", {
+            "category": "Home Page Filter",
+            "label": resourceType.title
+          });
+        } else {
+          delete resourceTypesSelectedMap[resourceType.key];
+          resourceTypesSelected.splice(index, 1);
+        }
+        this.scrollToFinder();
+        return {
+          resourceTypesSelected,
+          resourceTypesSelectedMap,
+          hideFeatured: true,
+          initPage: false
+        };
+      }, this.search);
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLLIElement>) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggle();
+      }
+    };
+
+    return (
+      <li
+        key={resourceType.key}
+        aria-pressed={selected}
+        className={className}
+        id={css[filterId]}
+        role="button"
+        tabIndex={0}
+        onClick={toggle}
+        onKeyDown={handleKeyDown}
+      >
+        { resourceType.title }
+      </li>
+    );
+  }
+
   renderSubjectAreas () {
-    const containerClassName = this.state.isSmallScreen ? css.finderOptionsContainer : `${css.finderOptionsContainer} ${css.open}`;
+    const isOpen = this.state.sectionsOpen.subject;
+    const containerClassName = isOpen
+      ? `${css.finderOptionsContainer} ${css.open}`
+      : css.finderOptionsContainer;
     return (
       <div className={containerClassName}>
-        <h2 onClick={this.handleFilterHeaderClick}>Subject</h2>
-        <ul>
-          { filters.subjectAreas.map((subjectArea: any) => {
-            return this.renderLogo(subjectArea);
-          }) }
-        </ul>
+        <h2
+          data-section-key="subject"
+          onClick={this.handleFilterHeaderClick}
+          onKeyDown={this.handleFilterHeaderKeyDown}
+          role="button"
+          tabIndex={0}
+          aria-expanded={isOpen}
+        >
+          Subject
+        </h2>
+        {isOpen && (
+          <ul>
+            { filters.subjectAreas.map((subjectArea: any) => {
+              return this.renderLogo(subjectArea);
+            }) }
+          </ul>
+        )}
       </div>
     );
   }
 
   renderGradeLevels () {
-    const containerClassName = this.state.isSmallScreen ? css.finderOptionsContainer : `${css.finderOptionsContainer} ${css.open}`;
+    const isOpen = this.state.sectionsOpen["grade-level"];
+    const containerClassName = isOpen
+      ? `${css.finderOptionsContainer} ${css.open}`
+      : css.finderOptionsContainer;
     return (
       <div className={containerClassName}>
-        <h2 onClick={this.handleFilterHeaderClick}>Grade Level</h2>
-        <ul>
-          { filters.gradeFilters.map((gradeLevel: any) => {
-            return this.renderGLLogo(gradeLevel);
-          }) }
-        </ul>
+        <h2
+          data-section-key="grade-level"
+          onClick={this.handleFilterHeaderClick}
+          onKeyDown={this.handleFilterHeaderKeyDown}
+          role="button"
+          tabIndex={0}
+          aria-expanded={isOpen}
+        >
+          Grade Level
+        </h2>
+        {isOpen && (
+          <ul>
+            { filters.gradeFilters.map((gradeLevel: any) => {
+              return this.renderGLLogo(gradeLevel);
+            }) }
+          </ul>
+        )}
+      </div>
+    );
+  }
+
+  renderResourceTypes () {
+    const isOpen = this.state.sectionsOpen["resource-type"];
+    const containerClassName = isOpen
+      ? `${css.finderOptionsContainer} ${css.open}`
+      : css.finderOptionsContainer;
+
+
+    return (
+      <div className={containerClassName}>
+        <h2
+          data-section-key="resource-type"
+          aria-expanded={isOpen}
+          role="button"
+          tabIndex={0}
+          onClick={this.handleFilterHeaderClick}
+          onKeyDown={this.handleFilterHeaderKeyDown}
+        >
+          Resource Type
+        </h2>
+        {isOpen && (
+          <ul aria-label="Resource Type filter" role="group">
+            { filters.resourceTypeFilters.map((rt: ResourceType) => this.renderRTLogo(rt)) }
+          </ul>
+        )}
       </div>
     );
   }
@@ -551,6 +740,8 @@ class StemFinder extends React.Component<Props, State> {
     this.setState({
       subjectAreasSelected: [],
       gradeLevelsSelected: [],
+      resourceTypesSelected: [],
+      resourceTypesSelectedMap: {},
       keyword: "",
       searchInput: ""
     }, this.search);
@@ -627,23 +818,37 @@ class StemFinder extends React.Component<Props, State> {
   };
 
   renderSearch () {
-    const containerClassName = this.state.isSmallScreen ? css.finderOptionsContainer : `${css.finderOptionsContainer} ${css.open}`;
+    const isOpen = this.state.sectionsOpen.keywords;
+    const containerClassName = isOpen
+      ? `${css.finderOptionsContainer} ${css.open}`
+      : css.finderOptionsContainer;
     return (
       <div className={containerClassName}>
-        <h2 onClick={this.handleFilterHeaderClick}>Keywords</h2>
-        <form onSubmit={this.handleSearchSubmit}>
-          <div className={"portal-pages-search-input-container"}>
-            <AutoSuggest
-              name={"search-terms"}
-              query={this.state.searchInput}
-              getQueryParams={this.getQueryParams}
-              onChange={this.handleSearchInputChange}
-              onSubmit={this.handleAutoSuggestSubmit}
-              placeholder={"Type search term here"}
-              skipAutoSearch
-            />
-          </div>
-        </form>
+        <h2
+          data-section-key="keywords"
+          onClick={this.handleFilterHeaderClick}
+          onKeyDown={this.handleFilterHeaderKeyDown}
+          role="button"
+          tabIndex={0}
+          aria-expanded={isOpen}
+        >
+          Keywords
+        </h2>
+        {isOpen && (
+          <form onSubmit={this.handleSearchSubmit}>
+            <div className={"portal-pages-search-input-container"}>
+              <AutoSuggest
+                name={"search-terms"}
+                query={this.state.searchInput}
+                getQueryParams={this.getQueryParams}
+                onChange={this.handleSearchInputChange}
+                onSubmit={this.handleAutoSuggestSubmit}
+                placeholder={"Type search term here"}
+                skipAutoSearch
+              />
+            </div>
+          </form>
+        )}
       </div>
     );
   }
@@ -654,14 +859,29 @@ class StemFinder extends React.Component<Props, State> {
   }
 
   renderAdvanced () {
+    const isOpen = this.state.sectionsOpen.advanced;
+    const containerClassName = isOpen
+      ? `${css.finderOptionsContainer} ${css.open}`
+      : css.finderOptionsContainer;
     return (
       <>
-        <div className={css.finderOptionsContainer}>
-          <h2 onClick={this.handleFilterHeaderClick}>Advanced</h2>
-          <ul>
-            <li id={css.official} className={css.selected} onClick={(e) => this.handleOfficialClick(e)}>Official</li>
-            <li id={css.community} onClick={(e) => this.handleCommunityClick(e)}>Community</li>
-          </ul>
+        <div className={containerClassName}>
+          <h2
+            data-section-key="advanced"
+            onClick={this.handleFilterHeaderClick}
+            onKeyDown={this.handleFilterHeaderKeyDown}
+            role="button"
+            tabIndex={0}
+            aria-expanded={isOpen}
+          >
+            Advanced
+          </h2>
+          {isOpen && (
+            <ul>
+              <li id={css.official} className={css.selected} onClick={(e) => this.handleOfficialClick(e)}>Official</li>
+              <li id={css.community} onClick={(e) => this.handleCommunityClick(e)}>Community</li>
+            </ul>
+          )}
         </div>
         <div className={css.advancedSearchLink}>
           <a href="/search" title="Advanced Search">Advanced Search</a>
@@ -678,14 +898,26 @@ class StemFinder extends React.Component<Props, State> {
           { this.renderSearch() }
           { this.renderSubjectAreas() }
           { this.renderGradeLevels() }
+          { this.renderResourceTypes() }
           { isAdvancedUser && this.renderAdvanced() }
         </div>
       </div>
     );
   }
 
-  handleFilterHeaderClick = (e: any) => {
-    e.currentTarget.parentElement.classList.toggle(css.open);
+  handleFilterHeaderClick = (e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => {
+    const key = (e.currentTarget as HTMLElement).dataset.sectionKey as SectionKey | undefined;
+    if (!key) return;
+    this.setState(prev => ({
+      sectionsOpen: { ...prev.sectionsOpen, [key]: !prev.sectionsOpen[key] }
+    }));
+  };
+
+  handleFilterHeaderKeyDown = (e: React.KeyboardEvent<HTMLHeadingElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      this.handleFilterHeaderClick(e);
+    }
   };
 
   handleShowOnlyMine = (e: any) => {
@@ -776,10 +1008,17 @@ class StemFinder extends React.Component<Props, State> {
   };
 
   renderCollections () {
+    const selectedRTs = this.state.resourceTypesSelected;
+    const collectionSelected = selectedRTs.some(rt => rt.key === "collection");
+    if (selectedRTs.length > 0 && !collectionSelected) {
+      return null;
+    }
+    const onlyCollectionSelected = selectedRTs.length === 1 && collectionSelected;
+
     const { collections, numTotalCollections, initPage, hideFeatured, searching, showAllCollections } = this.state;
 
     if (!initPage) {
-      return <Collections collections={collections} numTotalCollections={numTotalCollections} searching={searching} showAllCollections={showAllCollections} enableShowAllCollections={this.handleShowAllCollections} />;
+      return <Collections collections={collections} numTotalCollections={numTotalCollections} searching={searching} showAllCollections={showAllCollections} enableShowAllCollections={this.handleShowAllCollections} expandedByDefault={onlyCollectionSelected} />;
     }
 
     let featuredCollections = this.state.featuredCollections;
@@ -802,18 +1041,24 @@ class StemFinder extends React.Component<Props, State> {
       );
     }
 
+    const selectedRTs = this.state.resourceTypesSelected;
+    const onlyCollectionSelected = selectedRTs.length === 1 && selectedRTs[0].key === "collection";
     const resources = this.state.resources.slice(0, this.state.displayLimit);
     return (
       <>
         { this.renderCollections() }
-        { this.renderResultsHeader() }
-        <div className={css.finderResultsContainer}>
-          { resources.map((resource: any, index: any) => {
-            return <StemFinderResult key={`${resource.external_url}-${index}`} resource={resource} index={index} showResources={this.showResources} />;
-          }) }
-        </div>
-        { this.state.searching ? <div className={css.loading}>Loading</div> : null }
-        { this.renderLoadMore() }
+        { !onlyCollectionSelected && (
+          <>
+            { this.renderResultsHeader() }
+            <div className={css.finderResultsContainer}>
+              { resources.map((resource: any, index: any) => {
+                return <StemFinderResult key={`${resource.external_url}-${index}`} resource={resource} index={index} showResources={this.showResources} />;
+              }) }
+            </div>
+            { this.renderLoadMore() }
+          </>
+        )}
+        { this.state.searching && !onlyCollectionSelected ? <div className={css.loading}>Loading</div> : null }
       </>
     );
   }
