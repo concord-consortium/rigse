@@ -10,7 +10,8 @@ import filters from "../helpers/filters";
 import portalObjectHelpers from "../helpers/portal-object-helpers";
 import AutoSuggest from "./search/auto-suggest";
 import FeaturedCollections from "./featured-collections/featured-collections";
-import Collections from "./collections";
+import { FilterChip } from "./filter-chip";
+import { buildSelectedFilterChips, SelectedFilterChip } from "../helpers/selected-filter-chips";
 
 import css from "./stem-finder.scss";
 
@@ -51,13 +52,11 @@ interface Props {
 }
 
 interface State {
-  collections: any[],
   displayLimit: number,
   featuredCollections: any[],
   firstSearch: boolean,
   gradeLevelsSelected: GradeLevel[],
   gradeLevelsSelectedMap: Record<string, GradeLevel|undefined>,
-  hideFeatured: boolean,
   includeOfficial: boolean,
   includeContributed: boolean,
   includeMine: boolean,
@@ -68,7 +67,6 @@ interface State {
   lastSearchResultCount: number,
   noResourcesFound: boolean,
   numTotalResources: number,
-  numTotalCollections: number;
   opacity: number,
   resources: any[],
   searching: boolean,
@@ -80,7 +78,6 @@ interface State {
   resourceTypesSelected: ResourceType[],
   resourceTypesSelectedMap: Record<string, ResourceType|undefined>,
   usersAuthoredResourcesCount: number,
-  showAllCollections: boolean,
 }
 
 class StemFinder extends React.Component<Props, State> {
@@ -88,7 +85,6 @@ class StemFinder extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    const hideFeatured = this.props.hideFeatured || false;
     let subjectAreaKey = this.props.subjectAreaKey;
     let gradeLevelKey = this.props.gradeLevelKey;
     let resourceTypeKey = this.props.resourceTypeKey;
@@ -159,13 +155,11 @@ class StemFinder extends React.Component<Props, State> {
     const initialIsSmallScreen = window.innerWidth <= SMALL_SCREEN_MAX_WIDTH;
 
     this.state = {
-      collections: [],
       displayLimit: DISPLAY_LIMIT_INCREMENT,
       featuredCollections: [],
       firstSearch: true,
       gradeLevelsSelected,
       gradeLevelsSelectedMap,
-      hideFeatured,
       includeOfficial: true,
       includeContributed: false,
       includeMine: false,
@@ -176,7 +170,6 @@ class StemFinder extends React.Component<Props, State> {
       lastSearchResultCount: 0,
       noResourcesFound: false,
       numTotalResources: 0,
-      numTotalCollections: 0,
       opacity: 1,
       resources: [],
       searching: false,
@@ -188,7 +181,6 @@ class StemFinder extends React.Component<Props, State> {
       resourceTypesSelected,
       resourceTypesSelectedMap,
       usersAuthoredResourcesCount: 0,
-      showAllCollections: false,
     };
   }
 
@@ -317,7 +309,8 @@ class StemFinder extends React.Component<Props, State> {
     });
 
     if (!incremental && requestedTypes.indexOf("Collection") !== -1) {
-      // The Collections section component handles its own "show more" UI client-side.
+      // Always fetch all matching collections in one page. In filtered mode they go to
+      // the top of the unified list. In the landing state they feed FeaturedCollections.
       query.push("&collection_page=1");
       query.push("&collection_per_page=1000");
     }
@@ -353,10 +346,22 @@ class StemFinder extends React.Component<Props, State> {
     /* eslint-disable react/no-access-state-in-setstate */
     const displayLimit = incremental ? this.state.displayLimit + DISPLAY_LIMIT_INCREMENT : DISPLAY_LIMIT_INCREMENT;
     const featuredCollections = incremental ? this.state.featuredCollections.slice(0) : [];
-    let resources = incremental ? this.state.resources.slice(0) : [];
     const searchPage = incremental ? this.state.searchPage + 1 : 1;
     const keyword = jQuery.trim(this.state.searchInput);
-    const collections = incremental ? this.state.collections.slice(0) : [];
+
+    // "Filtered mode": if any filter or keyword is active, collections join the unified list
+    // at the top.
+    const filteredMode =
+      this.state.subjectAreasSelected.length > 0 ||
+      this.state.gradeLevelsSelected.length > 0 ||
+      this.state.resourceTypesSelected.length > 0 ||
+      keyword.length > 0;
+
+    // On incremental calls, split the prior unified resources state back into its
+    // collections-prefix and non-collections-tail so the new accumulators stay clean.
+    const prevUnified = incremental ? this.state.resources.slice(0) : [];
+    const searchCollections: any[] = prevUnified.filter((r: any) => r.material_type === "Collection");
+    const searchResources: any[] = prevUnified.filter((r: any) => r.material_type !== "Collection");
     /* eslint-enable react/no-access-state-in-setstate */
 
     // short circuit further incremental searches when all data has been downloaded
@@ -365,6 +370,14 @@ class StemFinder extends React.Component<Props, State> {
         displayLimit
       });
       return;
+    }
+
+    // On any new search/filter, scroll the results list back to the top.
+    if (!incremental && !this.state.firstSearch) {
+      const finderResults = document.getElementById(css.finderResults);
+      if (finderResults && !document.getElementById("finderLightbox")) {
+        finderResults.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     }
 
     if (keyword !== "") {
@@ -379,7 +392,7 @@ class StemFinder extends React.Component<Props, State> {
       searching: true,
       noResourcesFound: false,
       featuredCollections,
-      resources
+      resources: [...searchCollections, ...searchResources]
     });
 
     jQuery.ajax({
@@ -388,7 +401,6 @@ class StemFinder extends React.Component<Props, State> {
       dataType: "json"
     }).done((result1: any) => {
       let numTotalResources = 0;
-      let numTotalCollections = 0;
       const results = result1.results;
       const usersAuthoredResourcesCount = result1.filters.number_authored_resources;
       let lastSearchResultCount = 0;
@@ -397,17 +409,25 @@ class StemFinder extends React.Component<Props, State> {
         result.materials.forEach((material: any) => {
           portalObjectHelpers.processResource(material);
           if (material.material_type === "Collection") {
-            featuredCollections.push(material);
-            if (!incremental) {
-              collections.push(material);
+            if (filteredMode) {
+              // Collections go to the top of the unified list, so count them in the total.
+              searchCollections.push(material);
+            } else {
+              // Landing state: collections feed FeaturedCollections only. Do not mix into
+              // the unified list and do not count in numTotalResources.
+              featuredCollections.push(material);
             }
           } else {
-            resources.push(material);
+            searchResources.push(material);
             lastSearchResultCount++;
           }
         });
+
+        // Count collections toward numTotalResources only in filtered mode.
         if (result.type === "collections") {
-          numTotalCollections = collections.length;
+          if (filteredMode) {
+            numTotalResources += result.pagination.total_items;
+          }
         } else {
           numTotalResources += result.pagination.total_items;
         }
@@ -416,7 +436,13 @@ class StemFinder extends React.Component<Props, State> {
       if (featuredCollections.length > 1) {
         featuredCollections.sort(sortByName);
       }
-      resources = sortResources(resources, this.state.sortOrder);
+
+      const sortedResources = sortResources(searchResources, this.state.sortOrder);
+      // Collections always appear before other resources in filtered mode.
+      // Sort them by the same sortOrder for internal ordering, but always keep
+      // them grouped above the non-collection resources.
+      const sortedCollections = sortResources(searchCollections, this.state.sortOrder);
+      const unified = [...sortedCollections, ...sortedResources];
 
       if (this.state.firstSearch) {
         fadeIn(this);
@@ -425,10 +451,8 @@ class StemFinder extends React.Component<Props, State> {
       this.setState({
         firstSearch: false,
         featuredCollections,
-        collections,
-        resources,
+        resources: unified,
         numTotalResources,
-        numTotalCollections,
         searchPage,
         displayLimit,
         searching: false,
@@ -487,7 +511,6 @@ class StemFinder extends React.Component<Props, State> {
         return {
           subjectAreasSelected,
           subjectAreasSelectedMap,
-          hideFeatured: true,
           initPage: false
         };
       }, this.search);
@@ -544,7 +567,6 @@ class StemFinder extends React.Component<Props, State> {
         return {
           gradeLevelsSelected,
           gradeLevelsSelectedMap,
-          hideFeatured: true,
           initPage: false
         };
       }, this.search);
@@ -599,7 +621,6 @@ class StemFinder extends React.Component<Props, State> {
         return {
           resourceTypesSelected,
           resourceTypesSelectedMap,
-          hideFeatured: true,
           initPage: false
         };
       }, this.search);
@@ -712,10 +733,8 @@ class StemFinder extends React.Component<Props, State> {
     );
   }
 
-  handleOfficialClick = (e: any) => {
-    e.currentTarget.classList.toggle(css.selected);
+  handleOfficialClick = () => {
     this.setState((prev) => ({
-      hideFeatured: true,
       includeOfficial: !prev.includeOfficial
     }), this.search);
     gtag("event", "click", {
@@ -724,10 +743,15 @@ class StemFinder extends React.Component<Props, State> {
     });
   };
 
-  handleCommunityClick = (e: any) => {
-    e.currentTarget.classList.toggle(css.selected);
+  handleOfficialKeyDown = (e: React.KeyboardEvent<HTMLLIElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      this.handleOfficialClick();
+    }
+  };
+
+  handleCommunityClick = () => {
     this.setState((prev) => ({
-      hideFeatured: true,
       includeContributed: !prev.includeContributed
     }), this.search);
     gtag("event", "click", {
@@ -736,17 +760,26 @@ class StemFinder extends React.Component<Props, State> {
     });
   };
 
-  clearFilters () {
+  handleCommunityKeyDown = (e: React.KeyboardEvent<HTMLLIElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      this.handleCommunityClick();
+    }
+  };
+
+  clearFilters = () => {
     jQuery(".portal-pages-finder-form-subject-areas-logo").removeClass(css.selected);
     this.setState({
       subjectAreasSelected: [],
+      subjectAreasSelectedMap: {},
       gradeLevelsSelected: [],
+      gradeLevelsSelectedMap: {},
       resourceTypesSelected: [],
       resourceTypesSelectedMap: {},
       keyword: "",
       searchInput: ""
     }, this.search);
-  }
+  };
 
   clearKeyword () {
     this.setState({ keyword: "", searchInput: "" }, () => this.search());
@@ -783,17 +816,13 @@ class StemFinder extends React.Component<Props, State> {
     this.search();
     this.scrollToFinder();
     this.setState({
-      hideFeatured: true,
       initPage: false,
-      showAllCollections: false,
     });
   };
 
   handleAutoSuggestSubmit = (searchInput: any) => {
     this.setState({
-      hideFeatured: true,
       initPage: false,
-      showAllCollections: false,
     });
     this.setState({ searchInput }, () => {
       this.search();
@@ -805,7 +834,6 @@ class StemFinder extends React.Component<Props, State> {
     e.preventDefault();
     e.stopPropagation();
     this.setState({
-      hideFeatured: true,
       initPage: false
     });
     this.setState({ sortOrder: e.target.value }, () => {
@@ -879,8 +907,28 @@ class StemFinder extends React.Component<Props, State> {
           </h2>
           {isOpen && (
             <ul>
-              <li id={css.official} className={css.selected} onClick={(e) => this.handleOfficialClick(e)}>Official</li>
-              <li id={css.community} onClick={(e) => this.handleCommunityClick(e)}>Community</li>
+              <li
+                id={css.official}
+                aria-pressed={this.state.includeOfficial}
+                className={this.state.includeOfficial ? css.selected : undefined}
+                role="button"
+                tabIndex={0}
+                onClick={this.handleOfficialClick}
+                onKeyDown={this.handleOfficialKeyDown}
+              >
+                Official
+              </li>
+              <li
+                id={css.community}
+                aria-pressed={this.state.includeContributed}
+                className={this.state.includeContributed ? css.selected : undefined}
+                role="button"
+                tabIndex={0}
+                onClick={this.handleCommunityClick}
+                onKeyDown={this.handleCommunityKeyDown}
+              >
+                Community
+              </li>
             </ul>
           )}
         </div>
@@ -940,7 +988,7 @@ class StemFinder extends React.Component<Props, State> {
     return (
       <div className={css.sortMenu}>
         <label htmlFor="sort">Sort by</label>
-        <select name="sort" value={this.state.sortOrder} onChange={this.handleSortSelection}>
+        <select id="sort" name="sort" value={this.state.sortOrder} onChange={this.handleSortSelection}>
           { sortValues.map((sortValue, index) => {
             return <option key={`${sortValue}-${index}`} value={sortValue}>{ sortValue }</option>;
           }) }
@@ -949,44 +997,121 @@ class StemFinder extends React.Component<Props, State> {
     );
   }
 
-  renderResultsHeader () {
-    const { displayLimit, noResourcesFound, numTotalResources, searching, usersAuthoredResourcesCount } = this.state;
-    const finderHeaderClass = this.isAdvancedUser() || usersAuthoredResourcesCount > 0 ? `${css.finderHeader} ${css.advanced}` : css.finderHeader;
+  // Ref for the chip-bar container so we can recover focus after removal.
+  // See the focus-management block in removeFilterChip below.
+  chipBarRef: React.RefObject<HTMLDivElement> = React.createRef();
 
-    if (noResourcesFound || searching) {
-      return (
-        <div className={finderHeaderClass}>
-          <h2>Activities</h2>
-          <div className={css.finderHeaderWrapper}>
-            <div className={css.finderHeaderLeft}>
-              <div className={css.finderHeaderResourceCount}>
-                { noResourcesFound ? <div>No <span>Activities</span> matching your search</div> : "Loading..." }
-              </div>
-              { (this.isAdvancedUser() || usersAuthoredResourcesCount > 0) && this.renderShowOnly() }
-            </div>
-            { this.renderSortMenu() }
-          </div>
-        </div>
-      );
+  removeFilterChip = (chip: SelectedFilterChip, removedIndex: number) => {
+    this.setState(prev => {
+      const next: any = {};
+      switch (chip.kind) {
+        case "subject":
+          next.subjectAreasSelected = prev.subjectAreasSelected.filter(s => s.key !== chip.key);
+          next.subjectAreasSelectedMap = { ...prev.subjectAreasSelectedMap };
+          delete next.subjectAreasSelectedMap[chip.key];
+          // The jQuery-driven left-rail render mutates the DOM. Reset its visible state here
+          // by also toggling the `.selected` class off on the corresponding <li>.
+          jQuery("#" + css[this.buildFilterId(chip.key)]).removeClass(css.selected);
+          break;
+        case "grade":
+          next.gradeLevelsSelected = prev.gradeLevelsSelected.filter(g => g.key !== chip.key);
+          next.gradeLevelsSelectedMap = { ...prev.gradeLevelsSelectedMap };
+          delete next.gradeLevelsSelectedMap[chip.key];
+          break;
+        case "resourceType":
+          next.resourceTypesSelected = prev.resourceTypesSelected.filter(rt => rt.key !== chip.key);
+          next.resourceTypesSelectedMap = { ...prev.resourceTypesSelectedMap };
+          delete next.resourceTypesSelectedMap[chip.key];
+          break;
+        case "keyword":
+          next.keyword = "";
+          next.searchInput = "";
+          break;
+      }
+      return next;
+    }, () => {
+      // Focus management: the X button the user just activated has been unmounted.
+      // If any chips remain, shift focus to a neighboring chip's X — the chip now at
+      // `removedIndex`, or the new last chip if we removed the trailing one. If no
+      // chips remain, the chip bar itself has unmounted (along with Clear filters),
+      // so redirect focus to the sort <select>, rather than letting it fall to document.body.
+      const bar = this.chipBarRef.current;
+      if (bar) {
+        const buttons = bar.querySelectorAll<HTMLButtonElement>("button");
+        // Button ordering: [chip#0 ×, chip#1 ×, …, clear-filters]. The trailing
+        // clear-filters button isn't a valid focus target for "next chip," so clamp
+        // against `buttons.length - 2`.
+        const lastChipIndex = buttons.length - 2;
+        if (lastChipIndex >= 0) {
+          const targetIndex = Math.min(removedIndex, lastChipIndex);
+          buttons[targetIndex]?.focus();
+        }
+      } else {
+        document.getElementById("sort")?.focus();
+      }
+      this.search();
+    });
+  };
+
+  renderFilterChipBar () {
+    const chips = buildSelectedFilterChips({
+      subjectAreasSelected:  this.state.subjectAreasSelected,
+      gradeLevelsSelected:   this.state.gradeLevelsSelected,
+      resourceTypesSelected: this.state.resourceTypesSelected,
+      keyword:               this.state.keyword || ""
+    });
+
+    if (chips.length === 0) return null;
+
+    return (
+      <div
+        aria-label="Selected filters"
+        className={css.filterChipBar}
+        ref={this.chipBarRef}
+        role="region"
+      >
+        { chips.map((chip, index) => (
+          <FilterChip
+            key={`${chip.kind}-${chip.key}`}
+            label={chip.label}
+            onRemove={() => this.removeFilterChip(chip, index)}
+          />
+        )) }
+        <button
+          className={css.clearFiltersButton}
+          type="button"
+          onClick={() => this.clearFilters()}
+        >
+          Clear filters
+        </button>
+      </div>
+    );
+  }
+
+  renderResultsHeader () {
+    const { noResourcesFound, numTotalResources, searching, usersAuthoredResourcesCount } = this.state;
+
+    let countLabel: React.ReactNode;
+    if (searching) {
+      countLabel = "Loading…";
+    } else if (noResourcesFound || numTotalResources === 0) {
+      countLabel = "No results matching your search";
+    } else {
+      countLabel = `${numTotalResources} ${pluralize(numTotalResources, "result", "results")}`;
     }
 
-    const showingAll = displayLimit >= numTotalResources;
-    const multipleResources = numTotalResources > 1;
-    const resourceCount = showingAll ? numTotalResources : displayLimit + " of " + numTotalResources;
-    jQuery("#portal-pages-finder").removeClass("loading");
+    if (!searching) {
+      jQuery("#portal-pages-finder").removeClass("loading");
+    }
+
     return (
-      <div className={finderHeaderClass}>
-        <h2>Activities</h2>
-        <div className={css.finderHeaderWrapper}>
-          <div className={css.finderHeaderLeft}>
-            <div className={css.finderHeaderResourceCount}>
-              { showingAll && multipleResources ? "Showing All " : "Showing " }
-              <strong>{ resourceCount + " " + pluralize(resourceCount, "Activity", "Activities") }</strong> matching your search
-            </div>
-            { (this.isAdvancedUser() || usersAuthoredResourcesCount > 0) && this.renderShowOnly() }
-          </div>
-          { this.renderSortMenu() }
+      <div className={css.finderHeader}>
+        <div className={css.finderHeaderTop}>
+          <div className={css.finderHeaderResourceCount}>{countLabel}</div>
+          {this.renderSortMenu()}
+          {(this.isAdvancedUser() || usersAuthoredResourcesCount > 0) && this.renderShowOnly()}
         </div>
+        {this.renderFilterChipBar()}
       </div>
     );
   }
@@ -1004,40 +1129,6 @@ class StemFinder extends React.Component<Props, State> {
     }, 500);
   }
 
-  handleShowAllCollections = () => {
-    this.setState({ showAllCollections: true });
-  };
-
-  onlyCollectionSelected () {
-    const selected = this.state.resourceTypesSelected;
-    return selected.length === 1 && selected[0].key === "collection";
-  }
-
-  renderCollections () {
-    const selectedRTs = this.state.resourceTypesSelected;
-    const collectionSelected = selectedRTs.some(rt => rt.key === "collection");
-    if (selectedRTs.length > 0 && !collectionSelected) {
-      return null;
-    }
-    const onlyCollectionSelected = this.onlyCollectionSelected();
-
-    const { collections, numTotalCollections, initPage, hideFeatured, searching, showAllCollections } = this.state;
-
-    if (!initPage) {
-      return <Collections collections={collections} numTotalCollections={numTotalCollections} searching={searching} showAllCollections={showAllCollections} enableShowAllCollections={this.handleShowAllCollections} expandedByDefault={onlyCollectionSelected} />;
-    }
-
-    let featuredCollections = this.state.featuredCollections;
-    featuredCollections = featuredCollections.sort(() => Math.random() - Math.random()).slice(0, 3);
-    const showFeaturedCollections = !hideFeatured && initPage && this.noOptionsSelected() && featuredCollections.length > 0;
-
-    if (showFeaturedCollections) {
-      return <FeaturedCollections featuredCollections={featuredCollections} />;
-    }
-
-    return null;
-  }
-
   renderResults () {
     if (this.state.firstSearch) {
       return (
@@ -1047,23 +1138,32 @@ class StemFinder extends React.Component<Props, State> {
       );
     }
 
-    const onlyCollectionSelected = this.onlyCollectionSelected();
+    // Landing state: show FeaturedCollections strip (no filters, no keyword, initial page).
+    const showFeaturedStrip =
+      !this.props.hideFeatured &&
+      this.state.initPage &&
+      this.noOptionsSelected() &&
+      (this.state.keyword || "").trim().length === 0 &&
+      this.state.featuredCollections.length > 0;
+
+    const featured = showFeaturedStrip
+      ? this.state.featuredCollections.slice().sort(() => Math.random() - Math.random()).slice(0, 3)
+      : [];
+
+
     const resources = this.state.resources.slice(0, this.state.displayLimit);
+
     return (
       <>
-        { this.renderCollections() }
-        { !onlyCollectionSelected && (
-          <>
-            { this.renderResultsHeader() }
-            <div className={css.finderResultsContainer}>
-              { resources.map((resource: any, index: any) => {
-                return <StemFinderResult key={`${resource.external_url}-${index}`} resource={resource} index={index} showResources={this.showResources} />;
-              }) }
-            </div>
-            { this.renderLoadMore() }
-          </>
-        )}
-        { this.state.searching && !onlyCollectionSelected ? <div className={css.loading}>Loading</div> : null }
+        { showFeaturedStrip && <FeaturedCollections featuredCollections={featured} /> }
+        { this.renderResultsHeader() }
+        <div className={css.finderResultsContainer}>
+          { resources.map((resource: any, index: any) => (
+            <StemFinderResult key={`${resource.external_url}-${index}`} resource={resource} index={index} showResources={this.showResources} />
+          )) }
+        </div>
+        { this.renderLoadMore() }
+        { this.state.searching ? <div className={css.loading}>Loading</div> : null }
       </>
     );
   }

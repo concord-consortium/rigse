@@ -598,6 +598,7 @@ $materials-collection-item-icon-width: 300px;
     &:hover {
       background: $col-gold;
       border-color: $col-gold;
+      color: $col-darkgray;
     }
   }
 
@@ -609,7 +610,7 @@ $materials-collection-item-icon-width: 300px;
     &:hover {
       background: $col-gold;
       border-color: $col-gold;
-      color: $white;
+      color: $col-darkgray;
     }
   }
 

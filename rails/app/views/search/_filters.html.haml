@@ -30,16 +30,16 @@
             = check_box_tag 'material_types[]', 'Interactive',  @form_model.material_types.include?('Interactive'),:id=>'interactive'
             = label_tag 'interactive', t(:interactive).titleize
             %br
-            = check_box_tag 'material_types[]', 'Assessment',  @form_model.material_types.include?('Assessment'),:id=>'assessment'
+            = check_box_tag 'material_types[]', 'Assessment', @form_model.material_types.include?('Assessment'),:id=>'assessment'
             = label_tag 'assessment', t(:assessment).titleize
             %br
-            = check_box_tag 'material_types[]', 'Activity',  @form_model.material_types.include?('Activity'),:id=>'activity'
+            = check_box_tag 'material_types[]', 'Activity', @form_model.material_types.include?('Activity'),:id=>'activity'
             = label_tag 'activity', t(:activity).titleize
             %br
             = check_box_tag 'material_types[]', 'Investigation', @form_model.material_types.include?('Investigation'),:id=>'investigation'
             = label_tag 'investigation', t(:investigation).titleize
             %br
-            = check_box_tag 'material_types[]', 'Collection',  @form_model.material_types.include?('Collection'),:id=>'collection'
+            = check_box_tag 'material_types[]', 'Collection', @form_model.material_types.include?('Collection'),:id=>'collection'
             = label_tag 'collection', t(:collection).titleize
             %br
         #material-properties-filters.filter-group

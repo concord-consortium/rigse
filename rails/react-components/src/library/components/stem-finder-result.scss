@@ -159,6 +159,8 @@
       }
     }
     .metaTags {
+      display: flex;
+      flex-wrap: wrap;
       line-height: 1;
       margin-top: 3px;
       margin-bottom: 3px;
@@ -250,7 +252,7 @@
       &:active {
         background: $col-gold;
         border-color: $col-gold;
-        color: $white;
+        color: $col-darkgray;
       }
     }
 
@@ -268,7 +270,7 @@
       &:hover, &:active {
         background: $col-gold;
         border-color: $col-gold;
-        color: $white;
+        color: $col-darkgray;
       }
     }
 

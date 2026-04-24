@@ -2,6 +2,7 @@ import React from "react";
 import Component from "../helpers/component";
 import { MakeTeacherEditionLink } from "../helpers/make-teacher-edition-links";
 import GradeLevels from "./grade-levels";
+import { ResourceTypeTag } from "./resource-type-tag";
 import StemFinderResultStandards from "./stem-finder-result-standards";
 import RelatedResourceResult from "./related-resource-result";
 
@@ -387,6 +388,7 @@ const StemFinderResult = Component({
           </div>
           <div className={css.metaTags}>
             <GradeLevels resource={resource} />
+            <ResourceTypeTag resource={resource} />
             { this.renderTags() }
             { this.renderAssignedClasses() }
           </div>

@@ -648,8 +648,6 @@ describe Search do
   end
 
   describe "Assessment material_type" do
-    include SolrSpecHelper
-
     let(:admin) { FactoryBot.generate(:admin_user) }
 
     let!(:regular_activity) do

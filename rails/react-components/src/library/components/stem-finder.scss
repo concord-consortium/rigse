@@ -8,7 +8,7 @@
   .finderForm {
     margin-bottom: 50px;
     position: sticky;
-    top: 50px;
+    top: 20px;
   }
   #finderResults {
     margin: 0;
@@ -225,27 +225,27 @@
 
       &#simulation {
         &:before {
-          content: "\f3f2";
+          content: $icon-simulation;
         }
       }
       &#assessment {
         &:before {
-          content: "\f559";
+          content: $icon-assessment;
         }
       }
       &#activity {
         &:before {
-          content: "\f14b";
+          content: $icon-activity;
         }
       }
       &#sequence {
         &:before {
-          content: "\f5fd";
+          content: $icon-sequence;
         }
       }
       &#collection {
         &:before {
-          content: "\f49c";
+          content: $icon-collection;
           left: 7px;
         }
       }
@@ -264,67 +264,118 @@
 }
 
 .finderHeader {
+  background: $light-blue;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 0 12px;
+  position: sticky;
+  top: 0;
+  z-index: 6;
+}
+
+.finderHeaderTop {
+  align-items: center;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.finderHeaderResourceCount {
+  color: $col-darkgray;
+  flex: 1 1 auto;
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.filterChipBar {
+  align-items: center;
+  column-gap: 5px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  margin-bottom: 10px;
+  row-gap: 5px;
 
-  &.advanced {
-    h2 {
-      width: 645px;
-    }
+  .clearFiltersButton {
+    margin-left: 5px;
   }
+}
 
-  h2 {
+.clearFiltersButton {
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  color: inherit;
+  cursor: pointer;
+  font: 500 14px $font-museo-sans;
+  height: 30px;
+  padding: 1px 6px;
+
+  &:hover,
+  &:focus-visible {
+    background: $col-gold;
     color: $col-darkgray;
-    font-family: $font-museo;
-    font-size: 24px;
-    line-height: .8;
-    width: 100%;
   }
-  .finderHeaderWrapper {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    margin: 5px 0 -3px 0;
-    width: 100%;
-    align-items: flex-end;
+
+  &:focus-visible {
+    outline: 2px solid $col-blue;
+    outline-offset: 2px;
   }
-  .finderHeaderLeft {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-  }
-  .finderHeaderResourceCount {
+}
+
+.showOnly {
+  display: flex;
+  font-size: 14px;
+
+  label {
     align-self: center;
     color: $col-darkgray;
-
-    span {
-      font-weight: bold;
-    }
-  }
-  .showOnly, .sortMenu {
-    display: flex;
     font-size: 14px;
-    width: 217px;
+    font-weight: 300;
+    text-transform: none;
+    white-space: nowrap;
+  }
+}
 
-    label {
-      align-self: center;
-      color: $col-darkgray;
-      font-size: 14px;
-      font-weight: 300;
-      text-transform: none;
-      white-space: nowrap;
+.sortMenu {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+
+  label {
+    color: $col-darkgray;
+    font: 500 14px $font-museo-sans;
+    text-transform: none;
+    white-space: nowrap;
+  }
+
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: $white;
+    background-image: url("../assets/icons/expand-more-icon.svg");
+    background-position: right center;
+    background-repeat: no-repeat;
+    background-size: 24px 24px;
+    border: 1.5px solid $col-blue;
+    border-radius: 4px;
+    color: $col-darkgray;
+    cursor: pointer;
+    font: 500 14px $font-museo-sans;
+    height: 26px;
+    line-height: 1;
+    padding: 0 28px 0 10px;
+
+    &:hover,
+    &:focus-visible {
+      background-color: $col-blue;
+      background-image: url("../assets/icons/expand-more-icon-white.svg");
+      color: $white;
     }
-    select {
-      background: $white;
-      border-radius: 4px;
-      font: 300 14px $font-museo-sans;
-      margin: 0 0 0 5px;
-      overflow: hidden;
-      padding: 5px;
-      white-space: nowrap;
-      width: 155px;
+
+    &:focus-visible {
+      outline: 2px solid $col-blue;
+      outline-offset: 2px;
     }
   }
 }
@@ -339,7 +390,7 @@
       li {
         &:hover {
           background: $col-gold;
-          color: $white;
+          color: $col-darkgray;
         }
       }
     }
@@ -372,8 +423,4 @@
       }
     }
   }
-}
-
-@media screen and (max-width: 500px) {
-
 }
