@@ -255,6 +255,7 @@ class StemFinder extends React.Component<Props, State> {
 
   private handleResize = () => {
     const isSmallScreen = window.innerWidth <= SMALL_SCREEN_MAX_WIDTH;
+    if (isSmallScreen === this.state.isSmallScreen) return;
     this.setState({
       isSmallScreen,
       sectionsOpen: defaultSectionsOpen(!isSmallScreen)
@@ -703,7 +704,7 @@ class StemFinder extends React.Component<Props, State> {
           Resource Type
         </h2>
         {isOpen && (
-          <ul aria-label="Resource Type filter" role="group">
+          <ul>
             { filters.resourceTypeFilters.map((rt: ResourceType) => this.renderRTLogo(rt)) }
           </ul>
         )}
@@ -1007,13 +1008,18 @@ class StemFinder extends React.Component<Props, State> {
     this.setState({ showAllCollections: true });
   };
 
+  onlyCollectionSelected () {
+    const selected = this.state.resourceTypesSelected;
+    return selected.length === 1 && selected[0].key === "collection";
+  }
+
   renderCollections () {
     const selectedRTs = this.state.resourceTypesSelected;
     const collectionSelected = selectedRTs.some(rt => rt.key === "collection");
     if (selectedRTs.length > 0 && !collectionSelected) {
       return null;
     }
-    const onlyCollectionSelected = selectedRTs.length === 1 && collectionSelected;
+    const onlyCollectionSelected = this.onlyCollectionSelected();
 
     const { collections, numTotalCollections, initPage, hideFeatured, searching, showAllCollections } = this.state;
 
@@ -1041,8 +1047,7 @@ class StemFinder extends React.Component<Props, State> {
       );
     }
 
-    const selectedRTs = this.state.resourceTypesSelected;
-    const onlyCollectionSelected = selectedRTs.length === 1 && selectedRTs[0].key === "collection";
+    const onlyCollectionSelected = this.onlyCollectionSelected();
     const resources = this.state.resources.slice(0, this.state.displayLimit);
     return (
       <>
