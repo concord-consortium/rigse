@@ -526,7 +526,7 @@ RailsPortal::Application.routes.draw do
 
     get '/resources/:id(/:slug)' => 'browse/external_activities#show', :as => :stem_resources
 
-    get '/resources/:type/:id_or_filter_value(/:slug)' => 'browse/external_activities#show', :as => :redirect_stem_resources
+    get '/resources/:type/:id_or_filter_value(/:slug)' => 'home#stem_resources', :as => :redirect_stem_resources
 
     get 'robots.txt'    => 'robots#index'
     get 'sitemap.xml'   => 'robots#sitemap'

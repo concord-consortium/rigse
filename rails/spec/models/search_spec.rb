@@ -646,4 +646,50 @@ describe Search do
     end
 
   end
+
+  describe "Assessment material_type" do
+    include SolrSpecHelper
+
+    let(:admin) { FactoryBot.generate(:admin_user) }
+
+    let!(:regular_activity) do
+      FactoryBot.create(:external_activity,
+        publication_status: 'published',
+        material_type: 'Activity',
+        name: 'Plain Activity')
+    end
+
+    let!(:assessment_material) do
+      FactoryBot.create(:external_activity,
+        publication_status: 'published',
+        material_type: 'Assessment',
+        name: 'Quiz One')
+    end
+
+    before(:all) do
+      solr_setup
+      clean_solar_index
+    end
+
+    before(:each) { reindex_all }
+
+    after(:each) { clean_solar_index }
+
+    it "accepts 'Assessment' in material_types and clean_material_types" do
+      expect(Search.clean_material_types(['Assessment'])).to eq(['Assessment'])
+      expect(Search::AllMaterials).to include('Assessment')
+    end
+
+    it "returns only Assessment materials when filtered" do
+      search = Search.new(user_id: admin.id, material_types: ['Assessment'])
+      names = search.results[:all].map(&:name)
+      expect(names).to include('Quiz One')
+      expect(names).not_to include('Plain Activity')
+    end
+
+    it "paginates assessments via assessment_page/per_page opts" do
+      search = Search.new(user_id: admin.id, material_types: ['Assessment'], assessment_page: 1, assessment_per_page: 5)
+      expect(search.results['Assessment'].per_page).to eq(5)
+    end
+  end
 end

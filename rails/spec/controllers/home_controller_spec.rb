@@ -120,6 +120,56 @@ describe HomeController do
     end
   end
 
+  describe '#stem_resources' do
+    describe "with a resource-detail URL" do
+      let(:assessment) do
+        FactoryBot.create(:external_activity,
+          name: "Quiz One",
+          publication_status: "published",
+          material_type: "Assessment")
+      end
+
+      it "redirects to the resource page when type is 'assessment'" do
+        get :stem_resources, params: { type: "assessment", id_or_filter_value: assessment.id.to_s }
+        expect(response).to redirect_to("/resources/#{assessment.id}/#{assessment.name.parameterize}")
+      end
+
+      it "redirects to the resource page when type is 'activity'" do
+        activity_record = FactoryBot.create(:external_activity,
+          name: "Plain Activity",
+          publication_status: "published",
+          material_type: "Activity")
+        get :stem_resources, params: { type: "activity", id_or_filter_value: activity_record.id.to_s }
+        expect(response).to redirect_to("/resources/#{activity_record.id}/#{activity_record.name.parameterize}")
+      end
+
+      it "returns 404 when type is 'interactive' but the id is unknown" do
+        get :stem_resources, params: { type: "interactive", id_or_filter_value: "999999999999999" }
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    describe "with a filter URL" do
+      it "renders the home page when type is 'resource-type'" do
+        get :stem_resources, params: { type: "resource-type", id_or_filter_value: "simulation" }
+        expect(response).to have_http_status(:ok)
+        expect(response).to render_template(:home)
+      end
+
+      it "renders the home page when type is 'subject'" do
+        get :stem_resources, params: { type: "subject", id_or_filter_value: "chemistry" }
+        expect(response).to have_http_status(:ok)
+        expect(response).to render_template(:home)
+      end
+
+      it "renders the home page when type is 'grade-level'" do
+        get :stem_resources, params: { type: "grade-level", id_or_filter_value: "middle-school" }
+        expect(response).to have_http_status(:ok)
+        expect(response).to render_template(:home)
+      end
+    end
+  end
+
   # TODO: auto-generated
   describe '#index' do
     it 'GET index' do

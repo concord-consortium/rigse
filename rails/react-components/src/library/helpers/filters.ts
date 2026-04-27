@@ -26,6 +26,14 @@ const filters: any = {
     { key: "high-school", title: "High School", grades: ["9", "10", "11", "12"], label: "9-12", searchGroups: ["9-12"] },
     { key: "higher-education", title: "Higher Education", grades: ["Higher Ed"], label: "Higher Education", searchGroups: ["Higher Ed"] }
     // {key: "informal-learning", title: "Informal Learning (TODO)", grades: [], label: "Informal Learning"},
+  ],
+
+  resourceTypeFilters: [
+    { key: "simulation", title: "Simulation", searchMaterialType: "Interactive" },
+    { key: "assessment", title: "Assessment", searchMaterialType: "Assessment" },
+    { key: "activity", title: "Activity", searchMaterialType: "Activity" },
+    { key: "sequence", title: "Sequence", searchMaterialType: "Investigation" },
+    { key: "collection", title: "Collection", searchMaterialType: "Collection" }
   ]
 };
 

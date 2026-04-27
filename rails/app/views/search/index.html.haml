@@ -14,6 +14,7 @@
     = hidden_field_tag 'activity_page', (@form_model.activity_page rescue 1)
     = hidden_field_tag 'interactive_page', (@form_model.interactive_page rescue 1)
     = hidden_field_tag 'collection_page', (@form_model.collection_page rescue 1)
+    = hidden_field_tag 'assessment_page', (@form_model.assessment_page rescue 1)
   = hidden_field 'prevent','submit',:value=>"0"
   #results
     .search_resultscontainer
@@ -59,7 +60,8 @@
       jQuery("#investigation_page").val(1);
       jQuery("#activity_page").val(1);
       jQuery("#interactive_page").val(1);
-      jQuery("#collection_page").val();
+      jQuery("#collection_page").val(1);
+      jQuery("#assessment_page").val(1);
       var query = jQuery(form).serialize();
 
       window.updateSearchUrl(query);

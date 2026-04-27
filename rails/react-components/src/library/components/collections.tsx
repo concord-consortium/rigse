@@ -6,6 +6,7 @@ import css from "./collections.scss";
 
 interface Props {
   collections: any[]
+  expandedByDefault?: boolean;
   numTotalCollections: number;
   searching: boolean;
   showAllCollections: boolean;
@@ -17,9 +18,10 @@ const initialDisplayCount = 2;
 export default class Collections extends React.Component<Props> {
 
   render () {
-    const { collections, numTotalCollections, searching, showAllCollections, enableShowAllCollections } = this.props;
-    const displayCount = showAllCollections ? numTotalCollections : initialDisplayCount;
-    const showingAll = showAllCollections || displayCount >= numTotalCollections;
+    const { collections, numTotalCollections, searching, showAllCollections, enableShowAllCollections, expandedByDefault } = this.props;
+    const expanded = showAllCollections || !!expandedByDefault;
+    const displayCount = expanded ? numTotalCollections : initialDisplayCount;
+    const showingAll = expanded || displayCount >= numTotalCollections;
     const collectionCount = showingAll ? numTotalCollections : displayCount + " of " + numTotalCollections;
     const displayCollections = collections.slice(0, displayCount);
 
