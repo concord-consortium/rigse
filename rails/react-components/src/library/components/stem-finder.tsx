@@ -292,6 +292,13 @@ class StemFinder extends React.Component<Props, State> {
       requestedTypes = selectedRTs.map(rt => rt.searchMaterialType);
     }
 
+    // Collections are fetched in full (collection_per_page=1000) on non-incremental
+    // calls, so drop them from incremental requests to avoid re-fetching the first
+    // page and duplicating entries in searchCollections.
+    if (incremental) {
+      requestedTypes = requestedTypes.filter(t => t !== "Collection");
+    }
+
     query = query.concat([
       "&skip_lightbox_reloads=true",
       "&sort_order=Alphabetical",
@@ -460,6 +467,8 @@ class StemFinder extends React.Component<Props, State> {
         lastSearchResultCount,
         usersAuthoredResourcesCount
       });
+
+      jQuery("#portal-pages-finder").removeClass("loading");
 
       this.showResources();
     });
@@ -1098,10 +1107,6 @@ class StemFinder extends React.Component<Props, State> {
       countLabel = "No results matching your search";
     } else {
       countLabel = `${numTotalResources} ${pluralize(numTotalResources, "result", "results")}`;
-    }
-
-    if (!searching) {
-      jQuery("#portal-pages-finder").removeClass("loading");
     }
 
     return (
