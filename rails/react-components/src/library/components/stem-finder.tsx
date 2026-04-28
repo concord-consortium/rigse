@@ -777,7 +777,6 @@ class StemFinder extends React.Component<Props, State> {
   };
 
   clearFilters = () => {
-    jQuery(".portal-pages-finder-form-subject-areas-logo").removeClass(css.selected);
     this.setState({
       subjectAreasSelected: [],
       subjectAreasSelectedMap: {},
@@ -1018,9 +1017,6 @@ class StemFinder extends React.Component<Props, State> {
           next.subjectAreasSelected = prev.subjectAreasSelected.filter(s => s.key !== chip.key);
           next.subjectAreasSelectedMap = { ...prev.subjectAreasSelectedMap };
           delete next.subjectAreasSelectedMap[chip.key];
-          // The jQuery-driven left-rail render mutates the DOM. Reset its visible state here
-          // by also toggling the `.selected` class off on the corresponding <li>.
-          jQuery("#" + css[this.buildFilterId(chip.key)]).removeClass(css.selected);
           break;
         case "grade":
           next.gradeLevelsSelected = prev.gradeLevelsSelected.filter(g => g.key !== chip.key);
