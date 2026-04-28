@@ -425,3 +425,13 @@
     }
   }
 }
+
+@media screen and (max-height: 930px) and (min-width: 951px) {
+  .finderWrapper {
+    .finderForm {
+      margin-bottom: 30px;
+      position: relative;
+      top: 0;
+    }
+  }
+}
