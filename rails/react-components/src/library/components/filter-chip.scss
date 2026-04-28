@@ -1,0 +1,47 @@
+@import '../../shared/styles/variables/_variables.scss';
+
+.chip {
+  align-items: center;
+  background: $col-blue;
+  border-radius: 4px;
+  color: $col-white;
+  display: inline-flex;
+  font: 500 14px $font-museo-sans;
+  gap: 5px;
+  height: 30px;
+  padding: 1px 3px 1px 6px;
+}
+
+.chipLabel {
+  line-height: 1;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chipRemove {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  height: 26px;
+  justify-content: center;
+  padding: 0;
+  width: 26px;
+
+  &:hover {
+    background: $col-gold;
+    color: $col-darkgray;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $col-white;
+    outline-offset: -2px;
+  }
+
+  svg { display: block; }
+}

@@ -10,11 +10,6 @@ describe Browse::ExternalActivitiesController do
     :name => "test sequence",
     :publication_status => "published") }
 
-  let(:interactive) { FactoryBot.create(:interactive,
-    :name => "test interactive",
-    :publication_status => "published",
-    :external_activity_id => activity.id ) }
-
     before(:each) do
         @author_user = FactoryBot.generate(:author_user)
         @external_activity = FactoryBot.create(:external_activity, :name => 'activity', :url => 'external.activity.org/1', :user => @author_user, :publication_status => 'published')

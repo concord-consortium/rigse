@@ -151,12 +151,12 @@
     &.register:hover {
       background: $col-hover;
       border-color: $col-hover;
-      color: $white !important;
+      color: $col-darkgray !important;
     }
     &.log-in:hover {
       background-color: $col-hover;
       border-color: $col-hover;
-      color: $white !important;
+      color: $col-darkgray !important;
     }
     i.icon-login, i.icon-home {
       display: block;
@@ -197,7 +197,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     border: none;
-    color: $col-white;
+    color: $col-darkgray;
     display: inline-block;
     font-size: 15px;
     font-weight: normal;
@@ -206,7 +206,7 @@
     width: 100%;
 
     &:hover {
-      color: $col-white;
+      color: $col-darkgray;
       opacity: 1;
 
       li + li & a {

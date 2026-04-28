@@ -1,3 +1,5 @@
+@import '../variables/variables';
+
 // Rem output with px fallback
 @mixin font-size($sizeValue: 1) {
   font-size: ($sizeValue * 16) * 1px;
@@ -149,6 +151,19 @@
   background: none;
   margin: 0;
   display: inline-block;
+}
+
+@mixin meta-tag() {
+  align-items: center;
+  background-color: $light-gray;
+  color: $col-darkgray-75;
+  display: inline-flex;
+  font-size: 12px;
+  height: 12px;
+  line-height: 1;
+  margin-right: 5px;
+  overflow: hidden;
+  padding: 4px 5px;
 }
 
 @mixin box-shadow($top, $left, $blur, $color, $inset: false) {

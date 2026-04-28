@@ -1,0 +1,28 @@
+@import '../../shared/styles/mixins/_mixins.scss';
+
+.resourceTypeTag {
+  @include meta-tag;
+
+  .icon {
+    height: 13px;
+    margin-right: 1px;
+    overflow: hidden;
+    vertical-align: top;
+    width: 13px;
+
+    &.collection {
+      margin-right: 4px;
+      width: 15px;
+    }
+
+    &:before {
+      font-family: "Font Awesome 5 Pro";
+      font-weight: 300;
+    }
+    &.simulation:before { content: $icon-simulation; }
+    &.assessment:before { content: $icon-assessment; }
+    &.activity:before   { content: $icon-activity; }
+    &.sequence:before   { content: $icon-sequence; }
+    &.collection:before { content: $icon-collection; }
+  }
+}
