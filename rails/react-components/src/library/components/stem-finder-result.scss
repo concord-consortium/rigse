@@ -106,22 +106,6 @@
     }
   }
 
-  &.collection {
-    .metaTags {
-      &:after {
-        background: $light-gray;
-        color: $col-darkgray-75;
-        content: "Curated Collection";
-        display: inline-block;
-        font-size: 12px;
-        font-weight: 300;
-        line-height: 1;
-        margin: 0;
-        padding: 4px 5px;
-      }
-    }
-  }
-
   &.interactive, &.activity, &.sequence {
     background: $white;
   }

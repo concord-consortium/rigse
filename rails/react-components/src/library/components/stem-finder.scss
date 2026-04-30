@@ -11,6 +11,7 @@
     top: 20px;
   }
   #finderResults {
+    scroll-margin-top: 30px;
     margin: 0;
     position: relative;
     width: 73.68421%;
@@ -220,6 +221,7 @@
       &#community {
         &:before {
           content: '\f0c0';
+          left: 8px;
         }
       }
 
@@ -421,6 +423,16 @@
           width: 100%;
         }
       }
+    }
+  }
+}
+
+@media screen and (max-height: 930px) and (min-width: 951px) {
+  .finderWrapper {
+    .finderForm {
+      margin-bottom: 30px;
+      position: relative;
+      top: 0;
     }
   }
 }

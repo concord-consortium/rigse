@@ -60,7 +60,6 @@ interface State {
   includeOfficial: boolean,
   includeContributed: boolean,
   includeMine: boolean,
-  initPage: boolean,
   isSmallScreen: boolean,
   sectionsOpen: Record<SectionKey, boolean>,
   keyword: string,
@@ -163,7 +162,6 @@ class StemFinder extends React.Component<Props, State> {
       includeOfficial: true,
       includeContributed: false,
       includeMine: false,
-      initPage: true,
       isSmallScreen: initialIsSmallScreen,
       sectionsOpen: defaultSectionsOpen(!initialIsSmallScreen),
       keyword: "",
@@ -520,7 +518,6 @@ class StemFinder extends React.Component<Props, State> {
         return {
           subjectAreasSelected,
           subjectAreasSelectedMap,
-          initPage: false
         };
       }, this.search);
     };
@@ -576,7 +573,6 @@ class StemFinder extends React.Component<Props, State> {
         return {
           gradeLevelsSelected,
           gradeLevelsSelectedMap,
-          initPage: false
         };
       }, this.search);
     };
@@ -630,7 +626,6 @@ class StemFinder extends React.Component<Props, State> {
         return {
           resourceTypesSelected,
           resourceTypesSelectedMap,
-          initPage: false
         };
       }, this.search);
     };
@@ -794,7 +789,6 @@ class StemFinder extends React.Component<Props, State> {
   }
 
   toggleFilter (type: any, filter: any) {
-    this.setState({ initPage: false });
     const selectedKey: ("gradeLevelsSelected"|"subjectAreasSelected") = (type + "Selected") as any;
     const selectedFilters = this.state[selectedKey].slice();
     const index = selectedFilters.indexOf(filter);
@@ -823,15 +817,9 @@ class StemFinder extends React.Component<Props, State> {
     e.stopPropagation();
     this.search();
     this.scrollToFinder();
-    this.setState({
-      initPage: false,
-    });
   };
 
   handleAutoSuggestSubmit = (searchInput: any) => {
-    this.setState({
-      initPage: false,
-    });
     this.setState({ searchInput }, () => {
       this.search();
       this.scrollToFinder();
@@ -841,9 +829,6 @@ class StemFinder extends React.Component<Props, State> {
   handleSortSelection = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    this.setState({
-      initPage: false
-    });
     this.setState({ sortOrder: e.target.value }, () => {
       this.search();
     });
@@ -1139,10 +1124,9 @@ class StemFinder extends React.Component<Props, State> {
       );
     }
 
-    // Landing state: show FeaturedCollections strip (no filters, no keyword, initial page).
+    // Landing state: show FeaturedCollections strip (no filters, no keyword).
     const showFeaturedStrip =
       !this.props.hideFeatured &&
-      this.state.initPage &&
       this.noOptionsSelected() &&
       (this.state.keyword || "").trim().length === 0 &&
       this.state.featuredCollections.length > 0;
