@@ -1124,7 +1124,7 @@ class StemFinder extends React.Component<Props, State> {
       );
     }
 
-    // Landing state: show FeaturedCollections strip (no filters, no keyword, initial page).
+    // Landing state: show FeaturedCollections strip (no filters, no keyword).
     const showFeaturedStrip =
       !this.props.hideFeatured &&
       this.noOptionsSelected() &&
