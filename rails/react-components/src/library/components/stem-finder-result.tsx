@@ -264,19 +264,19 @@ const StemFinderResult = Component({
     const teacherEditionLink = resource.has_teacher_edition && Portal.currentUser.isTeacher
       ? <a href={MakeTeacherEditionLink(resource.external_url)} target="_blank" rel="noopener noreferrer" onClick={this.handleTeacherEditionClick}>Teacher Edition</a>
       : null;
-    const teacherGuideLink = resource.links.teacher_guide && Portal.currentUser.isTeacher
+    const teacherGuideLink = resource.links.teacher_guide
       ? <a href={resource.links.teacher_guide.url} target="_blank" rel="noopener noreferrer" onClick={this.handleTeacherGuideClick}>{ resource.links.teacher_guide.text }</a>
       : null;
-    const teacherResourcesLink = resource.links.teacher_resources && Portal.currentUser.isTeacher
+    const teacherResourcesLink = resource.links.teacher_resources
       ? <a href={resource.links.teacher_resources.url} target="_blank" rel="noopener noreferrer" onClick={this.handleTeacherResourcesClick}>{ resource.links.teacher_resources.text }</a>
       : null;
-    const rubricDocLink = resource.links.rubric_doc && Portal.currentUser.isTeacher
+    const rubricDocLink = resource.links.rubric_doc
       ? <a href={resource.links.rubric_doc.url} target="_blank" rel="noopener noreferrer" onClick={this.handleRubricDocClick}>{ resource.links.rubric_doc.text }</a>
       : null;
-    const assignCollectionLink = !isCollection && resource.links.assign_collection && (Portal.currentUser.isAdmin || Portal.currentUser.isManager)
+    const assignCollectionLink = !isCollection && resource.links.assign_collection
       ? <a href={resource.links.assign_collection.url} target="_blank" onClick={this.handleAddToCollectionClick} rel="noreferrer">{ resource.links.assign_collection.text }</a>
       : null;
-    const portalSettingsLink = resource.links.edit && (Portal.currentUser.isAdmin || Portal.currentUser.isManager)
+    const portalSettingsLink = resource.links.edit
       ? <a href={resource.links.edit.url} target="_blank" rel="noreferrer">Settings</a>
       : null;
 
