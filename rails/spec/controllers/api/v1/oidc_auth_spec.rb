@@ -126,6 +126,42 @@ RSpec.describe API::V1::JwtController, type: :controller do
         expect(mock_request.env['portal.auth_strategy']).to eq('oidc_bearer_token')
         expect(mock_request.env['portal.auth_client']).to eq('Full Flow SA')
       end
+
+      context 'opted-in client with a forwarded student token' do
+        let(:student) { FactoryBot.create(:full_portal_student) }
+        let(:clazz)   { FactoryBot.create(:portal_clazz, students: [student]) }
+        let(:offering) { FactoryBot.create(:portal_offering, clazz: clazz) }
+        let!(:opted_in_client) do
+          Admin::OidcClient.create!(
+            name: 'Forwarded SA', sub: oidc_sub,
+            email: 'test@project.iam.gserviceaccount.com',
+            user: admin_user, active: true, capabilities: ['update_offering_state']
+          )
+        end
+
+        before do
+          allow(mock_request).to receive(:headers)
+            .and_return({'Authorization' => "Bearer #{oidc_token}", 'X-Portal-Student-JWT' => 'fwd.jwt'})
+        end
+
+        it 'authenticates as the forwarded student and stamps the origin' do
+          result = ForwardedFirebaseToken::Result.new(user: student.user, origin_offering: offering, origin_clazz: clazz)
+          allow(ForwardedFirebaseToken).to receive(:verify).with('fwd.jwt').and_return(result)
+
+          expect(strategy.authenticate!).to eq(:success)
+          expect(strategy.user).to eq(student.user)
+          expect(mock_request.env['portal.forwarded_student']).to be true
+          expect(mock_request.env['portal.origin_offering_id']).to eq(offering.id)
+        end
+
+        it 'stamps portal.auth_error for an invalid forwarded token' do
+          allow(ForwardedFirebaseToken).to receive(:verify)
+            .and_raise(ForwardedFirebaseToken::Invalid.new(:class_hash_mismatch))
+
+          expect(strategy.authenticate!).to eq(:failure)
+          expect(mock_request.env['portal.auth_error']).to eq('forwarded_token_invalid')
+        end
+      end
     end
   end
 end
