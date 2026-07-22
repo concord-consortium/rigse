@@ -3,6 +3,8 @@
 # and some of the Portal Pages:
 # https://github.com/concord-consortium/portal-pages
 class API::V1::OfferingsController < API::APIController
+  include ForwardedAuthGuard
+  prepend_before_action :reject_forwarded_auth_error, only: [:update_student_metadata]
 
   def show
     offering = Portal::Offering

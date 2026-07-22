@@ -1,4 +1,6 @@
 class API::V1::StudentsController < API::APIController
+  include ForwardedAuthGuard
+  prepend_before_action :reject_forwarded_auth_error, only: [:add_to_class]
 
   # POST api/v1/students
   def create

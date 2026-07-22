@@ -83,12 +83,16 @@ class API::APIController < ApplicationController
   # NOTE: this approach requires you to return from the
   # method to prevent a double render problem. An easy way to do this:
   #  return error(...)
-  def error(message, status = 400, details = nil)
+  # error_code is a positional trailing param (not a keyword): existing callers
+  # pass a Hash as message (error(class_word: ...)); a keyword param would flip
+  # Ruby 3 parsing and break them.
+  def error(message, status = 400, details = nil, error_code = nil)
     error_body = {
       :success => false,
       :response_type => "ERROR",
       :message => message,
     }
+    error_body[:error_code] = error_code if error_code
     error_body[:details] = details if details
     render :json => error_body, :status => status
   end
