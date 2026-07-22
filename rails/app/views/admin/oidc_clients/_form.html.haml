@@ -22,4 +22,15 @@
         %li
           Active:
           = f.check_box :active
+        %li
+          Requires forwarded student JWT (Phase 2 — no mapped-user fallback):
+          = f.check_box :requires_forwarded_jwt
+        %li
+          Capabilities:
+          %ul
+            - Admin::OidcClient::CAPABILITIES.each do |identifier, label|
+              %li
+                = check_box_tag "admin_oidc_client[capabilities][]", identifier, oidc_client.capability?(identifier), id: "capability_#{identifier}"
+                = label_tag "capability_#{identifier}", label
+          = hidden_field_tag "admin_oidc_client[capabilities][]", ""
       = submit_tag

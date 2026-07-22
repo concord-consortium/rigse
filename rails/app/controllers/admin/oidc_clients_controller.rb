@@ -69,6 +69,8 @@ class Admin::OidcClientsController < ApplicationController
   private
 
   def oidc_client_params
-    params.require(:admin_oidc_client).permit(:name, :sub, :email, :user_id, :active)
+    params.require(:admin_oidc_client)
+          .permit(:name, :sub, :email, :user_id, :active, :requires_forwarded_jwt, capabilities: [])
+          .tap { |p| p[:capabilities] = Array(p[:capabilities]).reject(&:blank?) if p.key?(:capabilities) }
   end
 end
