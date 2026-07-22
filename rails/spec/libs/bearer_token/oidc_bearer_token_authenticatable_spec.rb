@@ -55,6 +55,12 @@ describe OidcBearerTokenAuthenticatable::BearerToken do
     end
   end
 
+  describe '#store?' do
+    it 'returns false' do
+      expect(strategy.store?).to be false
+    end
+  end
+
   describe '#authenticate!' do
     let(:rsa_key) { OpenSSL::PKey::RSA.generate(2048) }
     let(:oidc_sub) { 'google-sa-sub-12345' }
@@ -70,99 +76,162 @@ describe OidcBearerTokenAuthenticatable::BearerToken do
       }
     end
     let(:token) { JWT.encode(decoded_payload, rsa_key, 'RS256', { kid: 'test-kid' }) }
-
-    before(:each) do
-      allow(request).to receive(:headers).and_return({'Authorization' => "Bearer #{token}"})
+    let(:forwarded_token) { 'forwarded.jwt.value' }
+    let(:headers) { {'Authorization' => "Bearer #{token}"} }
+    let(:student) { FactoryBot.create(:full_portal_student) }
+    let(:clazz)   { FactoryBot.create(:portal_clazz, students: [student]) }
+    let(:origin_offering) { FactoryBot.create(:portal_offering, clazz: clazz) }
+    let(:forwarded_result) do
+      ForwardedFirebaseToken::Result.new(user: student.user, origin_offering: origin_offering, origin_clazz: clazz)
     end
 
-    context 'with valid OIDC token and matching active OidcClient' do
+    before(:each) do
+      allow(request).to receive(:headers).and_return(headers)
+      allow(GoogleOidcVerifier).to receive(:verify).with(token).and_return(decoded_payload)
+    end
+
+    context 'non-opted-in client (no capabilities, no requires_forwarded_jwt)' do
       let!(:oidc_client) do
         Admin::OidcClient.create!(name: 'Test SA', sub: oidc_sub, email: oidc_email, user: user, active: true)
       end
 
-      before do
-        allow(GoogleOidcVerifier).to receive(:verify).with(token).and_return(decoded_payload)
-      end
-
-      it 'authenticates and returns success' do
+      it 'authenticates as the mapped user and stamps common env' do
         expect(strategy.authenticate!).to eql :success
-      end
-
-      it 'sets portal.auth_strategy env' do
-        strategy.authenticate!
+        expect(strategy.user).to eq(user)
         expect(request.env['portal.auth_strategy']).to eq('oidc_bearer_token')
-      end
-
-      it 'sets portal.auth_client env' do
-        strategy.authenticate!
         expect(request.env['portal.auth_client']).to eq('Test SA')
-      end
-
-      it 'sets portal.auth_details with sub, email, and aud' do
-        strategy.authenticate!
+        expect(request.env['portal.auth_client_id']).to eq(oidc_client.id)
         details = request.env['portal.auth_details']
         expect(details[:sub]).to eq(oidc_sub)
         expect(details[:email]).to eq(oidc_email)
         expect(details[:aud]).to eq('http://localhost:3000')
       end
-    end
 
-    context 'with valid OIDC token but no matching OidcClient' do
-      before do
-        allow(GoogleOidcVerifier).to receive(:verify).with(token).and_return(decoded_payload)
-      end
-
-      it 'fails authentication' do
-        expect(strategy.authenticate!).to eql :failure
-      end
-
-      it 'logs a warning with sub and email' do
-        expect(Rails.logger).to receive(:warn).with(/OidcBearer:.*sub=#{oidc_sub}.*email=#{oidc_email}/)
-        strategy.authenticate!
+      it 'ignores a forwarded header and never acts as the forwarded student' do
+        headers['X-Portal-Student-JWT'] = forwarded_token
+        expect(ForwardedFirebaseToken).not_to receive(:verify)
+        expect(strategy.authenticate!).to eql :success
+        expect(strategy.user).to eq(user)
+        expect(request.env['portal.forwarded_student']).to be_nil
       end
     end
 
-    context 'with valid OIDC token but inactive OidcClient' do
+    context 'opted-in client (has capabilities), requires_forwarded_jwt false' do
       let!(:oidc_client) do
-        Admin::OidcClient.create!(name: 'Disabled SA', sub: oidc_sub, email: oidc_email, user: user, active: false)
+        Admin::OidcClient.create!(name: 'Test SA', sub: oidc_sub, email: oidc_email, user: user,
+                                  active: true, capabilities: ['update_offering_state'])
       end
 
-      before do
-        allow(GoogleOidcVerifier).to receive(:verify).with(token).and_return(decoded_payload)
+      context 'with no forwarded header' do
+        it 'falls back to the mapped user without setting skip_trackable' do
+          expect(strategy.authenticate!).to eql :success
+          expect(strategy.user).to eq(user)
+          expect(request.env['portal.auth_client_id']).to eq(oidc_client.id)
+          expect(request.env['portal.forwarded_student']).to be_nil
+          expect(request.env['devise.skip_trackable']).to be_nil
+        end
+
+        it 'logs the header-absent fallback' do
+          expect(Rails.logger).to receive(:info).with(/header-absent fallback to mapped user client=#{oidc_client.id}/)
+          strategy.authenticate!
+        end
       end
 
-      it 'fails authentication' do
-        expect(strategy.authenticate!).to eql :failure
+      context 'with a valid forwarded learner token' do
+        before do
+          headers['X-Portal-Student-JWT'] = forwarded_token
+          allow(ForwardedFirebaseToken).to receive(:verify).with(forwarded_token).and_return(forwarded_result)
+        end
+
+        it 'authenticates as the forwarded student and stamps the origin + skip_trackable' do
+          expect(strategy.authenticate!).to eql :success
+          expect(strategy.user).to eq(student.user)
+          expect(request.env['portal.forwarded_student']).to be true
+          expect(request.env['portal.origin_offering_id']).to eq(origin_offering.id)
+          expect(request.env['portal.origin_class_hash']).to eq(clazz.class_hash)
+          expect(request.env['portal.auth_client_id']).to eq(oidc_client.id)
+          expect(request.env['devise.skip_trackable']).to be true
+        end
       end
 
-      it 'logs a warning about inactive client' do
-        expect(Rails.logger).to receive(:warn).with(/OidcBearer:.*inactive.*Disabled SA/)
-        strategy.authenticate!
+      context 'with an invalid forwarded token' do
+        before do
+          headers['X-Portal-Student-JWT'] = forwarded_token
+          allow(ForwardedFirebaseToken).to receive(:verify).with(forwarded_token)
+            .and_raise(ForwardedFirebaseToken::Invalid.new(:class_hash_mismatch))
+        end
+
+        it 'fails with forwarded_token_invalid and never falls back to the mapped user' do
+          expect(strategy.authenticate!).to eql :failure
+          expect(request.env['portal.auth_error']).to eq('forwarded_token_invalid')
+          expect(request.env['portal.forwarded_student']).to be_nil
+        end
       end
     end
 
-    context 'when GoogleOidcVerifier raises an error' do
-      before do
-        allow(GoogleOidcVerifier).to receive(:verify).and_raise(GoogleOidcVerifier::Error, 'Signature has expired')
+    context 'client requires forwarded JWT with header absent' do
+      shared_examples 'requires the forwarded token' do
+        it 'fails with forwarded_token_required and never authenticates a nil user' do
+          expect(strategy.authenticate!).to eql :failure
+          expect(request.env['portal.auth_error']).to eq('forwarded_token_required')
+          expect(request.env['portal.forwarded_student']).to be_nil
+        end
       end
 
-      it 'fails authentication' do
-        expect(strategy.authenticate!).to eql :failure
+      context 'with capabilities and a mapped user' do
+        let!(:oidc_client) do
+          Admin::OidcClient.create!(name: 'Test SA', sub: oidc_sub, email: oidc_email, user: user,
+                                    active: true, requires_forwarded_jwt: true, capabilities: ['update_offering_state'])
+        end
+        include_examples 'requires the forwarded token'
       end
 
-      it 'logs the verification failure' do
-        expect(Rails.logger).to receive(:warn).with(/OidcBearer:.*Signature has expired/)
-        strategy.authenticate!
+      context 'Phase-2 state: empty capabilities and null user' do
+        let!(:oidc_client) do
+          Admin::OidcClient.create!(name: 'Test SA', sub: oidc_sub, email: oidc_email,
+                                    active: true, requires_forwarded_jwt: true)
+        end
+        include_examples 'requires the forwarded token'
       end
     end
 
-    context 'when token issuer is not Google (non-OIDC JWT)' do
-      before do
-        allow(GoogleOidcVerifier).to receive(:verify).and_raise(GoogleOidcVerifier::Error, 'Invalid issuer')
+    context 'OIDC failures' do
+      it 'fails with oidc_token_invalid when no client matches' do
+        expect(strategy.authenticate!).to eql :failure
+        expect(request.env['portal.auth_error']).to eq('oidc_token_invalid')
       end
 
-      it 'fails authentication' do
-        expect(strategy.authenticate!).to eql :failure
+      it 'logs a warning with sub and email when no client matches' do
+        allow(Rails.logger).to receive(:warn)
+        strategy.authenticate!
+        expect(Rails.logger).to have_received(:warn).with(/OidcBearer:.*sub=#{oidc_sub}.*email=#{oidc_email}/)
+      end
+
+      context 'inactive client' do
+        let!(:oidc_client) do
+          Admin::OidcClient.create!(name: 'Disabled SA', sub: oidc_sub, email: oidc_email, user: user, active: false)
+        end
+
+        it 'fails with oidc_token_invalid' do
+          expect(strategy.authenticate!).to eql :failure
+          expect(request.env['portal.auth_error']).to eq('oidc_token_invalid')
+        end
+      end
+
+      context 'when GoogleOidcVerifier raises' do
+        before do
+          allow(GoogleOidcVerifier).to receive(:verify).and_raise(GoogleOidcVerifier::Error, 'Signature has expired')
+        end
+
+        it 'fails with oidc_token_invalid' do
+          expect(strategy.authenticate!).to eql :failure
+          expect(request.env['portal.auth_error']).to eq('oidc_token_invalid')
+        end
+
+        it 'logs the sanitized verification failure' do
+          expect(Rails.logger).to receive(:warn).with(/OidcBearer:.*Signature has expired/)
+          strategy.authenticate!
+        end
       end
     end
   end
