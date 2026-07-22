@@ -1351,6 +1351,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_22_120000) do
     t.datetime "start_time", precision: nil, null: false
     t.integer "learner_id", null: false
     t.index ["learner_id", "start_time"], name: "index_portal_runs_on_learner_id_and_start_time"
+    t.index ["learner_id"], name: "fk_rails_06fb23e107"
     t.index ["start_time"], name: "index_portal_runs_on_start_time"
   end
 
