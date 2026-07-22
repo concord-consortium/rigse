@@ -148,4 +148,8 @@ class ApplicationPolicy
     user && record.respond_to?(:user) && record.user == user
   end
 
+  def oidc_context
+    @oidc_context ||= OidcAuthContext.new(request)
+  end
+
 end
