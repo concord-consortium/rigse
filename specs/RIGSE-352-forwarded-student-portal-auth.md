@@ -248,3 +248,17 @@ The schema migration + capability grant ship together (Phase-1-safe). The `user_
 
 ### "pipeline" terminology purged
 **Decision**: "pipeline" is report-service's own job terminology, so portal-side coinage uses the `forwarded` prefix (`forwarded_update_offering_state?`, `forwarded_enroll_student?`, `reject_forwarded_auth_error`, `oidc:grant_forwarded_capabilities`, etc.). The spec title/folder use "Forwarded-Student Portal Auth".
+
+## Future Extension: non-student forwarded identities (teacher/other)
+
+RIGSE-352 gates the forwarded path to **learner** tokens at the auth layer (`ForwardedFirebaseToken` requires `claims.user_type == "learner"` and a resolved `portal_student`). A future flow that needs report-service to act as a **teacher** (or another identity type) should extend this path rather than relax the gate. This note records the intended design so the extension stays forward-compatible with the shipped code; it is **not** implemented in RIGSE-352.
+
+**Why not simply "accept any Firebase token and check for a student at the usage sites":** the forwarded override is **global to the opted-in client's request**, not per-endpoint. `authenticate_forwarded_student!` calls `success!(result.user)`, so the forwarded identity becomes `current_user` on **every** endpoint that client can reach, including ones with no forwarded-student policy branch (`emails#oidc_send`, ordinary student/teacher-authorized reads such as `offerings#show` / `classes#show` / answers / reports). The learner gate is what currently guarantees that global identity is always a specific student. Removing it without a per-operation identity assertion would let a forwarded teacher/admin/researcher token act with that privileged role wherever the client can call, reintroducing the over-privilege model F removed. So "check at the usage site" would mean auditing every endpoint the opted-in client can reach, not the two lifecycle endpoints.
+
+**Intended design (type-on-the-context, per-operation assertion):**
+- Keep the auth layer verifying the token generically (signature, expiry, `platform_id`, app allowlist) and resolving the acting user, but record the token's `user_type` (and resolve the origin offering/clazz only when the token carries `offering_id`, i.e. for learner tokens) on `OidcAuthContext` (e.g. `#forwarded_user_type`, alongside the existing `#origin_offering`/`#origin_clazz`).
+- Make the **required identity type part of each capability/operation contract**, not a global auth gate: `enroll_student` / `update_offering_state` continue to require a student; a hypothetical teacher operation requires its capability **and** `forwarded_user_type == "teacher"` with a resolved `portal_teacher`.
+- **Fail closed on unknown/absent type**: if no operation branch asserts a type the request matches, the override does not apply (or fails closed), so a forwarded identity can never act on an endpoint that has not explicitly opted into its type. The current learner-only gate is exactly the single-type instance of this rule.
+- Because the override is global, adding any new forwarded-identity type requires confirming that every endpoint the opted-in client can reach either has a type-asserting branch or is safe for that identity to reach as an ordinary authenticated user.
+
+This is a moderate refactor (context carries the type; the two existing branches gain an explicit `student`-type assertion that today is implicit in `student?`), and the shipped learner-only gate is a clean, forward-compatible subset of it.
