@@ -74,6 +74,13 @@ module OidcBearerTokenAuthenticatable
 
     def success_as_mapped_user!(oidc_client)
       request.env['portal.auth_client_id'] = oidc_client.id
+      # Defense-in-depth: the mapped-user fallback with no mapped user (a
+      # requires_forwarded_jwt=false + user_id=nil client, which the model
+      # validation forbids but the now-nullable column permits) must fail closed
+      # rather than success!(nil), which would surface as a confusing Pundit 403.
+      unless oidc_client.user
+        return fail_auth!('oidc_token_invalid', "no mapped user for client=#{oidc_client.id}")
+      end
       success!(oidc_client.user)
     end
 

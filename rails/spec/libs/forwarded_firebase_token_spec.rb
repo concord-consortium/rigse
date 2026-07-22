@@ -70,6 +70,21 @@ describe ForwardedFirebaseToken do
       expect { ForwardedFirebaseToken.verify(token) }.to raise_error(ForwardedFirebaseToken::Invalid) { |e| expect(e.reason).to eq(:expired) }
     end
 
+    it 'reports :app_not_found when the iss matches no FirebaseApp' do
+      claims = { iss: 'orphan@example.com', sub: 'orphan@example.com', exp: Time.now.to_i + 3600, claims: {} }
+      token = JWT.encode(claims, OpenSSL::PKey::RSA.generate(2048), 'RS256')
+      expect { ForwardedFirebaseToken.verify(token) }.to raise_error(ForwardedFirebaseToken::Invalid) { |e| expect(e.reason).to eq(:app_not_found) }
+    end
+
+    it 'reports :no_iss when the token has no iss claim' do
+      token = JWT.encode({ exp: Time.now.to_i + 3600, claims: {} }, OpenSSL::PKey::RSA.generate(2048), 'RS256')
+      expect { ForwardedFirebaseToken.verify(token) }.to raise_error(ForwardedFirebaseToken::Invalid) { |e| expect(e.reason).to eq(:no_iss) }
+    end
+
+    it 'reports :undecodable for a token that cannot be parsed' do
+      expect { ForwardedFirebaseToken.verify('not-a-jwt') }.to raise_error(ForwardedFirebaseToken::Invalid) { |e| expect(e.reason).to eq(:undecodable) }
+    end
+
     it 'rejects a token signed with a different key' do
       wrong_key = OpenSSL::PKey::RSA.generate(2048)
       claims = {

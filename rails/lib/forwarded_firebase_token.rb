@@ -49,6 +49,19 @@ class ForwardedFirebaseToken
   def decode!
     SignedJwt.decode_firebase_token_by_iss(@token)
   rescue SignedJwt::Error => e
-    raise Invalid.new(e.message.include?('expired') ? :expired : :signature)
+    # All decode failures fail closed as forwarded_token_invalid (401); the reason
+    # symbol only drives the observability log line, so keep it specific rather
+    # than collapsing every non-expiry failure into :signature.
+    raise Invalid.new(decode_failure_reason(e.message))
+  end
+
+  def decode_failure_reason(message)
+    case message
+    when /expired/i        then :expired
+    when /has no iss/i     then :no_iss
+    when /No FirebaseApp/i then :app_not_found
+    when /Undecodable/i    then :undecodable
+    else :signature
+    end
   end
 end

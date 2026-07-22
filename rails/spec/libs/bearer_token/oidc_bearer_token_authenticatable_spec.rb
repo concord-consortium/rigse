@@ -195,6 +195,22 @@ describe OidcBearerTokenAuthenticatable::BearerToken do
       end
     end
 
+    context 'opted-in client whose mapped user is null (misconfigured Phase-1 state)' do
+      let!(:oidc_client) do
+        client = Admin::OidcClient.create!(name: 'Test SA', sub: oidc_sub, email: oidc_email, user: user,
+                                           active: true, capabilities: ['update_offering_state'])
+        # Force the model-forbidden state the nullable column permits.
+        client.update_column(:user_id, nil)
+        client
+      end
+
+      it 'fails closed with oidc_token_invalid rather than success!(nil)' do
+        expect(strategy.authenticate!).to eql :failure
+        expect(request.env['portal.auth_error']).to eq('oidc_token_invalid')
+        expect(request.env['portal.forwarded_student']).to be_nil
+      end
+    end
+
     context 'OIDC failures' do
       it 'fails with oidc_token_invalid when no client matches' do
         expect(strategy.authenticate!).to eql :failure
