@@ -352,6 +352,67 @@ RSpec.describe API::V1::StudentsController, type: :controller do
     end
   end
 
+  describe '#add_to_class (forwarded student)' do
+    let(:forwarded_student) { FactoryBot.create(:full_portal_student) }
+    let(:origin_clazz)   { FactoryBot.create(:portal_clazz, teachers: [teacher], students: [forwarded_student]) }
+    let(:origin_offering) { FactoryBot.create(:portal_offering, clazz: origin_clazz) }
+    let(:shared_class)   { FactoryBot.create(:portal_clazz, teachers: [teacher]) }
+    let(:mapped_user)    { FactoryBot.create(:user) }
+    let(:forwarded_client) do
+      Admin::OidcClient.create!(name: 'FS', sub: 'fs-clz', user: mapped_user, capabilities: ['enroll_student'])
+    end
+
+    def stamp_forwarded(acting_user)
+      allow(controller).to receive(:current_user).and_return(acting_user)
+      request.env['portal.auth_strategy']      = 'oidc_bearer_token'
+      request.env['portal.auth_client_id']     = forwarded_client.id
+      request.env['portal.forwarded_student']  = true
+      request.env['portal.origin_offering_id'] = origin_offering.id
+      request.env['portal.origin_class_hash']  = origin_clazz.class_hash
+    end
+
+    it 'enrolls the acting student into a shared-teacher class' do
+      stamp_forwarded(forwarded_student.user)
+      expect(shared_class.students.include?(forwarded_student)).to eq false
+      post :add_to_class, params: { clazz_id: shared_class.id, user_id: forwarded_student.user.id }
+      expect(response).to have_http_status(:ok)
+      expect(shared_class.reload.students.include?(forwarded_student)).to eq true
+    end
+
+    it 'denies enrolling a different student and creates no StudentClazz' do
+      other = FactoryBot.create(:full_portal_student)
+      stamp_forwarded(forwarded_student.user)
+      expect {
+        post :add_to_class, params: { clazz_id: shared_class.id, user_id: other.user.id }
+      }.not_to change { Portal::StudentClazz.count }
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    describe 'error contract' do
+      ['forwarded_token_invalid', 'forwarded_token_required', 'oidc_token_invalid'].each do |code|
+        it "renders 401 #{code} with a top-level error_code, not 403" do
+          allow(controller).to receive(:current_user).and_return(nil)
+          request.env['portal.auth_error'] = code
+          post :add_to_class, params: { clazz_id: shared_class.id, user_id: forwarded_student.user.id }
+          expect(response.status).to eq(401)
+          body = JSON.parse(response.body)
+          expect(body['error_code']).to eq(code)
+          expect(body['success']).to eq(false)
+        end
+      end
+    end
+
+    describe 'direct-call denial (AC3): forwarded header but no OIDC auth' do
+      it 'is rejected 403 and creates no StudentClazz' do
+        request.headers['X-Portal-Student-JWT'] = 'some.forwarded.jwt'
+        expect {
+          post :add_to_class, params: { clazz_id: shared_class.id, user_id: forwarded_student.user.id }
+        }.not_to change { Portal::StudentClazz.count }
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+  end
+
   describe '#remove_from_class' do
     it 'should fail without a student_clazz_id parameter' do
       post :remove_from_class

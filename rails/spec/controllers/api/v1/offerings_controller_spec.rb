@@ -518,6 +518,60 @@ describe API::V1::OfferingsController do
     end
   end
 
+  describe "PUT #update_student_metadata (forwarded student)" do
+    let(:mapped_user) { FactoryBot.create(:user) }
+    let(:forwarded_client) do
+      Admin::OidcClient.create!(name: 'FS', sub: 'fs-off', user: mapped_user, capabilities: ['update_offering_state'])
+    end
+
+    def stamp_forwarded(acting_user)
+      allow(controller).to receive(:current_user).and_return(acting_user)
+      request.env['portal.auth_strategy']      = 'oidc_bearer_token'
+      request.env['portal.auth_client_id']     = forwarded_client.id
+      request.env['portal.forwarded_student']  = true
+      request.env['portal.origin_offering_id'] = offering.id
+      request.env['portal.origin_class_hash']  = offering.clazz.class_hash
+    end
+
+    it 'locks the origin offering acting as the student' do
+      stamp_forwarded(student_a.user)
+      put :update_student_metadata, params: { id: offering.id, user_id: student_a.user.id, locked: true }
+      expect(response.status).to eq(200)
+    end
+
+    it 'denies acting-as-A modifying B and mutates nothing' do
+      stamp_forwarded(student_a.user)
+      put :update_student_metadata, params: { id: offering.id, user_id: student_b.user.id, locked: true }
+      expect(response.status).to eq(403)
+      expect(UserOfferingMetadata.where(user_id: student_b.user.id, offering_id: offering.id)).to be_empty
+    end
+
+    describe 'error contract' do
+      ['forwarded_token_invalid', 'forwarded_token_required', 'oidc_token_invalid'].each do |code|
+        it "renders 401 #{code} with a top-level error_code, not 403" do
+          allow(controller).to receive(:current_user).and_return(nil)
+          request.env['portal.auth_error'] = code
+          put :update_student_metadata, params: { id: offering.id, user_id: student_a.user.id, locked: true }
+          expect(response.status).to eq(401)
+          body = JSON.parse(response.body)
+          expect(body['error_code']).to eq(code)
+          expect(body['success']).to eq(false)
+        end
+      end
+    end
+
+    describe 'direct-call denial (AC3): forwarded header but no OIDC auth' do
+      it 'is rejected 403 and creates no UserOfferingMetadata' do
+        logout_user
+        request.headers['X-Portal-Student-JWT'] = 'some.forwarded.jwt'
+        expect {
+          put :update_student_metadata, params: { id: offering.id, user_id: student_a.user.id, locked: true }
+        }.not_to change { UserOfferingMetadata.count }
+        expect(response.status).to eq(403)
+      end
+    end
+  end
+
   describe "POST create_for_external_activity" do
     describe "as a guest" do
       before(:each) { logout_user }
