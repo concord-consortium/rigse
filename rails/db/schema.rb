@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_06_223205) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_22_120000) do
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
     t.string "access_token"
@@ -88,10 +88,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_06_223205) do
     t.string "name", null: false
     t.string "sub", null: false
     t.string "email"
-    t.integer "user_id", null: false
+    t.integer "user_id"
     t.boolean "active", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "requires_forwarded_jwt", default: false, null: false
+    t.text "capabilities"
     t.index ["sub"], name: "index_admin_oidc_clients_on_sub", unique: true
     t.index ["user_id"], name: "index_admin_oidc_clients_on_user_id"
   end
@@ -1349,7 +1351,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_06_223205) do
     t.datetime "start_time", precision: nil, null: false
     t.integer "learner_id", null: false
     t.index ["learner_id", "start_time"], name: "index_portal_runs_on_learner_id_and_start_time"
-    t.index ["learner_id"], name: "fk_rails_06fb23e107"
     t.index ["start_time"], name: "index_portal_runs_on_start_time"
   end
 
