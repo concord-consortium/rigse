@@ -399,4 +399,84 @@ RSpec.describe Portal::OfferingPolicy do
     end
   end
 
+  describe '#update_student_metadata? (forwarded student)' do
+    let(:teacher) { FactoryBot.create(:portal_teacher) }
+    let(:student) { FactoryBot.create(:full_portal_student) }
+    let(:clazz)   { FactoryBot.create(:portal_clazz, teachers: [teacher], students: [student]) }
+    let(:origin_offering)     { FactoryBot.create(:portal_offering, clazz: clazz) }
+    let(:non_origin_offering) { FactoryBot.create(:portal_offering, clazz: clazz) }
+    let(:other_clazz)    { FactoryBot.create(:portal_clazz, teachers: [teacher]) }
+    let(:other_offering) { FactoryBot.create(:portal_offering, clazz: other_clazz) }
+    let(:mapped_user) { FactoryBot.create(:user) }
+    let(:client)     { Admin::OidcClient.create!(name: 'C', sub: 'off-sub', user: mapped_user, capabilities: ['update_offering_state']) }
+    let(:no_cap)     { Admin::OidcClient.create!(name: 'NC', sub: 'off-sub-nc', user: mapped_user, capabilities: []) }
+    let(:acting_user) { student.user }
+
+    def forwarded_context(user, offering, klass, params, oidc_client)
+      env = {
+        'portal.auth_client_id'     => oidc_client.id,
+        'portal.forwarded_student'  => true,
+        'portal.origin_offering_id' => offering.id,
+        'portal.origin_class_hash'  => klass.class_hash
+      }
+      OpenStruct.new(user: user, original_user: user, request: OpenStruct.new(env: env), params: params)
+    end
+
+    def policy_for(record, params, oidc_client = client, user = acting_user)
+      described_class.new(forwarded_context(user, origin_offering, clazz, params, oidc_client), record)
+    end
+
+    it 'allows locking the origin offering with update_offering_state' do
+      expect(policy_for(origin_offering, { user_id: acting_user.id, locked: true }).update_student_metadata?).to be true
+    end
+
+    it 'denies without the capability' do
+      expect(policy_for(origin_offering, { user_id: acting_user.id, locked: true }, no_cap).update_student_metadata?).to be false
+    end
+
+    it 'denies when the target user_id is not the acting student' do
+      expect(policy_for(origin_offering, { user_id: mapped_user.id, locked: true }).update_student_metadata?).to be false
+    end
+
+    it 'still allows the teacher/admin path for a non-forwarded request' do
+      expect(described_class.new(teacher.user, origin_offering).update_student_metadata?).to be true
+    end
+
+    it 'allows opening a non-origin enrolled offering (unlock / make visible)' do
+      expect(policy_for(non_origin_offering, { user_id: acting_user.id, locked: false }).update_student_metadata?).to be true
+      expect(policy_for(non_origin_offering, { user_id: acting_user.id, active: true }).update_student_metadata?).to be true
+    end
+
+    it 'denies locking or hiding a non-origin offering (string and JSON booleans)' do
+      ['true', true].each do |v|
+        expect(policy_for(non_origin_offering, { user_id: acting_user.id, locked: v }).update_student_metadata?).to be false
+      end
+      ['false', false].each do |v|
+        expect(policy_for(non_origin_offering, { user_id: acting_user.id, active: v }).update_student_metadata?).to be false
+      end
+    end
+
+    it 'allows the same lock/hide writes on the origin offering' do
+      expect(policy_for(origin_offering, { user_id: acting_user.id, locked: true }).update_student_metadata?).to be true
+      expect(policy_for(origin_offering, { user_id: acting_user.id, active: false }).update_student_metadata?).to be true
+    end
+
+    it 'denies a non-origin offering in a class the student is not in' do
+      expect(policy_for(other_offering, { user_id: acting_user.id, locked: false }).update_student_metadata?).to be false
+    end
+
+    it 'stays student-scoped even when the acting user is also an admin' do
+      acting_user.add_role('admin')
+      expect(policy_for(non_origin_offering, { user_id: acting_user.id, locked: true }).update_student_metadata?).to be false
+    end
+
+    it 'denies a non-origin write with only user_id and no active/locked key' do
+      expect(policy_for(non_origin_offering, { user_id: acting_user.id }).update_student_metadata?).to be false
+    end
+
+    it 'does not grant the forwarded branch through the bare update?' do
+      expect(policy_for(origin_offering, { user_id: acting_user.id, locked: true }).update?).to be false
+    end
+  end
+
 end

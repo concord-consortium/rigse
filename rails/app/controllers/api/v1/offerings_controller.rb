@@ -54,7 +54,7 @@ class API::V1::OfferingsController < API::APIController
 
   def update_student_metadata
     offering = Portal::Offering.find(params[:id])
-    authorize offering, :update?
+    authorize offering, :update_student_metadata?
     user = User.find(params[:user_id])
 
     student = offering.clazz.students.find_by(user_id: user.id)

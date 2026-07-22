@@ -84,6 +84,15 @@ class Portal::OfferingPolicy < ApplicationPolicy
     class_teacher_or_admin?
   end
 
+  # A forwarded-student request is bound to student scope exclusively: when
+  # acting as the forwarded student we must not fall through to the
+  # teacher/admin branch, since current_user's portal roles are independent of
+  # the forwarded identity.
+  def update_student_metadata?
+    return forwarded_update_offering_state? if oidc_context.acting_as_forwarded_user?
+    class_teacher_or_admin?
+  end
+
   def answers?
     class_teacher_or_admin? || class_student?
   end
@@ -116,6 +125,34 @@ class Portal::OfferingPolicy < ApplicationPolicy
   end
 
   private
+
+  def forwarded_update_offering_state?
+    ctx = oidc_context
+    return false unless ctx.capability?('update_offering_state')
+    return false unless student? && class_student?
+    return false unless target_user_is_acting_student?
+
+    if record.id == ctx.origin_offering_id
+      true
+    else
+      open_only_write?
+    end
+  end
+
+  def target_user_is_acting_student?
+    @params.present? && @params[:user_id].to_s == user.id.to_s
+  end
+
+  # Non-origin offerings may only be opened (unlocked / made visible). Require at
+  # least one permitted state key and deny any write that locks or hides.
+  def open_only_write?
+    return false unless @params.present?
+    return false unless @params.key?(:locked) || @params.key?(:active)
+    cast = ActiveModel::Type::Boolean.new
+    locked = cast.cast(@params[:locked])
+    active = cast.cast(@params[:active])
+    !(locked == true || active == false)
+  end
 
   def class_teacher?
     user && record && record.clazz.is_teacher?(user)

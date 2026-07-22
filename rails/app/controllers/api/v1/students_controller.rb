@@ -187,7 +187,7 @@ class API::V1::StudentsController < API::APIController
     return error(result[:error]) if result[:error]
     portal_clazz = result[:portal_clazz]
 
-    authorize portal_clazz, :update_roster?
+    authorize portal_clazz, :add_to_class?
 
     result = find_student_from_params
     return error(result[:error]) if result[:error]
