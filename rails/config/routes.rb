@@ -540,7 +540,12 @@ RailsPortal::Application.routes.draw do
     root :to => 'home#index'
   end
 
-  # Web interface to show the delayed jobs for admins
+  # Web interface to show the delayed jobs for admins.
+  # Mounted Rack engines do not run ApplicationController#confine_service_minted_tokens, so a future
+  # engine authenticated by a bearer/portal token must add its own service-minted-token confinement
+  # (Rack middleware ahead of the router). This engine is session-authed and already fail-closed for
+  # bearer tokens (warden.user reads the session only), so no confinement is needed here today.
+  # The mounted_engines_spec tripwire fails if another mount is added without revisiting this.
   mount Delayed::Web::Engine, at: "/delayed_job", :constraints => lambda { |request|
     warden = request.env['warden']
     warden.user && warden.user.has_role?("admin")

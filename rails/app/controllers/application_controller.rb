@@ -48,6 +48,7 @@ class ApplicationController < ActionController::Base
 
   before_action :setup_container
   before_action :reject_old_browsers
+  before_action :confine_service_minted_tokens
 
   include AuthenticatedSystem
   include RoleRequirementSystem
@@ -66,6 +67,14 @@ class ApplicationController < ActionController::Base
   # Portal::School.find(:first).members.count
 
   protected
+
+  def confine_service_minted_tokens
+    return if is_a?(API::APIController)
+    current_user
+    return if Current.minted_via_oidc_client_id.blank?
+    render json: { success: false, message: 'A service-minted token may only be used on the API' },
+           status: 403
+  end
 
   def pundit_user_not_authorized(exception)
     # without the no-store Chrome will cache this redirect in some cases
