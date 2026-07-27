@@ -18,6 +18,9 @@ module SignedJwt
       exp: now + expires_in,
       uid: user.id
     }
+    claims = claims.dup
+    claims[:minted_via_oidc_client_id] ||= Current.minted_via_oidc_client_id if Current.minted_via_oidc_client_id
+    claims[:minted_for]                ||= Current.minted_for                if Current.minted_for
     # merge claims into payload, preventing duplicates
     payload.merge!(claims) { |key, old, new| fail "Duplicate JWT claim key: #{key}" }
     begin

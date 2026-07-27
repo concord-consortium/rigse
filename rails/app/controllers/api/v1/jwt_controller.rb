@@ -3,12 +3,24 @@ class API::V1::JwtController < API::APIController
   require 'digest/md5'
   skip_before_action :verify_authenticity_token
 
+  before_action :reject_credential_issuing_callers
+
   # use exceptions to return errors
   # instead of directly calling APIController#error
   rescue_from StandardError, with: :error_400
   rescue_from SignedJwt::Error, with: :error_500
 
   private
+  def reject_credential_issuing_callers
+    current_user
+    if request.env['portal.auth_strategy'] == 'oidc_bearer_token'
+      return error('This endpoint does not accept OIDC service tokens; use /api/v1/jwt/oidc_mint', 403)
+    end
+    if Current.minted_via_oidc_client_id.present?
+      return error('A service-minted token may not be used to mint another token', 403)
+    end
+  end
+
   def error_400(e)
     error(e.message, 400)
   end
