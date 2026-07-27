@@ -75,6 +75,10 @@ class Portal::ClazzPolicy < ApplicationPolicy
     admin? || class_project_admin?
   end
 
+  def send_class_teachers?
+    class_teacher?
+  end
+
   private
 
   def class_student?

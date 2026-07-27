@@ -102,4 +102,85 @@ RSpec.describe API::V1::EmailsController, type: :controller do
       end
     end
   end
+
+  describe 'POST #send_class_teachers' do
+    let(:teacher) { FactoryBot.create(:portal_teacher) }
+    let(:clazz) { teacher.clazzes.first }
+    let(:valid_params) { { class_id: clazz.id, subject: 'Hi teachers', message: 'Body' } }
+
+    before(:each) do
+      sign_in teacher.user
+      request.env['portal.auth_strategy'] = 'jwt_bearer_token'
+    end
+
+    it 'sends to all non-blank teacher emails of a class the caller teaches' do
+      other = FactoryBot.create(:portal_teacher)
+      clazz.teachers << other
+      post :send_class_teachers, params: valid_params, format: :json
+      expect(response).to have_http_status(:ok)
+      expect(ActionMailer::Base.deliveries.last.to).to include(teacher.user.email, other.user.email)
+    end
+
+    it 'returns 400 and sends nothing when class_id is missing' do
+      post :send_class_teachers, params: { subject: 'a', message: 'b' }, format: :json
+      expect(response).to have_http_status(:bad_request)
+      expect(ActionMailer::Base.deliveries).to be_empty
+    end
+
+    it 'returns 400 (not 500) and sends nothing when class_id is unresolvable' do
+      post :send_class_teachers, params: { class_id: -1, subject: 'a', message: 'b' }, format: :json
+      expect(response).to have_http_status(:bad_request)
+      expect(response.status).not_to eq(500)
+      expect(ActionMailer::Base.deliveries).to be_empty
+    end
+
+    it 'returns 403 and sends nothing when the caller does not teach the class' do
+      other_clazz = FactoryBot.create(:portal_teacher).clazzes.first
+      post :send_class_teachers, params: { class_id: other_clazz.id, subject: 'a', message: 'b' }, format: :json
+      expect(response).to have_http_status(:forbidden)
+      expect(ActionMailer::Base.deliveries).to be_empty
+    end
+
+    it 'denies a learner (non-teacher) caller' do
+      student = FactoryBot.create(:full_portal_student)
+      clazz.students << student
+      sign_in student.user
+      post :send_class_teachers, params: valid_params, format: :json
+      expect(response).to have_http_status(:forbidden)
+      expect(ActionMailer::Base.deliveries).to be_empty
+    end
+
+    it 'returns 422 and sends nothing when no teacher has a non-blank email' do
+      teacher.user.update_column(:email, '')
+      post :send_class_teachers, params: valid_params, format: :json
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(ActionMailer::Base.deliveries).to be_empty
+    end
+
+    it 'does not raise when a class teacher has no user' do
+      other = FactoryBot.create(:portal_teacher)
+      clazz.teachers << other
+      other.update_column(:user_id, nil)
+      post :send_class_teachers, params: valid_params, format: :json
+      expect(response).to have_http_status(:ok)
+      expect(ActionMailer::Base.deliveries.last.to).to eq([teacher.user.email])
+    end
+
+    it 'returns 502 on delivery failure' do
+      allow(OidcMailer).to receive_message_chain(:send_message, :deliver_now)
+        .and_raise(Net::SMTPServerBusy.new('too busy'))
+      post :send_class_teachers, params: valid_params, format: :json
+      expect(response).to have_http_status(502)
+    end
+
+    it 'returns 422 for a non-string subject' do
+      post :send_class_teachers, params: { class_id: clazz.id, subject: ['x'], message: 'b' }, format: :json
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it 'strips CR/LF from the subject' do
+      post :send_class_teachers, params: { class_id: clazz.id, subject: "a\r\nb", message: 'b' }, format: :json
+      expect(ActionMailer::Base.deliveries.last.subject).not_to match(/[\r\n]/)
+    end
+  end
 end

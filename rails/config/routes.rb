@@ -360,6 +360,7 @@ RailsPortal::Application.routes.draw do
         resources :emails, only: [] do
           collection do
             post :oidc_send
+            post :send_class_teachers
           end
         end
         namespace :passwords do

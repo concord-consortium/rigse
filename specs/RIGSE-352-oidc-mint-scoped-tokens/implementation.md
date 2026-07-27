@@ -577,6 +577,8 @@ all non-blank teacher emails of a `class_id` the acting teacher teaches. Added t
 **Files affected**:
 - `rails/app/controllers/api/v1/emails_controller.rb` — new `send_class_teachers` action +
   `skip_before_action :require_oidc_auth!, only: [:send_class_teachers]`.
+- `rails/app/policies/portal/clazz_policy.rb` — public `send_class_teachers?` delegating to the private
+  `class_teacher?` helper (Pundit needs a public query method).
 - `rails/config/routes.rb` — `POST /api/v1/emails/send_class_teachers`.
 
 **Estimated diff size**: ~60 lines.
@@ -598,7 +600,10 @@ Logic (**order matters** — see step 3):
    `Pundit::NotDefinedError` (not rescued by `application_controller.rb:23`, which rescues only
    `NotAuthorizedError`), so an unknown `class_id` would surface as a **500**. The 400 + message matches
    `classes_controller`'s convention.
-4. `authorize clazz, :class_teacher?` → `403` if `current_user` is not a teacher of the class.
+4. `authorize clazz, :send_class_teachers?` → `403` if `current_user` is not a teacher of the class.
+   `Portal::ClazzPolicy#class_teacher?` is a private helper (Pundit needs a public query method), so add
+   a public `send_class_teachers?` that delegates to it; the authorization is the same "teacher of the
+   class" check named throughout as `class_teacher?`.
 5. Recipients = `clazz.teachers.map { |t| t.user&.email }.reject(&:blank?)`. If empty → `error(..., 422)`,
    send nothing (RIGSE-353 carryover). 422 means exactly: class exists, caller authorized, no usable
    recipient.
