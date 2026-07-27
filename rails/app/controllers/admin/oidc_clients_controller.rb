@@ -69,6 +69,6 @@ class Admin::OidcClientsController < ApplicationController
   private
 
   def oidc_client_params
-    params.require(:admin_oidc_client).permit(:name, :sub, :email, :user_id, :active)
+    params.require(:admin_oidc_client).permit(:name, :sub, :email, :user_id, :active, :can_mint_scoped_tokens)
   end
 end

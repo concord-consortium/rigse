@@ -34,12 +34,26 @@ describe Admin::OidcClient do
     end
   end
 
+  describe 'can_mint_scoped_tokens' do
+    it 'defaults to false' do
+      client = Admin::OidcClient.create!(name: 'Test', sub: '12345', user: user)
+      expect(client.can_mint_scoped_tokens).to eq(false)
+    end
+  end
+
   describe 'scopes' do
     it '.active returns only active records' do
       active = Admin::OidcClient.create!(name: 'Active', sub: 'a1', user: user, active: true)
       inactive = Admin::OidcClient.create!(name: 'Inactive', sub: 'a2', user: user, active: false)
       expect(Admin::OidcClient.active).to include(active)
       expect(Admin::OidcClient.active).not_to include(inactive)
+    end
+
+    it '.token_minters returns only clients with minting enabled' do
+      minter = Admin::OidcClient.create!(name: 'Minter', sub: 'm1', user: user, can_mint_scoped_tokens: true)
+      plain = Admin::OidcClient.create!(name: 'Plain', sub: 'm2', user: user)
+      expect(Admin::OidcClient.token_minters).to include(minter)
+      expect(Admin::OidcClient.token_minters).not_to include(plain)
     end
   end
 
