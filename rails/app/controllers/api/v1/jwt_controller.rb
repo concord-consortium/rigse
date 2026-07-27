@@ -29,20 +29,6 @@ class API::V1::JwtController < API::APIController
     error(e.message, 500)
   end
 
-  def add_admin_claims(user, claims)
-    if (user.has_role? 'admin')
-      claims[:admin] = 1
-    else
-      claims[:admin] = -1
-    end
-    claims[:project_admins] = []
-    user.project_users.each do |p|
-      if(p.is_admin)
-        claims[:project_admins].push(p.project_id)
-      end
-    end
-  end
-
   def can_access_user(user, target_user_id, resource_link_id)
     return false if user.blank?
 
@@ -182,7 +168,7 @@ class API::V1::JwtController < API::APIController
       teacher = nil
     end
 
-    claims = {}
+    builder = PortalTokenClaims.new(self)
     if params[:researcher] == "true"
       # Note: no check is done to see if the user is a researcher for any projects.
       # The researcher user_type is used only by clients to know what type of JWT they have
@@ -199,22 +185,9 @@ class API::V1::JwtController < API::APIController
         :last_name => user.last_name
       }
     elsif learner
-      offering = learner.offering
-      claims = {
-        :domain => root_url,
-        :user_type => "learner",
-        :user_id => url_for(user),
-        :learner_id => learner.id,
-        :class_info_url => offering.clazz.class_info_url(request.protocol, request.host_with_port),
-        :offering_id => offering.id
-      }
+      claims = builder.learner_claims(user, learner)
     elsif teacher
-      claims = {
-        :domain => root_url,
-        :user_type => "teacher",
-        :user_id => url_for(user),
-        :teacher_id => teacher.id
-      }
+      claims = builder.teacher_claims(user, teacher)
     else
       claims = {
         :domain => root_url,
@@ -226,9 +199,9 @@ class API::V1::JwtController < API::APIController
         :student => user.portal_student ? true : false
       }
     end
-    add_admin_claims(user,claims)
+    builder.add_admin_claims(user, claims)
 
-    render status: 201, json: {token: SignedJwt::create_portal_token(user, claims, 3600)}
+    render status: 201, json: {token: builder.sign(user, claims)}
   end
 
 
