@@ -46,21 +46,17 @@ RSpec.describe API::V1::JwtController, type: :controller do
         )
       end
 
-      it 'authenticates via OIDC and returns a portal JWT' do
+      it 'is denied on #portal: OIDC service tokens cannot mint a portal JWT (D1)' do
         # Simulate Devise/Warden authenticating the user via OIDC strategy
         allow(controller).to receive(:current_user).and_return(admin_user)
         request.env['portal.auth_strategy'] = 'oidc_bearer_token'
         request.env['portal.auth_client'] = 'Integration Test SA'
         request.headers['Authorization'] = "Bearer #{oidc_token}"
 
+        expect(SignedJwt).not_to receive(:create_portal_token)
         get :portal
-        expect(response.status).to eq(201)
-        body = JSON.parse(response.body)
-        expect(body['token']).to be_present
-
-        # Decode the returned token to verify the user mapping
-        decoded = SignedJwt.decode_portal_token(body['token'])
-        expect(decoded[:data]['uid']).to eq(admin_user.id)
+        expect(response.status).to eq(403)
+        expect(response.body).to match(/does not accept OIDC service tokens/)
       end
 
       it 'routes OIDC token via portal_token? and uses current_user from Devise strategy' do
