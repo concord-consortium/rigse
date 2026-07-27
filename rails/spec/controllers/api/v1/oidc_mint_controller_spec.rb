@@ -157,6 +157,20 @@ RSpec.describe API::V1::OidcMintController, type: :controller do
     end
   end
 
+  describe 'claim parity for an elevated teacher (D8 withdrawn)' do
+    it 'carries the teacher\'s normal admin and project-admin claims' do
+      project = FactoryBot.create(:project)
+      teacher.user.add_role('admin')
+      FactoryBot.create(:project_user, user: teacher.user, project: project, is_admin: true)
+
+      post :create, params: { firebase_token: firebase_token, token_type: 'teacher' }, format: :json
+      claims = decoded_token
+      expect(claims['admin']).to eq(1)
+      expect(claims['project_admins']).to include(project.id)
+      expect(claims['user_type']).to eq('teacher')
+    end
+  end
+
   describe 'least-privileged teacher selection (Q2)' do
     let(:elevated_teacher) do
       t = FactoryBot.create(:portal_teacher)
