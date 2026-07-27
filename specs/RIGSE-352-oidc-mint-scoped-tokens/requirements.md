@@ -675,8 +675,9 @@ implementation "Refactor").
 
 **Wiring note (surfaced by this review):** because the mint uses a separate controller
 (`API::V1::OidcMintController`, Q4) but lives at `/api/v1/jwt/oidc_mint`, the route must be explicit —
-`post 'oidc_mint', to: 'oidc_mint#create'` inside `namespace :jwt` — since a bare `post :oidc_mint` would
-map to `JwtController#oidc_mint`.
+`post 'oidc_mint', to: '/api/v1/oidc_mint#create'` inside `namespace :jwt`. The absolute (leading-slash)
+target reaches `API::V1::OidcMintController`; a namespace-relative `to: 'oidc_mint#create'` would imply
+`API::V1::Jwt::OidcMintController`, and a bare `post :oidc_mint` would map to `JwtController#oidc_mint`.
 
 ### RESOLVED: D11 mounted-engine coverage — defer with a tripwire (not A/B/C)
 

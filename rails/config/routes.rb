@@ -424,6 +424,7 @@ RailsPortal::Application.routes.draw do
           get  :portal
           post :firebase
           get  :firebase
+          post 'oidc_mint', to: '/api/v1/oidc_mint#create'
         end
 
         resources :external_activities, :only => [:create] do

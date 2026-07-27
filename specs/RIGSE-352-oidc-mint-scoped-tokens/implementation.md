@@ -357,8 +357,11 @@ shared builder plus the audit claim, and logs the mint.
 **Files affected**:
 - `rails/app/controllers/api/v1/oidc_mint_controller.rb` — NEW.
 - `rails/config/routes.rb` — inside `namespace :jwt`, add an **explicit** mapping so the separate
-  controller (Q4) is reached at the documented URL: `post 'oidc_mint', to: 'oidc_mint#create'`. A bare
-  `post :oidc_mint` would map to `JwtController#oidc_mint` instead.
+  controller (Q4) is reached at the documented URL: `post 'oidc_mint', to: '/api/v1/oidc_mint#create'`.
+  The absolute (leading-slash) `to:` target keeps the controller `API::V1::OidcMintController` (a sibling
+  of `JwtController` in the `api/v1` module), rather than `API::V1::Jwt::OidcMintController` that a
+  namespace-relative `to: 'oidc_mint#create'` would imply; a bare `post :oidc_mint` would instead map to
+  `JwtController#oidc_mint`.
 - specs (see Testing).
 
 **Estimated diff size**: ~140 lines.
