@@ -70,6 +70,12 @@ class ApplicationController < ActionController::Base
 
   def confine_service_minted_tokens
     return if is_a?(API::APIController)
+    # The service-mint marker is only populated as a side effect of authentication:
+    # JwtBearerTokenAuthenticatable copies the minted_via_oidc_client_id / minted_for
+    # claims onto Current while decoding the JWT. Warden authenticates lazily, so on a
+    # controller that never touches current_user the strategy would not have run yet and
+    # Current would still be blank here, letting a marked token through unchecked. This
+    # call forces authentication so the marker is known before we decide.
     current_user
     return if Current.minted_via_oidc_client_id.blank?
     render json: { success: false, message: 'A service-minted token may only be used on the API' },

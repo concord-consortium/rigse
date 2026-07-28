@@ -91,7 +91,11 @@ class API::V1::Offering
     self.id = offering.id
     self.teacher = offering.clazz.teacher.name
     self.clazz = offering.clazz.name
-    self.class_word = offering.clazz.class_word
+    # The class word is the class's shared enrollment secret: a teacher hands it out to
+    # seed the roster and then rotates it to stop students inviting their friends. Only
+    # teachers of the class (and admins) may read it here, so the students and researchers
+    # who can otherwise see this offering do not get it.
+    self.class_word = offering.clazz.class_word if can_read_class_word?(offering.clazz, current_user)
     self.clazz_hash = offering.clazz.class_hash
     self.clazz_id = offering.clazz.id
     self.clazz_info_url = offering.clazz.class_info_url(protocol, host_with_port)
@@ -124,5 +128,12 @@ class API::V1::Offering
 
     self.students = offering.clazz.students.map { |s| OfferingStudent.new(s, offering, protocol, host_with_port, anonymize_students) }
     self.locked = offering.locked
+  end
+
+  private
+
+  def can_read_class_word?(clazz, user)
+    return false unless user
+    clazz.is_teacher?(user) || user.has_role?('admin')
   end
 end
