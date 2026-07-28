@@ -41,6 +41,10 @@ class API::APIController < ApplicationController
             :teacher => data["user_type"] == "teacher" ? Portal::Teacher.find_by_id(data["teacher_id"]) : nil
           }
           request.env['portal.auth_strategy'] = 'api_jwt'
+          Current.minted_via_oidc_client_id = data['minted_via_oidc_client_id']
+          Current.minted_for                = data['minted_for']
+          request.env['portal.minted_via_oidc_client_id'] = data['minted_via_oidc_client_id']
+          request.env['portal.minted_for']                = data['minted_for']
           return [user, role]
         else
           raise StandardError, 'User in token not found'

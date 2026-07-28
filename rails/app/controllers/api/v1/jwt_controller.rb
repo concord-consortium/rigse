@@ -3,32 +3,30 @@ class API::V1::JwtController < API::APIController
   require 'digest/md5'
   skip_before_action :verify_authenticity_token
 
+  before_action :reject_credential_issuing_callers
+
   # use exceptions to return errors
   # instead of directly calling APIController#error
   rescue_from StandardError, with: :error_400
   rescue_from SignedJwt::Error, with: :error_500
 
   private
+  def reject_credential_issuing_callers
+    current_user
+    if request.env['portal.auth_strategy'] == 'oidc_bearer_token'
+      return error('This endpoint does not accept OIDC service tokens; use /api/v1/jwt/oidc_mint', 403)
+    end
+    if Current.minted_via_oidc_client_id.present?
+      return error('A service-minted token may not be used to mint another token', 403)
+    end
+  end
+
   def error_400(e)
     error(e.message, 400)
   end
 
   def error_500(e)
     error(e.message, 500)
-  end
-
-  def add_admin_claims(user, claims)
-    if (user.has_role? 'admin')
-      claims[:admin] = 1
-    else
-      claims[:admin] = -1
-    end
-    claims[:project_admins] = []
-    user.project_users.each do |p|
-      if(p.is_admin)
-        claims[:project_admins].push(p.project_id)
-      end
-    end
   end
 
   def can_access_user(user, target_user_id, resource_link_id)
@@ -170,7 +168,7 @@ class API::V1::JwtController < API::APIController
       teacher = nil
     end
 
-    claims = {}
+    builder = PortalTokenClaims.new(self)
     if params[:researcher] == "true"
       # Note: no check is done to see if the user is a researcher for any projects.
       # The researcher user_type is used only by clients to know what type of JWT they have
@@ -187,22 +185,9 @@ class API::V1::JwtController < API::APIController
         :last_name => user.last_name
       }
     elsif learner
-      offering = learner.offering
-      claims = {
-        :domain => root_url,
-        :user_type => "learner",
-        :user_id => url_for(user),
-        :learner_id => learner.id,
-        :class_info_url => offering.clazz.class_info_url(request.protocol, request.host_with_port),
-        :offering_id => offering.id
-      }
+      claims = builder.learner_claims(user, learner)
     elsif teacher
-      claims = {
-        :domain => root_url,
-        :user_type => "teacher",
-        :user_id => url_for(user),
-        :teacher_id => teacher.id
-      }
+      claims = builder.teacher_claims(user, teacher)
     else
       claims = {
         :domain => root_url,
@@ -214,9 +199,9 @@ class API::V1::JwtController < API::APIController
         :student => user.portal_student ? true : false
       }
     end
-    add_admin_claims(user,claims)
+    builder.add_admin_claims(user, claims)
 
-    render status: 201, json: {token: SignedJwt::create_portal_token(user, claims, 3600)}
+    render status: 201, json: {token: builder.sign(user, claims)}
   end
 
 

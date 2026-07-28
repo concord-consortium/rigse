@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_06_223205) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_27_150000) do
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
     t.string "access_token"
@@ -92,6 +92,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_06_223205) do
     t.boolean "active", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "can_mint_scoped_tokens", default: false, null: false
     t.index ["sub"], name: "index_admin_oidc_clients_on_sub", unique: true
     t.index ["user_id"], name: "index_admin_oidc_clients_on_user_id"
   end

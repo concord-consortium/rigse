@@ -70,4 +70,35 @@ gpZlAvdO9CFaBcBKsAcJnNDQBY2lhFsSeqYs78PoW7Zz
     end
   end
 
+  describe "#decode_firebase_token_by_iss" do
+    let(:firebase_app_name) { FirebaseTestHelper::FIREBASE_TEST_APP_NAME }
+    let!(:firebase_app) { FirebaseTestHelper.create_test_firebase_app }
+
+    it 'verifies a good token and returns data, header, and the resolved app' do
+      token = SignedJwt.create_firebase_token('uid-1', firebase_app_name, 3600, { foo: 'bar' })
+      result = SignedJwt.decode_firebase_token_by_iss(token)
+      expect(result[:app]).to eq(firebase_app)
+      expect(result[:data]['foo']).to eq('bar')
+      expect(result[:data]['iss']).to eq(firebase_app.client_email)
+    end
+
+    it 'raises when the signature does not verify' do
+      wrong_key = OpenSSL::PKey::RSA.generate(2048)
+      payload = { iss: firebase_app.client_email, exp: Time.now.to_i + 3600 }
+      token = JWT.encode(payload, wrong_key, 'RS256')
+      expect { SignedJwt.decode_firebase_token_by_iss(token) }.to raise_error(SignedJwt::Error, /Signature did not verify/)
+    end
+
+    it 'raises when the token is expired' do
+      token = SignedJwt.create_firebase_token('uid-1', firebase_app_name, -3600)
+      expect { SignedJwt.decode_firebase_token_by_iss(token) }.to raise_error(SignedJwt::Error, /expired/)
+    end
+
+    it 'raises for an unknown iss' do
+      payload = { iss: 'unknown@nowhere.example.com', exp: Time.now.to_i + 3600 }
+      token = JWT.encode(payload, OpenSSL::PKey::RSA.generate(2048), 'RS256')
+      expect { SignedJwt.decode_firebase_token_by_iss(token) }.to raise_error(SignedJwt::Error, /No FirebaseApp for iss/)
+    end
+  end
+
 end

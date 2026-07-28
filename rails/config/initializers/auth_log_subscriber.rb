@@ -10,6 +10,8 @@ module AuthLogSubscriber
     if (details = req.env['portal.auth_details'])
       details.each { |k, v| additions << "#{k}=#{v}" }
     end
+    additions << "minted_via=#{req.env['portal.minted_via_oidc_client_id']}" if req.env['portal.minted_via_oidc_client_id']
+    additions << "minted_for=#{req.env['portal.minted_for']}"                if req.env['portal.minted_for']
     additions << "#{req.request_method} #{req.path}" if additions.any?
     info("  Auth: #{additions.join(' ')}") if additions.any?
     super

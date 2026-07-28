@@ -19,6 +19,11 @@ module JwtBearerTokenAuthenticatable
         return fail!(:invalid_token)
       end
       request.env['portal.auth_strategy'] = 'jwt_bearer_token'
+      data = decoded_token[:data]
+      Current.minted_via_oidc_client_id = data['minted_via_oidc_client_id']
+      Current.minted_for                = data['minted_for']
+      request.env['portal.minted_via_oidc_client_id'] = data['minted_via_oidc_client_id']
+      request.env['portal.minted_for']                = data['minted_for']
       success!(user)
     rescue JWT::ExpiredSignature => e
       Rails.logger.warn("JwtBearerToken: token expired - #{e.message}")

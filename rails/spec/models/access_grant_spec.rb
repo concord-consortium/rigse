@@ -32,6 +32,23 @@ describe AccessGrant do
 
   subject{ AccessGrant.create(valid_attributes)}
 
+  describe "service-minted token refusal" do
+    after(:each) { Current.reset }
+
+    it "refuses creation while a service-mint marker is set" do
+      Current.minted_via_oidc_client_id = 42
+      grant = AccessGrant.create(valid_attributes)
+      expect(grant).not_to be_persisted
+      expect(grant.errors[:base]).to include('cannot be created from a service-minted token')
+    end
+
+    it "allows creation when no marker is set" do
+      Current.reset
+      grant = AccessGrant.create(valid_attributes)
+      expect(grant).to be_persisted
+    end
+  end
+
   describe "class methods" do
     describe "#new with valid attributes" do
       it "should return a valid instance with parameters set" do

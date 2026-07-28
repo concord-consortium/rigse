@@ -18,6 +18,9 @@ module SignedJwt
       exp: now + expires_in,
       uid: user.id
     }
+    claims = claims.dup
+    claims[:minted_via_oidc_client_id] ||= Current.minted_via_oidc_client_id if Current.minted_via_oidc_client_id
+    claims[:minted_for]                ||= Current.minted_for                if Current.minted_for
     # merge claims into payload, preventing duplicates
     payload.merge!(claims) { |key, old, new| fail "Duplicate JWT claim key: #{key}" }
     begin
@@ -76,6 +79,42 @@ module SignedJwt
       raise SignedJwt::Error.new(e.message)
     end
     {data: decoded[0], header: decoded[1]}
+  end
+
+  # Verify a forwarded Firebase custom token, selecting the RSA key from the
+  # token's iss (= FirebaseApp#client_email) rather than a caller-supplied app
+  # name. Signature and exp are enforced with zero clock skew. Returns
+  # {data:, header:, app:}. Raises SignedJwt::Error on any failure.
+  def self.decode_firebase_token_by_iss(token)
+    unverified = begin
+      JWT.decode(token, nil, false).first
+    rescue StandardError => e
+      raise SignedJwt::Error.new("Undecodable forwarded token: #{e.message}")
+    end
+    iss = unverified && unverified['iss']
+    raise SignedJwt::Error.new('Forwarded token has no iss') if iss.blank?
+
+    apps = FirebaseApp.where(client_email: iss).to_a
+    raise SignedJwt::Error.new("No FirebaseApp for iss=#{iss}") if apps.empty?
+
+    app, decoded = verify_against_any(token, apps)
+    raise SignedJwt::Error.new("Signature did not verify for iss=#{iss}") unless app
+    {data: decoded[0], header: decoded[1], app: app}
+  end
+
+  def self.verify_against_any(token, apps)
+    apps.each do |app|
+      begin
+        rsa = OpenSSL::PKey::RSA.new(app.private_key)
+        decoded = JWT.decode(token, rsa, true, {algorithm: self.rsa_algorithm})
+        return [app, decoded]
+      rescue JWT::ExpiredSignature
+        raise SignedJwt::Error.new('Forwarded token expired')
+      rescue StandardError
+        next
+      end
+    end
+    [nil, nil]
   end
 
   def self.is_valid_private_key?(private_key)

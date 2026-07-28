@@ -3,6 +3,7 @@ class AccessGrant < ApplicationRecord
   belongs_to :client
   belongs_to :learner, :class_name => "Portal::Learner"
   belongs_to :teacher, :class_name => "Portal::Teacher"
+  before_create :refuse_service_minted_tokens
   before_create :generate_tokens
 
   ExpireTime = 1.week
@@ -107,6 +108,12 @@ class AccessGrant < ApplicationRecord
 
   def generate_tokens
     self.code, self.access_token, self.refresh_token = SecureRandom.hex(16), SecureRandom.hex(16), SecureRandom.hex(16)
+  end
+
+  def refuse_service_minted_tokens
+    return if Current.minted_via_oidc_client_id.blank?
+    errors.add(:base, 'cannot be created from a service-minted token')
+    throw :abort
   end
 
   # Auth code flow 1st step is to redirect back to client with code.
