@@ -23,8 +23,17 @@ DONE_RE="migrated \(|rake aborted!|ActiveRecord::(StatementInvalid|NoDatabaseErr
 echo "waiting for log stream ${STREAM} in ${GROUP}"
 LOG=""; first_seen=0
 while [ $SECONDS -lt $DEADLINE ]; do
-  LOG=$(aws logs get-log-events --log-group-name "$GROUP" --log-stream-name "$STREAM" \
-        --start-from-head --query 'events[].message' --output text 2>/dev/null) || LOG=""
+  ERR=$(mktemp); LOG=$(aws logs get-log-events --log-group-name "$GROUP" --log-stream-name "$STREAM" \
+        --start-from-head --query 'events[].message' --output text 2>"$ERR") || LOG=""
+  # Only a missing *stream* is benign: the task may not have logged yet. Everything
+  # else fails immediately rather than being polled into a misleading "no log events
+  # found" at the deadline. Matching the message rather than the exception type
+  # matters, because a missing log group raises the same ResourceNotFoundException
+  # yet will never appear, and a wrong region presents as exactly that.
+  if [ -s "$ERR" ] && ! grep -q "log stream does not exist" "$ERR"; then
+    echo "FAIL: AWS error while reading logs"; cat "$ERR"; rm -f "$ERR"; exit 1
+  fi
+  rm -f "$ERR"
   if grep -qE "$DONE_RE" <<<"$LOG"; then break; fi
   # A no-op run prints neither a migration nor an error, so once the stream exists
   # give it a short grace period instead of burning the whole deadline.
@@ -36,7 +45,9 @@ while [ $SECONDS -lt $DEADLINE ]; do
 done
 
 if [ -z "$LOG" ]; then
-  echo "FAIL: no log events found for ${STREAM} within the timeout"; exit 1
+  echo "FAIL: no log events found for ${STREAM} within the timeout"
+  echo "  the log group exists, so check the task actually started and logged"
+  exit 1
 fi
 
 if grep -qE "rake aborted!|ActiveRecord::(StatementInvalid|NoDatabaseError)|Mysql2::Error" <<<"$LOG"; then

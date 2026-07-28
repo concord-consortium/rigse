@@ -15,8 +15,20 @@ DEADLINE=$((SECONDS + MAX))
 streak=0; last=""
 
 echo "checking https://${HOST}/ for ${EXPECTED} (need ${NEED} consecutive)"
+# Strip tags and collapse newlines before matching, so the extraction survives the
+# footer being indented, wrapped in elements, or rendered on one line. Both footer
+# partials currently emit "Version:" and the value on separate unindented lines, but
+# nothing guarantees that stays true.
+extract_version() {
+  curl -s --max-time 15 "https://${HOST}/" \
+    | tr '\n' ' ' \
+    | sed 's/<[^>]*>/ /g' \
+    | grep -oE 'Version:[[:space:]]*v?[0-9][^[:space:]<]*' \
+    | head -1 | sed -E 's/^Version:[[:space:]]*//'
+}
+
 while [ $SECONDS -lt $DEADLINE ]; do
-  v=$(curl -s --max-time 15 "https://${HOST}/" | grep -A1 -i '^Version:' | tail -1 | tr -d '[:space:]')
+  v=$(extract_version)
   if [ -z "$v" ]; then
     echo "  no version found in footer (request failed or markup changed)"
     streak=0

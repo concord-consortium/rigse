@@ -107,14 +107,26 @@ versions.
 
 ### 3. Pre-flight checks
 
-Run all three and report the results together **before** tagging. Each one has
+Run all four and report the results together **before** tagging. Each one has
 bitten a real release.
+
+**These checks run before step 4 creates the tag, so they must not reference
+`$NEW_TAG`** as a git revision: it does not exist yet and every command below would
+fail with `fatal: bad revision`. Resolve the target to a ref that exists now:
+
+```bash
+# A new release tags the current commit; a rollback targets an existing tag.
+TARGET_REF=HEAD          # rollback: TARGET_REF="$NEW_TAG"
+```
+
+`$NEW_TAG` is still the name being *published*, and stays correct in step 4 onward
+once the tag exists.
 
 **a. Migrations that will apply.** This tells you whether step 5 is needed at all
 and, critically, gives you the expected migration class names to verify against:
 
 ```bash
-git diff --name-only "$FROM_TAG".."$NEW_TAG" -- rails/db/migrate/
+git diff --name-only "$FROM_TAG".."$TARGET_REF" -- rails/db/migrate/
 ```
 
 **b. CloudFormation template drift.** `--use-previous-template` in step 6 means
@@ -124,7 +136,7 @@ silent and wrong:
 ```bash
 aws cloudformation get-template --stack-name "$STACK" --template-stage Original \
   --query 'TemplateBody' --output text > /tmp/deployed-template.yml
-git show "$NEW_TAG":configs/cloudformation/stack_template.yml > /tmp/tag-template.yml
+git show "$TARGET_REF":configs/cloudformation/stack_template.yml > /tmp/tag-template.yml
 diff <(sed 's/[[:space:]]*$//' /tmp/deployed-template.yml) <(sed 's/[[:space:]]*$//' /tmp/tag-template.yml)
 ```
 
@@ -176,11 +188,11 @@ if [ "$DEPLOYED_TAG" = "$NEW_TAG" ]; then
   echo "SAME version already deployed"
 elif ! git rev-parse -q --verify "${DEPLOYED_TAG}^{commit}" >/dev/null; then
   echo "UNKNOWN: deployed tag $DEPLOYED_TAG not found in this repo"
-elif [ "$(git rev-parse "${NEW_TAG}^{commit}")" = "$(git rev-parse "${DEPLOYED_TAG}^{commit}")" ]; then
+elif [ "$(git rev-parse "${TARGET_REF}^{commit}")" = "$(git rev-parse "${DEPLOYED_TAG}^{commit}")" ]; then
   echo "SAME COMMIT under a different tag (normal pre-release to release promotion)"
-elif git merge-base --is-ancestor "$NEW_TAG" "$DEPLOYED_TAG"; then
+elif git merge-base --is-ancestor "$TARGET_REF" "$DEPLOYED_TAG"; then
   echo "DOWNGRADE: $NEW_TAG is an ancestor of the deployed $DEPLOYED_TAG"
-elif git merge-base --is-ancestor "$DEPLOYED_TAG" "$NEW_TAG"; then
+elif git merge-base --is-ancestor "$DEPLOYED_TAG" "$TARGET_REF"; then
   echo "FORWARD: $DEPLOYED_TAG is an ancestor of $NEW_TAG"
 else
   echo "DIVERGENT: $NEW_TAG and $DEPLOYED_TAG share no ancestry"
@@ -202,7 +214,7 @@ How to treat each result:
   **migrations are not reversed**. If any migration between the two versions was
   destructive or non-additive, the older code will be running against a schema it
   does not expect. Report which migrations sit between the two versions
-  (`git diff --name-only "$NEW_TAG".."$DEPLOYED_TAG" -- rails/db/migrate/`) so the
+  (`git diff --name-only "$TARGET_REF".."$DEPLOYED_TAG" -- rails/db/migrate/`) so the
   decision is informed.
 - **DIVERGENT** or **UNKNOWN** means the tags are not comparable, usually a tag that
   was never fetched or an image not built from a tag. Stop and ask; do not guess.
