@@ -3,8 +3,14 @@
 // This is mostly a copy from create-edit-permission-form.scss
 .manageStudentsForm {
   width: 600px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 
   .formTop {
+    // By default, prevent the top of the form from shrinking or stretching
+    flex-shrink: 0;
     background-color: $col-link;
     color: white;
     font-weight: bold;
@@ -16,6 +22,8 @@
   }
 
   .formRow {
+    // By default, prevent the rows from shrinking or stretching
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     padding: 7px 20px;
@@ -25,6 +33,13 @@
       // Override global label style
       text-transform: initial;
     }
+  }
+
+  .classListRow {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    align-items: flex-start;
   }
 
   .contextInfo {
@@ -46,6 +61,8 @@
   }
 
   .formButtonArea {
+    // Prevent the area for buttons from shrinking or stretching
+    flex-shrink: 0;
     display: flex;
     justify-content: flex-end;
     margin-top: 0px;
