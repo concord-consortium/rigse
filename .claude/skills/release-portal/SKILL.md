@@ -36,7 +36,7 @@ pattern-based guess will be wrong for one of them.
 | Migrate task family | `learn-portal-staging-App-migrate` | `learn-ecs-production-App-migrate` |
 | CloudWatch log group | `learn-portal-staging` | `learn-ecs-production` |
 | Host | `learn.portal.staging.concord.org` | `learn.concord.org` |
-| Version style | pre-release `vX.Y.Z-pre.N` | release `vX.Y.Z` |
+| Version style | usually pre-release `vX.Y.Z-pre.N`, see step 2 | release `vX.Y.Z` |
 
 Region is `us-east-1`, account `612297603577`, image repo
 `ghcr.io/concord-consortium/rigse`. Confirm the AWS identity with
@@ -64,6 +64,18 @@ directly, as below.
 `docs/portal-authentication-unification-design.md` is unrelated; the deployment
 reference is the LARA deployment doc, whose "Migrations" section still applies and
 whose "Deploying New Code" section describes the console equivalent of step 6.
+
+## Helper scripts
+
+Two helper scripts ship with this skill, in its own `scripts/` directory. **Their
+paths are relative to the skill, not to the repo.** The working directory throughout
+a release is the rigse checkout, which has no top-level `scripts/`, so a bare
+`scripts/verify-migration.sh` resolves to nothing and fails. Set `SKILL_DIR` from the
+base directory reported when the skill was loaded, and invoke them through it:
+
+```bash
+SKILL_DIR=<the skill's base directory>   # as reported on load
+```
 
 ## Steps
 
@@ -93,17 +105,25 @@ means a minor bump, otherwise a patch bump. Check what is actually shipping:
 git log --oneline "$FROM_TAG"..master
 ```
 
-- **staging** cuts a pre-release, `vX.Y.Z-pre.N`. `N` starts at 0 and increments if
-  that version already has pre-releases.
+- **staging** usually cuts a pre-release, `vX.Y.Z-pre.N`. `N` starts at 0 and
+  increments if that version already has pre-releases.
 - **production** cuts the plain `vX.Y.Z` matching the pre-release that was verified
   on staging.
+
+**Staging is not always a pre-release, and the alternative is arguably safer.** The
+other flow is to cut the final `vX.Y.Z`, build it once, deploy that image to staging,
+verify it, then promote the *identical image* to production. Production then runs the
+exact artifact that was validated on staging rather than a separate rebuild of the
+same commit. Do not treat a request for a non-pre tag on staging as a mistake to be
+corrected. If the user has not made the style clear, ask which of the two they want
+rather than assuming the pre-release flow.
 
 Tags are **annotated** (`git tag -a`). Confirm the chosen version with the user
 before creating it; a wrong version number is annoying to undo once pushed.
 
 Note pre-release tags are **plain git tags, not GitHub Releases**. Do not create a
 GitHub Release for them; the convention here is release objects only for final
-versions.
+versions, created in step 8.
 
 ### 3. Pre-flight checks
 
@@ -137,11 +157,16 @@ silent and wrong:
 aws cloudformation get-template --stack-name "$STACK" --template-stage Original \
   --query 'TemplateBody' --output text > /tmp/deployed-template.yml
 git show "$TARGET_REF":configs/cloudformation/stack_template.yml > /tmp/tag-template.yml
-diff <(sed 's/[[:space:]]*$//' /tmp/deployed-template.yml) <(sed 's/[[:space:]]*$//' /tmp/tag-template.yml)
+diff -B <(sed 's/[[:space:]]*$//' /tmp/deployed-template.yml) <(sed 's/[[:space:]]*$//' /tmp/tag-template.yml)
 ```
 
-Strip trailing whitespace on both sides. The deployed copy comes back with an extra
-trailing newline and will otherwise always report a spurious difference.
+Strip trailing whitespace on both sides **and pass `-B`**. Both are needed and they
+fix different things. The `sed` handles trailing whitespace within a line; `-B`
+handles the extra trailing *blank line* the deployed copy comes back with, which the
+`sed` cannot touch because an empty line has no trailing whitespace to strip.
+Without `-B` this check reports `952d951` on every single run, and the rule below
+then aborts every release on a difference that is not real. A genuine template change
+still shows through `-B`.
 
 **If the templates differ, stop and ask the user how to proceed.** Applying the new
 template means passing `--template-body` from the tag instead of
@@ -202,9 +227,12 @@ fi
 How to treat each result:
 
 - **FORWARD** is the normal case. Continue.
-- **SAME COMMIT** is the normal staging-to-production promotion, where the release
-  tag points at the commit the pre-release already validated. Continue, and say so
-  in the report.
+- **SAME COMMIT** means the target and the deployed image are the same commit under
+  two different tags. That is the normal staging-to-production promotion, and it also
+  occurs **on staging** when the final `vX.Y.Z` is cut on the commit staging already
+  runs as `vX.Y.Z-pre.N` (the build-once flow in step 2). Continue, and say so in the
+  report. Note this is not a no-op deploy: the image tag differs, so CloudFormation
+  does have a change to make, unlike the SAME version case below.
 - **SAME version** means there is nothing for CloudFormation to change. It rejects a
   no-op update with `No updates are to be performed`, so step 6 fails rather than
   doing anything, and re-pointing the parameter at the image it already holds cannot
@@ -229,6 +257,23 @@ VERSION_NO_V="${NEW_TAG#v}"   # image tags drop the v; used by steps 5 and 6
 
 CI builds on tag push. **Wait for it and confirm it is green** before deploying;
 do not deploy an untested image. Use a `Monitor` on the run rather than polling.
+
+Find the run by the tag it was pushed for, since `headBranch` carries the tag name:
+
+```bash
+gh run list --limit 10 --json databaseId,headBranch,status \
+  --jq ".[] | select(.headBranch==\"${NEW_TAG}\") | \"\(.databaseId) \(.status)\""
+```
+
+**Use `--jq`, not `--template`.** `--template` renders `databaseId` through Go's
+default float formatting and prints it as `3.1089915042e+10`, which is not a usable
+run ID. Give the push a few seconds before the first query: an empty list right after
+`git push` means the run has not registered yet, not that CI failed to fire.
+
+Gate the `Monitor` on the run's own `status` reaching `completed`, and report each
+job as it finishes so a failure is visible immediately rather than at the end. The
+`Deploy application` job showing as `skipped` is expected: that is the disabled
+workflow described above, not a problem with the build.
 
 The image tag drops the `v` prefix (`docker/metadata-action` with
 `type=semver,pattern={{version}}`), so `v2.30.0-pre.0` publishes as:
@@ -308,12 +353,15 @@ Require exit code `0`. Then **verify from the logs**, because an exit code says 
 container exited cleanly, not which migrations ran:
 
 ```bash
-scripts/verify-migration.sh "$LOG_GROUP" "$TASK_ID" <ExpectedMigrationClass ...>
+"$SKILL_DIR"/scripts/verify-migration.sh "$LOG_GROUP" "$TASK_ID" <ExpectedMigrationClass ...>
 ```
 
 Pass the class names derived in step 3a. The script polls, because the CloudWatch
 stream can lag the task by up to a minute, and it treats "no migrations applied" as
 a warning rather than success.
+
+**Record `$TASK_ID` in the step 9 report.** It is the only cheap handle on this run's
+log once the task ages out of ECS, and the next release may need it.
 
 **If it fails, do not simply abort and assume the database is untouched.** This
 stack runs MySQL, where DDL is not transactional, so a run that fails partway
@@ -322,6 +370,54 @@ through several migrations leaves the earlier ones committed and recorded in
 neither the old nor the new image. Compare the verifier's `applied:` line against the
 expected list from step 3a to establish exactly how far it got, report that to the
 user, and resolve forward. Do not re-run blindly and do not start the stack update.
+
+#### Verifying a migration that already ran
+
+Releases frequently reach this step with the migration already applied: staging was
+migrated days earlier, or the same commit is being re-tagged and promoted. The user
+may also simply ask you to double-check. **Do not re-run the task to find out.**
+Establish it from the durable records instead.
+
+**The migrate family's task definition revisions are the audit trail.** Every release
+registers one, and its image tag says which version it migrated:
+
+```bash
+for r in $(aws ecs list-task-definitions --family-prefix "${STACK}-App-migrate" \
+           --sort DESC --query 'taskDefinitionArns[:4]' --output text | tr '\t' '\n'); do
+  aws ecs describe-task-definition --task-definition "$r" \
+    --query 'taskDefinition.{rev:taskDefinitionArn,img:containerDefinitions[0].image,at:registeredAt}' --output text
+done
+```
+
+Slice inside the query (`taskDefinitionArns[:4]`) rather than passing `--max-items`.
+With `--output text`, `--max-items` appends the pagination token as a literal `None`
+line, which the loop then feeds to `describe-task-definition` and fails with
+`ClientException: Unable to describe task definition`.
+
+Registration proves the run was *prepared*, not that it succeeded, so confirm from
+the log. **ECS retains STOPPED tasks for only about an hour**, so
+`list-tasks --desired-status STOPPED` is empty for anything older and is not an audit
+trail; the task definition's `registeredAt` is what you correlate against instead.
+
+The migrate task logs to `portal/App/<task-id>` in the same log group as the web
+tasks, so **it is not distinguishable by stream name**. Match the stream whose last
+event is shortly after that revision's `registeredAt`, then read that one stream:
+
+```bash
+aws logs describe-log-streams --log-group-name "$LOG_GROUP" \
+  --order-by LastEventTime --descending --max-items 20 \
+  --query 'logStreams[].{stream:logStreamName,last:lastEventTimestamp}' --output text
+
+aws logs get-log-events --log-group-name "$LOG_GROUP" \
+  --log-stream-name "portal/App/<task-id>" --start-from-head \
+  --query 'events[].message' --output text
+```
+
+A successful run shows `== <timestamp> <Class>: migrated`.
+
+**Never scan the whole log group.** `aws logs filter-log-events` across the group
+walks every stream and times out (over two minutes in practice) even with a filter
+pattern and a `--start-time`. Always target the single stream.
 
 ### 6. Update the CloudFormation stack
 
@@ -392,8 +488,17 @@ runtime:
 ```bash
 NEED=$(( $(aws ecs list-tasks --cluster "$CLUSTER" --family "${STACK}-App" \
            --desired-status RUNNING --query 'length(taskArns)' --output text) * 3 ))
-scripts/check-deployed-version.sh "$HOST" "$NEW_TAG" "$NEED"
+MAX=$(( NEED * 5 * 3 ))
+if [ "$MAX" -lt 900 ]; then MAX=900; fi   # never below the script default
+"$SKILL_DIR"/scripts/check-deployed-version.sh "$HOST" "$NEW_TAG" "$NEED" "$MAX"
 ```
+
+**Size the deadline from `NEED`, not the script's 900s default.** The script polls
+every 5s and resets the streak on any flap or failed request, so `NEED` alone implies
+`NEED * 5` seconds of *uninterrupted* agreement as a floor. On a 30-task fleet that
+is `NEED=90`, a 450s floor, and two or three flaps put a perfectly healthy deploy
+past 900s and report a false failure. Passing `NEED * 15` leaves room for the streak
+to restart a couple of times.
 
 **This must require consecutive agreement, not a single request.** During a rollout
 the ALB balances across both task generations and the footer flaps: a real deploy
@@ -405,10 +510,27 @@ image tag. It comes from `CC_PORTAL_IMAGE_VERSION`, baked into the image at buil
 time from `github.ref_name`. It is better evidence than the stack's
 `CC_PORTAL_VERSION` parameter, which is stale and unrelated.
 
-### 8. Report
+### 8. Create the GitHub Release (final versions only)
+
+Step 2 says the convention is release objects for final versions only, and no other
+step creates one, so it falls here. Do it **after** the verifications pass, so the
+release object never advertises a version that failed to roll out:
+
+```bash
+gh release create "$NEW_TAG" --title "$NEW_TAG" --generate-notes
+```
+
+**Skip this entirely for a pre-release** (`vX.Y.Z-pre.N` stays a plain git tag) and
+for a rollback (the release object already exists). Confirm with the user before
+publishing: it is outward-facing and notifies watchers. If the same commit already
+shipped to staging under a pre-release tag, the release object still belongs on the
+final tag, not the pre-release one.
+
+### 9. Report
 
 State the environment, the version deployed, the from-version, which migrations
-applied, and the three verification results. Mention anything deferred or skipped.
+applied (with the migrate task ID from step 5), and the three verification results.
+Mention anything deferred or skipped, including a GitHub Release you did not create.
 
 If the release enables a feature behind a flag or an admin setting, say so
 explicitly: the deploy alone may not make the feature live.
