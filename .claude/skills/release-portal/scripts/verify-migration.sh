@@ -9,6 +9,12 @@
 # runs; if a release ever migrates enough to exceed it, follow nextForwardToken.
 set -uo pipefail
 
+if [ "$#" -lt 2 ]; then
+  echo "usage: $(basename "$0") <log-group> <task-id> [expected-migration-class ...]" >&2
+  echo "  e.g. $(basename "$0") learn-portal-staging abc123 AddFooToBars" >&2
+  exit 2
+fi
+
 GROUP="$1"; TASK_ID="$2"; shift 2
 EXPECTED=("$@")
 STREAM="portal/App/${TASK_ID}"
@@ -68,7 +74,11 @@ fi
 
 status=0
 for want in "${EXPECTED[@]}"; do
-  if grep -q "${want}: migrated" <<<"$LOG"; then
+  # -F: the class name is data, not a pattern. Rails migration classes are Ruby
+  # constants so metacharacters cannot legitimately appear, but these names are
+  # typed by hand from the pre-flight diff and a malformed one should fail the
+  # check loudly rather than match something unexpected.
+  if grep -qF "${want}: migrated" <<<"$LOG"; then
     echo "OK: ${want}"
   else
     echo "FAIL: expected migration ${want} not found in log"; status=1

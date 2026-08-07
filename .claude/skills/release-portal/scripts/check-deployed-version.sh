@@ -10,6 +10,12 @@
 #   expected-version is the git tag WITH the v prefix, e.g. v2.30.0-pre.0
 set -uo pipefail
 
+if [ "$#" -lt 2 ]; then
+  echo "usage: $(basename "$0") <host> <expected-version> [streak] [max-seconds]" >&2
+  echo "  e.g. $(basename "$0") learn.portal.staging.concord.org v2.30.0-pre.0 30 900" >&2
+  exit 2
+fi
+
 HOST="$1"; EXPECTED="$2"; NEED="${3:-10}"; MAX="${4:-900}"
 DEADLINE=$((SECONDS + MAX))
 streak=0; last=""
