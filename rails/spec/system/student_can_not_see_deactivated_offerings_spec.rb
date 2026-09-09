@@ -18,7 +18,7 @@ RSpec.describe "Student can not see deactivated offerings", type: :system do
     login_as("teacher")
     visit "/getting_started"
     expect(page).to have_content("Getting Started")
-    open_class_page("Class_With_No_Students", "Assignments")
+    open_class_page("Class_with_no_students", "Assignments")
     within("div[class^='sortableItem']", text: "Plant reproduction") do
       first("input[type='checkbox']").uncheck
     end

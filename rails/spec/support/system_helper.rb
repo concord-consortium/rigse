@@ -43,7 +43,11 @@ module SystemHelper
     # then clicks on the page name.
     within("#clazzes_nav") do
       find("li", text: "Classes").click
-      first("li", text: class_name, exact_text: true).click
+      # The nav styles these items with text-transform: capitalize and Selenium
+      # reports rendered rather than DOM text, so the case reaching Capybara is the
+      # browser's, not the class name's. Match case-insensitively; the transform can
+      # only change case, so an anchored regexp is still an exact match on content.
+      first("li", text: /\A#{Regexp.escape(class_name)}\z/i).click
       click_link(page_name)
     end
   end
