@@ -1200,6 +1200,56 @@ protected
 
   end
 
+  describe "can_be_researcher_for_clazz?" do
+    let(:cohort)          { FactoryBot.create(:admin_cohort) }
+    let(:teacher)         { FactoryBot.create(:portal_teacher, cohorts: [cohort]) }
+    let(:clazz)           { FactoryBot.create(:portal_clazz, name: 'test class', teachers: [teacher]) }
+    let(:other_clazz)     { FactoryBot.create(:portal_clazz, name: 'other class', teachers: [FactoryBot.create(:portal_teacher)]) }
+    let(:project)         { FactoryBot.create(:project, cohorts: [cohort]) }
+
+    subject { user.can_be_researcher_for_clazz?(clazz) }
+
+    context "when the user has no standing on the class" do
+      let(:user) { FactoryBot.create(:user) }
+      it { is_expected.to be false }
+    end
+
+    context "when the user is a researcher for the class" do
+      let(:user) {
+        researcher = FactoryBot.generate(:researcher_user)
+        researcher.researcher_for_projects << project
+        researcher
+      }
+      it { is_expected.to be true }
+
+      it "is false for a class that project does not reach" do
+        expect(user.can_be_researcher_for_clazz?(other_clazz)).to be false
+      end
+    end
+
+    context "when the user is a project admin for the class" do
+      let(:user) {
+        project_admin = FactoryBot.generate(:author_user)
+        project_admin.admin_for_projects << project
+        project_admin
+      }
+      it { is_expected.to be true }
+
+      it "is false for a class that project does not reach" do
+        expect(user.can_be_researcher_for_clazz?(other_clazz)).to be false
+      end
+    end
+
+    context "when the user is a site admin" do
+      let(:user) { FactoryBot.generate(:admin_user) }
+      it { is_expected.to be true }
+
+      it "is true for any class, since a site admin reaches every project" do
+        expect(user.can_be_researcher_for_clazz?(other_clazz)).to be true
+      end
+    end
+  end
+
   # TODO: auto-generated
   describe '#is_project_researcher?' do
     it 'is_project_researcher?' do

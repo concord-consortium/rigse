@@ -138,8 +138,7 @@ class API::V1::JwtController < API::APIController
   end
 
   def jwt_user_id(user)
-    site_url_without_trailing_slash = APP_CONFIG[:site_url].sub(/\/$/,'')
-    site_url_without_trailing_slash + polymorphic_path(user)
+    FirebaseTokenClaims.user_id(user)
   end
 
   public
@@ -214,11 +213,7 @@ class API::V1::JwtController < API::APIController
 
     # Firebase auth rules expect all the claims to be in a sub-object named "claims".
     # All the new properties should go there. Other apps can still read them.
-    sub_claims = {
-      platform_id: APP_CONFIG[:site_url],
-      platform_user_id: user.id,
-      user_id: jwt_user_id(user)
-    }
+    sub_claims = FirebaseTokenClaims.identity(user)
     claims = {
       claims: sub_claims
     }
@@ -232,8 +227,7 @@ class API::V1::JwtController < API::APIController
         raise StandardError, "A class with the requested class_hash does not exist"
       end
 
-      can_be_researcher = user.is_researcher_for_clazz?(clazz) || user.is_project_admin_for_clazz?(clazz) || user.has_role?('admin')
-      if !can_be_researcher
+      if !user.can_be_researcher_for_clazz?(clazz)
         raise StandardError, "You do not have access to the requested class_hash as a researcher"
       end
       class_hash = params[:class_hash]
@@ -323,8 +317,7 @@ class API::V1::JwtController < API::APIController
 
     end
 
-    # the firebase uid must be between 1-36 characters and unique across all portals, MD5 yields a 32 byte string
-    uid = Digest::MD5.hexdigest(jwt_user_id(user))
+    uid = FirebaseTokenClaims.uid(user)
 
     render status: 201, json: {token: SignedJwt::create_firebase_token(uid, params[:firebase_app], 3600, claims)}
   end

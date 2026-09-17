@@ -566,6 +566,17 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
                 "class_hash" => clazz.class_hash
               )
             end
+
+            # The Researcher Dashboard's runner tokens are minted only by
+            # ResearcherDashboard::RunnerToken and never reach a browser, so the rules that
+            # trust the claim (CLUE denies writes on it, report-service requires it for
+            # result writes) can treat it as proof the writer is a VM.
+            it "does not return a JWT carrying the researcher dashboard runner claim" do
+              post :firebase, params: {:firebase_app => "test app", :class_hash => clazz.class_hash, :researcher => "true" }, session: { :format => :json }
+              decoded_token = decode_token()
+
+              expect(decoded_token[:data]["claims"]).not_to have_key("researcher_dashboard_runner")
+            end
           end
         end
       end
