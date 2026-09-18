@@ -420,6 +420,10 @@ RailsPortal::Application.routes.draw do
           end
         end
 
+        namespace :researcher_dashboard do
+          post :run_package
+        end
+
         namespace :jwt do
           post :portal
           get  :portal
