@@ -246,6 +246,16 @@ Parameters:
     Type: String
     Description: Server-to-server bearer token for report-service API (see report-service project)
 
+  ReportServerUrl:
+    Type: String
+    Default: https://report-server.concord.org
+    Description: Report server this portal pairs with, where a researcher's dashboard credential is retired
+
+  PortalServiceSecret:
+    Type: String
+    Default: ''
+    Description: Key the portal signs the researcher-dashboard claim with. Must match report-server's PORTAL_SERVICE_SECRET
+
   ReportServiceSource:
     Type: String
     Default: authoring.concord.org
@@ -545,6 +555,10 @@ Resources:
               Value: !Ref ReportServiceURL
             - Name: REPORT_SERVICE_BEARER_TOKEN
               Value: !Ref ReportServiceBearerToken
+            - Name: REPORT_SERVER_URL
+              Value: !Ref ReportServerUrl
+            - Name: PORTAL_SERVICE_SECRET
+              Value: !Ref PortalServiceSecret
             - Name: REPORT_SERVICE_SOURCE
               Value: !Ref ReportServiceSource
 
@@ -776,6 +790,10 @@ Resources:
               Value: !Ref ReportServiceURL
             - Name: REPORT_SERVICE_BEARER_TOKEN
               Value: !Ref ReportServiceBearerToken
+            - Name: REPORT_SERVER_URL
+              Value: !Ref ReportServerUrl
+            - Name: PORTAL_SERVICE_SECRET
+              Value: !Ref PortalServiceSecret
             - Name: REPORT_SERVICE_SOURCE
               Value: !Ref ReportServiceSource
 

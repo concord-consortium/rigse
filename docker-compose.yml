@@ -142,6 +142,15 @@ services:
       REPORT_SERVICE_SOURCE: "${REPORT_SERVICE_SOURCE:-authoring.lara.staging.concord.org}"
       REPORT_SERVICE_BEARER_TOKEN:
 
+      #
+      # Researcher Dashboard: where the portal retires a researcher's report-server
+      # credential, and the key it signs the claim report-server verifies with. The
+      # secret has to match report-server's PORTAL_SERVICE_SECRET, and is left without a
+      # default so it comes from the environment rather than the repository.
+      #
+      REPORT_SERVER_URL: "${REPORT_SERVER_URL:-https://report-server.concordqa.org}"
+      PORTAL_SERVICE_SECRET:
+
     # open standard in and turn on tty so we can attach to the container and debug it
     stdin_open: true
     tty: true
