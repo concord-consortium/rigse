@@ -92,7 +92,7 @@ describe ResearcherDashboard::RunPackage do
   it "carries the identity and portal segment the VM is told to use" do
     body = posted { run }
 
-    expect(body["scope"]).to eql({ "kind" => "class", "class_hash" => "the-class" })
+    expect(body["scope"]).to eql({ "kind" => "class", "class_hash" => "the-class", "class_id" => clazz.id })
     expect(body["package"]).to eql({ "name" => "class-counts", "version" => "1.0.0", "checksum" => "sha256:abc" })
     expect(body["platform_user_id"]).to eql researcher.id
     expect(body["platform_id"]).to eql site_url

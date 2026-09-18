@@ -58,7 +58,9 @@ module ResearcherDashboard
 
     def body
       {
-        scope: { kind: "class", class_hash: @clazz.class_hash },
+        # Both identifiers, because neither derives from the other: the hash is what
+        # Firebase and CLUE key on, and report-server filters a run by the portal's id.
+        scope: { kind: "class", class_hash: @clazz.class_hash, class_id: @clazz.id },
         package: @package,
         class_tokens: class_tokens,
         # The researcher's status document lives only in the project report-service runs
