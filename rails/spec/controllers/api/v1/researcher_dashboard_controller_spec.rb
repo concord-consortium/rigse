@@ -70,6 +70,16 @@ describe API::V1::ResearcherDashboardController, :type => :controller do
     end
   end
 
+  # Otherwise an anonymous caller learns which class ids exist from the difference
+  # between the 404 and the 403.
+  it "refuses an unauthenticated caller before looking any class up" do
+    request.headers["Authorization"] = nil
+    expect(Portal::Clazz).not_to receive(:find_by_id)
+    expect(ResearcherDashboard::RunPackage).not_to receive(:call)
+    post_run
+    expect(response.status).to eql 401
+  end
+
   it "reports an unknown class as not found rather than forbidden" do
     expect(ResearcherDashboard::RunPackage).not_to receive(:call)
     post_run(class_id: -1)

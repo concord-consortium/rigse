@@ -7,10 +7,14 @@ class API::V1::ResearcherDashboardController < API::APIController
   # straight to report-service and only the result document's path comes back, which is
   # what keeps the runner claim out of a browser.
   def run_package
+    # Before the class is looked up, so an anonymous caller cannot tell a class that
+    # exists from one that does not by the difference between 403 and 404.
+    return error("You must be logged in to use this endpoint", 401) unless current_user
+
     clazz = Portal::Clazz.find_by_id(params[:class_id])
     return error("A class with the requested class_id does not exist", 404) unless clazz
 
-    unless current_user && current_user.can_be_researcher_for_clazz?(clazz)
+    unless current_user.can_be_researcher_for_clazz?(clazz)
       return error("You do not have access to the requested class as a researcher", 403)
     end
 
