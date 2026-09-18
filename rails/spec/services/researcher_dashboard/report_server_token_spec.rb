@@ -23,11 +23,15 @@ describe ResearcherDashboard::ReportServerToken do
   it "revokes the researcher's dashboard tokens through report-server" do
     expect(HTTParty).to receive(:delete) do |url, options|
       expect(url).to eql endpoint
-      expect(options[:headers]["Authorization"]).to eql "Bearer shared-secret"
-      body = JSON.parse(options[:body])
-      expect(body["portal_user_id"]).to eql researcher.id
+      # A signed claim, not the secret: report-server names the researcher from the
+      # verified assertion, so the secret never travels and no body is needed.
+      presented = options[:headers]["Authorization"].sub("Bearer ", "")
+      claims = JWT.decode(presented, 'shared-secret', true,
+                          { algorithm: 'HS256', aud: 'report-server', verify_aud: true }).first
+      expect(claims["portal_user_id"]).to eql researcher.id
       # The host, not the site url: report-server keys its users on the portal host.
-      expect(body["portal_server"]).to eql "test.host"
+      expect(claims["portal_server"]).to eql "test.host"
+      expect(options[:body]).to be_nil
       double(success?: true, code: 200, parsed_response: { "revoked" => 1 })
     end
 
@@ -42,11 +46,12 @@ describe ResearcherDashboard::ReportServerToken do
       .to raise_error(described_class::Error, /401/)
   end
 
-  it "raises when the shared secret is not configured" do
+  # The assertion cannot be signed without it, so the refusal comes from the minter.
+  it "raises when the signing secret is not configured" do
     stub_const('ENV', @base_env.merge('REPORT_SERVER_URL' => 'https://report-server.example.org')
       .tap { |e| e.delete('PORTAL_SERVICE_SECRET') })
     expect { described_class.revoke(user: researcher) }
-      .to raise_error(described_class::NotConfigured, /PORTAL_SERVICE_SECRET/)
+      .to raise_error(ResearcherDashboard::ReportServerAssertion::NotConfigured, /PORTAL_SERVICE_SECRET/)
   end
 
   it "raises when the report-server url is not configured" do

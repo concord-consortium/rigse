@@ -7,9 +7,8 @@ module ResearcherDashboard
   # them current where report-server's own copy is only as fresh as that user's last
   # sign-in there, which for a researcher who only meets it through a VM may be never.
   #
-  # One builder, because these values travel by two routes: signed into the launch
-  # assertion the report-service function relays, and in the body of the revoke call the
-  # portal makes itself.
+  # Held apart from the assertion that carries them so the shape report-server expects
+  # is written down once, in the order that server's own PortalUserInfo struct declares.
   module PortalUserInfo
     def self.for(user)
       {

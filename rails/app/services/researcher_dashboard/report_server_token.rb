@@ -6,7 +6,8 @@ module ResearcherDashboard
   # branch that creates a VM may mint, and only that function knows whether it is
   # creating one. It calls report-server directly, presenting the signed claim from
   # ReportServerAssertion. Revocation runs from the portal, against the same endpoint
-  # and the same shared secret.
+  # and presenting the same kind of claim: report-server names the researcher from the
+  # verified assertion, so nothing travels in the body.
   class ReportServerToken
     class Error < StandardError; end
     class NotConfigured < Error; end
@@ -21,15 +22,13 @@ module ResearcherDashboard
 
     def revoke
       raise NotConfigured, "REPORT_SERVER_URL is not set" if base_url.blank?
-      raise NotConfigured, "PORTAL_SERVICE_SECRET is not set" if secret.blank?
 
       response = HTTParty.delete(
         "#{base_url.chomp('/')}/api/v1/dashboard-tokens",
         headers: {
-          "Authorization" => "Bearer #{secret}",
+          "Authorization" => "Bearer #{ReportServerAssertion.mint(user: @user)}",
           "Content-Type" => "application/json"
         },
-        body: PortalUserInfo.for(@user).to_json,
         timeout: 10
       )
 
@@ -44,10 +43,6 @@ module ResearcherDashboard
 
     def base_url
       ENV['REPORT_SERVER_URL']
-    end
-
-    def secret
-      ENV['PORTAL_SERVICE_SECRET']
     end
   end
 end
