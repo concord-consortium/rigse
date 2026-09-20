@@ -256,6 +256,11 @@ Parameters:
     Default: ''
     Description: Key the portal signs the researcher-dashboard claim with. Must match report-server's PORTAL_SERVICE_SECRET
 
+  ResearcherDashboardUrl:
+    Type: String
+    Default: ''
+    Description: Researcher Dashboard app this portal launches. Empty turns the Analyze Class link off
+
   ReportServiceSource:
     Type: String
     Default: authoring.concord.org
@@ -559,6 +564,8 @@ Resources:
               Value: !Ref ReportServerUrl
             - Name: PORTAL_SERVICE_SECRET
               Value: !Ref PortalServiceSecret
+            - Name: RESEARCHER_DASHBOARD_URL
+              Value: !Ref ResearcherDashboardUrl
             - Name: REPORT_SERVICE_SOURCE
               Value: !Ref ReportServiceSource
 
@@ -794,6 +801,8 @@ Resources:
               Value: !Ref ReportServerUrl
             - Name: PORTAL_SERVICE_SECRET
               Value: !Ref PortalServiceSecret
+            - Name: RESEARCHER_DASHBOARD_URL
+              Value: !Ref ResearcherDashboardUrl
             - Name: REPORT_SERVICE_SOURCE
               Value: !Ref ReportServiceSource
 
