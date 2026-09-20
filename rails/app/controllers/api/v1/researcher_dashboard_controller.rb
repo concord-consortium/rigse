@@ -47,7 +47,9 @@ class API::V1::ResearcherDashboardController < API::APIController
   rescue ResearcherDashboard::RunnerToken::NotAuthorized => e
     error(e.message, 403)
   rescue ResearcherDashboard::RunPackage::Refused => e
-    error(e.message, 502)
+    # A busy VM is passed through as itself. Everything else upstream is a bad gateway
+    # from the caller's side, since there is nothing they can do about it.
+    error(e.message, e.status.to_i == 409 ? 409 : 502)
   rescue ResearcherDashboard::RunPackage::NotConfigured,
          ResearcherDashboard::ReportServerAssertion::NotConfigured => e
     error(e.message, 500)

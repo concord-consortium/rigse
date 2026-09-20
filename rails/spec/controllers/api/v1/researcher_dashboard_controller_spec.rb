@@ -60,6 +60,26 @@ describe API::V1::ResearcherDashboardController, :type => :controller do
     end
   end
 
+  # The runner answers 409 when the researcher's VM is already running a package, and the
+  # page shows that as queued and retries rather than as an error. It only reaches the page
+  # as itself if the portal passes the status through, since every other upstream refusal
+  # is a bad gateway the researcher can do nothing about.
+  describe "report-service refusing the run" do
+    it "passes a busy VM through as 409" do
+      expect(ResearcherDashboard::RunPackage).to receive(:call)
+        .and_raise(ResearcherDashboard::RunPackage::Refused.new("busy", status: 409))
+      post_run
+      expect(response.status).to eql 409
+    end
+
+    it "reports anything else upstream as a bad gateway" do
+      expect(ResearcherDashboard::RunPackage).to receive(:call)
+        .and_raise(ResearcherDashboard::RunPackage::Refused.new("boom", status: 500))
+      post_run
+      expect(response.status).to eql 502
+    end
+  end
+
   # The only gate on which classes a researcher may analyze, and it runs before anything
   # is minted, so report-service is never asked.
   describe "a researcher without access to the class" do

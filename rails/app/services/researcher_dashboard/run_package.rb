@@ -18,7 +18,18 @@ module ResearcherDashboard
   class RunPackage
     class Error < StandardError; end
     class NotConfigured < Error; end
-    class Refused < Error; end
+    # Carries the upstream status, because one of them is not a failure: a 409 means the
+    # researcher's VM is busy with another package, which the page shows as queued and
+    # retries. Collapsing every refusal into one code would make that indistinguishable
+    # from report-service being down.
+    class Refused < Error
+      attr_reader :status
+
+      def initialize(message, status: nil)
+        super(message)
+        @status = status
+      end
+    end
 
     def self.call(user:, clazz:, package:, firebase_project:, firebase_apps:)
       new(user: user, clazz: clazz, package: package,
@@ -48,7 +59,9 @@ module ResearcherDashboard
       )
 
       unless response.success?
-        raise Refused, "report-service refused the package run: #{response.code}"
+        raise Refused.new(
+          "report-service refused the package run: #{response.code}", status: response.code
+        )
       end
 
       response.parsed_response

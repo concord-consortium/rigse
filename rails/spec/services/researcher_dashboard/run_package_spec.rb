@@ -122,6 +122,13 @@ describe ResearcherDashboard::RunPackage do
     expect { run }.to raise_error(described_class::Refused, /500/)
   end
 
+  # The caller decides what a refusal means to the researcher, and it cannot do that from
+  # the message: a busy VM is a wait, and everything else is a failure.
+  it "carries the upstream status on the refusal" do
+    allow(HTTParty).to receive(:post).and_return(double(success?: false, code: 409, parsed_response: {}))
+    expect { run }.to raise_error(described_class::Refused) { |e| expect(e.status).to eql 409 }
+  end
+
   it "raises when report-service is not configured" do
     stub_const('ENV', @base_env.merge('REPORT_SERVICE_BEARER_TOKEN' => 'x')
       .tap { |e| e.delete('REPORT_SERVICE_URL') })
