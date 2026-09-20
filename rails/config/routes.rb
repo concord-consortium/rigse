@@ -75,6 +75,7 @@ RailsPortal::Application.routes.draw do
           get :roster
           get :materials
           get :current_clazz
+          get :researcher_dashboard
         end
 
         resources :bookmarks, only: [:index]
@@ -422,6 +423,9 @@ RailsPortal::Application.routes.draw do
 
         namespace :researcher_dashboard do
           post :run_package
+          # Absolute controller path: inside a namespace block `to:` resolves relative to
+          # the namespace, which would look for a controller one level deeper than this.
+          get 'classes/:id', to: '/api/v1/researcher_dashboard#clazz', as: :clazz
         end
 
         namespace :jwt do

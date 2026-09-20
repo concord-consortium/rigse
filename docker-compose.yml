@@ -134,6 +134,7 @@ services:
       LARA_TOOL_ID: "${LARA_DOMAIN:-app.lara.docker}.${USER}"
 
       REPORT_SERVER_REPORTS_URL: "${REPORT_SERVER_REPORTS_URL:-https://report-server.concordqa.org/reports}"
+      RESEARCHER_DASHBOARD_URL: "${RESEARCHER_DASHBOARD_URL:-}"
 
       #
       # Report Service settings (used for feedback lookup)

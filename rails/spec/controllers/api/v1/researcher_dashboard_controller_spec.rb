@@ -113,4 +113,66 @@ describe API::V1::ResearcherDashboardController, :type => :controller do
       expect(response.status).to eql 400
     end
   end
+
+  # What the dashboard app shows above the analyses. Same class gate as run_package, so the
+  # app cannot use it to enumerate classes it could not analyze.
+  describe "GET clazz" do
+    let(:tool)      { FactoryBot.create(:tool, source_type: "LARA") }
+    let(:runnable)  { FactoryBot.create(:external_activity, tool: tool, name: "An AP activity") }
+    let!(:offering) { FactoryBot.create(:portal_offering, clazz: clazz, runnable: runnable) }
+
+    def get_clazz(id = clazz.id)
+      get :clazz, params: { id: id }
+    end
+
+    # So an anonymous caller cannot tell a class that exists from one that does not by the
+    # difference between 403 and 404. The outer before signs the researcher in, so this has
+    # to take the credential back off.
+    it "refuses an anonymous caller before looking the class up" do
+      request.headers["Authorization"] = nil
+      expect(Portal::Clazz).not_to receive(:find_by_id)
+      get_clazz
+      expect(response.status).to eq(401)
+    end
+
+    describe "as a researcher for the class" do
+      it "returns the class, its teachers and its cohorts" do
+        get_clazz
+        body = JSON.parse(response.body)
+        expect(body["id"]).to eq(clazz.id)
+        expect(body["name"]).to eq(clazz.name)
+        expect(body["class_hash"]).to eq("the-class")
+        expect(body["teacher_names"]).to be_present
+        expect(body["cohort_names"]).to include(cohort.name)
+      end
+
+      it "returns each assignment with the platform a package matches on" do
+        get_clazz
+        assignment = JSON.parse(response.body)["assignments"].first
+        expect(assignment["name"]).to eq("An AP activity")
+        expect(assignment["platform"]).to eq("LARA")
+      end
+
+      # A runnable with no tool has no source_type rather than a default one. Reporting nil
+      # lets a package skip it; inventing a platform would have it mis-handled.
+      it "reports no platform rather than guessing one" do
+        runnable.update!(tool: nil)
+        get_clazz
+        expect(JSON.parse(response.body)["assignments"].first["platform"]).to be_nil
+      end
+
+      it "404s a class that does not exist" do
+        get_clazz(0)
+        expect(response.status).to eq(404)
+      end
+    end
+
+    describe "as a researcher for a different class" do
+      it "is refused" do
+        get_clazz(other_clazz.id)
+        expect(response.status).to eq(403)
+      end
+    end
+  end
+
 end

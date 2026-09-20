@@ -118,6 +118,7 @@ describe API::V1::ResearchClassesController do
           "classes"=>[{
             "materials_url"=>materials_portal_clazz_url(clazz.id, researcher: true, host: 'test.host'),
             "roster_url"=>nil,
+            "analyze_url"=>nil,
             "cohort_names"=>@cohort1.name,
             "id"=>clazz.id,
             "name"=>clazz.name,
@@ -227,6 +228,7 @@ describe API::V1::ResearchClassesController do
           "classes"=>[{
             "materials_url"=>materials_portal_clazz_url(clazz.id, researcher: true, host: 'test.host'),
             "roster_url"=>roster_portal_clazz_url(clazz.id, host: 'test.host'),
+          "analyze_url"=>nil,
             "cohort_names"=>@cohort1.name,
             "id"=>clazz.id,
             "name"=>clazz.name,
@@ -266,6 +268,7 @@ describe API::V1::ResearchClassesController do
             # No roster for class2 since the logged in user is only researcher for project2
             # and class2 only has a teacher from project2
             "roster_url"=>nil,
+            "analyze_url"=>nil,
             "cohort_names"=>@cohort1.name,
             "id"=>@clazz2.id,
             "name"=>@clazz2.name,
@@ -276,6 +279,7 @@ describe API::V1::ResearchClassesController do
           {
             "materials_url"=>materials_portal_clazz_url(@clazz1.id, researcher: true, host: 'test.host'),
             "roster_url"=>roster_portal_clazz_url(@clazz1.id, host: 'test.host'),
+            "analyze_url"=>nil,
             "cohort_names"=>@cohort1.name,
             "id"=>@clazz1.id,
             "name"=>@clazz1.name,
@@ -284,6 +288,47 @@ describe API::V1::ResearchClassesController do
           }
         ])
       end
+    end
+  end
+
+
+  # The Analyze link on the Research Classes table is rendered from this field, so its
+  # presence is the gate: the table shows a link only where the launch action would work.
+  describe "analyze_url on the class rows" do
+    def analyze_urls
+      get :index, params: { project_id: @project1.id }
+      JSON.parse(response.body)["hits"]["classes"].map { |c| c["analyze_url"] }
+    end
+
+    before { allow(ENV).to receive(:[]).and_call_original }
+
+    describe "when no dashboard is configured" do
+      before { allow(ENV).to receive(:[]).with('RESEARCHER_DASHBOARD_URL').and_return(nil) }
+
+      it "is absent on every row" do
+        expect(analyze_urls.compact).to be_empty
+      end
+    end
+
+    describe "when a dashboard is configured" do
+      before { allow(ENV).to receive(:[]).with('RESEARCHER_DASHBOARD_URL').and_return("https://dash.test/") }
+
+      it "points at the portal's launch action, not at the dashboard" do
+        expect(analyze_urls.compact).to all(match(%r{/portal/classes/\d+/researcher_dashboard}))
+      end
+
+      it "is present on the classes this researcher may analyze" do
+        expect(analyze_urls.compact).not_to be_empty
+      end
+
+      describe "for an admin, who may analyze any class" do
+        let(:logged_in_user) { FactoryBot.generate(:admin_user) }
+
+        it "is present" do
+          expect(analyze_urls.compact).not_to be_empty
+        end
+      end
+
     end
   end
 

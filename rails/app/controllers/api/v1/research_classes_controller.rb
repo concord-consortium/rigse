@@ -173,8 +173,23 @@ class API::V1::ResearchClassesController < API::APIController
         # It seems the number of classes is not limited by pagination. Also there are other places
         # where this will be inefficient, so if we need to show a lot of classes hopefully we can
         # make time to paginate it.
-        roster_url: policy(c).roster? ? roster_portal_clazz_url(c.id) : nil
+        roster_url: policy(c).roster? ? roster_portal_clazz_url(c.id) : nil,
+        # Absent rather than false when this deployment has no dashboard or this user is
+        # not a researcher for this class, so the table renders a link only where one
+        # would work. The same check the launch action applies, one request earlier.
+        analyze_url: analyze_url_for(c)
       }
     end
+  end
+
+  def analyze_url_for(clazz)
+    return nil unless ResearcherDashboard.enabled?
+    # The same gate the launch action applies, one request earlier, so the table offers a
+    # link only where following it would work. This endpoint's own scoping is narrower
+    # than the check today, which is why no test here can make the two disagree; it is
+    # here so the link does not silently follow if that scoping ever widens.
+    return nil unless current_user.can_be_researcher_for_clazz?(clazz)
+
+    researcher_dashboard_portal_clazz_url(clazz.id)
   end
 end

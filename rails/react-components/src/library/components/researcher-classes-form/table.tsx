@@ -105,6 +105,9 @@ export default class ResearcherClassesTable extends React.Component<any, any> {
                     { c.roster_url && 
                       <><br /><a href={c.roster_url} target="_blank" rel="noreferrer">View Roster</a></>
                     }
+                    { c.analyze_url &&
+                      <><br /><a href={c.analyze_url} target="_blank" rel="noreferrer">Analyze Class</a></>
+                    }
                   </td>
                 </tr>
               ))

@@ -53,7 +53,47 @@ class API::V1::ResearcherDashboardController < API::APIController
     error(e.message, 500)
   end
 
+  # What the dashboard app shows above the analyses: which class this is, whose it is, and
+  # what was assigned in it. Read-only, and gated by the same class check as everything
+  # else here, so the app cannot use it to enumerate classes.
+  def clazz
+    return error("You must be logged in to use this endpoint", 401) unless current_user
+
+    clazz = Portal::Clazz.find_by_id(params[:id])
+    return error("A class with the requested class_id does not exist", 404) unless clazz
+
+    unless current_user.can_be_researcher_for_clazz?(clazz)
+      return error("You do not have access to the requested class as a researcher", 403)
+    end
+
+    render json: {
+      id: clazz.id,
+      name: clazz.name,
+      class_hash: clazz.class_hash,
+      teacher_names: clazz.teachers.map { |t| "#{t.user.first_name} #{t.user.last_name}" },
+      cohort_names: clazz.teachers.flat_map { |t| t.cohorts.map(&:name) }.uniq,
+      assignments: assignments_for(clazz)
+    }
+  end
+
   private
+
+  # One entry per assigned runnable, with the platform the analysis packages match on.
+  # `tools.source_type` is what the portal already uses to tell an Activity Player
+  # assignment from a CLUE one (`default_report_service.rb:6`), and a runnable with no
+  # tool has no source_type rather than a default, which is reported as nil rather than
+  # guessed: a package matching on platform should skip it, not mis-handle it.
+  def assignments_for(clazz)
+    clazz.offerings.map do |offering|
+      runnable = offering.runnable
+      {
+        id: offering.id,
+        runnable_id: runnable&.id,
+        name: runnable&.name,
+        platform: runnable.respond_to?(:tool) ? runnable.tool&.source_type : nil
+      }
+    end
+  end
 
   def package_params
     package = params[:package]

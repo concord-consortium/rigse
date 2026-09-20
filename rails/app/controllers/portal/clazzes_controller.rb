@@ -371,6 +371,25 @@ class Portal::ClazzesController < ApplicationController
     redirect_to next_url, allow_other_host: true
   end
 
+  # Sends a researcher to the dashboard for this class, the way external_report sends them
+  # to a class report: authorize, mint a short-lived grant, redirect. The authorization is
+  # the researcher one rather than the policy used for teaching a class, because analyzing
+  # someone else's class is exactly what this is for.
+  def researcher_dashboard
+    portal_clazz = Portal::Clazz.find(params[:id])
+    unless current_visitor.can_be_researcher_for_clazz?(portal_clazz)
+      raise Pundit::NotAuthorizedError, 'not a researcher for this class'
+    end
+
+    next_url = ResearcherDashboard::Launch.url_for(
+      clazz: portal_clazz,
+      user: current_visitor,
+      protocol: request.protocol,
+      host: request.host_with_port
+    )
+    redirect_to next_url, allow_other_host: true
+  end
+
   private
 
   def portal_clazz_strong_params(params)
