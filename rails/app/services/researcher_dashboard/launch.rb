@@ -12,10 +12,14 @@ module ResearcherDashboard
 
     # The Client is created through the admin UI, so its secret is never in the repository
     # nor in a migration that replays into every environment. What the code needs is a way
-    # to find it, and a fixed name is the least configuration that does: an environment
-    # with a dashboard URL and no Client of this name is misconfigured, and says so rather
-    # than launching a researcher at a page that cannot authenticate.
-    CLIENT_NAME = 'researcher-dashboard'.freeze
+    # to find it, and a fixed `app_id` is the least configuration that does: an environment
+    # with a dashboard URL and no such Client is misconfigured, and says so rather than
+    # launching a researcher at a page that cannot authenticate.
+    #
+    # Keyed on `app_id` rather than `name` because that is the slug in this table and
+    # `name` is prose: the existing rows pair "Activity Player" with `activity-player` and
+    # "Portal Report SPA" with `portal-report`.
+    CLIENT_APP_ID = 'researcher-dashboard'.freeze
 
     # The first page of the app, and today the only one. The app switches on `page`, so the
     # value is part of the launch contract rather than a path.
@@ -34,7 +38,7 @@ module ResearcherDashboard
 
     def url
       raise NotConfigured, 'RESEARCHER_DASHBOARD_URL is not set' unless ResearcherDashboard.enabled?
-      raise NotConfigured, "no Client named #{CLIENT_NAME}" if client.nil?
+      raise NotConfigured, "no Client with app_id #{CLIENT_APP_ID}" if client.nil?
 
       add_query_params(ResearcherDashboard.url, launch_params)
     end
@@ -44,7 +48,7 @@ module ResearcherDashboard
     attr_reader :clazz, :user, :protocol, :host
 
     def client
-      @client ||= Client.find_by(name: CLIENT_NAME)
+      @client ||= Client.find_by(app_id: CLIENT_APP_ID)
     end
 
     def launch_params

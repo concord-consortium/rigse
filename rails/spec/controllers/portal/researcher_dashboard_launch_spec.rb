@@ -9,7 +9,7 @@ describe Portal::ClazzesController, :type => :controller do
   let(:teacher)       { FactoryBot.create(:portal_teacher, cohorts: [cohort]) }
   let(:clazz)         { FactoryBot.create(:portal_clazz, teachers: [teacher]) }
   let(:project)       { FactoryBot.create(:project, cohorts: [cohort]) }
-  let!(:client)       { FactoryBot.create(:client, name: ResearcherDashboard::Launch::CLIENT_NAME) }
+  let!(:client)       { FactoryBot.create(:client, app_id: ResearcherDashboard::Launch::CLIENT_APP_ID, name: 'Researcher Dashboard') }
 
   let(:researcher) do
     user = FactoryBot.generate(:researcher_user)

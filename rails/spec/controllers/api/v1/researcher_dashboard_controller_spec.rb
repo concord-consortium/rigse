@@ -142,6 +142,9 @@ describe API::V1::ResearcherDashboardController, :type => :controller do
         expect(body["id"]).to eq(clazz.id)
         expect(body["name"]).to eq(clazz.name)
         expect(body["class_hash"]).to eq("the-class")
+        # The status document is keyed by this, so the app reads it here rather than
+        # decoding the Firebase token it was given.
+        expect(body["platform_user_id"]).to eq(researcher.id)
         expect(body["teacher_names"]).to be_present
         expect(body["cohort_names"]).to include(cohort.name)
       end

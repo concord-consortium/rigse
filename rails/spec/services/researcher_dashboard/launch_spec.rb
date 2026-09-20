@@ -5,7 +5,7 @@ describe ResearcherDashboard::Launch do
   let(:teacher)       { FactoryBot.create(:portal_teacher) }
   let(:clazz)         { FactoryBot.create(:portal_clazz, teachers: [teacher]) }
   let(:researcher)    { FactoryBot.generate(:researcher_user) }
-  let!(:client)       { FactoryBot.create(:client, name: described_class::CLIENT_NAME) }
+  let!(:client)       { FactoryBot.create(:client, app_id: described_class::CLIENT_APP_ID, name: 'Researcher Dashboard') }
 
   def launch
     described_class.url_for(clazz: clazz, user: researcher, protocol: "https://", host: "portal.test")
@@ -65,7 +65,7 @@ describe ResearcherDashboard::Launch do
     end
 
     describe "and no Client record has been created" do
-      before { client.update!(name: "something-else") }
+      before { client.update!(app_id: "something-else") }
 
       # The Client is made through the admin UI, so a deployment can have the url and not
       # the record. Failing here is better than launching a researcher at a page whose

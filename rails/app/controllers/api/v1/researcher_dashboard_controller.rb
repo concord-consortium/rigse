@@ -70,6 +70,9 @@ class API::V1::ResearcherDashboardController < API::APIController
       id: clazz.id,
       name: clazz.name,
       class_hash: clazz.class_hash,
+      # Whose dashboard this is. The researcher status document is keyed by it, and the app
+      # should not have to take it apart from a token to know which document is its own.
+      platform_user_id: current_user.id,
       teacher_names: clazz.teachers.map { |t| "#{t.user.first_name} #{t.user.last_name}" },
       cohort_names: clazz.teachers.flat_map { |t| t.cohorts.map(&:name) }.uniq,
       assignments: assignments_for(clazz)
