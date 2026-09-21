@@ -129,6 +129,21 @@ describe ResearcherDashboard::RunPackage do
     expect { run }.to raise_error(described_class::Refused) { |e| expect(e.status).to eql 409 }
   end
 
+  # Without this a launch failure is invisible from outside report-service: every cause
+  # reads as 502, and finding out why needs the function's own log and a live gcloud
+  # session. report-service already puts the reason in the body.
+  it "carries report-service's reason, not just its status" do
+    allow(HTTParty).to receive(:post).and_return(
+      double(success?: false, code: 502, parsed_response: { "error" => "no AWS credentials configured" })
+    )
+    expect { run }.to raise_error(described_class::Refused, /no AWS credentials configured/)
+  end
+
+  it "still refuses cleanly when the body says nothing" do
+    allow(HTTParty).to receive(:post).and_return(double(success?: false, code: 502, parsed_response: nil))
+    expect { run }.to raise_error(described_class::Refused, /502/)
+  end
+
   it "raises when report-service is not configured" do
     stub_const('ENV', @base_env.merge('REPORT_SERVICE_BEARER_TOKEN' => 'x')
       .tap { |e| e.delete('REPORT_SERVICE_URL') })

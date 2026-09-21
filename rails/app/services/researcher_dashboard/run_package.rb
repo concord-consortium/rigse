@@ -60,7 +60,8 @@ module ResearcherDashboard
 
       unless response.success?
         raise Refused.new(
-          "report-service refused the package run: #{response.code}", status: response.code
+          "report-service refused the package run: #{response.code}#{upstream_reason(response)}",
+          status: response.code
         )
       end
 
@@ -68,6 +69,19 @@ module ResearcherDashboard
     end
 
     private
+
+    # report-service says why it refused, in the body, and a status code on its own makes
+    # a launch failure invisible from the outside: every cause looks like 502. Kept short
+    # and appended rather than replacing the code, so the code stays greppable.
+    def upstream_reason(response)
+      reason = response.parsed_response
+      reason = reason["error"] || reason["message"] if reason.is_a?(Hash)
+      reason = reason.to_s.strip
+      reason.empty? ? "" : ", #{reason.truncate(300)}"
+    rescue StandardError
+      # A body that will not parse is not worth failing the failure over.
+      ""
+    end
 
     def body
       {
