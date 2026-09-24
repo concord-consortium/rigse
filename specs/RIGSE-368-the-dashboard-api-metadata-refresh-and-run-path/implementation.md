@@ -488,7 +488,7 @@ module ResearcherDashboard
     end
 
     # The upstream's own words for a refusal: runnable:false's reason, report-server's
-    # message (its envelope is {error: CODE, message}), the function's message or error,
+    # message (its envelope is {error: CODE, message}), the function's `error`,
     # or a plain-text body. Truncated, and never the request's own body.
     def self.reason(response)
       body = begin
@@ -568,7 +568,7 @@ end
 - `RESEARCHER_DASHBOARD_FUNCTION_URL` unset: 503 naming it, and no request
 - an oversized list: 422 and no request
 - a token for another class, and a non-researcher: 403 and no request
-- `Upstream.reason` on a report-server envelope, a `runnable: false` body, a function body with `message`, a plain-text body, an unparsable JSON body, and a body over 300 characters
+- `Upstream.reason` on a report-server envelope, a `runnable: false` body, a function body `{success: false, error: ...}`, a plain-text body, an unparsable JSON body, and a body over 300 characters
 
 **Checked.** Built and run: 202 with the fingerprint, the posted body and the decoded assertion (`aud=report-service-functions`, the researcher's uid) as listed; the function's 400 came back 502 `report-service refused the profile refresh: assignment_urls[3] is longer than 2048 characters` with `details: {upstream: "report-service", status: 400, reason: ...}`; with the function URL unset, 503 `... RESEARCHER_DASHBOARD_FUNCTION_URL is not set`; 502 URLs, 422 with zero requests made.
 
@@ -693,8 +693,8 @@ module ResearcherDashboard
   # has accepted the work. It never waits for a VM. The tokens go only to the function, and
   # only the queue state comes back, so no runner claim reaches the browser.
   class RunPackage
-    # The function records the queue before it touches a VM and never waits for one.
-    READ_TIMEOUT = 25
+    # Up to four upstream calls of 10 seconds each, plus its Firestore transactions; it never waits for a VM.
+    READ_TIMEOUT = 45
 
     def self.call(user:, clazz:, packages:, launch_token:)
       new(user: user, clazz: clazz, packages: packages, launch_token: launch_token).call
@@ -778,7 +778,7 @@ Resolves run one at a time and stop at the first refusal, so the portal load rep
   - a batch with a `clue_prepull: true` resolve answer: `class_tokens` gains the CLUE FirebaseApp, whose token carries the class hash
   - five packages whose third resolve is 404: 409 naming it, the fourth and fifth never resolved, `/run-package` never called
   - archived: 409 `... cannot be run: archived`, `/run-package` never called
-  - the function's 409: 409 carrying `queue at its cap (20 outstanding)`; its 502 with a plain-text body: 502 carrying that text; its read timeout: 504 saying the packages may already be queued; a 202 whose body is not a JSON object: 502
+  - the function's 409: 409 carrying `queue at its cap (20 outstanding)`; its 503 `{success: false, error: "researcherDashboard is not configured: RD_MICROVM_IMAGE_ARN unset"}`: 502 with `details: {upstream: "report-service", status: 503, reason: <that text>}`; its 502 with a plain-text body: 502 carrying that text; its read timeout: 504 saying the packages may already be queued; a 202 whose body is not a JSON object: 502
   - two researchers of the same class running the same package: each request is answered 202 from its own stubbed response, and each posted body's assertions carry its own `uid`
   - `RESEARCHER_DASHBOARD_CLUE_FIREBASE_APP` unset: 202 for a batch without `clue_prepull`, 503 for one with it, with nothing sent to the function
 
@@ -816,12 +816,12 @@ The README states what each variable points at, per environment (staging: `https
 
 **Decision**: A. The run path has a dozen distinct refusals across three services, and R28 requires every one to have the same body shape; one `rescue_from` makes that true by construction and keeps the actions to two lines each. The spike's mapping (`e.status.to_i == 409 ? 409 : 502`) is the pattern R23 keeps, now inside `Upstream.refusal`.
 
-### RESOLVED: Judgment call: read timeouts of 10 seconds for the resolve and the refresh, 25 for `/run-package`
+### RESOLVED: Judgment call: read timeouts of 10 seconds for the resolve and the refresh, 45 for `/run-package`
 **Options considered**:
-- A) 10, 10 and 25 seconds, with a 5-second open timeout everywhere.
+- A) 10, 10 and 45 seconds, with a 5-second open timeout everywhere.
 - B) HTTParty's default (none set, so Net::HTTP's 60 seconds).
 
-**Decision**: A. The resolve's slowest honest answer is report-server's five-second portal timeout (REPORT-142 R15) plus its own work; the refresh only enqueues a Cloud Task; `/run-package` records the queue and makes at most `GetMicrovm`, a Firestore transaction, report-server's mint and `RunMicrovm`, none of which waits for a VM. None of these is the old wait: each bounds one call that should take a second or two, so a hung upstream is reported in seconds rather than holding a Puma thread for a minute. A `/run-package` timeout says the work may be queued, which is true because REPORT-141 writes the queue first (R27).
+**Decision**: A. The resolve's slowest honest answer is report-server's five-second portal timeout (REPORT-142 R15) plus its own work, and the refresh only enqueues a Cloud Task, so for those two a hung upstream is reported in seconds rather than holding a Puma thread for a minute. `/run-package` records the queue and then makes at most `GetMicrovm` and either `ResumeMicrovm`, or `GetMicrovmImage`, report-server's mint and `RunMicrovm`, plus its Firestore transactions. None of these waits for a VM. As implemented, REPORT-141 makes each upstream call once with a 10-second timeout and answers 502 with the reason. 45 seconds covers the four 10-second timeouts with 5 seconds left for its Firestore transactions and a cold start, so rigse hears the function's own reason where 25 would have turned a slow upstream into rigse's 504. Only the function's own 60-second timeout bounds it fully, and `/run-package` can hold a Puma thread for up to 50 seconds, the price of hearing that reason (amended 2026-09-24). A `/run-package` timeout says the work may be queued, which is true because REPORT-141 writes the queue first (R27).
 
 ### RESOLVED: Judgment call: resolve sequentially and stop at the first refusal
 **Options considered**:
