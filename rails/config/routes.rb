@@ -421,6 +421,11 @@ RailsPortal::Application.routes.draw do
           end
         end
 
+        # `to:` is absolute: inside a namespace a relative controller path resolves one level deeper.
+        namespace :researcher_dashboard do
+          get 'classes/:id', to: '/api/v1/researcher_dashboard#clazz', as: :clazz
+        end
+
         namespace :jwt do
           post :portal
           get  :portal
