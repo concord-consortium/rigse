@@ -491,7 +491,8 @@ end
 
 **Files affected**:
 - `docker-compose.yml` — `RESEARCHER_DASHBOARD_URL`, `PORTAL_SIGNING_KEY`, `PORTAL_SIGNING_KEY_ID`, `PORTAL_PREVIOUS_VERIFY_KEYS` in the app service, no defaults for the key
-- `configs/cloudformation/stack_template.yml` — four parameters (`PortalSigningKey` with `NoEcho: true`, all defaulting to empty) and the four environment entries in both `AppTaskDefinition` and `WorkerTaskDefinition`
+- `configs/cloudformation/stack_template.yml` — four parameters (`PortalSigningKey` with `NoEcho: true`, all defaulting to empty) and the four environment entries in both `AppTaskDefinition` and `WorkerTaskDefinition`, each behind an `!If` on its parameter being non-empty with `AWS::NoValue` otherwise, the pattern `PORTAL_PAGES_LIBRARY_URL` already uses, so an environment that has not enabled the dashboard carries no empty variables
+- `.env-osx-sample`, `.env-gh-codespaces-sample` — the three variables, commented out, beside `JWT_HMAC_SECRET`
 - `rails/lib/tasks/portal_signing_key.rake` — new
 - `README.md` — a "Researcher Dashboard" section
 

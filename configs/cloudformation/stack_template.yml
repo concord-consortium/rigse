@@ -251,6 +251,27 @@ Parameters:
     Default: authoring.concord.org
     Description: Source collection for report service data (use authoring.lara.staging.concord.org for staging)
 
+  ResearcherDashboardUrl:
+    Type: String
+    Default: ""
+    Description: URL of the Researcher Dashboard app. The dashboard link is offered only when this and PortalSigningKey are both set.
+
+  PortalSigningKey:
+    Type: String
+    Default: ""
+    NoEcho: true
+    Description: RS256 private key PEM with newlines written as \n (rake portal_signing_key:generate). Generate one per environment; never share it between staging and production.
+
+  PortalSigningKeyId:
+    Type: String
+    Default: ""
+    Description: The kid of PortalSigningKey, which report-server and the report-service function are configured with alongside its public key.
+
+  PortalPreviousVerifyKeys:
+    Type: String
+    Default: ""
+    Description: Optional JSON object of kid to public key PEM, for tokens signed by the previous key during a rotation.
+
   EnableALBAccessLogs:
     Type: String
     Default: "false"
@@ -263,6 +284,10 @@ Parameters:
 
 Conditions:
   PortalPagesLibraryDefined: !Not [!Equals [!Ref PortalPagesLibraryVersion, ""]]
+  ResearcherDashboardUrlDefined: !Not [!Equals [!Ref ResearcherDashboardUrl, ""]]
+  PortalSigningKeyDefined: !Not [!Equals [!Ref PortalSigningKey, ""]]
+  PortalSigningKeyIdDefined: !Not [!Equals [!Ref PortalSigningKeyId, ""]]
+  PortalPreviousVerifyKeysDefined: !Not [!Equals [!Ref PortalPreviousVerifyKeys, ""]]
   CreateLoadBalancerHTTPRedirectCond:
     !Equals [!Ref CreateLoadBalancerHTTPRedirect, "true"]
   EnableALBAccessLogsCond:
@@ -547,6 +572,26 @@ Resources:
               Value: !Ref ReportServiceBearerToken
             - Name: REPORT_SERVICE_SOURCE
               Value: !Ref ReportServiceSource
+            - !If
+              - ResearcherDashboardUrlDefined
+              - Name: RESEARCHER_DASHBOARD_URL
+                Value: !Ref ResearcherDashboardUrl
+              - !Ref "AWS::NoValue"
+            - !If
+              - PortalSigningKeyDefined
+              - Name: PORTAL_SIGNING_KEY
+                Value: !Ref PortalSigningKey
+              - !Ref "AWS::NoValue"
+            - !If
+              - PortalSigningKeyIdDefined
+              - Name: PORTAL_SIGNING_KEY_ID
+                Value: !Ref PortalSigningKeyId
+              - !Ref "AWS::NoValue"
+            - !If
+              - PortalPreviousVerifyKeysDefined
+              - Name: PORTAL_PREVIOUS_VERIFY_KEYS
+                Value: !Ref PortalPreviousVerifyKeys
+              - !Ref "AWS::NoValue"
 
   # Notes from 2017-11-14:
   # Values where changed to match the changed made to the CPU reservation value for the
@@ -778,6 +823,26 @@ Resources:
               Value: !Ref ReportServiceBearerToken
             - Name: REPORT_SERVICE_SOURCE
               Value: !Ref ReportServiceSource
+            - !If
+              - ResearcherDashboardUrlDefined
+              - Name: RESEARCHER_DASHBOARD_URL
+                Value: !Ref ResearcherDashboardUrl
+              - !Ref "AWS::NoValue"
+            - !If
+              - PortalSigningKeyDefined
+              - Name: PORTAL_SIGNING_KEY
+                Value: !Ref PortalSigningKey
+              - !Ref "AWS::NoValue"
+            - !If
+              - PortalSigningKeyIdDefined
+              - Name: PORTAL_SIGNING_KEY_ID
+                Value: !Ref PortalSigningKeyId
+              - !Ref "AWS::NoValue"
+            - !If
+              - PortalPreviousVerifyKeysDefined
+              - Name: PORTAL_PREVIOUS_VERIFY_KEYS
+                Value: !Ref PortalPreviousVerifyKeys
+              - !Ref "AWS::NoValue"
 
   WorkerService:
     Type: AWS::ECS::Service
