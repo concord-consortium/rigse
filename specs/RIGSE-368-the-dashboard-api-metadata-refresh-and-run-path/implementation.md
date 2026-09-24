@@ -805,6 +805,16 @@ The README states what each variable points at, per environment (staging: `https
 
 ---
 
+## As built
+
+Where the code departs from the plan above, in step order.
+
+- **The controller skips `verify_authenticity_token`** (step 3), as `jwt_controller` and the other bearer-only `/api/v1` controllers do. The plan relied on `protect_from_forgery`'s null session, which lets a bearer request through but logs a CSRF warning on every POST; the endpoints read no session (R1), so skipping the check changes nothing but the noise.
+- **The spec harness is a shared context** (step 3), `with the researcher dashboard configured` in `rails/spec/support/researcher_dashboard_helper.rb`, rather than an `around` hook written into each spec file, since the controller spec and three service specs all need it. It sets and restores the variables the same way.
+- **The controller spec calls `Current.reset` before each example** (step 3), so a scope one example's launch token set cannot leak into the next example's session-only request, whatever the test framework's own reset of `Current` does.
+
+---
+
 ## Open Questions
 
 <!-- Implementation-focused questions only. Requirements questions go in requirements.md. -->
