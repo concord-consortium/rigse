@@ -20,18 +20,25 @@ module ResearcherDashboard
     # The FirebaseApp in report-service's project. Its name is the project id, which is
     # what the runner signs in to and what it looks its class token up by.
     def self.firebase_app
-      fetch('RESEARCHER_DASHBOARD_FIREBASE_APP')
+      fetch_firebase_app('RESEARCHER_DASHBOARD_FIREBASE_APP')
     end
 
     # The FirebaseApp in CLUE's project, for packages that declare clue_prepull.
     # TODO(RIGSE-369): remove with the CLUE mint.
     def self.clue_firebase_app
-      fetch('RESEARCHER_DASHBOARD_CLUE_FIREBASE_APP')
+      fetch_firebase_app('RESEARCHER_DASHBOARD_CLUE_FIREBASE_APP')
     end
 
     def self.fetch(name)
       ENV[name].presence || raise(NotConfigured, "#{name} is not set")
     end
-    private_class_method :fetch
+
+    # A name with no FirebaseApp row cannot sign a token, which is a configuration gap too.
+    def self.fetch_firebase_app(name)
+      app = fetch(name)
+      raise NotConfigured, "#{name} names FirebaseApp #{app}, which does not exist" unless FirebaseApp.exists?(name: app)
+      app
+    end
+    private_class_method :fetch, :fetch_firebase_app
   end
 end

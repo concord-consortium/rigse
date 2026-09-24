@@ -27,13 +27,16 @@ module ResearcherDashboard
     # message (its envelope is {error: CODE, message}), the function's `error`, or a
     # plain-text body. Truncated, and never the request's own body.
     def self.reason(response)
-      body = begin
-        response.parsed_response
-      rescue StandardError
-        response.body
-      end
+      body = parsed(response) || response.body
       text = body.is_a?(Hash) ? (body['reason'] || body['message'] || body['error']) : body
       text.to_s.strip.truncate(REASON_MAX)
+    end
+
+    # The parsed body, or nil when a JSON content type carries a body that does not parse.
+    def self.parsed(response)
+      response.parsed_response
+    rescue StandardError
+      nil
     end
 
     def self.refusal(upstream, response, status: 502, message: nil)
@@ -43,6 +46,13 @@ module ResearcherDashboard
       message = "#{message}: #{reason}" if reason.present?
       log(name, response.code, reason)
       Refusal.new(status, message, { upstream: name, status: response.code, reason: reason })
+    end
+
+    # An answer whose status is fine but whose body is not what the contract says.
+    def self.malformed(upstream, status, reason, message)
+      name = NAMES.fetch(upstream)
+      log(name, status, reason)
+      Refusal.new(502, message, { upstream: name, status: status, reason: reason })
     end
 
     # One grep-able warning per upstream failure; never a body, so never a token.
