@@ -232,8 +232,7 @@ class API::V1::JwtController < API::APIController
         raise StandardError, "A class with the requested class_hash does not exist"
       end
 
-      can_be_researcher = user.is_researcher_for_clazz?(clazz) || user.is_project_admin_for_clazz?(clazz) || user.has_role?('admin')
-      if !can_be_researcher
+      if !user.can_be_researcher_for_clazz?(clazz)
         raise StandardError, "You do not have access to the requested class_hash as a researcher"
       end
       class_hash = params[:class_hash]

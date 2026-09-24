@@ -366,6 +366,38 @@ describe User do
     end
   end
 
+  describe "#can_be_researcher_for_clazz?" do
+    let(:cohort)  { FactoryBot.create(:admin_cohort) }
+    let(:project) { FactoryBot.create(:project, cohorts: [cohort]) }
+    let(:teacher) { FactoryBot.create(:portal_teacher, cohorts: [cohort]) }
+    let(:clazz)   { FactoryBot.create(:portal_clazz, teachers: [teacher]) }
+    let(:user)    { FactoryBot.create(:user) }
+
+    it "is true for a project researcher of the class's cohort" do
+      user.add_role_for_project('researcher', project)
+      expect(user.can_be_researcher_for_clazz?(clazz)).to be true
+    end
+
+    it "is true for a project admin of the class's cohort" do
+      user.add_role_for_project('admin', project)
+      expect(user.can_be_researcher_for_clazz?(clazz)).to be true
+    end
+
+    it "is true for a site admin" do
+      expect(FactoryBot.generate(:admin_user).can_be_researcher_for_clazz?(clazz)).to be true
+    end
+
+    it "is false for a researcher of an unrelated project" do
+      user.add_role_for_project('researcher', FactoryBot.create(:project))
+      expect(user.can_be_researcher_for_clazz?(clazz)).to be false
+    end
+
+    it "is false for a researcher whose grant has expired" do
+      user.add_role_for_project('researcher', project, expiration_date: Time.now - 1.day)
+      expect(user.can_be_researcher_for_clazz?(clazz)).to be false
+    end
+  end
+
   describe "remove_role_for_project" do
     let(:project)     { FactoryBot.create(:project) }
     let(:user)        { FactoryBot.create(:user)    }

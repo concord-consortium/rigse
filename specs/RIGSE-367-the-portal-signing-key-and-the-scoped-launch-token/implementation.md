@@ -243,7 +243,7 @@ The `require` is needed because these lines run before Rails loads; without it e
   # cohorts, or a site admin. It decides which classes a researcher Firebase token may be
   # minted for and which classes the Researcher Dashboard may open.
   def can_be_researcher_for_clazz?(clazz)
-    is_researcher_for_clazz?(clazz) || is_project_admin_for_clazz?(clazz) || has_role?('admin')
+    has_role?('admin') || is_researcher_for_clazz?(clazz) || is_project_admin_for_clazz?(clazz)
   end
 ```
 

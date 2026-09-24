@@ -479,6 +479,13 @@ class User < ApplicationRecord
       .count > 0
   end
 
+  # The gate on reading a class's data as a researcher: a project researcher (whose grant
+  # has not expired) or project admin reaching the class through one of its teachers'
+  # cohorts, or a site admin.
+  def can_be_researcher_for_clazz?(clazz)
+    has_role?('admin') || is_researcher_for_clazz?(clazz) || is_project_admin_for_clazz?(clazz)
+  end
+
   def has_full_access_to_student_data?(clazz)
     # Only admins, class students, teachers and project admins have full access to student data. Start checks from
     # the "cheapest" queries so we don't need to execute complex queries if not necessary (e.g. is_project_admin_for_clazz).
