@@ -661,7 +661,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
 
           body = JSON.parse(response.body)
           token = body["token"]
-          decoded_token = SignedJwt::decode_portal_token(token)
+          decoded_token = SignedJwt::decode_portal_token(token, aud: nil)
           expect(decoded_token[:data]["uid"]).to eql user.id
         end
 
@@ -674,7 +674,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
 
               body = JSON.parse(response.body)
               token = body["token"]
-              decoded_token = SignedJwt::decode_portal_token(token)
+              decoded_token = SignedJwt::decode_portal_token(token, aud: nil)
 
               expect(decoded_token[:data]["uid"]).to eql user.id
               expect(decoded_token[:data]["domain"]).to eql "http://test.host/"
@@ -707,7 +707,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
 
             body = JSON.parse(response.body)
             token = body["token"]
-            decoded_token = SignedJwt::decode_portal_token(token)
+            decoded_token = SignedJwt::decode_portal_token(token, aud: nil)
 
             expect(decoded_token[:data]["uid"]).to eql user.id
             expect(decoded_token[:data]["domain"]).to eql "http://test.host/"
@@ -730,7 +730,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
 
           body = JSON.parse(response.body)
           token = body["token"]
-          decoded_token = SignedJwt::decode_portal_token(token)
+          decoded_token = SignedJwt::decode_portal_token(token, aud: nil)
 
           expect(decoded_token[:data]["uid"]).to eql user.id
           expect(decoded_token[:data]["domain"]).to eql "http://test.host/"
@@ -753,7 +753,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
 
           body = JSON.parse(response.body)
           token = body["token"]
-          decoded_token = SignedJwt::decode_portal_token(token)
+          decoded_token = SignedJwt::decode_portal_token(token, aud: nil)
 
           expect(decoded_token[:data]["uid"]).to eql user.id
           expect(decoded_token[:data]["domain"]).to eql "http://test.host/"
@@ -774,7 +774,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
 
             body = JSON.parse(response.body)
             token = body["token"]
-            decoded_token = SignedJwt::decode_portal_token(token)
+            decoded_token = SignedJwt::decode_portal_token(token, aud: nil)
 
             expect(decoded_token[:data]["admin"]).to eql 1
             expect(decoded_token[:data]["project_admins"]).to eql []
@@ -793,7 +793,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
 
             body = JSON.parse(response.body)
             token = body["token"]
-            decoded_token = SignedJwt::decode_portal_token(token)
+            decoded_token = SignedJwt::decode_portal_token(token, aud: nil)
 
             expect(decoded_token[:data]["admin"]).to eql -1
             expect(decoded_token[:data]["project_admins"]).to eql [project.id]

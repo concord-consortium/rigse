@@ -81,8 +81,8 @@ class API::V1::JwtController < API::APIController
     end
   end
 
-  def handle_initial_auth
-    user, role = check_for_auth_token(params)
+  def handle_initial_auth(aud: nil)
+    user, role = check_for_auth_token(params, aud: aud)
 
     if role
       learner = role[:learner]

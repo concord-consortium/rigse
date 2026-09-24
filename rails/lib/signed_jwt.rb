@@ -9,31 +9,66 @@ module SignedJwt
   class Error < StandardError
   end
 
-  def self.create_portal_token(user, claims={}, expires_in=3600)
+  # The audiences an RS256 portal token can carry. Each keeps its claim set and its reach
+  # apart from the others; no rigse endpoint accepts the two service audiences.
+  AUD_RESEARCHER_DASHBOARD     = 'researcher-dashboard'.freeze
+  AUD_REPORT_SERVER            = 'report-server'.freeze
+  AUD_REPORT_SERVICE_FUNCTIONS = 'report-service-functions'.freeze
+  AUDIENCES = [AUD_RESEARCHER_DASHBOARD, AUD_REPORT_SERVER, AUD_REPORT_SERVICE_FUNCTIONS].freeze
+
+  # Without aud: the legacy HS256 portal token. With aud: an RS256 token for that
+  # audience, signed by the environment's key and carrying its kid.
+  def self.create_portal_token(user, claims={}, expires_in=3600, aud: nil)
+    if aud && !AUDIENCES.include?(aud)
+      raise SignedJwt::Error.new("Unknown portal token audience: #{aud}")
+    end
     now = Time.now.to_i
-    payload = {
-      alg: self.hmac_algorithm,
+    payload = aud ? {} : { alg: self.hmac_algorithm }
+    payload.merge!(
       iss: APP_CONFIG[:site_url],
       iat: now,
       exp: now + expires_in,
       uid: user.id
-    }
+    )
+    payload[:aud] = aud if aud
     claims = claims.dup
     claims[:minted_via_oidc_client_id] ||= Current.minted_via_oidc_client_id if Current.minted_via_oidc_client_id
     claims[:minted_for]                ||= Current.minted_for                if Current.minted_for
     # merge claims into payload, preventing duplicates
     payload.merge!(claims) { |key, old, new| fail "Duplicate JWT claim key: #{key}" }
     begin
-      JWT.encode payload, self.hmac_secret, self.hmac_algorithm
+      if aud
+        JWT.encode payload, PortalSigningKey.private_key, PortalSigningKey::ALGORITHM, { kid: PortalSigningKey.kid }
+      else
+        JWT.encode payload, self.hmac_secret, self.hmac_algorithm
+      end
+    rescue SignedJwt::Error
+      raise
     rescue StandardError => e
       raise SignedJwt::Error.new(e.message)
     end
   end
 
-  def self.decode_portal_token(token)
+  # aud is the RS256 audience this call site accepts, or nil to accept no RS256 token at
+  # all. Tokens are routed by the kid header: with one, RS256 is pinned and the key is the
+  # one that kid names; without one, HS256 is pinned against JWT_HMAC_SECRET, which is
+  # every legacy portal token. The token's own alg never chooses the key.
+  def self.decode_portal_token(token, aud:)
     begin
-      decoded = JWT.decode token, self.hmac_secret, true, {algorithm: self.hmac_algorithm}
-    rescue JWT::ExpiredSignature
+      header = JWT.decode(token, nil, false)[1]
+      decoded =
+        if header.key?('kid')
+          raise SignedJwt::Error.new('This endpoint does not accept RS256 portal tokens') if aud.nil?
+          JWT.decode(token, nil, true, { algorithm: PortalSigningKey::ALGORITHM, aud: aud, verify_aud: true }) do |h|
+            PortalSigningKey.verification_key(h['kid'])
+          end.tap do |d|
+            # The gem accepts an aud array containing the expected value; rigse never mints one.
+            raise SignedJwt::Error.new('Portal token aud must be a single string') unless d[0]['aud'].is_a?(String)
+          end
+        else
+          JWT.decode token, self.hmac_secret, true, {algorithm: self.hmac_algorithm}
+        end
+    rescue JWT::ExpiredSignature, SignedJwt::Error
       raise
     rescue StandardError => e
       raise SignedJwt::Error.new(e.message)

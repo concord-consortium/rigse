@@ -7,7 +7,7 @@ describe JwtBearerTokenAuthenticatable::BearerToken do
   let(:mapping)       { Devise.mappings[:user] }
   let(:expires_in)    { 10.minutes.to_i }
   let(:token)         { SignedJwt.create_portal_token(user, {}, expires_in) }
-  let(:decoded_token) { SignedJwt::decode_portal_token(token) }
+  let(:decoded_token) { SignedJwt::decode_portal_token(token, aud: nil) }
   let(:headers)       { {"Authorization" => "Bearer/JWT #{token}"} }
   let(:user)          { FactoryBot.create(:user) }
   let(:params)        { {} }
@@ -153,6 +153,20 @@ describe JwtBearerTokenAuthenticatable::BearerToken do
       allow(request).to receive(:headers).and_return({"Authorization" => "Bearer/JWT #{bad_token}"})
       expect(Rails.logger).to receive(:warn).with(/JwtBearerToken: user not found/)
       strategy.authenticate!
+    end
+  end
+
+
+  context 'an RS256 portal token' do
+    SignedJwt::AUDIENCES.each do |aud|
+      context "with aud #{aud}" do
+        let(:token) { SignedJwt.create_portal_token(user, {}, expires_in, aud: aud) }
+
+        it 'authenticates no one' do
+          expect(strategy.authenticate!).to eql :failure
+          expect(strategy.message).to eq(:invalid_token)
+        end
+      end
     end
   end
 
