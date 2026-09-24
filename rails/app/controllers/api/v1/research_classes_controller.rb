@@ -161,7 +161,9 @@ class API::V1::ResearchClassesController < API::APIController
   end
 
   def classes_mapping(classes_query)
-    classes_query.map do |c|
+    classes = classes_query.to_a
+    dashboard_clazz_ids = researcher_dashboard_clazz_ids(classes)
+    classes.map do |c|
       row = {
         id: c.id,
         name: c.name,
@@ -175,17 +177,15 @@ class API::V1::ResearchClassesController < API::APIController
         # make time to paginate it.
         roster_url: policy(c).roster? ? roster_portal_clazz_url(c.id) : nil
       }
-      dashboard_url = researcher_dashboard_url_for(c)
-      row[:researcher_dashboard_url] = dashboard_url if dashboard_url
+      row[:researcher_dashboard_url] = researcher_dashboard_portal_clazz_url(c.id) if dashboard_clazz_ids.include?(c.id)
       row
     end
   end
 
-  # The same gate the launch action applies, so the table offers a link only where
-  # following it would work.
-  def researcher_dashboard_url_for(clazz)
-    return nil unless ResearcherDashboard.enabled?
-    return nil unless current_user.can_be_researcher_for_clazz?(clazz)
-    researcher_dashboard_portal_clazz_url(clazz.id)
+  # The same gate the launch action applies, evaluated once for every row, so the table
+  # offers a link only where following it would work.
+  def researcher_dashboard_clazz_ids(classes)
+    return Set.new unless ResearcherDashboard.enabled?
+    current_user.researcher_clazz_ids(classes.map(&:id)).to_set
   end
 end

@@ -398,6 +398,43 @@ describe User do
     end
   end
 
+  describe "#researcher_clazz_ids" do
+    let(:cohort)         { FactoryBot.create(:admin_cohort) }
+    let(:project)        { FactoryBot.create(:project, cohorts: [cohort]) }
+    let(:teacher)        { FactoryBot.create(:portal_teacher, cohorts: [cohort]) }
+    let(:reached)        { FactoryBot.create(:portal_clazz, teachers: [teacher]) }
+    let(:also_reached)   { FactoryBot.create(:portal_clazz, teachers: [teacher]) }
+    let(:unreached)      { FactoryBot.create(:portal_clazz) }
+    let(:ids)            { [reached.id, also_reached.id, unreached.id] }
+    let(:user)           { FactoryBot.create(:user) }
+
+    it "returns the classes a project researcher reaches" do
+      user.add_role_for_project('researcher', project)
+      expect(user.researcher_clazz_ids(ids)).to match_array([reached.id, also_reached.id])
+    end
+
+    it "returns the classes a project admin reaches" do
+      user.add_role_for_project('admin', project)
+      expect(user.researcher_clazz_ids(ids)).to match_array([reached.id, also_reached.id])
+    end
+
+    it "returns every class for a site admin" do
+      expect(FactoryBot.generate(:admin_user).researcher_clazz_ids(ids)).to match_array(ids)
+    end
+
+    it "returns nothing for a researcher whose grant has expired" do
+      user.add_role_for_project('researcher', project, expiration_date: Time.now - 1.day)
+      expect(user.researcher_clazz_ids(ids)).to be_empty
+    end
+
+    it "agrees with can_be_researcher_for_clazz? class by class" do
+      user.add_role_for_project('researcher', project)
+      [reached, also_reached, unreached].each do |c|
+        expect(user.researcher_clazz_ids(ids).include?(c.id)).to eq(user.can_be_researcher_for_clazz?(c))
+      end
+    end
+  end
+
   describe "remove_role_for_project" do
     let(:project)     { FactoryBot.create(:project) }
     let(:user)        { FactoryBot.create(:user)    }

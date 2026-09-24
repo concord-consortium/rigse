@@ -684,6 +684,19 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
         expect(response.body).to match(/expired/i)
       end
 
+      it "is refused on POST" do
+        set_auth_token(launch_token)
+        post :firebase, params: { firebase_app: firebase_app_name, class_hash: clazz.class_hash, researcher: "true" }
+        expect(response.status).to eq(500)
+        expect(response.body).to match(/does not accept RS256/)
+      end
+
+      it "leaves a legacy HS256 bearer free to POST for the researcher mint" do
+        set_auth_token(SignedJwt.create_portal_token(researcher, {}, 3600))
+        post :firebase, params: { firebase_app: firebase_app_name, class_hash: clazz.class_hash, researcher: "true" }
+        expect(decode_token[:data]["claims"]).to include("class_hash" => clazz.class_hash)
+      end
+
       it "is refused without researcher=true" do
         request_researcher_token(clazz.class_hash, researcher: nil)
         expect(response.status).to eq(500)

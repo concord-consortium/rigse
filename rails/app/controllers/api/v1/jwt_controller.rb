@@ -220,10 +220,11 @@ class API::V1::JwtController < API::APIController
   # POST api/v1/jwt/firebase as a logged in user, or
   # GET  api/v1/jwt/firebase?firebase_app=abc with a valid bearer token
   def firebase
-    # A launch token reaches only the researcher mint, and only for the class it was
+    # A launch token reaches only the GET researcher mint, and only for the class it was
     # launched for; it opens no other branch here and nothing in #portal.
     researcher = params[:researcher] == "true"
-    user, learner, teacher = handle_initial_auth(aud: researcher ? SignedJwt::AUD_RESEARCHER_DASHBOARD : nil)
+    launch_aud = researcher && request.get? ? SignedJwt::AUD_RESEARCHER_DASHBOARD : nil
+    user, learner, teacher = handle_initial_auth(aud: launch_aud)
 
     raise StandardError, "Missing firebase_app parameter" if params[:firebase_app].blank?
 

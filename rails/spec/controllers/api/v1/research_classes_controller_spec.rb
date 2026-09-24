@@ -306,8 +306,14 @@ describe API::V1::ResearchClassesController do
         expect(rows.first["researcher_dashboard_url"]).to eq(researcher_dashboard_portal_clazz_url(@clazz1.id, host: 'test.host'))
       end
 
+      it "evaluates the researcher gate once for all rows" do
+        expect_any_instance_of(User).to receive(:researcher_clazz_ids).once.and_call_original
+        expect_any_instance_of(User).not_to receive(:can_be_researcher_for_clazz?)
+        rows
+      end
+
       it "is absent for a class the user fails the researcher gate on" do
-        allow_any_instance_of(User).to receive(:can_be_researcher_for_clazz?).and_return(false)
+        allow_any_instance_of(User).to receive(:researcher_clazz_ids).and_return([])
         expect(rows.first).not_to have_key("researcher_dashboard_url")
       end
     end

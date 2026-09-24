@@ -230,9 +230,19 @@ Researchers open the Researcher Dashboard from a "Researcher Dashboard" link on 
 
 ---
 
-### Check the site admin role first in the researcher gate
-**Context**: The gate runs once per Research Classes row, and the neighbouring `has_full_access_to_student_data?` orders its checks cheapest first.
-**Decision**: `has_role?('admin')` runs before the two join-count queries; the result is unchanged because the three are OR-ed predicates.
+### Evaluate the researcher gate once for the whole Research Classes list
+**Context**: The Research Classes response is unpaginated, and checking the gate per row cost two join-count queries per class for every non-admin researcher (raised in code review).
+**Options considered**:
+- A) Keep the per-row check, as the existing per-row roster policy check does.
+- B) Compute the set of permitted class ids once for the whole list.
+
+**Decision**: B. `User#researcher_clazz_ids(clazz_ids)` returns the permitted subset in a fixed number of queries, checking the site admin role first, and `can_be_researcher_for_clazz?` is defined through it, so the gate still has one definition. The four-join chain it shares with `is_researcher_for_clazz?` and `is_project_admin_for_clazz?` is one private helper.
+
+---
+
+### Accept the launch token only on GET `jwt/firebase`
+**Context**: `jwt/firebase` is routed for both GET and POST, and R11a names only the GET endpoint (raised in code review).
+**Decision**: The `researcher-dashboard` audience is accepted only when the request is a GET with `researcher=true`; a POST with a launch token is refused, and legacy HS256 POST callers are unchanged.
 
 ---
 
