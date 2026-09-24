@@ -265,6 +265,14 @@ One side effect worth knowing: every launch-token request also logs `JwtBearerTo
 
 **Decision**: A. A truncated list derives a profile that silently omits assignments, so packages matching them are silently not offered, which is the failure `final-design.md` 5.5 warns against. A class with more than 500 distinct assignment URLs, or 256 KiB of them, is far outside anything measured (35 activities gave 54 interactive URLs), and a visible refusal is the better failure for a case that should not happen. A single URL over 2,048 characters is left out instead, because refusing the whole class for one malformed row would deny every package to it. Recorded as R11 and R14.
 
+### RESOLVED: Judgment call: the disabled 404 is a bare 404, not the error envelope
+**Context**: R5 says the endpoints answer 404 while the dashboard is disabled "as the launch action does", and the launch action answers `head :not_found`. R28 says every refusal uses `API::APIController#error`. Found in the post-implementation comparison of the code with this spec.
+**Options considered**:
+- A) A bare 404, as the launch action gives and the plan's controller wrote.
+- B) `error('The Researcher Dashboard is not enabled', 404)`, the envelope with a message.
+
+**Decision**: A (implementation, 2026-09-24). A disabled dashboard is a portal on which the endpoints do not exist, not a refusal of a request to them, and a bare 404 is how such a portal already answers every path, including the launch. R28 governs the refusals of an enabled dashboard.
+
 ## Self-Review
 
 Roles: Security Engineer, Senior Rails Engineer, QA Engineer, DevOps Engineer, and the engineer building RD-3 against these endpoints. Each finding was checked against the code, by reading it or by a throwaway spec, before it was recorded. Candidates dropped after checking:
