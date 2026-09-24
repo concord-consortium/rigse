@@ -281,4 +281,129 @@ describe API::V1::ResearcherDashboardController, type: :controller do
       expect(response.status).to eq(401)
     end
   end
+
+  describe 'POST run_package' do
+    let(:run_url) { 'https://functions.example/researcherDashboard/run-package' }
+    let(:package) { { 'identity' => 'projects/20/b', 'version' => '1.0.0' } }
+    let(:queue) { [{ 'class_hash' => clazz.class_hash, 'package_key' => 'projects-20-b' }] }
+
+    before(:each) do
+      FirebaseTestHelper.create_test_firebase_app(name: 'report-service-dev')
+      stub_request(:get, 'https://report-server.example/api/v1/packages/resolve')
+        .with(query: { identity: 'projects/20/b', version: '1.0.0' })
+        .to_return(status: 200, headers: { 'Content-Type' => 'application/json' }, body: JSON.generate(
+          identity: 'projects/20/b', version: '1.0.0', checksum: "sha256:#{'a' * 64}", catalog_id: 12,
+          clue_prepull: false, archived: false, runnable: true, reason: nil
+        ))
+    end
+
+    def run(body, content_type: 'application/json')
+      request.headers['Content-Type'] = content_type
+      post :run_package, body: body.is_a?(String) ? body : JSON.generate(body), format: :json
+    end
+
+    context 'with a launch token for the class' do
+      before(:each) { bearer(token_for(researcher)) }
+
+      it 'answers 202 with the queue state only, and no credential' do
+        stub_request(:post, run_url).to_return(status: 202, headers: { 'Content-Type' => 'application/json' },
+                                               body: JSON.generate(success: true, queue: queue, appended: ['projects-20-b'], vm: 'running', debug: 'x'))
+        run({ 'packages' => [package] })
+        expect(response.status).to eq(202)
+        expect(json).to eq('queue' => queue, 'appended' => ['projects-20-b'], 'vm' => 'running')
+        expect(response.body).not_to include('eyJ')
+      end
+
+      it 'posts the class the token is scoped to' do
+        stub_request(:post, run_url).to_return(status: 202, headers: { 'Content-Type' => 'application/json' },
+                                               body: JSON.generate(queue: queue, appended: ['projects-20-b'], vm: 'launched'))
+        run({ 'packages' => [package] })
+        expect(a_request(:post, run_url).with { |r| JSON.parse(r.body)['scope']['classes'] == [{ 'class_hash' => clazz.class_hash, 'class_id' => clazz.id }] })
+          .to have_been_made.once
+      end
+
+      it 'refuses a checksum in the body with 400, and sends nothing' do
+        run({ 'packages' => [package.merge('checksum' => "sha256:#{'b' * 64}")] })
+        expect(response.status).to eq(400)
+        expect(json['message']).to eq('packages[0] has unexpected keys: checksum')
+        expect(a_request(:any, /.*/)).not_to have_been_made
+      end
+
+      it 'refuses a scope field in the body with 400' do
+        run({ 'packages' => [package], 'class_id' => other_clazz.id })
+        expect(response.status).to eq(400)
+        expect(json['message']).to eq('Unexpected keys in the body: class_id')
+      end
+
+      it 'refuses malformed JSON with 400' do
+        run('{"packages": [')
+        expect(response.status).to eq(400)
+        expect(json['message']).to eq('The body must be a JSON object')
+      end
+
+      it 'refuses a JSON array with 400' do
+        run([package])
+        expect(response.status).to eq(400)
+      end
+
+      it "answers the function's 409 with 409 and its reason" do
+        stub_request(:post, run_url).to_return(status: 409, headers: { 'Content-Type' => 'application/json' },
+                                               body: '{"success":false,"error":"queue at its cap (20 outstanding)"}')
+        run({ 'packages' => [package] })
+        expect(response.status).to eq(409)
+        expect(json).to include('success' => false, 'response_type' => 'ERROR')
+        expect(json['message']).to start_with('report-service refused the run')
+        expect(json['details']).to eq('upstream' => 'report-service', 'status' => 409, 'reason' => 'queue at its cap (20 outstanding)')
+      end
+
+      it 'answers 503 naming an unset setting, and sends nothing' do
+        ENV.delete('REPORT_SERVER_URL')
+        run({ 'packages' => [package] })
+        expect(response.status).to eq(503)
+        expect(json['message']).to match(/REPORT_SERVER_URL is not set/)
+        expect(a_request(:any, /.*/)).not_to have_been_made
+      end
+    end
+
+    it 'gives two researchers of the same class their own answers and assertions' do
+      second = FactoryBot.create(:confirmed_user)
+      second.add_role_for_project('researcher', project)
+      answers = { researcher.id => 1, second.id => 2 }
+      stub_request(:post, run_url).to_return { |r|
+        uid = SignedJwt.decode_portal_token(r.headers['Authorization'].sub(/\ABearer /, ''), aud: SignedJwt::AUD_REPORT_SERVICE_FUNCTIONS)[:data]['uid']
+        assertion = SignedJwt.decode_portal_token(JSON.parse(r.body)['report_server_assertion'], aud: SignedJwt::AUD_REPORT_SERVER)[:data]
+        expect(assertion['uid']).to eq(uid)
+        { status: 202, headers: { 'Content-Type' => 'application/json' },
+          body: JSON.generate(queue: [{ class_hash: clazz.class_hash, package_key: "p#{answers[uid]}" }], appended: [], vm: 'running') }
+      }
+      [researcher, second].each do |user|
+        Current.reset
+        bearer(token_for(user))
+        run({ 'packages' => [package] })
+        expect(response.status).to eq(202)
+        expect(json['queue'].first['package_key']).to eq("p#{answers[user.id]}")
+      end
+      expect(a_request(:post, run_url)).to have_been_made.twice
+    end
+
+    it 'refuses a non-researcher with 403, and resolves nothing' do
+      bearer(token_for(FactoryBot.create(:confirmed_user)))
+      run({ 'packages' => [package] })
+      expect(response.status).to eq(403)
+      expect(a_request(:any, /.*/)).not_to have_been_made
+    end
+
+    it 'refuses a session with no bearer with 401' do
+      sign_in researcher
+      run({ 'packages' => [package] })
+      expect(response.status).to eq(401)
+    end
+
+    it 'answers 404 when the dashboard is disabled' do
+      bearer(token_for(researcher))
+      ENV.delete('RESEARCHER_DASHBOARD_URL')
+      run({ 'packages' => [package] })
+      expect(response.status).to eq(404)
+    end
+  end
 end

@@ -47,6 +47,14 @@ class API::V1::ResearcherDashboardController < API::APIController
     render status: 202, json: ResearcherDashboard::ProfileRefresh.call(user: @user, clazz: @clazz)
   end
 
+  # POST /api/v1/researcher_dashboard/run_package
+  def run_package
+    packages = ResearcherDashboard::RunRequest.parse(request.raw_post)
+    render status: 202, json: ResearcherDashboard::RunPackage.call(
+      user: @user, clazz: @clazz, packages: packages, launch_token: @launch_token
+    )
+  end
+
   private
 
   def require_dashboard_enabled
