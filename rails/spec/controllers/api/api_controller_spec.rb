@@ -266,6 +266,12 @@ RSpec.describe API::APIController, type: :controller do
           end
         end
 
+        it 'refuses a launch token that carries no scope' do
+          set_standard_bearer_token(SignedJwt.create_portal_token(user, { user_type: 'researcher' }, 3600, aud: SignedJwt::AUD_RESEARCHER_DASHBOARD))
+          expect { controller.check_for_auth_token({}, aud: SignedJwt::AUD_RESEARCHER_DASHBOARD) }
+            .to raise_error(SignedJwt::Error, /carries no scope/)
+        end
+
         it 'records no scope for a legacy HS256 token' do
           set_standard_bearer_token(SignedJwt.create_portal_token(user, launch_claims, 3600))
           controller.check_for_auth_token({}, aud: SignedJwt::AUD_RESEARCHER_DASHBOARD)

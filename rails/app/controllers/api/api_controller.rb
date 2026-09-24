@@ -34,6 +34,10 @@ class API::APIController < ApplicationController
         decoded_token = SignedJwt.decode_portal_token(token, aud: aud)
         data = decoded_token[:data]
         if decoded_token[:header].key?('kid')
+          # An unscoped launch token would pass every scope check as a caller with no scope.
+          if data['aud'] == SignedJwt::AUD_RESEARCHER_DASHBOARD && (data['scope_kind'].nil? || data['scope_id'].nil?)
+            raise SignedJwt::Error, 'Researcher Dashboard token carries no scope'
+          end
           Current.token_scope_kind = data['scope_kind']
           Current.token_scope_id   = data['scope_id']
         end

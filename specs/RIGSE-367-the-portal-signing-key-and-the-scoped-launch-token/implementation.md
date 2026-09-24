@@ -188,6 +188,10 @@ end
         decoded_token = SignedJwt.decode_portal_token(token, aud: aud)
         data = decoded_token[:data]
         if decoded_token[:header].key?('kid')
+          # An unscoped launch token would pass every scope check as a caller with no scope.
+          if data['aud'] == SignedJwt::AUD_RESEARCHER_DASHBOARD && (data['scope_kind'].nil? || data['scope_id'].nil?)
+            raise SignedJwt::Error, 'Researcher Dashboard token carries no scope'
+          end
           Current.token_scope_kind = data['scope_kind']
           Current.token_scope_id   = data['scope_id']
         end
@@ -222,7 +226,7 @@ The `require` is needed because these lines run before Rails loads; without it e
 - `PortalSigningKey.configured?` false when either variable is blank; a `\n`-escaped PEM parses; a malformed PEM or JSON raises `SignedJwt::Error`
 - an expired RS256 token raises `JWT::ExpiredSignature`, matching the HS256 path's contract with its callers
 
-`jwt_bearer_token_authenticatable_spec.rb` and `api_controller_spec.rb`: an RS256 token of each of the three audiences is refused by the strategy and by `check_for_auth_token(params)`; `check_for_auth_token(params, aud: SignedJwt::AUD_RESEARCHER_DASHBOARD)` accepts a launch token and sets `Current.token_scope_kind` and `token_scope_id`, and still refuses the two service audiences.
+`jwt_bearer_token_authenticatable_spec.rb` and `api_controller_spec.rb`: an RS256 token of each of the three audiences is refused by the strategy and by `check_for_auth_token(params)`; `check_for_auth_token(params, aud: SignedJwt::AUD_RESEARCHER_DASHBOARD)` accepts a launch token and sets `Current.token_scope_kind` and `token_scope_id`, and still refuses the two service audiences, and refuses a launch token missing `scope_kind` or `scope_id`.
 
 ---
 
@@ -524,7 +528,7 @@ namespace :portal_signing_key do
 end
 ```
 
-The README section states: what the three variables are; that the private key is set only on rigse and the public key (from `rake portal_signing_key:public`) is configured by value in report-server and the report-service function under its `kid`; that staging and production each generate their own; that there is no JWKS endpoint by design; and that a rotation is two deploys (add the new public key to the verifiers and move the old key's public half into `PORTAL_PREVIOUS_VERIFY_KEYS` while switching rigse to the new key, then drop the old one once its tokens have expired, which for the launch token is two hours). `PORTAL_SERVICE_SECRET` is not introduced anywhere; the step's check is `git grep PORTAL_SERVICE_SECRET` returning nothing.
+The README section states: what the three variables are; that the private key is set only on rigse and the public key (from `rake portal_signing_key:public`) is configured by value in report-server and the report-service function under its `kid`; that staging and production each generate their own; that there is no JWKS endpoint by design; and that a rotation is two deploys (add the new public key to the verifiers and move the old key's public half into `PORTAL_PREVIOUS_VERIFY_KEYS` while switching rigse to the new key, then drop the old one once its tokens have expired, which for the launch token is two hours). `PORTAL_SERVICE_SECRET` is not introduced anywhere; the step's check is `git grep PORTAL_SERVICE_SECRET -- ':!specs'` returning nothing, since these specs name it to explain the set-aside clause.
 
 **Getting it onto a stack.** The release skill updates the stack with `--use-previous-template` (`.claude/skills/release-portal/SKILL.md`, step 6), so releasing this code does not add the four parameters or their environment entries to a running stack; the dashboard stays disabled there, which is safe. Turning it on is a separate, deliberate template update per environment, with that environment's own key and URL supplied as parameter values, and the README section says so. Later releases carry the values forward, since the skill passes every existing parameter with `UsePreviousValue=true`, which also keeps the `NoEcho` key intact.
 

@@ -677,6 +677,13 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
         end
       end
 
+      it "refuses an expired launch token" do
+        expired = SignedJwt.create_portal_token(launch_user, { user_type: 'researcher' }.merge(scope), -60, aud: SignedJwt::AUD_RESEARCHER_DASHBOARD)
+        request_researcher_token(clazz.class_hash, token: expired)
+        expect(response.status).to eq(400)
+        expect(response.body).to match(/expired/i)
+      end
+
       it "is refused without researcher=true" do
         request_researcher_token(clazz.class_hash, researcher: nil)
         expect(response.status).to eq(500)

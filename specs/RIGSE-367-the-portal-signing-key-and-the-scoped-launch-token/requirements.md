@@ -60,7 +60,7 @@ RIGSE-367 is the first implementation story under the Researcher Dashboard featu
 
 - R7a. Each RS256 token carries exactly one `aud`, as a string. The `jwt` gem accepts an `aud` array that contains the expected audience, so a multi-audience token would pass more than one check; rigse never mints one.
 - R8. `iss` on every RS256 token is `APP_CONFIG[:site_url]`, the portal's site URL, exactly as the HS256 tokens carry it today, so that it doubles as `platform_id`.
-- R9. The launch token (`aud: researcher-dashboard`) never carries the role flags or any other permission. `scope_kind` and `scope_id` record what was opened and are never treated as authorization: every endpoint that uses them also runs `can_be_researcher_for_clazz?` on the scope.
+- R9. The launch token (`aud: researcher-dashboard`) never carries the role flags or any other permission. `scope_kind` and `scope_id` record what was opened and are never treated as authorization: every endpoint that uses them also runs `can_be_researcher_for_clazz?` on the scope. A `researcher-dashboard` token missing either claim is refused wherever it is presented, so an unscoped launch token can never pass a scope check as a caller with no scope.
 - R10. Verification of an RS256 token takes the expected audience from the call site. A token with a missing `aud`, or an `aud` other than the one the call site accepts, is refused. The call sites are the two places rigse decodes a portal token today, `JwtBearerTokenAuthenticatable#authenticate!` and `API::APIController#check_for_auth_token`, and any added by this story; each names the audience it accepts.
 - R11. No rigse endpoint accepts a `report-server` or `report-service-functions` token as a bearer. Those two are minted for other services only.
 - R11a. rigse accepts a `researcher-dashboard` token as a bearer only on `GET /api/v1/jwt/firebase` with `researcher=true` (R19) and on the `/api/v1/researcher_dashboard/*` endpoints RIGSE-368 adds. Everywhere else, including `POST`/`GET /api/v1/jwt/portal`, `jwt/firebase` without `researcher=true`, and every controller that authenticates through the Devise strategy, such a token authenticates no one.
@@ -83,7 +83,7 @@ RIGSE-367 is the first implementation story under the Researcher Dashboard featu
 ### Configuration and secrets
 
 - R21. `RESEARCHER_DASHBOARD_URL`, the signing key and its `kid` are added to `docker-compose.yml`, both task definitions and the parameters of `configs/cloudformation/stack_template.yml`, and the local setup documentation, without defaults that put a key in the repository.
-- R22. `PORTAL_SERVICE_SECRET` appears nowhere in the repository.
+- R22. `PORTAL_SERVICE_SECRET` appears in no code or configuration in the repository (`git grep PORTAL_SERVICE_SECRET -- ':!specs'` returns nothing); the specs name it only to record why the Jira clause deleting it was set aside.
 - R23. `REPORT_SERVICE_BEARER_TOKEN` stays, for `get_feedback_metadata` only. No dashboard path in this story or RIGSE-368 uses it, so the Jira Done-when "rigse's configuration holds no bearer for the function app" is met in the form "rigse uses the function app's shared bearer on no dashboard path". Moving feedback metadata onto an assertion is a possible follow-up story, not part of this one.
 
 ## Technical Notes

@@ -138,6 +138,12 @@ gpZlAvdO9CFaBcBKsAcJnNDQBY2lhFsSeqYs78PoW7Zz
         expect(data.keys).to eq(%w[alg iss iat exp uid])
       end
 
+      it "keeps minting and verifying legacy HS256 tokens when the key is not configured" do
+        stub_const('ENV', ENV.to_h.merge('PORTAL_SIGNING_KEY' => '', 'PORTAL_SIGNING_KEY_ID' => ''))
+        token = SignedJwt.create_portal_token(user, {}, 600)
+        expect(decode(token, aud: nil)[:data]['uid']).to eq(user.id)
+      end
+
       it "raises SignedJwt::Error when the key is not configured" do
         stub_const('ENV', ENV.to_h.merge('PORTAL_SIGNING_KEY' => ''))
         expect { SignedJwt.create_portal_token(user, {}, 600, aud: aud) }
