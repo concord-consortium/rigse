@@ -610,4 +610,56 @@ describe Portal::ClazzesController do
     end
   end
 
+
+  describe "GET researcher_dashboard" do
+    let(:dashboard_url) { 'https://dashboard.example.com/' }
+
+    before(:each) do
+      allow(ResearcherDashboard).to receive(:url).and_return(dashboard_url)
+    end
+
+    it "redirects a researcher of the class to the dashboard with a token as its one parameter" do
+      sign_in @project_researcher_user
+      get :researcher_dashboard, params: { id: @mock_clazz.id }
+
+      expect(response).to have_http_status(:found)
+      location = URI.parse(response.location)
+      expect("#{location.scheme}://#{location.host}#{location.path}").to eq(dashboard_url)
+      params = Rack::Utils.parse_query(location.query)
+      expect(params.keys).to eq(['token'])
+      data = SignedJwt.decode_portal_token(params['token'], aud: SignedJwt::AUD_RESEARCHER_DASHBOARD)[:data]
+      expect(data).to include('uid' => @project_researcher_user.id, 'scope_kind' => 'class', 'scope_id' => @mock_clazz.id)
+    end
+
+    it "gives a researcher of another project the not-authorized response and no token" do
+      sign_in @another_project_researcher_user
+      get :researcher_dashboard, params: { id: @mock_clazz.id }
+
+      expect(response).to redirect_to("/recent_activity")
+      expect(response.location).not_to start_with(dashboard_url)
+    end
+
+    it "sends an anonymous visitor to sign in" do
+      get :researcher_dashboard, params: { id: @mock_clazz.id }
+
+      expect(response).to redirect_to(auth_login_path(after_sign_in_path: researcher_dashboard_portal_clazz_path(@mock_clazz.id)))
+    end
+
+    it "answers 404 and mints nothing when the dashboard is disabled" do
+      allow(ResearcherDashboard).to receive(:url).and_return(nil)
+      expect(SignedJwt).not_to receive(:create_portal_token)
+      sign_in @project_researcher_user
+      get :researcher_dashboard, params: { id: @mock_clazz.id }
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "answers 404 for an unknown class" do
+      sign_in @project_researcher_user
+      get :researcher_dashboard, params: { id: 0 }
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
 end

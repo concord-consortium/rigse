@@ -6,7 +6,7 @@ module JwtBearerTokenAuthenticatable
     end
 
     def authenticate!
-      decoded_token = SignedJwt.decode_portal_token(jwt_token_value)
+      decoded_token = SignedJwt.decode_portal_token(jwt_token_value, aud: nil)
       unless decoded_token && decoded_token[:data].key?("uid")
         Rails.logger.warn("JwtBearerToken: token decode failed or missing uid")
         return fail!(:invalid_token)

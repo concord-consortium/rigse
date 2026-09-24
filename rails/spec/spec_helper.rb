@@ -2,6 +2,10 @@ ENV["RAILS_ENV"] = 'test'
 
 # needed to generate signed portal tokens
 ENV["JWT_HMAC_SECRET"] = 'foo'
+# needed to generate RS256 portal tokens
+require "openssl"
+ENV["PORTAL_SIGNING_KEY"] = OpenSSL::PKey::RSA.generate(2048).to_pem
+ENV["PORTAL_SIGNING_KEY_ID"] = 'test-key'
 
 # needed for testing google auth
 ENV['GOOGLE_CLIENT_KEY'] = '1234'

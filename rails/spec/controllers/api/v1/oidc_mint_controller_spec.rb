@@ -37,7 +37,7 @@ RSpec.describe API::V1::OidcMintController, type: :controller do
   end
 
   def decoded_token
-    JSON.parse(response.body)['token'].then { |t| SignedJwt.decode_portal_token(t)[:data] }
+    JSON.parse(response.body)['token'].then { |t| SignedJwt.decode_portal_token(t, aud: nil)[:data] }
   end
 
   describe 'authorization' do

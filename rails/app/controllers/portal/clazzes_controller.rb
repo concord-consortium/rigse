@@ -371,6 +371,19 @@ class Portal::ClazzesController < ApplicationController
     redirect_to next_url, allow_other_host: true
   end
 
+  # The researcher gate rather than the class policy, because opening someone else's class
+  # is what this is for.
+  def researcher_dashboard
+    return head(:not_found) unless ResearcherDashboard.enabled?
+
+    portal_clazz = Portal::Clazz.find(params[:id])
+    unless current_visitor.can_be_researcher_for_clazz?(portal_clazz)
+      raise Pundit::NotAuthorizedError, 'not a researcher for this class'
+    end
+
+    redirect_to ResearcherDashboard.launch_url(user: current_visitor, clazz: portal_clazz), allow_other_host: true
+  end
+
   private
 
   def portal_clazz_strong_params(params)

@@ -63,7 +63,7 @@ describe ExternalActivity do
       # JWT tokens contain dots (header.payload.signature)
       expect(token_param[1]).to include(".")
       # Verify it's a valid portal JWT with learner claims
-      decoded = SignedJwt.decode_portal_token(token_param[1])
+      decoded = SignedJwt.decode_portal_token(token_param[1], aud: nil)
       expect(decoded[:data]["uid"]).to eq(user.id)
       expect(decoded[:data]["learner_id"]).to eq(34)
       expect(decoded[:data]["user_type"]).to eq("learner")

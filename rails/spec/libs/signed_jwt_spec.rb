@@ -101,4 +101,150 @@ gpZlAvdO9CFaBcBKsAcJnNDQBY2lhFsSeqYs78PoW7Zz
     end
   end
 
+
+  describe "RS256 portal tokens" do
+    let(:user) { FactoryBot.create(:user) }
+    let(:aud)  { SignedJwt::AUD_RESEARCHER_DASHBOARD }
+    let(:public_key) { PortalSigningKey.private_key.public_key }
+    let(:now) { Time.now.to_i }
+
+    def payload(overrides = {})
+      { iss: APP_CONFIG[:site_url], iat: now, exp: now + 600, uid: user.id, aud: aud }.merge(overrides)
+    end
+
+    def decode(token, aud: SignedJwt::AUD_RESEARCHER_DASHBOARD)
+      SignedJwt.decode_portal_token(token, aud: aud)
+    end
+
+    describe "#create_portal_token with aud" do
+      it "mints RS256 with the kid header and the standard claims, and no alg claim" do
+        token = SignedJwt.create_portal_token(user, {}, 600, aud: aud)
+        data, header = JWT.decode(token, nil, false)
+        expect(header).to include('alg' => 'RS256', 'kid' => 'test-key')
+        expect(data).to include('iss' => APP_CONFIG[:site_url], 'uid' => user.id, 'aud' => aud)
+        expect(data['exp'] - data['iat']).to eq(600)
+        expect(data).not_to have_key('alg')
+      end
+
+      it "refuses an unknown audience" do
+        expect { SignedJwt.create_portal_token(user, {}, 600, aud: 'somewhere-else') }
+          .to raise_error(SignedJwt::Error, /Unknown portal token audience/)
+      end
+
+      it "keeps the legacy HS256 token's shape without aud" do
+        token = SignedJwt.create_portal_token(user, {}, 600)
+        data, header = JWT.decode(token, nil, false)
+        expect(header).to eq('alg' => 'HS256')
+        expect(data.keys).to eq(%w[alg iss iat exp uid])
+      end
+
+      it "keeps minting and verifying legacy HS256 tokens when the key is not configured" do
+        stub_const('ENV', ENV.to_h.merge('PORTAL_SIGNING_KEY' => '', 'PORTAL_SIGNING_KEY_ID' => ''))
+        token = SignedJwt.create_portal_token(user, {}, 600)
+        expect(decode(token, aud: nil)[:data]['uid']).to eq(user.id)
+      end
+
+      it "raises SignedJwt::Error when the key is not configured" do
+        stub_const('ENV', ENV.to_h.merge('PORTAL_SIGNING_KEY' => ''))
+        expect { SignedJwt.create_portal_token(user, {}, 600, aud: aud) }
+          .to raise_error(SignedJwt::Error, /PORTAL_SIGNING_KEY/)
+      end
+    end
+
+    describe "#decode_portal_token" do
+      it "accepts the expected audience" do
+        token = SignedJwt.create_portal_token(user, { scope_id: 5 }, 600, aud: aud)
+        decoded = decode(token)
+        expect(decoded[:data]).to include('uid' => user.id, 'scope_id' => 5)
+        expect(decoded[:header]['kid']).to eq('test-key')
+      end
+
+      it "refuses a wrong audience" do
+        token = SignedJwt.create_portal_token(user, {}, 600, aud: SignedJwt::AUD_REPORT_SERVER)
+        expect { decode(token) }.to raise_error(SignedJwt::Error)
+      end
+
+      it "refuses a missing audience" do
+        token = JWT.encode(payload.except(:aud), PortalSigningKey.private_key, 'RS256', { kid: 'test-key' })
+        expect { decode(token) }.to raise_error(SignedJwt::Error)
+      end
+
+      it "refuses an aud array containing the expected audience" do
+        token = JWT.encode(payload(aud: [aud, SignedJwt::AUD_REPORT_SERVER]), PortalSigningKey.private_key, 'RS256', { kid: 'test-key' })
+        expect { decode(token) }.to raise_error(SignedJwt::Error, /single string/)
+      end
+
+      it "refuses any RS256 token when the call site accepts no audience" do
+        SignedJwt::AUDIENCES.each do |a|
+          token = SignedJwt.create_portal_token(user, {}, 600, aud: a)
+          expect { decode(token, aud: nil) }.to raise_error(SignedJwt::Error, /does not accept RS256/)
+        end
+      end
+
+      it "still accepts a legacy HS256 token when the call site accepts no audience" do
+        token = SignedJwt.create_portal_token(user, {}, 600)
+        expect(decode(token, aud: nil)[:data]['uid']).to eq(user.id)
+      end
+
+      it "verifies a legacy HS256 token as before at a call site that accepts an audience" do
+        token = SignedJwt.create_portal_token(user, {}, 600)
+        expect(decode(token)[:data]['uid']).to eq(user.id)
+      end
+
+      describe "algorithm confusion" do
+        it "refuses an HS256 token carrying the kid, signed with the public key's PEM" do
+          token = JWT.encode(payload, public_key.to_pem, 'HS256', { kid: 'test-key' })
+          expect { decode(token) }.to raise_error(SignedJwt::Error)
+        end
+
+        it "refuses the same token without a kid" do
+          token = JWT.encode(payload, public_key.to_pem, 'HS256')
+          expect { decode(token) }.to raise_error(SignedJwt::Error)
+          expect { decode(token, aud: nil) }.to raise_error(SignedJwt::Error)
+        end
+
+        it "refuses alg none with and without a kid" do
+          with_kid = JWT.encode(payload, nil, 'none', { kid: 'test-key' })
+          without_kid = JWT.encode(payload, nil, 'none')
+          expect { decode(with_kid) }.to raise_error(SignedJwt::Error)
+          expect { decode(without_kid, aud: nil) }.to raise_error(SignedJwt::Error)
+        end
+      end
+
+      it "refuses an unknown kid" do
+        token = JWT.encode(payload, PortalSigningKey.private_key, 'RS256', { kid: 'other-key' })
+        expect { decode(token) }.to raise_error(SignedJwt::Error, /Unrecognized portal signing key id/)
+      end
+
+      it "refuses an RS256 token without a kid" do
+        token = JWT.encode(payload, PortalSigningKey.private_key, 'RS256')
+        expect { decode(token) }.to raise_error(SignedJwt::Error)
+      end
+
+      it "refuses a token signed by another environment's key under the same kid" do
+        token = JWT.encode(payload, OpenSSL::PKey::RSA.generate(2048), 'RS256', { kid: 'test-key' })
+        expect { decode(token) }.to raise_error(SignedJwt::Error)
+      end
+
+      it "raises JWT::ExpiredSignature for an expired RS256 token" do
+        token = SignedJwt.create_portal_token(user, {}, -600, aud: aud)
+        expect { decode(token) }.to raise_error(JWT::ExpiredSignature)
+      end
+
+      describe "a token signed by a previous key" do
+        let(:previous_key) { OpenSSL::PKey::RSA.generate(2048) }
+        let(:token) { JWT.encode(payload, previous_key, 'RS256', { kid: 'previous-key' }) }
+
+        it "verifies when PORTAL_PREVIOUS_VERIFY_KEYS names its kid" do
+          stub_const('ENV', ENV.to_h.merge('PORTAL_PREVIOUS_VERIFY_KEYS' => { 'previous-key' => previous_key.public_key.to_pem }.to_json))
+          expect(decode(token)[:data]['uid']).to eq(user.id)
+        end
+
+        it "is refused otherwise" do
+          expect { decode(token) }.to raise_error(SignedJwt::Error, /Unrecognized/)
+        end
+      end
+    end
+  end
+
 end

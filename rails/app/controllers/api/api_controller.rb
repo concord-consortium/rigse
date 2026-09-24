@@ -23,7 +23,7 @@ class API::APIController < ApplicationController
     return error("destroy not configured for this resource")
   end
 
-  def check_for_auth_token(params)
+  def check_for_auth_token(params, aud: nil)
     header = request.headers["Authorization"]
     token = extract_bearer_token(header)
 
@@ -31,8 +31,16 @@ class API::APIController < ApplicationController
       if SignedJwt.portal_token?(token)
         # Portal JWT — decode and authenticate. Errors raise SignedJwt::Error
         # or JWT::ExpiredSignature, which callers should be listening for.
-        decoded_token = SignedJwt.decode_portal_token(token)
+        decoded_token = SignedJwt.decode_portal_token(token, aud: aud)
         data = decoded_token[:data]
+        if decoded_token[:header].key?('kid')
+          # An unscoped launch token would pass every scope check as a caller with no scope.
+          if data['aud'] == SignedJwt::AUD_RESEARCHER_DASHBOARD && (data['scope_kind'].nil? || data['scope_id'].nil?)
+            raise SignedJwt::Error, 'Researcher Dashboard token carries no scope'
+          end
+          Current.token_scope_kind = data['scope_kind']
+          Current.token_scope_id   = data['scope_id']
+        end
 
         user = User.find_by_id(data["uid"])
         if user

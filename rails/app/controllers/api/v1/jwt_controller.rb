@@ -81,8 +81,8 @@ class API::V1::JwtController < API::APIController
     end
   end
 
-  def handle_initial_auth
-    user, role = check_for_auth_token(params)
+  def handle_initial_auth(aud: nil)
+    user, role = check_for_auth_token(params, aud: aud)
 
     if role
       learner = role[:learner]
@@ -140,6 +140,18 @@ class API::V1::JwtController < API::APIController
   def jwt_user_id(user)
     site_url_without_trailing_slash = APP_CONFIG[:site_url].sub(/\/$/,'')
     site_url_without_trailing_slash + polymorphic_path(user)
+  end
+
+  # The scope is what the launch was for, not what it permits: the researcher check
+  # still runs on the matching class, because a token outlives a permission change.
+  def check_token_scope(clazz)
+    return if Current.token_scope_kind.nil? && Current.token_scope_id.nil?
+    if Current.token_scope_kind != 'class'
+      raise StandardError, "This token's scope kind (#{Current.token_scope_kind.inspect}) cannot mint a class token"
+    end
+    if Current.token_scope_id != clazz.id
+      raise StandardError, "The requested class_hash is not the class this token was issued for"
+    end
   end
 
   public
@@ -208,7 +220,11 @@ class API::V1::JwtController < API::APIController
   # POST api/v1/jwt/firebase as a logged in user, or
   # GET  api/v1/jwt/firebase?firebase_app=abc with a valid bearer token
   def firebase
-    user, learner, teacher = handle_initial_auth
+    # A launch token reaches only the GET researcher mint, and only for the class it was
+    # launched for; it opens no other branch here and nothing in #portal.
+    researcher = params[:researcher] == "true"
+    launch_aud = researcher && request.get? ? SignedJwt::AUD_RESEARCHER_DASHBOARD : nil
+    user, learner, teacher = handle_initial_auth(aud: launch_aud)
 
     raise StandardError, "Missing firebase_app parameter" if params[:firebase_app].blank?
 
@@ -223,7 +239,7 @@ class API::V1::JwtController < API::APIController
       claims: sub_claims
     }
 
-    if params[:researcher] == "true"
+    if researcher
       if !params[:class_hash].present?
         raise StandardError, "A class_hash is required for researcher access"
       end
@@ -231,9 +247,9 @@ class API::V1::JwtController < API::APIController
       if !clazz
         raise StandardError, "A class with the requested class_hash does not exist"
       end
+      check_token_scope(clazz)
 
-      can_be_researcher = user.is_researcher_for_clazz?(clazz) || user.is_project_admin_for_clazz?(clazz) || user.has_role?('admin')
-      if !can_be_researcher
+      if !user.can_be_researcher_for_clazz?(clazz)
         raise StandardError, "You do not have access to the requested class_hash as a researcher"
       end
       class_hash = params[:class_hash]

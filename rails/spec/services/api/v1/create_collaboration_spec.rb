@@ -119,7 +119,7 @@ describe API::V1::CreateCollaboration do
           token_param, token = query.pop()
           expect(token_param).to eq("token")
           expect(token).to include(".")
-          decoded = SignedJwt.decode_portal_token(token)
+          decoded = SignedJwt.decode_portal_token(token, aud: nil)
           expect(decoded[:data]["uid"]).to eq(student1.user.id)
           expect(decoded[:data]["learner_id"]).not_to be_nil
           expect(decoded[:data]["user_type"]).to eq("learner")

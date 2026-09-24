@@ -26,7 +26,7 @@ RSpec.describe API::V1::ClassesController, type: :controller do
     expect(response).to have_http_status(:ok)
     url = JSON.parse(response.body)['offerings'].first['links']['download']
     token = Rack::Utils.parse_query(URI(url).query)['portal_token']
-    decoded = SignedJwt.decode_portal_token(token)[:data]
+    decoded = SignedJwt.decode_portal_token(token, aud: nil)[:data]
     expect(decoded['minted_via_oidc_client_id']).to eq(77)
   end
 end

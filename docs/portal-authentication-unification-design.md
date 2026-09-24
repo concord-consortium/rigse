@@ -329,7 +329,7 @@ token = extract_bearer_token(header)
 if token && (header =~ /^Bearer\/JWT/i || SignedJwt.probably_jwt?(token))
   if SignedJwt.portal_token?(token)
     # Portal JWT — decode and extract user + role
-    decoded_token = SignedJwt::decode_portal_token(token)
+    decoded_token = SignedJwt::decode_portal_token(token, aud: aud)
     # ...
   else
     # Non-portal JWT (e.g., OIDC) — already authenticated by Devise

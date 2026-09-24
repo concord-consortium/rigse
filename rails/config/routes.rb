@@ -75,6 +75,7 @@ RailsPortal::Application.routes.draw do
           get :roster
           get :materials
           get :current_clazz
+          get :researcher_dashboard
         end
 
         resources :bookmarks, only: [:index]

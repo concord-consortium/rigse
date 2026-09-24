@@ -625,6 +625,109 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
         end
       end
     end
+
+    context "with a researcher-dashboard launch token" do
+      let(:second_clazz) { FactoryBot.create(:portal_clazz, teachers: [class_teacher], class_hash: "second") }
+      let(:scope) { { scope_kind: 'class', scope_id: clazz.id } }
+      let(:launch_user) { researcher }
+      let(:launch_token) {
+        SignedJwt.create_portal_token(launch_user, { user_type: 'researcher' }.merge(scope), 3600, aud: SignedJwt::AUD_RESEARCHER_DASHBOARD)
+      }
+
+      before(:each) { FirebaseApp.create!(firebase_app_attributes) }
+
+      def request_researcher_token(class_hash, token: launch_token, researcher: "true")
+        set_auth_token(token)
+        get :firebase, params: { firebase_app: firebase_app_name, class_hash: class_hash, researcher: researcher }
+      end
+
+      it "mints a researcher token for the class it was launched for" do
+        request_researcher_token(clazz.class_hash)
+        expect(decode_token[:data]["claims"]).to include("user_type" => "researcher", "class_hash" => clazz.class_hash)
+      end
+
+      it "refuses another class the researcher can reach" do
+        expect(researcher.can_be_researcher_for_clazz?(second_clazz)).to be true
+        request_researcher_token(second_clazz.class_hash)
+        expect(response.status).to eq(400)
+        expect(response.body).to match(/not the class this token was issued for/)
+      end
+
+      context "with a scope kind other than class" do
+        let(:scope) { { scope_kind: 'cohort', scope_id: clazz.id } }
+
+        it "refuses" do
+          request_researcher_token(clazz.class_hash)
+          expect(response.status).to eq(400)
+          expect(response.body).to match(/scope kind .*cohort.* cannot mint a class token/)
+        end
+      end
+
+      context "for a researcher whose grant has since expired" do
+        let(:launch_user) {
+          user = FactoryBot.create(:user)
+          user.add_role_for_project('researcher', project, expiration_date: Time.now - 1.day)
+          user
+        }
+
+        it "refuses the class it was launched for, because the scope is not authorization" do
+          request_researcher_token(clazz.class_hash)
+          expect(response.status).to eq(400)
+          expect(response.body).to match(/You do not have access to the requested class_hash as a researcher/)
+        end
+      end
+
+      it "refuses an expired launch token" do
+        expired = SignedJwt.create_portal_token(launch_user, { user_type: 'researcher' }.merge(scope), -60, aud: SignedJwt::AUD_RESEARCHER_DASHBOARD)
+        request_researcher_token(clazz.class_hash, token: expired)
+        expect(response.status).to eq(400)
+        expect(response.body).to match(/expired/i)
+      end
+
+      it "is refused on POST" do
+        set_auth_token(launch_token)
+        post :firebase, params: { firebase_app: firebase_app_name, class_hash: clazz.class_hash, researcher: "true" }
+        expect(response.status).to eq(500)
+        expect(response.body).to match(/does not accept RS256/)
+      end
+
+      it "leaves a legacy HS256 bearer free to POST for the researcher mint" do
+        set_auth_token(SignedJwt.create_portal_token(researcher, {}, 3600))
+        post :firebase, params: { firebase_app: firebase_app_name, class_hash: clazz.class_hash, researcher: "true" }
+        expect(decode_token[:data]["claims"]).to include("class_hash" => clazz.class_hash)
+      end
+
+      it "is refused without researcher=true" do
+        request_researcher_token(clazz.class_hash, researcher: nil)
+        expect(response.status).to eq(500)
+        expect(response.body).to match(/does not accept RS256/)
+      end
+
+      it "is refused at jwt/portal and mints nothing" do
+        set_auth_token(launch_token)
+        post :portal, format: :json
+        expect(response.status).to eq(500)
+        expect(JSON.parse(response.body)).not_to have_key("token")
+      end
+
+      [SignedJwt::AUD_REPORT_SERVER, SignedJwt::AUD_REPORT_SERVICE_FUNCTIONS].each do |aud|
+        it "refuses a #{aud} token with researcher=true" do
+          token = SignedJwt.create_portal_token(researcher, { user_type: 'researcher' }.merge(scope), 3600, aud: aud)
+          request_researcher_token(clazz.class_hash, token: token)
+          expect(response.status).to eq(500)
+        end
+      end
+
+      it "leaves an unscoped legacy HS256 bearer free to ask for any class it can reach" do
+        request_researcher_token(second_clazz.class_hash, token: SignedJwt.create_portal_token(researcher, {}, 3600))
+        expect(decode_token[:data]["claims"]).to include("class_hash" => second_clazz.class_hash)
+      end
+
+      it "leaves an AccessGrant bearer free to ask for any class it can reach" do
+        request_researcher_token(second_clazz.class_hash, token: researcher_token)
+        expect(decode_token[:data]["claims"]).to include("class_hash" => second_clazz.class_hash)
+      end
+    end
   end
 
   describe "GET #portal" do
@@ -661,7 +764,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
 
           body = JSON.parse(response.body)
           token = body["token"]
-          decoded_token = SignedJwt::decode_portal_token(token)
+          decoded_token = SignedJwt::decode_portal_token(token, aud: nil)
           expect(decoded_token[:data]["uid"]).to eql user.id
         end
 
@@ -674,7 +777,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
 
               body = JSON.parse(response.body)
               token = body["token"]
-              decoded_token = SignedJwt::decode_portal_token(token)
+              decoded_token = SignedJwt::decode_portal_token(token, aud: nil)
 
               expect(decoded_token[:data]["uid"]).to eql user.id
               expect(decoded_token[:data]["domain"]).to eql "http://test.host/"
@@ -707,7 +810,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
 
             body = JSON.parse(response.body)
             token = body["token"]
-            decoded_token = SignedJwt::decode_portal_token(token)
+            decoded_token = SignedJwt::decode_portal_token(token, aud: nil)
 
             expect(decoded_token[:data]["uid"]).to eql user.id
             expect(decoded_token[:data]["domain"]).to eql "http://test.host/"
@@ -730,7 +833,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
 
           body = JSON.parse(response.body)
           token = body["token"]
-          decoded_token = SignedJwt::decode_portal_token(token)
+          decoded_token = SignedJwt::decode_portal_token(token, aud: nil)
 
           expect(decoded_token[:data]["uid"]).to eql user.id
           expect(decoded_token[:data]["domain"]).to eql "http://test.host/"
@@ -753,7 +856,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
 
           body = JSON.parse(response.body)
           token = body["token"]
-          decoded_token = SignedJwt::decode_portal_token(token)
+          decoded_token = SignedJwt::decode_portal_token(token, aud: nil)
 
           expect(decoded_token[:data]["uid"]).to eql user.id
           expect(decoded_token[:data]["domain"]).to eql "http://test.host/"
@@ -774,7 +877,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
 
             body = JSON.parse(response.body)
             token = body["token"]
-            decoded_token = SignedJwt::decode_portal_token(token)
+            decoded_token = SignedJwt::decode_portal_token(token, aud: nil)
 
             expect(decoded_token[:data]["admin"]).to eql 1
             expect(decoded_token[:data]["project_admins"]).to eql []
@@ -793,7 +896,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
 
             body = JSON.parse(response.body)
             token = body["token"]
-            decoded_token = SignedJwt::decode_portal_token(token)
+            decoded_token = SignedJwt::decode_portal_token(token, aud: nil)
 
             expect(decoded_token[:data]["admin"]).to eql -1
             expect(decoded_token[:data]["project_admins"]).to eql [project.id]

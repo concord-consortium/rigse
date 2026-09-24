@@ -240,6 +240,46 @@ RSpec.describe API::APIController, type: :controller do
         end
       end
 
+      describe 'with an RS256 portal token' do
+        let(:launch_claims) { { user_type: 'researcher', scope_kind: 'class', scope_id: 42 } }
+
+        SignedJwt::AUDIENCES.each do |aud|
+          it "refuses aud #{aud} when the call site names no audience" do
+            set_standard_bearer_token(SignedJwt.create_portal_token(user, launch_claims, 3600, aud: aud))
+            expect { controller.check_for_auth_token({}) }.to raise_error(SignedJwt::Error, /does not accept RS256/)
+          end
+        end
+
+        it 'accepts a launch token where the call site names its audience, and records the scope' do
+          set_standard_bearer_token(SignedJwt.create_portal_token(user, launch_claims, 3600, aud: SignedJwt::AUD_RESEARCHER_DASHBOARD))
+          auth_user, _roles = controller.check_for_auth_token({}, aud: SignedJwt::AUD_RESEARCHER_DASHBOARD)
+          expect(auth_user).to eq(user)
+          expect(Current.token_scope_kind).to eq('class')
+          expect(Current.token_scope_id).to eq(42)
+        end
+
+        [SignedJwt::AUD_REPORT_SERVER, SignedJwt::AUD_REPORT_SERVICE_FUNCTIONS].each do |aud|
+          it "refuses aud #{aud} where the call site accepts the launch token" do
+            set_standard_bearer_token(SignedJwt.create_portal_token(user, launch_claims, 3600, aud: aud))
+            expect { controller.check_for_auth_token({}, aud: SignedJwt::AUD_RESEARCHER_DASHBOARD) }
+              .to raise_error(SignedJwt::Error)
+          end
+        end
+
+        it 'refuses a launch token that carries no scope' do
+          set_standard_bearer_token(SignedJwt.create_portal_token(user, { user_type: 'researcher' }, 3600, aud: SignedJwt::AUD_RESEARCHER_DASHBOARD))
+          expect { controller.check_for_auth_token({}, aud: SignedJwt::AUD_RESEARCHER_DASHBOARD) }
+            .to raise_error(SignedJwt::Error, /carries no scope/)
+        end
+
+        it 'records no scope for a legacy HS256 token' do
+          set_standard_bearer_token(SignedJwt.create_portal_token(user, launch_claims, 3600))
+          controller.check_for_auth_token({}, aud: SignedJwt::AUD_RESEARCHER_DASHBOARD)
+          expect(Current.token_scope_kind).to be_nil
+          expect(Current.token_scope_id).to be_nil
+        end
+      end
+
       describe 'standard bearer token with JWT (dot-containing token)' do
         it 'should decode a JWT sent as a plain Bearer token' do
           claims = {user_type: "learner", learner_id: learner.id}
