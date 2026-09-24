@@ -1,66 +1,12 @@
-# The dashboard API: scope metadata, the profile refresh and the run path
+# RIGSE-368: The dashboard API: scope metadata, the profile refresh and the run path
 
 **Jira**: https://concord-consortium.atlassian.net/browse/RIGSE-368
-**Repo**: https://github.com/concord-consortium/rigse
-**Implementation Spec**: [implementation.md](implementation.md)
-**Status**: **In Development**
+
+**Status**: **Closed**
 
 ## Overview
 
 rigse gains the three endpoints the Researcher Dashboard app calls with its launch token: one describing the class it was launched into, one asking report-service to rebuild the class's authored URL profile, and one queueing a batch of packages to run. All three check that the researcher may open the class on every call, and the run path answers as soon as report-service has accepted the work instead of waiting for a VM.
-
-## Project Owner Overview
-
-When a researcher opens the Researcher Dashboard on a class, the page needs to know what the class is, who teaches it, what was assigned in it, and whether its cached list of assigned activities and interactives is out of date. This story gives the page one portal call that answers all of that, and a second one that asks for the list to be rebuilt when the class's assignments have changed. The portal supplies the list of assignment links itself, so nothing outside the portal can make report-service fetch an arbitrary web address.
-
-It also gives the page the call that starts analyses. The researcher picks one or more packages, the portal checks each one against the catalog (so a package that is archived, or that the researcher may not run, is refused with a reason on the spot), creates the short-lived credentials the run needs, and hands the work to report-service. The page gets its answer in about a second instead of waiting up to three minutes for an analysis machine to start, which is what the prototype did and why its failures all looked the same.
-
-## Background
-
-RIGSE-368 is derived from `final-design.md` sections 4, 5.5, 6.1, 10, 11.2 and 13 and the renames in section 3. The Jira description is the authoritative scope and is not restated in full here; this spec records how it lands on the RIGSE-367 branch, which it stacks on, and the contracts it takes from the three specs at the other end of its calls.
-
-**What it builds on (RIGSE-367, closed spec `specs/RIGSE-367-the-portal-signing-key-and-the-scoped-launch-token.md`).** RIGSE-367 is implemented on its branch (PR #1487), which this branch is stacked on, so every name below is in the code this story starts from. Two behaviors settled in its implementation and review also hold here: `check_for_auth_token` refuses an `aud: researcher-dashboard` token missing `scope_kind` or `scope_id`, and `jwt/firebase` accepts the launch token only on GET.
-- `SignedJwt.decode_portal_token(token, aud:)` verifies RS256 tokens by `kid` with the audience named by the call site, and `API::APIController#check_for_auth_token(params, aud:)` sets `Current.token_scope_kind` and `Current.token_scope_id` when the bearer is an RS256 token (RIGSE-367 implementation, step 1). A launch token carries `scope_kind: "class"` and `scope_id` as the class's integer id (R15 there).
-- The launch token is accepted only on `jwt/firebase?researcher=true` and on the `/api/v1/researcher_dashboard/*` endpoints this story adds (RIGSE-367 R11a).
-- `User#can_be_researcher_for_clazz?` is the one researcher gate (R13 there).
-- `ResearcherDashboard.enabled?` is true when both `RESEARCHER_DASHBOARD_URL` and the signing key are configured (R14 there).
-- `ResearcherDashboard::Assertions.report_server(user:, clazz:)` and `.report_service_functions(user:)` mint the two service assertions, each living 120 seconds; the `report-server` one carries a fresh `jti` per call (RIGSE-367 implementation, the service assertions step).
-
-**The other ends of its calls.**
-- **report-service REPORT-141** (branch `REPORT-141-portal-key-verification`). `POST /run-package` is on the separate `researcherDashboard` HTTPS function, whose URL is also the runner's `function_url`. It accepts only an `aud: report-service-functions` bearer and takes the researcher and portal from that assertion's `uid` and `iss`, never the body. Its body is `packages: [{identity, version, checksum, catalog_id}]`, `scope: {kind, collection, id, classes: [{class_hash, class_id}], assignments: [{offering_id, runnable_id, name, url}]}`, `class_tokens` (FirebaseApp name to token), `session_token`, `firebase_project` and `report_server_assertion`, which it verifies (same `uid` and `iss` as the request's assertion) and relays to report-server only on the branch that launches a VM. It validates the whole batch before writing, queues by class (`scopes.{class_hash}`), and answers:
-  - 202 `{queue, appended, vm}`, where `vm` is `launched`, `launching`, `resumed`, `running` or `suspending`
-  - 400 naming the field for a malformed body; `scope.classes[0].class_hash` must be 48 lowercase hex
-  - 401 for a bad bearer
-  - 409 `queue at its cap (N outstanding)`
-  - 502 carrying the upstream status and reason when report-server's mint or the MicroVM API fails after the work was queued
-  - 500 for its own misconfiguration (a malformed `PORTAL_PUBLIC_KEYS`, a launch payload over the platform's cap) or an unexpected failure
-  - 503 naming the unset settings, with nothing written, while any of its launch settings (the runner stack's image, role and bucket, and the report-server URL) is empty; production answers this until its runner stack exists, since its image, role and bucket are empty
-
-  Every error body is `{"success": false, "error": "<reason>"}`. It never waits for a VM, and each of its upstream calls is made once with a 10-second timeout (REPORT-141 as implemented, 2026-09-24).
-- **report-service REPORT-142** (branch `REPORT-142-catalog-and-url-profile`).
-  - `GET /api/v1/packages/resolve?identity=&version=` on report-server, presented with the app's launch token (report-server verifies the `researcher-dashboard` audience with REPORT-141's verifier). It answers `{catalog_id, identity, version, checksum, expected_duration_seconds, clue_prepull, archived, runnable, reason}` (`clue_prepull` added to REPORT-142 for this story, see Open Questions), with checksums as `sha256:<hex>`; a package the caller may not see is 404, the same as a missing one; an archived package, or any non-official one until report-server's unreviewed-runs switch is on, answers 200 with `runnable: false` and a `reason`. Errors are the flat `{"error": CODE, "message": ...}`; a portal read timing out is 503, and an unknown portal, or a `uid` the portal does not know, is 401. A request with no `Origin` header is not origin-checked, and a resolve without the launch token is 401 (REPORT-142 as implemented, 2026-09-24).
-  - `POST /derive-profile` on the `researcherDashboard` function, behind the same `report-service-functions` auth. Body `{class_hash, assignment_fingerprint, assignment_urls}`: `class_hash` is 48 lowercase hex, the fingerprint a non-empty string of at most 256 characters, at most 500 URLs of at most 2,048 characters each, and the whole body at most 256 KiB; anything else is 400 and nothing is queued. A valid request is 202 `{success: true, queued: true}` once a Cloud Task is queued; an enqueue failure is 502, and while the function's `RD_AUTHORING_HOSTS` allowlist is empty every request is 503 `{success: false, error}` naming it, with nothing queued (REPORT-142 as implemented, 2026-09-24). R15 passes either through as a 502. The derivation writes `researcher_dashboard/{portal}/classes/{class_hash}` whole, including `assignment_fingerprint` and `assignment_urls` exactly as given, and never overwrites a newer request's document.
-
-**What master has today.** None of the dashboard API. Checked on master and on the RIGSE-367 branch:
-- There is no `API::V1::ResearcherDashboardController`, no `researcher_dashboard` route under `/api/v1`, and no CORS entry for it. `final-design.md` section 4 says "the launch action and the metadata endpoint exist today for `class`"; both exist only on the spike branch (`RIGSE-365-runner-token-service`), so the metadata endpoint is built fresh here rather than changed.
-- **Offerings.** `Portal::Clazz#offerings` is ordered by `position`. `ExternalActivity` is the only model declaring `has_many :offerings, as: :runnable` (`external_activity.rb:88`), but the polymorphic column is not constrained: an offering whose `runnable_type` names a model that no longer exists raises `NameError` when its runnable is loaded (probe, see Verification), which is why `research_classes_controller.rb:19` and `report_users_controller.rb:82` filter on `runnable_type = 'ExternalActivity'` explicitly.
-- **`external_activities.url`** is a `mediumtext` column. `ExternalActivity#url` is not the stored value: without a learner it returns `URI.parse(stored).to_s`, which lowercases the scheme and drops a default port, and falls back to the stored string when parsing fails (`external_activity.rb:142-164`; probe, see Verification). The stored value is `read_attribute(:url)`. The model's `valid_url` check accepts an empty string, so a stored URL can be `""`. Activity Player assignments carry the activity or sequence JSON as `activity=` or `sequence=` (`lib/tasks/lara2.rake`), which is what REPORT-142's deriver follows; a legacy LARA URL is taken as it stands.
-- **`tools`** holds `name`, `source_type`, `tool_id`, `remote_duplicate_url` and `launch_method`; an external activity may have no tool. The default setup names the Activity Player tool `ActivityPlayer` for both `name` and `source_type` (`lib/tasks/app.rake`, `create_default_tools`), and `source_type` is what `DefaultReportService` and `lara_activity_or_sequence?` branch on. The spike's controller reported `source_type` as `platform`; this story reports `name` as `tool` (section 3).
-- **Teachers, cohorts and projects.** A class has teachers through `portal_teacher_clazzes`; a teacher has cohorts through `admin_cohort_items` (`lib/cohorts.rb`) and projects through its cohorts (`portal/teacher.rb:36`). "The projects the class belongs to" is the same relation the researcher gate joins through (`User#with_teacher_clazzes`, shared by `is_researcher_for_clazz?`, `is_project_admin_for_clazz?` and `researcher_clazz_ids`): the projects of the cohorts of the class's teachers.
-- **`class_hash`** is `SecureRandom.hex(24)`, 48 lowercase hex characters, generated before save and backfilled for existing classes by `20170202190333_add_class_hash.rb`, so it matches REPORT-142's `class_hash` rule.
-- **Firebase custom tokens.** `SignedJwt.create_firebase_token(uid, firebase_app_name, expires_in, claims)` signs with the named `FirebaseApp` row's service-account key and raises `SignedJwt::Error` for an unknown name. `jwt_controller#firebase` builds the researcher claims inline: `claims: {platform_id, platform_user_id, user_id, user_type, class_hash}` with `uid = MD5(user_id)`. The runner names projects by FirebaseApp name, and reads its own class token as `class_tokens[firebase_project]` (`researcher-dashboard/runner/server/runner.js:336`), so the FirebaseApp names rigse keys by are the Firebase project ids.
-- **Outbound HTTP** in rigse uses `HTTParty` (`students_controller.rb#get_feedback_metadata`), and specs stub it with WebMock (`spec/spec_helper_common.rb`, `disable_net_connect!`).
-- **Errors** from `API::APIController#error` are `{success: false, response_type: "ERROR", message, details?}`. The spike app reads `message` (or `error`) from any non-2xx body and treats 401 and 403 alike as an expired launch (`researcher-dashboard/app/src/shell/portal.ts:38`).
-- **Configuration.** rigse has `REPORT_SERVICE_URL`, which is the function app's `api` function and is used only by feedback metadata, and `REPORT_SERVER_REPORTS_URL`, a link to report-server's reports UI. It has no report-server API base URL and no URL for the `researcherDashboard` function.
-
-**What the spike built, and what changes.** The spike's controller (`app/controllers/api/v1/researcher_dashboard_controller.rb` on the spike) and `ResearcherDashboard::RunPackage` took `class_id`, a caller-supplied `{name, version, checksum}`, `firebase_project` and `firebase_apps` in the body, posted to `REPORT_SERVICE_URL/run_package` with `REPORT_SERVICE_BEARER_TOKEN` and a 30-second timeout while report-service waited up to 180 seconds for the VM, and did not rescue `Net::ReadTimeout`. Its metadata endpoint returned `teacher_names`, `cohort_names` and assignments as `{id, runnable_id, name, platform}` with no URL. Its `RunnerToken` minted the session and class tokens with `researcher_dashboard_runner: true`, which this story keeps in shape. Everything else is replaced: the scope comes from the bearer, the checksum from the catalog, the Firebase projects from configuration, the credential is the assertion, and nothing waits.
-
-**Clauses of the Jira story set aside, and why.** Per the sprint's branching rule, a clause that deletes or renames something that exists only on the spike is ignored. Each was checked against master and the RIGSE-367 branch:
-
-| Jira clause | On master? | Treatment |
-|---|---|---|
-| "The `platform` field is renamed `tool`" | No: the metadata endpoint and its `platform` field are spike only | Set aside as a rename. The endpoint is built with `tool` from the start and never has `platform` (R7). The Done-when "`platform` is gone from the response" holds by construction and is still asserted (R7). |
-| "The wait is deleted: no `waitUntilRunning`, no 30-second-against-180-second timeout, no unrescued `Net::ReadTimeout`" | No: `run_package` is spike only | Set aside as a deletion. Restated as requirements on the new path, which never waits and rescues its own timeouts (R26, R27). |
 
 ## Requirements
 
@@ -157,42 +103,30 @@ RIGSE-368 is derived from `final-design.md` sections 4, 5.5, 6.1, 10, 11.2 and 1
 
 ## Technical Notes
 
-- **Files this story touches**, on top of RIGSE-367's: new `rails/app/controllers/api/v1/researcher_dashboard_controller.rb`; new services under `rails/app/services/researcher_dashboard/` for the scope's assignments and fingerprint, the catalog resolve, the runner-token mint and the two function calls; `rails/config/routes.rb`; `rails/config/application.rb` (CORS); `docker-compose.yml`, `configs/cloudformation/stack_template.yml`, `README.md`; specs under `rails/spec/controllers/api/v1/` and `rails/spec/services/researcher_dashboard/`.
-- **Route shape.** The spike routed `get 'classes/:id', to: '/api/v1/researcher_dashboard#clazz'` inside `namespace :researcher_dashboard`, with an absolute controller path because `to:` inside a namespace resolves one level deeper.
-- **Runner claim.** `researcher_dashboard_runner: true` is the claim report-service's rules and CLUE-692's deny-write rules key on (`final-design.md` 9 and 13); the spike's `RunnerToken` is the reference shape.
-- **Firebase custom tokens live at most one hour** (`exp - iat <= 3600`), and the class tokens sit in `work/{uid}` until the VM takes the work. A package queued behind more than an hour of other work reaches the VM with an expired custom token; whether the runner signs in once per class early enough is RD-4's and REPORT-143's concern (REPORT-143's `/work` also hands out "a fresh session token"). rigse mints at request time and can do no better.
-- **report-server resolves the caller's grants from the portal on every resolve** (REPORT-142 R15, a five-second portal timeout), so a twenty-package batch is twenty portal round trips from report-server; sequential resolves keep the portal load one request deep.
-- **The `work/` document holds the scope block**, including the assignments, and Firestore caps a document at 1 MiB. A class with several hundred assignments of long URLs approaches that; REPORT-141 owns the document.
-- **Where the other halves are specified**: the function's validation, queue and VM branch (REPORT-141), the resolve and the deriver (REPORT-142), `/work` and the rules (REPORT-143), the runner (RD-4), the app's use of all three endpoints (RD-3), and the eventual deletion of the CLUE mint (RIGSE-369).
+- **What master had before this story.** None of the dashboard API: no `API::V1::ResearcherDashboardController`, no `/api/v1/researcher_dashboard` route and no CORS entry for it; the spike's metadata endpoint (`RIGSE-365-runner-token-service`) was never merged, so everything here was built fresh on the RIGSE-367 branch, which this story stacks on and whose primitives it uses: `decode_portal_token(token, aud:)`, `check_for_auth_token(params, aud:)` setting `Current.token_scope_kind` and `token_scope_id` (and refusing an unscoped launch token), `User#can_be_researcher_for_clazz?`, `ResearcherDashboard.enabled?` and `ResearcherDashboard::Assertions`.
+- **Portal facts the endpoints rest on.** `ExternalActivity#url` re-serializes the stored value (lowercasing the scheme, dropping a default port), so the stored `read_attribute(:url)` is what the endpoints report; it can be `""`, and an activity's name can be null. An offering whose `runnable_type` names a model that no longer exists raises `NameError` when loaded, so only `ExternalActivity` offerings are read. `tools.name` is the display name; `source_type` is what the portal branches on. The projects a class belongs to are the projects of its teachers' cohorts, the same join the researcher gate makes. `class_hash` is 48 lowercase hex.
+- **The other ends of its calls.** report-service's `researcherDashboard` function (REPORT-141) takes `/run-package` behind an `aud: report-service-functions` bearer, validates the whole batch before writing, and answers 202 `{success: true, queue: [{class_hash, package_key}], appended: [package_key], vm}`, 400 naming a field, 401, 409 `queue at its cap (N outstanding)`, 502 for an upstream failure after queueing, 500, or 503 naming its unset launch settings; every error body is `{success: false, error}`, and each of its upstream calls is made once with a 10-second timeout. The same function (REPORT-142) takes `/derive-profile` with `{class_hash, assignment_fingerprint, assignment_urls}` (at most 500 URLs of at most 2,048 characters, 256 KiB in all), answering 202 `{success: true, queued: true}`, 400, 502, or 503 while `RD_AUTHORING_HOSTS` is empty. report-server's `GET /api/v1/packages/resolve?identity=&version=` (REPORT-142) takes the app's launch token and answers `{catalog_id, identity, version, checksum, expected_duration_seconds, clue_prepull, archived, runnable, reason}`, 404 for a package the caller may not see, 401 without a launch token or for an unknown `uid`, and 503 when its portal read times out, with errors as `{error: CODE, message}`.
+- **Set-aside Jira clauses.** The story's rename of `platform` to `tool` and its deletion of the spike's wait (`waitUntilRunning`, the 30-second-against-180-second timeout, the unrescued `Net::ReadTimeout`) act on spike-only code, so they were set aside as a rename and a deletion and restated as requirements on the new code: the endpoint never has `platform` (R7), and the run path never waits and rescues its own timeouts (R26, R27).
+- **Runner claim.** `researcher_dashboard_runner: true` is the claim report-service's rules and CLUE's deny-write rules key on; the spike's `RunnerToken` was the reference shape.
+- **Firebase custom tokens live at most one hour**, and the class tokens sit in `work/{uid}` until the VM takes the work, so a package queued behind more than an hour of other work reaches the VM with an expired custom token; that is RD-4's and REPORT-143's concern, since rigse can mint only at request time.
+- **report-server reads the caller's grants from the portal on every resolve**, so resolves run one at a time and stop at the first refusal.
+- **The `work/` document holds the scope block**, including the assignments, under Firestore's 1 MiB document cap, which REPORT-141 owns.
+- **Where the other halves are specified**: the function's validation, queue and VM branch (REPORT-141), the resolve and the deriver (REPORT-142), `/work` and the rules (REPORT-143), the runner (RD-4), the app's use of all three endpoints (RD-3), and the deletion of the CLUE mint (RIGSE-369).
 
-## Verification
+### As built
 
-Stage 1 ran throwaway probes, deleted afterwards and never committed:
+Where the code departs from the implementation plan, and how it was verified.
 
-- **`ExternalActivity#url` against the stored value** (the portal image's Ruby, and again through the model in a scratch spec in the test database). `HTTPS://Activity-Player.concord.org/?activity=...` came back with the scheme lowercased; `https://example.com:443/x` lost its port; a URL with a space or a `|` failed to parse and came back raw; an encoded Activity Player URL and a protocol-relative URL round-tripped. So "the URL exactly as `external_activities` stores it" is `read_attribute(:url)`.
-- **A legacy `runnable_type`.** An offering whose `runnable_type` was set to `Investigation` made `clazz.offerings.map(&:runnable)` raise `NameError: uninitialized constant Investigation`, while `offerings.where(runnable_type: 'ExternalActivity')` loaded the rest. Hence R9.
-- **Blank URLs and names.** `ExternalActivity.new(name: 'x', url: '')` is valid, and the factory's external activity has a nil name, so `url` can be `""` and `name` null.
-- **Cohorts and projects.** A teacher created with a cohort of a project reports that cohort and that project; `class_hash` is 48 lowercase hex.
-
-**Stage 4, the spec's load-bearing assumptions run as throwaway code.** RIGSE-367's token primitives (its implementation step 1: `PortalSigningKey`, the audience-aware `create_portal_token` and `decode_portal_token`, `Current.token_scope_*` in `check_for_auth_token`, and `can_be_researcher_for_clazz?`) were applied to the working tree from its spec, with a minimal controller implementing R1 to R4 and the CORS entry of R6, then reverted.
-
-| Case | Result |
-|---|---|
-| Launch token for class A, `GET classes/A` | 200; `current_user` nil inside the action, the user from `check_for_auth_token`, `scope_id` an `Integer` |
-| Same token, `classes/<A>abc` and `classes/B` | 403 (R4) |
-| Token with `scope_kind: "cohort"` | 403 (R2) |
-| `aud: report-server` token | 401, refused by the decoder's audience check |
-| Legacy HS256 portal token, and a Devise session with no bearer | 401: both authenticate, but neither sets a scope, which is what R1 refuses on |
-| Launch token for a user who fails the gate | 403 (R3) |
-| Expired launch token | 401 (`JWT::ExpiredSignature`) |
-| R10's fingerprint over no offerings, one, a second of the same activity, the activity's URL changed, the second offering removed | five distinct values, 67 characters, stable on recomputation |
-| Firebase custom token with the runner claims for FirebaseApp `collaborative-learning-staging` | decodes with `researcher_dashboard_runner: true` and `class_hash` under `claims`, `exp - iat = 3600`; an unknown FirebaseApp name raises `SignedJwt::Error` |
-| HTTParty 0.22 under WebMock: a connect timeout, a read timeout | `Net::OpenTimeout` and `Net::ReadTimeout`, both `Timeout::Error` |
-| HTTParty on a JSON 409 body and a `text/plain` 502 body | a parsed hash and the raw string, so R28's reason reader handles both |
-| `URI.encode_www_form(identity: "projects/20/class-counts", ...)` | `identity=projects%2F20%2Fclass-counts`, so the identity's slashes survive the resolve query |
-| CORS preflight for `POST /api/v1/researcher_dashboard/run_package` with `authorization,content-type` | 200, `Access-Control-Allow-Origin: *`, methods `GET, POST`, the requested headers allowed |
-
-One side effect worth knowing: every launch-token request also logs `JwtBearerToken: decode error - This endpoint does not accept RS256 portal tokens` from the Devise strategy, which runs first and refuses the token as RIGSE-367 intends.
+- **The controller skips `verify_authenticity_token`** (step 3), as `jwt_controller` and the other bearer-only `/api/v1` controllers do. The plan relied on `protect_from_forgery`'s null session, which lets a bearer request through but logs a CSRF warning on every POST; the endpoints read no session (R1), so skipping the check changes nothing but the noise.
+- **The spec harness is a shared context** (step 3), `with the researcher dashboard configured` in `rails/spec/support/researcher_dashboard_helper.rb`, rather than an `around` hook written into each spec file, since the controller spec and three service specs all need it. It sets and restores the variables the same way.
+- **The controller spec calls `Current.reset` before each example** (step 3), so a scope one example's launch token set cannot leak into the next example's session-only request, whatever the test framework's own reset of `Current` does.
+- **Refusals the plan built by hand are logged too** (step 5). The plan's `Catalog` raised its 404 and malformed-answer refusals, and `RunPackage` its malformed-202 refusal, without going through `Upstream.refusal`, so none wrote R30's warning. The malformed answers now go through `Upstream.malformed(upstream, status, reason, message)`, which logs and builds the 502 as `Upstream.refusal` does. The resolve 404 goes through `Upstream.refusal` with status 409, so its message ends with report-server's own reason after the plan's wording (`... cannot be resolved: it does not exist or you may not see it: <reason>`).
+- **A resolve 200 whose JSON does not parse is a 502** (step 5). The plan's `Catalog` read `response.parsed_response` unguarded, and HTTParty parses lazily, so a truncated `application/json` body raised `JSON::ParserError` as a Rails 500. `Upstream.parsed` returns nil for it, and both `Catalog` and `RunPackage` read bodies through it.
+- **A 202 must carry the queue state** (step 5). The plan accepted any JSON object; the code requires `queue` and `appended` to be lists and `vm` a string, and answers anything else with the malformed-202 502. It does not check the queue entries' keys, which REPORT-141 owns (Decisions).
+- **A FirebaseApp setting that names no row is a 503** (step 5). `SignedJwt.create_firebase_token` raises `SignedJwt::Error` for an unknown name, which the controller does not rescue, so a portal with `RESEARCHER_DASHBOARD_CLUE_FIREBASE_APP` set before its FirebaseApp row existed answered a bare 500. `Settings.firebase_app` and `clue_firebase_app` now raise `NotConfigured` naming the variable and the missing row, before anything is minted or sent.
+- **The run path's specs split by layer** (step 5). `run_package_spec.rb` covers the service: the posted body, the tokens and assertions, the CLUE token, all-or-nothing resolution, each function answer and the configuration refusals. The controller spec's `run_package` block covers what only the action can show: the 202 body sliced to the queue state, the 400s for a caller-supplied checksum, a scope key, malformed JSON and a non-object body, the error envelope around the function's 409, the 503, two researchers' independent answers, and the 401, 403 and 404 gates.
+- **Verification** (2026-09-24, after step 6). The dashboard's own specs: 154 examples, 0 failures. The full rspec suite (`docker/dev/run-spec.sh`): 3,207 examples, 3 failures, 203 pending. The three failures are in `research_classes_controller_spec.rb` and come from this machine's `.env`, which sets `RESEARCHER_DASHBOARD_URL`. The test container inherits it, so each class row gains the `researcher_dashboard_url` RIGSE-367 adds; the file passes (21 examples) with the variable blanked, and CI sets no such variable. The `react-components` jest suite: 173 tests, 2 failures, both in `external-report-button.test.tsx`, which fail identically on master under a full run on this machine (Node 24; CI uses 18) and pass when that file runs alone. This branch changes nothing in `react-components`. The stack template lints clean with `cfn-lint`, and `docker compose config` shows the four variables.
+- **The requirements were compared with the code, requirement by requirement, after step 6.** Nothing was missing. One reading was recorded as a judgment call, the bare 404 while the dashboard is disabled (Decisions).
 
 ## Out of Scope
 
@@ -203,12 +137,14 @@ One side effect worth knowing: every launch-token request also logs `JwtBearerTo
 - A second scope kind. The endpoints refuse any `scope_kind` but `class` (R2); a cohort scope is `final-design.md` section 15.1's extension.
 - Deleting spike-only code (see the set-aside clauses in Background).
 
-## Open Questions
+## Not Yet Implemented
 
-<!-- Requirements-focused questions only (scope, acceptance criteria, business rules).
-     Implementation questions go in implementation.md. -->
+- Enabling the refresh and the run path on the staging and production stacks — the release process updates stacks with their previous template, so the four new parameters (`ReportServerURL`, `ResearcherDashboardFunctionURL`, `ResearcherDashboardFirebaseApp`, `ResearcherDashboardClueFirebaseApp`) reach a stack only through a deliberate template update per environment; until then the metadata endpoint works and the refresh and run path answer 503 naming the missing setting.
 
-### RESOLVED: rigse cannot learn `clue_prepull` from the resolve answer
+## Decisions
+
+### rigse cannot learn `clue_prepull` from the resolve answer
+
 **Context**: R19 and R20 mint the CLUE class token when a package declares `clue_prepull`, and R17 says rigse learns about a package only from `GET /api/v1/packages/resolve`. REPORT-142's resolve answers `{catalog_id, identity, version, checksum, expected_duration_seconds, archived, runnable, reason}` (its implementation spec, the reading step): no `clue_prepull`, although it is a column of the `package_versions` row the resolve already joins. The list endpoint carries it, but only for each package's current version, and rigse must also run a non-current version.
 **Options considered**:
 - A) Amend REPORT-142's resolve to also answer `clue_prepull` from the version row. One field, no new query; rigse is the resolve's only consumer.
@@ -217,7 +153,10 @@ One side effect worth knowing: every launch-token request also logs `JwtBearerTo
 
 **Decision**: A (Doug, 2026-09-24). REPORT-142's R17 and its reading step were amended on its branch the same day: the resolve now answers `clue_prepull` from the resolved version's row. Recorded in R17 and R19.
 
-### RESOLVED: Low confidence: the fingerprint's shape
+---
+
+### The fingerprint's shape
+
 **Context**: The story leaves the shape to this story, requiring only that it change when the assignment set changes. The profile document is a function of the URL list alone, so a fingerprint of the URLs would skip refreshes that produce an identical document, while a fingerprint of the offerings changes on exactly what the story names.
 **Options considered**:
 - A) A versioned hash of the sorted `(offering_id, url)` pairs: changes when an offering is added or removed or its URL changes.
@@ -226,7 +165,10 @@ One side effect worth knowing: every launch-token request also logs `JwtBearerTo
 
 **Decision**: A, as `v1:` followed by the lowercase hex SHA-256 of the JSON array of `[offering_id, url]` pairs sorted by offering id, 67 characters. It meets the story's one requirement literally: B does not change when a second offering of an already-assigned activity is added or removed, which the story counts as the assignment set changing. The cost of A over B is a refresh that rewrites an identical profile in that case, which is one Cloud Task and is harmless because the deriver is idempotent (REPORT-142 R25). C misses a removal (a deleted offering leaves no `updated_at` behind) and changes on edits that do not touch the assignment set, such as reordering. Hashing JSON rather than a joined string keeps a URL containing the separator from colliding with two URLs; the `v1:` prefix lets a later shape change force one refresh everywhere instead of comparing unlike values. It is computed from the offerings R8 lists, including inactive ones and ones whose URL R11 leaves out of the refresh body, so the metadata endpoint and `refresh_profile` always agree. Recorded in R10.
 
-### RESOLVED: Low confidence: which Firebase projects get a class token, and where rigse learns their names
+---
+
+### Which Firebase projects get a class token, and where rigse learns their names
+
 **Context**: The spike took `firebase_project` and `firebase_apps` from the app. The story's body is packages only, and section 13 says which project holds CLUE is "runner and rigse configuration per environment". The runner requires `class_tokens[firebase_project]`.
 **Options considered**:
 - A) Two settings: the report-service FirebaseApp (always minted, also `firebase_project`) and the CLUE FirebaseApp (minted when `clue_prepull`).
@@ -235,7 +177,10 @@ One side effect worth knowing: every launch-token request also logs `JwtBearerTo
 
 **Decision**: A. C contradicts the story's "takes `{packages}` and nothing else". B would mint a runner token in every Firebase project the portal happens to hold a key for (production portals hold keys for projects unrelated to the dashboard), which is exactly the unasked-for credential spread the runner claim exists to contain. The runner reads its own class token as `class_tokens[firebase_project]` and refuses a run without one (`researcher-dashboard/runner/server/runner.js:336-339`), so the report-service token is always minted; the CLUE token only when R20 says. The CLUE setting is the one RIGSE-369 deletes. Recorded in R19 and R29.
 
-### RESOLVED: REPORT-141's `/run-package` validation expects a bare hex checksum
+---
+
+### REPORT-141's `/run-package` validation expects a bare hex checksum
+
 **Context**: REPORT-141's implementation spec validates `checksum` as "a hex string" (its queueing step), while REPORT-142 R9 and the resolve answer give `sha256:<lowercase hex>`, which is also what the runner computes and compares (`researcher-dashboard/runner/server/package-fetch.js:20`). rigse forwards the catalog's checksum verbatim (R17), so if REPORT-141 is built as written every run is refused 400.
 **Options considered**:
 - A) rigse sends the catalog's value unchanged, and REPORT-141's validation is corrected to `^sha256:[0-9a-f]{64}$`.
@@ -243,7 +188,10 @@ One side effect worth knowing: every launch-token request also logs `JwtBearerTo
 
 **Decision**: A for rigse's side, which needs no decision: the catalog, the runner and the design all use `sha256:<hex>`, and B would make rigse the one component rewriting a value it is supposed to carry untouched. REPORT-141's spec was the one in error. At stage 8, Doug approved correcting it (2026-09-24), and its R13 and queueing step now validate `^sha256:[0-9a-f]{64}$` and accept an assignment with `url: ""` and `name: null`, which R8 can send. Recorded in R17 and R22.
 
-### RESOLVED: Judgment call: the endpoints accept only a launch token
+---
+
+### The endpoints accept only a launch token
+
 **Context**: `check_for_auth_token` also accepts a session cookie, an HS256 portal token and an AccessGrant, none of which carries a scope.
 **Options considered**:
 - A) Refuse every credential but the launch token (R1).
@@ -251,21 +199,30 @@ One side effect worth knowing: every launch-token request also logs `JwtBearerTo
 
 **Decision**: A. The story gates each endpoint on "the scope in the verified bearer", and `run_package` has no other way to name a class. Accepting a session would also make the two POSTs reachable by a cross-site form under `protect_from_forgery`'s null-session handling, and would give a portal session a path to mint runner tokens. The app is the only caller. Recorded as R1.
 
-### RESOLVED: Judgment call: refuse unknown keys in the run body rather than ignore them
+---
+
+### Refuse unknown keys in the run body rather than ignore them
+
 **Options considered**:
 - A) 400 for any key but `packages`, and any entry key but `identity` and `version`.
 - B) Read `identity` and `version` and ignore the rest.
 
 **Decision**: A. The story says the body is those two fields "and nothing else" and that rigse must not accept a checksum or package key from the caller. Ignoring them would meet the letter, but refusing them makes a stale client that still sends a checksum fail loudly instead of appearing to choose its package bytes. Recorded as R16.
 
-### RESOLVED: Judgment call: refuse an oversized assignment list rather than truncate it
+---
+
+### Refuse an oversized assignment list rather than truncate it
+
 **Options considered**:
 - A) 422 without calling the function when the URL list exceeds REPORT-142's count or body limit.
 - B) Send the first 500 sorted URLs.
 
 **Decision**: A. A truncated list derives a profile that silently omits assignments, so packages matching them are silently not offered, which is the failure `final-design.md` 5.5 warns against. A class with more than 500 distinct assignment URLs, or 256 KiB of them, is far outside anything measured (35 activities gave 54 interactive URLs), and a visible refusal is the better failure for a case that should not happen. A single URL over 2,048 characters is left out instead, because refusing the whole class for one malformed row would deny every package to it. Recorded as R11 and R14.
 
-### RESOLVED: Judgment call: the disabled 404 is a bare 404, not the error envelope
+---
+
+### The disabled 404 is a bare 404, not the error envelope
+
 **Context**: R5 says the endpoints answer 404 while the dashboard is disabled "as the launch action does", and the launch action answers `head :not_found`. R28 says every refusal uses `API::APIController#error`. Found in the post-implementation comparison of the code with this spec.
 **Options considered**:
 - A) A bare 404, as the launch action gives and the plan's controller wrote.
@@ -273,25 +230,108 @@ One side effect worth knowing: every launch-token request also logs `JwtBearerTo
 
 **Decision**: A (implementation, 2026-09-24). A disabled dashboard is a portal on which the endpoints do not exist, not a refusal of a request to them, and a bare 404 is how such a portal already answers every path, including the launch. R28 governs the refusals of an enabled dashboard.
 
-## Self-Review
+---
 
-Roles: Security Engineer, Senior Rails Engineer, QA Engineer, DevOps Engineer, and the engineer building RD-3 against these endpoints. Each finding was checked against the code, by reading it or by a throwaway spec, before it was recorded. Candidates dropped after checking:
-- Forwarding the app's launch token to report-server's resolve. report-server is a designed verifier of the `researcher-dashboard` audience (REPORT-141 R5, REPORT-142 R15), so this hands the token to a service it was minted for.
-- Class enumeration through the difference between 404 and 403. The class comes from the signed `scope_id`, not from anything the caller can vary, and `:id` must equal it (R4).
-- `origins '*'` on the new CORS entry. rack-cors sends no credentials with a wildcard, and the endpoints refuse cookie sessions (R1).
-- Repeated `refresh_profile` calls driving authoring fetches. Each needs a live launch token for a class the caller may research, and REPORT-142's worker is rate-limited (`maxConcurrentDispatches: 10`).
-- Cohort names from projects the researcher holds no grant on. The spike returned the same names, and the Research Classes table the researcher launched from already lists them.
+### R3 called the gate on `current_user`, which is nil for a launch-token request
 
-### Senior Rails Engineer
-
-#### RESOLVED: R3 called the gate on `current_user`, which is nil for a launch-token request
 The Devise strategy refuses every RS256 token (RIGSE-367 implementation, step 1: `decode_portal_token(jwt_token_value, aud: nil)` fails and leaves `current_user` nil), so the only user on these requests is the one `check_for_auth_token` returns from the token's `uid`. As written, R3 would have raised on nil or refused every call. Fixed: R3 and R7 name the token's user.
 
-#### RESOLVED: R16's "exactly this body" cannot be checked against `params`
+---
+
+### R16's "exactly this body" cannot be checked against `params`
+
 `config.load_defaults 7.0` turns on JSON parameter wrapping, so a scratch controller spec posting `{"packages": [...]}` saw `params.keys` of `packages, format, controller, action, researcher_dashboard` and `request.request_parameters.keys` of `packages, researcher_dashboard`. A top-level key check over either would refuse every valid request, and an unparsable body raised `ActionDispatch::Http::Parameters::ParseError` before the action. Fixed: R16 checks the parsed request body and names a non-object body as a 400.
 
-### QA Engineer
+---
 
-#### RESOLVED: R4 compared a string path id with an integer claim
+### R4 compared a string path id with an integer claim
+
 `params[:id]` is a string and `scope_id` an integer (RIGSE-367 R15), so a direct comparison refuses every request and a lenient one accepts `"12abc"`. Fixed: R4 compares as integers. (Stage 5 found the router already refuses a non-numeric id with a 404, `rails routes` showing `:id=>/\d+/` on the new routes, and R4 now says so.)
 
+---
+
+### One `Refusal` type rendered by `rescue_from`, rather than status handling in the controller
+
+**Options considered**:
+- A) Services raise `ResearcherDashboard::Refusal(status, message, details)` and the controller renders it once.
+- B) Services return result objects and the controller maps each outcome to a status, as the spike's controller did with three rescue clauses.
+
+**Decision**: A. The run path has a dozen distinct refusals across three services, and R28 requires every one to have the same body shape; one `rescue_from` makes that true by construction and keeps the actions to two lines each. The spike's mapping (`e.status.to_i == 409 ? 409 : 502`) is the pattern R23 keeps, now inside `Upstream.refusal`.
+
+---
+
+### Read timeouts of 10 seconds for the resolve and the refresh, 45 for `/run-package`
+
+**Options considered**:
+- A) 10, 10 and 45 seconds, with a 5-second open timeout everywhere.
+- B) HTTParty's default (none set, so Net::HTTP's 60 seconds).
+
+**Decision**: A. The resolve's slowest honest answer is report-server's five-second portal timeout (REPORT-142 R15) plus its own work, and the refresh only enqueues a Cloud Task, so for those two a hung upstream is reported in seconds rather than holding a Puma thread for a minute. `/run-package` records the queue and then makes at most `GetMicrovm` and either `ResumeMicrovm`, or `GetMicrovmImage`, report-server's mint and `RunMicrovm`, plus its Firestore transactions. None of these waits for a VM. As implemented, REPORT-141 makes each upstream call once with a 10-second timeout and answers 502 with the reason. 45 seconds covers the four 10-second timeouts with 5 seconds left for its Firestore transactions and a cold start, so rigse hears the function's own reason where 25 would have turned a slow upstream into rigse's 504. Only the function's own 60-second timeout bounds it fully, and `/run-package` can hold a Puma thread for up to 50 seconds, the price of hearing that reason (amended 2026-09-24). A `/run-package` timeout says the work may be queued, which is true because REPORT-141 writes the queue first (R27).
+
+---
+
+### Resolve sequentially and stop at the first refusal
+
+**Options considered**:
+- A) One resolve at a time, stopping at the first refusal.
+- B) All resolves in parallel threads.
+
+**Decision**: A. A batch is at most 20 and typically one to three; each resolve makes report-server read the portal (REPORT-142 R15), so parallel resolves multiply portal load for a saving of a second at most. Stopping early also means a refused batch reports the first bad package and costs nothing more.
+
+---
+
+### Skip the CSRF check on the dashboard controller
+
+**Context**: The plan's controller left `protect_from_forgery`'s null-session strategy in place. Decided during step 3.
+**Options considered**:
+- A) `skip_before_action :verify_authenticity_token`, as `jwt_controller`, `oidc_mint_controller` and the other bearer-only `/api/v1` controllers do.
+- B) Keep the null session, which lets a bearer POST through but logs a CSRF warning for each one.
+
+**Decision**: A. The endpoints read no session and refuse every request without a launch token (R1), so there is nothing for a forged request to ride, and B's only effect is a warning on every run and refresh. Recorded in "As built" under Technical Notes.
+
+---
+
+### How strictly to read the function's 202
+
+**Context**: The plan accepted any JSON object as the 202 and sliced `queue`, `appended` and `vm` from it. The step 5 review found that a 202 of `{}` would then be answered 202 `{}`. Decided during step 5, against REPORT-141 as built (`functions/src/researcher-dashboard/run-package.ts`), whose 202 is `{success: true, queue: [{class_hash, package_key}], appended: [package_key], vm}`.
+**Options considered**:
+- A) Require `queue` and `appended` to be lists and `vm` a string, and answer anything else 502.
+- B) Keep the plan's check, a JSON object.
+- C) Validate each queue entry's keys as well.
+
+**Decision**: A. The app renders the queue from this answer, so a success without it is a failure the app cannot show, and a 502 names it. C would couple rigse to the shape of the function's queue entries, which rigse only relays and REPORT-141 owns. Recorded in "As built" under Technical Notes.
+
+---
+
+### Where a missing FirebaseApp row becomes a 503
+
+**Context**: The step 5 review found that a FirebaseApp setting naming no row raised `SignedJwt::Error` from the mint, which the controller does not rescue, so the run path answered a bare 500.
+**Options considered**:
+- A) `Settings.firebase_app` and `clue_firebase_app` check the row exists and raise `NotConfigured`.
+- B) `RunPackage` rescues `SignedJwt::Error` around the mint and re-raises it as `NotConfigured`.
+
+**Decision**: A. The check then happens where the setting is read, after the resolves and before anything is minted, and it names the variable. B would also turn any other signing failure (a malformed private key, say) into a message blaming the setting. The extra query runs only on the run path. Recorded in "As built" under Technical Notes.
+
+---
+
+### A dropped connection or a garbled response would still surface as a Rails 500
+
+`Upstream` rescued `Timeout::Error`, `SocketError`, `SystemCallError`, SSL errors and `HTTParty::Error`. On the portal image's Ruby, `EOFError` (a connection closed mid-response) descends from `IOError`, and `Net::HTTPBadResponse` and `Net::ProtocolError` from `StandardError` directly, so none was caught, against R27. Fixed: `Upstream::CONNECTION_ERRORS` adds `IOError`, `Net::HTTPBadResponse` and `Net::ProtocolError`. Checked: a resolve stubbed to raise `EOFError` now answers 502 `report-server could not be reached`.
+
+---
+
+### A 202 whose body is not a JSON object raised `ArgumentError`
+
+`response.parsed_response.slice('queue', 'appended', 'vm')` is `String#slice` when the body is text, and `String#slice` with three string arguments raises `ArgumentError` (checked on the portal image), which would be a 500 after the work was queued. Fixed: `RunPackage` answers 502 naming the malformed answer unless the body is a Hash. Checked: a stubbed `text/plain` 202 answers 502.
+
+---
+
+### Nothing recorded an upstream refusal server-side
+
+The plan reported each refusal's reason to the browser (R28) and wrote nothing to the portal's log, so a researcher's "my run failed" had no server-side trace beyond a 502 status line. Fixed: `Upstream` writes one `researcher_dashboard.upstream_refusal upstream=... status=... reason=...` warning for every refusal, timeout and connection failure, with no request body and so no token. Stage 8 found no requirement for it; Doug added it as R30 (2026-09-24).
+
+---
+
+### Every action answers 404 unless the specs enable the dashboard
+
+`ResearcherDashboard.enabled?` needs `RESEARCHER_DASHBOARD_URL` as well as the signing key, and `spec_helper.rb` sets only the key (RIGSE-367 step 1). The first throwaway run of the disabled case confirmed the 404. Fixed: step 3 states the harness, an `around` hook setting and restoring the five variables.
