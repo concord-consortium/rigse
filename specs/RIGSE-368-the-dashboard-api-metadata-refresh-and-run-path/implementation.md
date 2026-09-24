@@ -814,9 +814,11 @@ Where the code departs from the plan above, in step order.
 - **The controller spec calls `Current.reset` before each example** (step 3), so a scope one example's launch token set cannot leak into the next example's session-only request, whatever the test framework's own reset of `Current` does.
 - **Refusals the plan built by hand are logged too** (step 5). The plan's `Catalog` raised its 404 and malformed-answer refusals, and `RunPackage` its malformed-202 refusal, without going through `Upstream.refusal`, so none wrote R30's warning. The malformed answers now go through `Upstream.malformed(upstream, status, reason, message)`, which logs and builds the 502 as `Upstream.refusal` does. The resolve 404 goes through `Upstream.refusal` with status 409, so its message ends with report-server's own reason after the plan's wording (`... cannot be resolved: it does not exist or you may not see it: <reason>`).
 - **A resolve 200 whose JSON does not parse is a 502** (step 5). The plan's `Catalog` read `response.parsed_response` unguarded, and HTTParty parses lazily, so a truncated `application/json` body raised `JSON::ParserError` as a Rails 500. `Upstream.parsed` returns nil for it, and both `Catalog` and `RunPackage` read bodies through it.
-- **A 202 must carry the queue state** (step 5). The plan accepted any JSON object; the code requires REPORT-141's shape as built, `queue` a list of `{class_hash, package_key}`, `appended` a list of package keys and `vm` a string, and answers anything else with the malformed-202 502.
+- **A 202 must carry the queue state** (step 5). The plan accepted any JSON object; the code requires `queue` and `appended` to be lists and `vm` a string, and answers anything else with the malformed-202 502. It does not check the queue entries' keys, which REPORT-141 owns (Open Questions).
 - **A FirebaseApp setting that names no row is a 503** (step 5). `SignedJwt.create_firebase_token` raises `SignedJwt::Error` for an unknown name, which the controller does not rescue, so a portal with `RESEARCHER_DASHBOARD_CLUE_FIREBASE_APP` set before its FirebaseApp row existed answered a bare 500. `Settings.firebase_app` and `clue_firebase_app` now raise `NotConfigured` naming the variable and the missing row, before anything is minted or sent.
 - **The run path's specs split by layer** (step 5). `run_package_spec.rb` covers the service: the posted body, the tokens and assertions, the CLUE token, all-or-nothing resolution, each function answer and the configuration refusals. The controller spec's `run_package` block covers what only the action can show: the 202 body sliced to the queue state, the 400s for a caller-supplied checksum, a scope key, malformed JSON and a non-object body, the error envelope around the function's 409, the 503, two researchers' independent answers, and the 401, 403 and 404 gates.
+- **Verification** (2026-09-24, after step 6). The dashboard's own specs: 154 examples, 0 failures. The full rspec suite (`docker/dev/run-spec.sh`): 3,207 examples, 3 failures, 203 pending. The three failures are in `research_classes_controller_spec.rb` and come from this machine's `.env`, which sets `RESEARCHER_DASHBOARD_URL`. The test container inherits it, so each class row gains the `researcher_dashboard_url` RIGSE-367 adds; the file passes (21 examples) with the variable blanked, and CI sets no such variable. The `react-components` jest suite: 173 tests, 2 failures, both in `external-report-button.test.tsx`, which fail identically on master under a full run on this machine (Node 24; CI uses 18) and pass when that file runs alone. This branch changes nothing in `react-components`. The stack template lints clean with `cfn-lint`, and `docker compose config` shows the four variables.
+- **The requirements were compared with the code, requirement by requirement, after step 6.** Nothing was missing. One reading was recorded as a judgment call, the bare 404 while the dashboard is disabled (requirements, Open Questions).
 
 ---
 
@@ -844,6 +846,31 @@ Where the code departs from the plan above, in step order.
 - B) All resolves in parallel threads.
 
 **Decision**: A. A batch is at most 20 and typically one to three; each resolve makes report-server read the portal (REPORT-142 R15), so parallel resolves multiply portal load for a saving of a second at most. Stopping early also means a refused batch reports the first bad package and costs nothing more.
+
+### RESOLVED: Judgment call: skip the CSRF check on the dashboard controller
+**Context**: The plan's controller left `protect_from_forgery`'s null-session strategy in place. Decided during step 3.
+**Options considered**:
+- A) `skip_before_action :verify_authenticity_token`, as `jwt_controller`, `oidc_mint_controller` and the other bearer-only `/api/v1` controllers do.
+- B) Keep the null session, which lets a bearer POST through but logs a CSRF warning for each one.
+
+**Decision**: A. The endpoints read no session and refuse every request without a launch token (R1), so there is nothing for a forged request to ride, and B's only effect is a warning on every run and refresh. Recorded in "As built".
+
+### RESOLVED: Judgment call: how strictly to read the function's 202
+**Context**: The plan accepted any JSON object as the 202 and sliced `queue`, `appended` and `vm` from it. The step 5 review found that a 202 of `{}` would then be answered 202 `{}`. Decided during step 5, against REPORT-141 as built (`functions/src/researcher-dashboard/run-package.ts`), whose 202 is `{success: true, queue: [{class_hash, package_key}], appended: [package_key], vm}`.
+**Options considered**:
+- A) Require `queue` and `appended` to be lists and `vm` a string, and answer anything else 502.
+- B) Keep the plan's check, a JSON object.
+- C) Validate each queue entry's keys as well.
+
+**Decision**: A. The app renders the queue from this answer, so a success without it is a failure the app cannot show, and a 502 names it. C would couple rigse to the shape of the function's queue entries, which rigse only relays and REPORT-141 owns. Recorded in "As built".
+
+### RESOLVED: Judgment call: where a missing FirebaseApp row becomes a 503
+**Context**: The step 5 review found that a FirebaseApp setting naming no row raised `SignedJwt::Error` from the mint, which the controller does not rescue, so the run path answered a bare 500.
+**Options considered**:
+- A) `Settings.firebase_app` and `clue_firebase_app` check the row exists and raise `NotConfigured`.
+- B) `RunPackage` rescues `SignedJwt::Error` around the mint and re-raises it as `NotConfigured`.
+
+**Decision**: A. The check then happens where the setting is read, after the resolves and before anything is minted, and it names the variable. B would also turn any other signing failure (a malformed private key, say) into a message blaming the setting. The extra query runs only on the run path. Recorded in "As built".
 
 ## Self-Review
 
