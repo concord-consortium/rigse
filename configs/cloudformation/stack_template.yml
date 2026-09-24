@@ -272,6 +272,26 @@ Parameters:
     Default: ""
     Description: Optional JSON object of kid to public key PEM, for tokens signed by the previous key during a rotation.
 
+  ReportServerURL:
+    Type: String
+    Default: ""
+    Description: Base URL of report-server's API, for the Researcher Dashboard run path's catalog resolve (https://report-server.concordqa.org for staging).
+
+  ResearcherDashboardFunctionURL:
+    Type: String
+    Default: ""
+    Description: URL of report-service's researcherDashboard function, for the Researcher Dashboard's profile refresh and run path (https://us-central1-report-service-dev.cloudfunctions.net/researcherDashboard for staging).
+
+  ResearcherDashboardFirebaseApp:
+    Type: String
+    Default: ""
+    Description: Name of the FirebaseApp row for report-service's Firebase project, whose name is the project id; the Researcher Dashboard runner's tokens are minted in it (report-service-dev for staging).
+
+  ResearcherDashboardClueFirebaseApp:
+    Type: String
+    Default: ""
+    Description: Name of the FirebaseApp row for CLUE's Firebase project, for Researcher Dashboard packages that pre-pull CLUE documents (collaborative-learning-staging for staging).
+
   EnableALBAccessLogs:
     Type: String
     Default: "false"
@@ -288,6 +308,10 @@ Conditions:
   PortalSigningKeyDefined: !Not [!Equals [!Ref PortalSigningKey, ""]]
   PortalSigningKeyIdDefined: !Not [!Equals [!Ref PortalSigningKeyId, ""]]
   PortalPreviousVerifyKeysDefined: !Not [!Equals [!Ref PortalPreviousVerifyKeys, ""]]
+  ReportServerURLDefined: !Not [!Equals [!Ref ReportServerURL, ""]]
+  ResearcherDashboardFunctionURLDefined: !Not [!Equals [!Ref ResearcherDashboardFunctionURL, ""]]
+  ResearcherDashboardFirebaseAppDefined: !Not [!Equals [!Ref ResearcherDashboardFirebaseApp, ""]]
+  ResearcherDashboardClueFirebaseAppDefined: !Not [!Equals [!Ref ResearcherDashboardClueFirebaseApp, ""]]
   CreateLoadBalancerHTTPRedirectCond:
     !Equals [!Ref CreateLoadBalancerHTTPRedirect, "true"]
   EnableALBAccessLogsCond:
@@ -592,6 +616,26 @@ Resources:
               - Name: PORTAL_PREVIOUS_VERIFY_KEYS
                 Value: !Ref PortalPreviousVerifyKeys
               - !Ref "AWS::NoValue"
+            - !If
+              - ReportServerURLDefined
+              - Name: REPORT_SERVER_URL
+                Value: !Ref ReportServerURL
+              - !Ref "AWS::NoValue"
+            - !If
+              - ResearcherDashboardFunctionURLDefined
+              - Name: RESEARCHER_DASHBOARD_FUNCTION_URL
+                Value: !Ref ResearcherDashboardFunctionURL
+              - !Ref "AWS::NoValue"
+            - !If
+              - ResearcherDashboardFirebaseAppDefined
+              - Name: RESEARCHER_DASHBOARD_FIREBASE_APP
+                Value: !Ref ResearcherDashboardFirebaseApp
+              - !Ref "AWS::NoValue"
+            - !If
+              - ResearcherDashboardClueFirebaseAppDefined
+              - Name: RESEARCHER_DASHBOARD_CLUE_FIREBASE_APP
+                Value: !Ref ResearcherDashboardClueFirebaseApp
+              - !Ref "AWS::NoValue"
 
   # Notes from 2017-11-14:
   # Values where changed to match the changed made to the CPU reservation value for the
@@ -842,6 +886,26 @@ Resources:
               - PortalPreviousVerifyKeysDefined
               - Name: PORTAL_PREVIOUS_VERIFY_KEYS
                 Value: !Ref PortalPreviousVerifyKeys
+              - !Ref "AWS::NoValue"
+            - !If
+              - ReportServerURLDefined
+              - Name: REPORT_SERVER_URL
+                Value: !Ref ReportServerURL
+              - !Ref "AWS::NoValue"
+            - !If
+              - ResearcherDashboardFunctionURLDefined
+              - Name: RESEARCHER_DASHBOARD_FUNCTION_URL
+                Value: !Ref ResearcherDashboardFunctionURL
+              - !Ref "AWS::NoValue"
+            - !If
+              - ResearcherDashboardFirebaseAppDefined
+              - Name: RESEARCHER_DASHBOARD_FIREBASE_APP
+                Value: !Ref ResearcherDashboardFirebaseApp
+              - !Ref "AWS::NoValue"
+            - !If
+              - ResearcherDashboardClueFirebaseAppDefined
+              - Name: RESEARCHER_DASHBOARD_CLUE_FIREBASE_APP
+                Value: !Ref ResearcherDashboardClueFirebaseApp
               - !Ref "AWS::NoValue"
 
   WorkerService:
