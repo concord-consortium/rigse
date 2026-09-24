@@ -13,10 +13,13 @@ class API::V1::ResearcherDashboardController < API::APIController
 
   before_action :require_dashboard_enabled
   before_action :authorize_scope
-  before_action :require_path_matches_scope, only: [:clazz]
+  before_action :require_path_matches_scope, only: [:clazz, :refresh_profile]
 
   rescue_from ResearcherDashboard::Refusal do |e|
     error(e.message, e.status, e.details)
+  end
+  rescue_from ResearcherDashboard::Settings::NotConfigured do |e|
+    error("The Researcher Dashboard is not fully configured: #{e.message}", 503)
   end
   rescue_from ActionDispatch::Http::Parameters::ParseError do
     error('The body must be a JSON object', 400)
@@ -37,6 +40,11 @@ class API::V1::ResearcherDashboardController < API::APIController
       assignment_fingerprint: scope.fingerprint,
       assignments: scope.assignments
     }
+  end
+
+  # POST /api/v1/researcher_dashboard/classes/:id/refresh_profile
+  def refresh_profile
+    render status: 202, json: ResearcherDashboard::ProfileRefresh.call(user: @user, clazz: @clazz)
   end
 
   private
