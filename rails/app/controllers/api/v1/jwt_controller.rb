@@ -1,6 +1,5 @@
 class API::V1::JwtController < API::APIController
 
-  require 'digest/md5'
   skip_before_action :verify_authenticity_token
 
   before_action :reject_credential_issuing_callers
@@ -137,11 +136,6 @@ class API::V1::JwtController < API::APIController
     [user, learner, teacher]
   end
 
-  def jwt_user_id(user)
-    site_url_without_trailing_slash = APP_CONFIG[:site_url].sub(/\/$/,'')
-    site_url_without_trailing_slash + polymorphic_path(user)
-  end
-
   # The scope is what the launch was for, not what it permits: the researcher check
   # still runs on the matching class, because a token outlives a permission change.
   def check_token_scope(clazz)
@@ -230,11 +224,7 @@ class API::V1::JwtController < API::APIController
 
     # Firebase auth rules expect all the claims to be in a sub-object named "claims".
     # All the new properties should go there. Other apps can still read them.
-    sub_claims = {
-      platform_id: APP_CONFIG[:site_url],
-      platform_user_id: user.id,
-      user_id: jwt_user_id(user)
-    }
+    sub_claims = FirebaseTokenClaims.identity(user)
     claims = {
       claims: sub_claims
     }
@@ -339,8 +329,7 @@ class API::V1::JwtController < API::APIController
 
     end
 
-    # the firebase uid must be between 1-36 characters and unique across all portals, MD5 yields a 32 byte string
-    uid = Digest::MD5.hexdigest(jwt_user_id(user))
+    uid = FirebaseTokenClaims.uid(user)
 
     render status: 201, json: {token: SignedJwt::create_firebase_token(uid, params[:firebase_app], 3600, claims)}
   end

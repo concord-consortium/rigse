@@ -150,6 +150,11 @@ services:
       PORTAL_SIGNING_KEY:
       PORTAL_SIGNING_KEY_ID:
       PORTAL_PREVIOUS_VERIFY_KEYS:
+      # Profile refresh and run path only; the metadata endpoint needs none of these.
+      REPORT_SERVER_URL: "${REPORT_SERVER_URL:-https://report-server.concordqa.org}"
+      RESEARCHER_DASHBOARD_FUNCTION_URL: "${RESEARCHER_DASHBOARD_FUNCTION_URL:-https://us-central1-report-service-dev.cloudfunctions.net/researcherDashboard}"
+      RESEARCHER_DASHBOARD_FIREBASE_APP: "${RESEARCHER_DASHBOARD_FIREBASE_APP:-report-service-dev}"
+      RESEARCHER_DASHBOARD_CLUE_FIREBASE_APP: "${RESEARCHER_DASHBOARD_CLUE_FIREBASE_APP:-collaborative-learning-staging}"
 
     # open standard in and turn on tty so we can attach to the container and debug it
     stdin_open: true
