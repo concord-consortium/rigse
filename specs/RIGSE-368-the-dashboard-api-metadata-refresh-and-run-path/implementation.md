@@ -792,7 +792,7 @@ Resolves run one at a time and stop at the first refusal, so the portal load rep
 
 **Files affected**:
 - `docker-compose.yml` — the four variables in the app service, beside the `REPORT_SERVICE_*` block, with staging-shaped defaults for the two URLs and the two FirebaseApp names (the same pattern `REPORT_SERVICE_URL` uses there)
-- `configs/cloudformation/stack_template.yml` — parameters `ReportServerURL`, `ResearcherDashboardFunctionURL`, `ResearcherDashboardFirebaseApp` and `ResearcherDashboardClueFirebaseApp`, each `Type: String` with `Default: ""` and a description naming the staging value; their four `Name`/`Value` entries in both `AppTaskDefinition` and `WorkerTaskDefinition`, beside `REPORT_SERVICE_URL`
+- `configs/cloudformation/stack_template.yml` — parameters `ReportServerURL`, `ResearcherDashboardFunctionURL`, `ResearcherDashboardFirebaseApp` and `ResearcherDashboardClueFirebaseApp`, each `Type: String` with `Default: ""` and a description naming the staging value; their four entries in both `AppTaskDefinition` and `WorkerTaskDefinition`, beside `REPORT_SERVICE_URL`, each behind an `!If` on its parameter being non-empty with `AWS::NoValue` otherwise, as RIGSE-367's four entries are (one `<Param>Defined` condition per parameter beside `PortalPagesLibraryDefined`), so a stack that has not enabled the dashboard carries no empty variables
 - `README.md` — the RIGSE-367 "Researcher Dashboard" section gains the four variables
 
 **Estimated diff size**: ~70 lines
