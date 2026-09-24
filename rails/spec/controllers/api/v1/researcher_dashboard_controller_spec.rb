@@ -156,4 +156,129 @@ describe API::V1::ResearcherDashboardController, type: :controller do
       end
     end
   end
+
+  describe 'POST refresh_profile' do
+    let(:derive_url) { 'https://functions.example/researcherDashboard/derive-profile' }
+    let(:warnings) { [] }
+
+    before(:each) do
+      allow(Rails.logger).to receive(:warn).and_call_original
+      allow(Rails.logger).to receive(:warn).with(/researcher_dashboard\.upstream_refusal/) { |message| warnings << message }
+    end
+
+    def refresh(id = clazz.id)
+      post :refresh_profile, params: { id: id }, format: :json
+    end
+
+    context 'with a launch token for the class' do
+      let(:token) { token_for(researcher) }
+      before(:each) { bearer(token) }
+
+      it 'posts the URLs to the deriver and answers 202 with the fingerprint' do
+        posted = nil
+        stub_request(:post, derive_url).to_return { |request|
+          posted = request
+          { status: 202, body: '{"success":true,"queued":true}', headers: { 'Content-Type' => 'application/json' } }
+        }
+        refresh
+        fingerprint = ResearcherDashboard::Scope.new(clazz).fingerprint
+        expect(response.status).to eq(202)
+        expect(json).to eq('queued' => true, 'assignment_fingerprint' => fingerprint)
+        expect(JSON.parse(posted.body)).to eq(
+          'class_hash' => clazz.class_hash,
+          'assignment_fingerprint' => fingerprint,
+          'assignment_urls' => ['HTTPS://ap.example:443/?activity=1']
+        )
+        assertion = posted.headers['Authorization'].sub(/\ABearer /, '')
+        data = SignedJwt.decode_portal_token(assertion, aud: SignedJwt::AUD_REPORT_SERVICE_FUNCTIONS)[:data]
+        expect(data['uid']).to eq(researcher.id)
+      end
+
+      it "answers 502 with the function's reason when it refuses" do
+        stub_request(:post, derive_url).to_return(status: 400, body: '{"success":false,"error":"assignment_urls[3] is too long"}',
+                                                  headers: { 'Content-Type' => 'application/json' })
+        refresh
+        expect(response.status).to eq(502)
+        expect(json['message']).to eq('report-service refused the profile refresh: assignment_urls[3] is too long')
+        expect(json['details']).to eq('upstream' => 'report-service', 'status' => 400, 'reason' => 'assignment_urls[3] is too long')
+      end
+
+      it "passes the function's 503 through as a 502" do
+        stub_request(:post, derive_url).to_return(status: 503, body: '{"success":false,"error":"RD_AUTHORING_HOSTS is not set"}',
+                                                  headers: { 'Content-Type' => 'application/json' })
+        refresh
+        expect(response.status).to eq(502)
+        expect(json['details']).to include('status' => 503, 'reason' => 'RD_AUTHORING_HOSTS is not set')
+      end
+
+      it 'answers 504 for a read timeout' do
+        stub_request(:post, derive_url).to_raise(Net::ReadTimeout)
+        refresh
+        expect(response.status).to eq(504)
+      end
+
+      [Errno::ECONNREFUSED, EOFError].each do |error|
+        it "answers 502 for #{error}" do
+          stub_request(:post, derive_url).to_raise(error)
+          refresh
+          expect(response.status).to eq(502)
+          expect(json['message']).to eq('report-service could not be reached')
+        end
+      end
+
+      it 'logs each upstream failure once, without the assertion' do
+        stub_request(:post, derive_url).to_raise(Net::ReadTimeout)
+        refresh
+        expect(warnings.size).to eq(1)
+        expect(warnings.first).not_to include('eyJ')
+      end
+
+      it 'answers 503 naming the unset function URL, and sends nothing' do
+        ENV.delete('RESEARCHER_DASHBOARD_FUNCTION_URL')
+        refresh
+        expect(response.status).to eq(503)
+        expect(json['message']).to match(/RESEARCHER_DASHBOARD_FUNCTION_URL is not set/)
+        expect(a_request(:any, /.*/)).not_to have_been_made
+      end
+
+      it 'answers 422 for an oversized list, and sends nothing' do
+        allow_any_instance_of(ResearcherDashboard::Scope).to receive(:assignments).and_return(
+          (1..501).map { |i| { offering_id: i, runnable_id: i, name: 'x', url: "https://a.example/#{i}", tool: nil } }
+        )
+        refresh
+        expect(response.status).to eq(422)
+        expect(a_request(:any, /.*/)).not_to have_been_made
+      end
+    end
+
+    it 'refuses a class other than the scoped one with 403, and sends nothing' do
+      bearer(token_for(researcher))
+      refresh(other_clazz.id)
+      expect(response.status).to eq(403)
+      expect(json['message']).to eq('The requested class is not the class this token was issued for')
+      expect(a_request(:any, /.*/)).not_to have_been_made
+    end
+
+    it 'refuses a non-researcher with 403, and sends nothing' do
+      bearer(token_for(FactoryBot.create(:confirmed_user)))
+      refresh
+      expect(response.status).to eq(403)
+      expect(json['message']).to eq('You do not have access to this class as a researcher')
+      expect(a_request(:any, /.*/)).not_to have_been_made
+    end
+
+    it 'answers 404 when the dashboard is disabled, and sends nothing' do
+      bearer(token_for(researcher))
+      ENV.delete('RESEARCHER_DASHBOARD_URL')
+      refresh
+      expect(response.status).to eq(404)
+      expect(a_request(:any, /.*/)).not_to have_been_made
+    end
+
+    it 'refuses a session with no bearer with 401' do
+      sign_in researcher
+      refresh
+      expect(response.status).to eq(401)
+    end
+  end
 end
