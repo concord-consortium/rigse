@@ -127,8 +127,8 @@ module ResearcherDashboard
       end
     end
 
-    # The cohorts of the class's teachers, through the same join is_researcher_for_clazz?
-    # uses, so "the projects this class belongs to" means what the researcher gate means.
+    # The cohorts of the class's teachers, through the same join User#with_teacher_clazzes
+    # makes, so "the projects this class belongs to" means what the researcher gate means.
     def cohorts
       @cohorts ||= Admin::Cohort
         .joins("INNER JOIN admin_cohort_items __aci ON __aci.admin_cohort_id = admin_cohorts.id AND __aci.item_type = 'Portal::Teacher'")
