@@ -691,6 +691,13 @@ On AWS the values are the `PortalSigningKey`, `PortalSigningKeyId`, `PortalPrevi
 
 **Scopes.** A `Client` with scopes (space-separated capabilities, set on the admin client form) must use the authorization code flow, with PKCE if it is public, and receives from `/oauth/token` an RS256 JWT access token (RFC 9068) carrying `scope`, the `client_id`, and a `context` naming the one object it is bound to, such as `{"type": "class", "id": 123}`. `context.id` is the portal's integer id, not report-service's `contextId`, which is the class hash. A token with a scope is accepted only by actions that declare one of its capabilities, and even there the capability is a ceiling: the action still runs its own authorization. A client without scopes behaves exactly as before. The capabilities are `class:researcher-read`, `class:researcher-run`, `packages:read` and `portal-api` (`lib/token_capabilities.rb`).
 
+**Enabling the Researcher Dashboard** is admin data, not configuration. With the signing key and `REPORT_SERVER_URL` set, an admin creates:
+
+1. A `Client` with type `public`, the dashboard's URL as its only redirect URI, and scopes `class:researcher-read class:researcher-run packages:read`.
+2. An `ExternalReport` with report type `class`, "supports researchers" checked, the dashboard's URL, a name and launch text (for example "Researcher Dashboard"), and that client.
+
+The Research Classes table then shows the report's launch text on each class the researcher may open. The link carries `authDomain`, `classId` and `loginHint` and no token; the dashboard runs the code flow with PKCE, asking for `context=class:<classId>`, and the portal checks the researcher's access to that class before issuing a code.
+
 ## Uses the Database for Sessions
 
 ### Will Paginate

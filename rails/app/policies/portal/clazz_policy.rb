@@ -57,8 +57,10 @@ class Portal::ClazzPolicy < ApplicationPolicy
     class_teacher_or_admin? || class_project_admin?
   end
 
+  # A project admin passes the researcher gate that lists class reports on Research Classes,
+  # so may follow those links, as materials? and roster? already allow.
   def external_report?
-    class_teacher_or_admin? || class_researcher? || class_student?
+    class_teacher_or_admin? || class_researcher? || class_project_admin? || class_student?
   end
 
   # Used by Portal::API::V1::PermissionFormsController:

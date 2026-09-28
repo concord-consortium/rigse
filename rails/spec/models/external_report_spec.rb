@@ -8,6 +8,15 @@ describe ExternalReport do
   let(:portal_teacher)  { FactoryBot.create(:portal_teacher)}
   let(:extra_params)    { {} }
 
+  describe "#url_for_offering for a scoped client's report" do
+    it "refuses, since the token would be in the URL" do
+      external_report.client.update!(scopes: 'class:researcher-read')
+      offering = FactoryBot.create(:portal_offering)
+      expect { external_report.url_for_offering(offering, portal_teacher.user, 'https', 'perfect.host.com') }
+        .to raise_error(ExternalReport::LaunchNotSupported)
+    end
+  end
+
   describe "#url_for_offering" do
     subject { external_report.url_for_offering(offering, portal_teacher.user, 'https', 'perfect.host.com', extra_params) }
 
@@ -67,6 +76,21 @@ describe ExternalReport do
       query_hash = Rack::Utils.parse_query(uri.query)
       expect(query_hash['class']).to start_with('https://')
       expect(query_hash['classOfferings']).to start_with('https://')
+    end
+
+    context "when the report's client has scopes" do
+      before(:each) do
+        external_report.client.update!(client_type: Client::PUBLIC, redirect_uris: 'https://dashboard.example.org/',
+                                       scopes: 'class:researcher-read')
+      end
+      let(:extra_params) { { researcher: true } }
+
+      it "adds no token and creates no grant, only the launch parameters" do
+        expect { subject }.not_to change { AccessGrant.count }
+        query = Rack::Utils.parse_query(URI.parse(subject).query)
+        expect(query).to eq('cool' => 'true', 'authDomain' => 'https://perfect.host.com/',
+                            'classId' => offering.clazz.id.to_s, 'loginHint' => portal_teacher.user.id.to_s)
+      end
     end
 
     describe "with logging not enabled" do

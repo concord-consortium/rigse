@@ -166,6 +166,21 @@ RSpec.describe 'Scoped OAuth clients', type: :request do
     end
   end
 
+  describe 'the offering launch route' do
+    let(:report) do
+      FactoryBot.create(:external_report, client: client, report_type: ExternalReport::ClassReport,
+                        supports_researchers: true, url: redirect_uri)
+    end
+    let(:offering) { FactoryBot.create(:portal_offering, clazz: clazz) }
+
+    it "never launches a scoped client's report with a token in its URL" do
+      sign_in_as(teacher.user)
+      expect {
+        expect { get "/portal/offerings/#{offering.id}/external_report/#{report.id}" }.to raise_error(ActionController::RoutingError)
+      }.not_to change { AccessGrant.count }
+    end
+  end
+
   describe 'using the token' do
     let(:token) do
       sign_in_as(researcher)

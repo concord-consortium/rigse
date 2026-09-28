@@ -337,6 +337,11 @@ Implemented on 2026-09-28, one commit per step, each through a `cc-code-review` 
 - **Departure: a change of a client's scopes cancels what it no longer covers.** R33a was enforced only when a grant was created, so an existing client an admin gives scopes kept its implicit-flow or report grants, usable as full-user tokens for up to a week, and a code issued before a scope change redeemed under the old scope for up to five minutes. A save that changes a client's scopes now deletes its pending codes, and, when it leaves the client scoped, every grant holding an opaque token; and the token endpoint signs only the capabilities the grant and the client still share, answering `invalid_grant` when none remain.
 - **Tests added:** a public client without scopes redeeming a PKCE code for an opaque one-week token (and refused without a challenge), a scoped confidential client redeeming with its secret and no PKCE, and a `code_challenge` sent as an array refused as `invalid_request` rather than raising.
 
+### The Researcher Dashboard as an ExternalReport
+
+- **Departure: project admins may follow a class report's launch link.** The review found that the Research Classes rows list class reports for every class the researcher gate admits, which includes the class's project admins, while `Portal::ClazzPolicy#external_report?` admitted teachers, site admins, class researchers and class students but not project admins, so a project admin who is not a researcher saw a "Researcher Dashboard" link that answered not authorized. `external_report?` now also admits `class_project_admin?`, as `materials?` and `roster?` already do for the same role. This widens every class report's launch, not only the dashboard's, to a role that already has full access to the class's student data (`has_full_access_to_student_data?`); the launch still grants nothing a scoped report's authorize step does not check again.
+- **Test added:** a Research Classes row whose class fails the researcher gate lists no reports even when one supports researchers.
+
 ## Stage 8 cross-reference
 
 Every requirement maps to a step. Doug's answers, 2026-09-28, each the recommendation:
