@@ -681,12 +681,15 @@ The portal signs two kinds of RS256 token with one key per environment: the scop
 * `PORTAL_SIGNING_KEY`: the RS256 private key as a PEM, with its newlines written as `\n` so it fits in one environment value.
 * `PORTAL_SIGNING_KEY_ID`: the key's `kid`, which every token names in its header.
 * `PORTAL_PREVIOUS_VERIFY_KEYS` (optional): a JSON object of `kid` to public key PEM, for tokens signed by the previous key during a rotation.
+* `REPORT_SERVER_URL`: report-server's base URL. It is the `aud` entry of a token carrying `packages:read`, so a client with that scope cannot be authorized without it.
 
 Generate a keypair with `docker compose run --rm app bundle exec rake portal_signing_key:generate KID=<environment>-<yyyy-mm>`. Staging and production each generate their own and must never share one, or a staging token would verify in production. The private key is set only on the portal. report-server and the report-service function are configured by value with the public key and its `kid`, which `rake portal_signing_key:public` prints for the running environment. There is deliberately no JWKS or other public-key endpoint.
 
 A rotation is two deploys. First, configure the new public key in report-server and the report-service function, then switch the portal to the new key and `kid` while moving the old key's public half into `PORTAL_PREVIOUS_VERIFY_KEYS`. Second, once the old key's tokens have expired (an access token lives two hours), remove it from `PORTAL_PREVIOUS_VERIFY_KEYS` and from the verifiers.
 
-On AWS the values are the `PortalSigningKey`, `PortalSigningKeyId` and `PortalPreviousVerifyKeys` stack parameters, all empty by default. A normal release updates the stack with its previous template, so releasing this code does not add them to a running stack. Adding them is a deliberate template update per environment with that environment's own values, after which releases carry them forward.
+On AWS the values are the `PortalSigningKey`, `PortalSigningKeyId`, `PortalPreviousVerifyKeys` and `ReportServerURL` stack parameters, all empty by default. A normal release updates the stack with its previous template, so releasing this code does not add them to a running stack. Adding them is a deliberate template update per environment with that environment's own values, after which releases carry them forward.
+
+**Scopes.** A `Client` with scopes (space-separated capabilities, set on the admin client form) must use the authorization code flow, with PKCE if it is public, and receives from `/oauth/token` an RS256 JWT access token (RFC 9068) carrying `scope`, the `client_id`, and a `context` naming the one object it is bound to, such as `{"type": "class", "id": 123}`. `context.id` is the portal's integer id, not report-service's `contextId`, which is the class hash. A token with a scope is accepted only by actions that declare one of its capabilities, and even there the capability is a ceiling: the action still runs its own authorization. A client without scopes behaves exactly as before. The capabilities are `class:researcher-read`, `class:researcher-run`, `packages:read` and `portal-api` (`lib/token_capabilities.rb`).
 
 ## Uses the Database for Sessions
 

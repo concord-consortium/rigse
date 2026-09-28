@@ -161,10 +161,38 @@ RSpec.describe AuthController, type: :controller do
       expect(JSON.parse(response.body)).to eq('error' => 'Could not find application')
     end
 
+    context 'for a public client without scopes, using PKCE' do
+      let(:client)    { FactoryBot.create(:client, app_id: 'spa', client_type: Client::PUBLIC, redirect_uris: 'https://spa.example.org/') }
+      let(:user)      { FactoryBot.create(:confirmed_user) }
+      let(:verifier)  { 'v' * 43 }
+      let(:challenge) { Base64.urlsafe_encode64(Digest::SHA256.digest(verifier), padding: false) }
+
+      def redeem(grant)
+        post :access_token, params: { client_id: 'spa', code: grant.code, code_verifier: verifier, redirect_uri: 'https://spa.example.org/' }
+        JSON.parse(response.body)
+      end
+
+      it 'exchanges the code once for an opaque token that lives a week' do
+        grant = AccessGrant.create!(client: client, user: user, issue_code: true, code_challenge: challenge, redirect_uri: 'https://spa.example.org/')
+        code = grant.code
+        body = redeem(grant)
+        expect(body).to eq('access_token' => grant.access_token, 'token_type' => 'bearer', 'expires_in' => AccessGrant::ExpireTime.to_i)
+        expect(response.headers['Cache-Control']).to include('no-store')
+        expect(grant.reload.access_token_expires_at).to be_within(1.minute).of(AccessGrant::ExpireTime.from_now)
+        grant.code = code
+        expect(redeem(grant)).to eq('error' => 'invalid_grant')
+      end
+
+      it 'refuses a code issued without a challenge' do
+        grant = AccessGrant.create!(client: client, user: user, issue_code: true, redirect_uri: 'https://spa.example.org/')
+        expect(redeem(grant)).to eq('error' => 'invalid_grant')
+      end
+    end
+
     context 'for a confidential client' do
       let(:client) { FactoryBot.create(:client, app_id: 'lara', app_secret: 's3cret', client_type: Client::CONFIDENTIAL, redirect_uris: 'https://lara.example.org/cb') }
       let(:user)   { FactoryBot.create(:confirmed_user) }
-      let(:grant)  { AccessGrant.create!(client: client, user: user, issue_code: true) }
+      let(:grant)  { AccessGrant.create!(client: client, user: user, issue_code: true, redirect_uri: 'https://lara.example.org/cb') }
 
       def redeem(code)
         post :access_token, params: { client_id: 'lara', client_secret: 's3cret', code: code }
@@ -176,6 +204,46 @@ RSpec.describe AuthController, type: :controller do
         expect(redeem(code)['access_token']).to eq(grant.access_token)
         expect(grant.reload.access_token_expires_at).to be > Time.now
         expect(redeem(code)).to eq('error' => 'Could not authenticate access code')
+      end
+
+      it "verifies a confidential client's PKCE challenge when it sent one" do
+        verifier = 'v' * 43
+        grant.update!(code_challenge: Base64.urlsafe_encode64(Digest::SHA256.digest(verifier), padding: false))
+        post :access_token, params: { client_id: 'lara', client_secret: 's3cret', code: grant.code, code_verifier: 'w' * 43 }
+        expect(JSON.parse(response.body)).to eq('error' => 'Could not authenticate access code')
+        post :access_token, params: { client_id: 'lara', client_secret: 's3cret', code: grant.code, code_verifier: verifier }
+        expect(JSON.parse(response.body)['access_token']).to eq(grant.access_token)
+      end
+
+      it 'refuses a redirect_uri other than the one the code was issued for' do
+        post :access_token, params: { client_id: 'lara', client_secret: 's3cret', code: grant.code, redirect_uri: 'https://lara.example.org/other' }
+        expect(JSON.parse(response.body)).to eq('error' => 'Could not authenticate access code')
+        expect(grant.reload.code).to be_present
+      end
+
+      it 'accepts a missing redirect_uri for now, and logs the client' do
+        expect(Rails.logger).to receive(:warn).with(/redeemed a code without redirect_uri/).at_least(:once)
+        post :access_token, params: { client_id: 'lara', client_secret: 's3cret', code: grant.code }
+        expect(JSON.parse(response.body)['access_token']).to eq(grant.access_token)
+      end
+
+      it 'issues a scoped token to a scoped confidential client that sends its secret, without PKCE' do
+        client.update!(scopes: 'portal-api')
+        scoped_grant = AccessGrant.create!(client: client, user: user, issue_code: true, scope: 'portal-api', redirect_uri: 'https://lara.example.org/cb')
+        code = scoped_grant.code
+        post :access_token, params: { client_id: 'lara', client_secret: 's3cret', code: code, redirect_uri: 'https://lara.example.org/cb' }
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body)).to include('token_type' => 'Bearer', 'scope' => 'portal-api')
+        expect(AccessGrant.exists?(scoped_grant.id)).to be false
+        post :access_token, params: { client_id: 'lara', client_secret: 's3cret', code: code, redirect_uri: 'https://lara.example.org/cb' }
+        expect(JSON.parse(response.body)).to eq('error' => 'invalid_grant')
+      end
+
+      it 'answers invalid_client for a scoped confidential client without its secret' do
+        client.update!(scopes: 'class:researcher-read')
+        post :access_token, params: { client_id: 'lara', code: grant.code }
+        expect(response.status).to eq(401)
+        expect(JSON.parse(response.body)).to eq('error' => 'invalid_client')
       end
 
       it 'refuses a code that expired unredeemed, and its token never authenticated' do

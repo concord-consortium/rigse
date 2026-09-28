@@ -331,6 +331,12 @@ Implemented on 2026-09-28, one commit per step, each through a `cc-code-review` 
 - **Departure: the implicit flow's redirect is logged as `[FILTERED]`.** The review found that R47b was not met by `filter_parameters` alone: Rails logs `Redirected to <location>` from `response.filtered_location`, which filters a Location's query string but never its fragment, and the implicit flow puts a week-long access token in the fragment (`#access_token=…`). `config.filter_redirect << /[#&]access_token=/` makes Rails log such a redirect as `[FILTERED]`; the spec checks that and that a code-flow redirect still logs with only `code` filtered.
 - **Tests added for two behaviours the step had none for:** `check_for_auth_token` refusing a grant whose expiry was never set as an expired grant (R29), and a routing spec that both token routes answer POST and are not routable by GET (R30).
 
+### PKCE and scoped clients
+
+- **Departure: a malformed `code_challenge` is refused at authorize.** The review found that only presence and `code_challenge_method` were checked, so a 300-character challenge reached the 255-character column and raised `ActiveRecord::ValueTooLong`, a 500 for the user. A challenge must now match RFC 7636's 43 to 128 unreserved characters (`AccessGrant::PKCE_VALUE`, which the verifier check shares) or authorize answers `invalid_request` with `state`.
+- **Departure: a change of a client's scopes cancels what it no longer covers.** R33a was enforced only when a grant was created, so an existing client an admin gives scopes kept its implicit-flow or report grants, usable as full-user tokens for up to a week, and a code issued before a scope change redeemed under the old scope for up to five minutes. A save that changes a client's scopes now deletes its pending codes, and, when it leaves the client scoped, every grant holding an opaque token; and the token endpoint signs only the capabilities the grant and the client still share, answering `invalid_grant` when none remain.
+- **Tests added:** a public client without scopes redeeming a PKCE code for an opaque one-week token (and refused without a challenge), a scoped confidential client redeeming with its secret and no PKCE, and a `code_challenge` sent as an array refused as `invalid_request` rather than raising.
+
 ## Stage 8 cross-reference
 
 Every requirement maps to a step. Doug's answers, 2026-09-28, each the recommendation:

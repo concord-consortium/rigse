@@ -85,6 +85,11 @@ class AuthController < ApplicationController
   end
 
   def access_token
+    client = Client.find_by(app_id: params[:client_id])
+    if client && (client.public? || client.scoped?)
+      return pkce_or_scoped_access_token(client)
+    end
+
     application = Client.authenticate(params[:client_id], params[:client_secret])
 
     if application.nil?
@@ -93,7 +98,8 @@ class AuthController < ApplicationController
     end
 
     access_grant = AccessGrant.authenticate(params[:code], application.id)
-    if access_grant.nil? || !access_grant.spend_code!
+    if access_grant.nil? || !access_grant.verifies_code_verifier?(params[:code_verifier]) ||
+       !legacy_redirect_uri_matches?(access_grant, application) || !access_grant.spend_code!
       render :json => {:error => "Could not authenticate access code"}
       return
     end
@@ -101,6 +107,79 @@ class AuthController < ApplicationController
     access_grant.start_expiry_period!
     render :json => {:access_token => access_grant.access_token, :refresh_token => access_grant.refresh_token, :expires_in => Devise.timeout_in.to_i}
   end
+
+  private
+
+  # Token endpoint for public (PKCE) and scoped clients; errors follow RFC 6749 5.2.
+  # A public client holds no secret and proves itself with its PKCE verifier.
+  def pkce_or_scoped_access_token(client)
+    if params[:grant_type].present? && params[:grant_type] != "authorization_code"
+      return oauth_error("unsupported_grant_type", 400)
+    end
+    unless client.public? || Client.authenticate(params[:client_id], params[:client_secret])
+      return oauth_error("invalid_client", 401)
+    end
+
+    grant = AccessGrant.authenticate(params[:code], client.id)
+    return oauth_error("invalid_grant", 400) unless grant
+    return oauth_error("invalid_grant", 400) if client.public? && grant.code_challenge.blank?
+    return oauth_error("invalid_grant", 400) unless grant.verifies_code_verifier?(params[:code_verifier])
+    return oauth_error("invalid_grant", 400) if grant.redirect_uri.present? && params[:redirect_uri] != grant.redirect_uri
+
+    client.scoped? ? issue_scoped_access_token(client, grant) : issue_opaque_access_token(grant)
+  end
+
+  # RFC 6749 4.1.3: a mismatched redirect_uri is refused; a missing one is logged and
+  # accepted, since not every confidential client sends it (Model My Watershed omits it).
+  def legacy_redirect_uri_matches?(grant, client)
+    return true if grant.redirect_uri.blank?
+    if params[:redirect_uri].blank?
+      Rails.logger.warn("OAuth token: #{client.name} (#{client.app_id}) redeemed a code without redirect_uri")
+      return true
+    end
+    params[:redirect_uri] == grant.redirect_uri
+  end
+
+  # The grant row exists only to carry the code across the redirect. The token is signed
+  # before the code is spent, so a signing failure leaves the code for a retry; the grant
+  # is then deleted only if this request still holds its code, so a concurrent redemption
+  # cannot also succeed, and a token signed for a lost race is discarded unsent.
+  def issue_scoped_access_token(client, grant)
+    # Only what the client may still request, in case its scopes narrowed since the code.
+    capabilities = grant.scope_list & client.scope_list
+    return oauth_error("invalid_grant", 400) if capabilities.empty?
+    audiences = capabilities.map { |c| TokenCapabilities.audience_value(c) }
+    return oauth_error("server_error", 500) if audiences.any?(&:nil?)
+    ttl = ExternalReport::ReportTokenValidFor.to_i
+    token = begin
+      SignedJwt.create_access_token(grant.user,
+        client_id: client.app_id,
+        capabilities: capabilities,
+        context: grant.context,
+        audiences: [APP_CONFIG[:site_url], *audiences].uniq,
+        expires_in: ttl)
+    rescue SignedJwt::Error => e
+      Rails.logger.error("OAuth token: could not sign a scoped token for #{client.app_id}: #{e.message}")
+      return oauth_error("server_error", 500)
+    end
+    return oauth_error("invalid_grant", 400) unless AccessGrant.where(id: grant.id).where.not(code: nil).delete_all == 1
+    response.headers["Cache-Control"] = "no-store"
+    render json: { access_token: token, token_type: "Bearer", expires_in: ttl, scope: capabilities.join(" ") }
+  end
+
+  def issue_opaque_access_token(grant)
+    return oauth_error("invalid_grant", 400) unless grant.spend_code!
+    grant.start_expiry_period!
+    response.headers["Cache-Control"] = "no-store"
+    render json: { access_token: grant.access_token, token_type: "bearer", expires_in: AccessGrant::ExpireTime.to_i }
+  end
+
+  def oauth_error(error, status)
+    response.headers["Cache-Control"] = "no-store"
+    render json: { error: error }, status: status
+  end
+
+  public
 
   def failure
     render :plain => "ERROR: #{params[:message]}"

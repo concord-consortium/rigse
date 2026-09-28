@@ -141,5 +141,51 @@ describe Client do
     end
   end
 
+  describe "scopes" do
+    it "never gives a scoped client an opaque grant" do
+      client = FactoryBot.create(:client, scopes: 'class:researcher-read')
+      expect { client.updated_grant_for(FactoryBot.create(:user), 1.hour) }.to raise_error(ArgumentError)
+      grant = AccessGrant.create(client: client, user: FactoryBot.create(:user))
+      expect(grant).not_to be_persisted
+      expect(AccessGrant.create(client: client, user: FactoryBot.create(:user), issue_code: true)).to be_persisted
+    end
 
+    it "accepts known capabilities and refuses unknown ones" do
+      expect(FactoryBot.build(:client, scopes: 'class:researcher-read packages:read')).to be_valid
+      client = FactoryBot.build(:client, scopes: 'class:researcher-read everything')
+      expect(client).not_to be_valid
+      expect(client.errors[:scopes].first).to include('everything')
+    end
+
+    it "deletes the opaque grants a client had when it is given scopes" do
+      client = FactoryBot.create(:client)
+      grant = client.updated_grant_for(FactoryBot.create(:user), 1.hour)
+      client.update!(scopes: 'class:researcher-read')
+      expect(AccessGrant.exists?(grant.id)).to be false
+    end
+
+    it "cancels a client's pending codes when its scopes change" do
+      client = FactoryBot.create(:client, scopes: 'class:researcher-read class:researcher-run')
+      pending_code = AccessGrant.create!(client: client, user: FactoryBot.create(:user), issue_code: true, scope: 'class:researcher-run')
+      client.update!(scopes: 'class:researcher-read')
+      expect(AccessGrant.exists?(pending_code.id)).to be false
+    end
+
+    it "keeps pending codes when a save changes nothing but the scopes' spelling" do
+      unscoped = FactoryBot.create(:client)
+      unscoped_code = AccessGrant.create!(client: unscoped, user: FactoryBot.create(:user), issue_code: true)
+      unscoped.update!(scopes: '', name: 'renamed')
+      scoped = FactoryBot.create(:client, scopes: 'class:researcher-read class:researcher-run')
+      scoped_code = AccessGrant.create!(client: scoped, user: FactoryBot.create(:user), issue_code: true)
+      scoped.update!(scopes: ' class:researcher-run  class:researcher-read ')
+      expect(AccessGrant.exists?(unscoped_code.id)).to be true
+      expect(AccessGrant.exists?(scoped_code.id)).to be true
+      expect(unscoped.reload.scopes).to be_nil
+    end
+
+    it "is scoped only with at least one capability" do
+      expect(FactoryBot.build(:client, scopes: '').scoped?).to be false
+      expect(FactoryBot.build(:client, scopes: 'portal-api').scoped?).to be true
+    end
+  end
 end

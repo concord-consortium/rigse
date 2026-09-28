@@ -267,6 +267,11 @@ Parameters:
     Default: ""
     Description: Optional JSON object of kid to public key PEM, for tokens signed by the previous key during a rotation.
 
+  ReportServerURL:
+    Type: String
+    Default: ""
+    Description: Base URL of report-server, which is the audience of a scoped token carrying packages:read (https://report-server.concordqa.org for staging).
+
   EnableALBAccessLogs:
     Type: String
     Default: "false"
@@ -279,6 +284,7 @@ Parameters:
 
 Conditions:
   PortalPagesLibraryDefined: !Not [!Equals [!Ref PortalPagesLibraryVersion, ""]]
+  ReportServerURLDefined: !Not [!Equals [!Ref ReportServerURL, ""]]
   PortalSigningKeyDefined: !Not [!Equals [!Ref PortalSigningKey, ""]]
   PortalSigningKeyIdDefined: !Not [!Equals [!Ref PortalSigningKeyId, ""]]
   PortalPreviousVerifyKeysDefined: !Not [!Equals [!Ref PortalPreviousVerifyKeys, ""]]
@@ -567,6 +573,11 @@ Resources:
             - Name: REPORT_SERVICE_SOURCE
               Value: !Ref ReportServiceSource
             - !If
+              - ReportServerURLDefined
+              - Name: REPORT_SERVER_URL
+                Value: !Ref ReportServerURL
+              - !Ref "AWS::NoValue"
+            - !If
               - PortalSigningKeyDefined
               - Name: PORTAL_SIGNING_KEY
                 Value: !Ref PortalSigningKey
@@ -812,6 +823,11 @@ Resources:
               Value: !Ref ReportServiceBearerToken
             - Name: REPORT_SERVICE_SOURCE
               Value: !Ref ReportServiceSource
+            - !If
+              - ReportServerURLDefined
+              - Name: REPORT_SERVER_URL
+                Value: !Ref ReportServerURL
+              - !Ref "AWS::NoValue"
             - !If
               - PortalSigningKeyDefined
               - Name: PORTAL_SIGNING_KEY

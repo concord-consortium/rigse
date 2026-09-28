@@ -16,6 +16,14 @@ module PortalSigningKey
     ENV['PORTAL_SIGNING_KEY'].present? && ENV['PORTAL_SIGNING_KEY_ID'].present?
   end
 
+  # Configured, and the configured key actually parses as an RSA private key. A present but
+  # malformed PORTAL_SIGNING_KEY would otherwise look configured until the first signing.
+  def self.usable?
+    configured? && private_key.private?
+  rescue SignedJwt::Error
+    false
+  end
+
   def self.kid
     ENV['PORTAL_SIGNING_KEY_ID'].presence ||
       raise(SignedJwt::Error, 'No portal signing key id (PORTAL_SIGNING_KEY_ID) found in environment')

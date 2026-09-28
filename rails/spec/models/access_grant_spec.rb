@@ -138,8 +138,10 @@ describe AccessGrant do
       end
 
       mismatched_pairs = [
-        {client_type: Client::CONFIDENTIAL, response_type: "token"},
-        {client_type: Client::PUBLIC,       response_type: "code"}
+        {client_type: Client::CONFIDENTIAL, response_type: "token", error: "unauthorized_client"},
+        # a public client may use the code flow only with PKCE, so without a challenge the
+        # request is malformed rather than unauthorized (RFC 7636 4.4.1)
+        {client_type: Client::PUBLIC,       response_type: "code",  error: "invalid_request"}
       ]
       mismatched_pairs.each do |pair|
         context "when response_type is '#{pair[:response_type]} and client_type is '#{pair[:client_type]}''" do
@@ -163,7 +165,7 @@ describe AccessGrant do
             it { should_not be_valid }
 
             it "should return an error_redirect" do
-              expect(subject.error_redirect).to eq("http://test.com?error=unauthorized_client")
+              expect(subject.error_redirect).to eq("http://test.com?error=#{pair[:error]}")
             end
           end
         end
@@ -235,6 +237,15 @@ describe AccessGrant do
         AccessGrant.prune!
         expect(AccessGrant.exists?(stale.id)).to be false
         expect(AccessGrant.exists?(live.id)).to be true
+      end
+    end
+
+    describe "#validate_oauth_authorize for a public client using PKCE" do
+      it "accepts the code flow with an S256 challenge" do
+        FactoryBot.create(:client, app_id: 'pkce-client', client_type: Client::PUBLIC, redirect_uris: "http://test.com")
+        result = AccessGrant.validate_oauth_authorize(client_id: 'pkce-client', response_type: "code", redirect_uri: "http://test.com",
+                                                      code_challenge: 'c' * 43, code_challenge_method: 'S256')
+        expect(result).to be_valid
       end
     end
 

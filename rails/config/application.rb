@@ -116,6 +116,9 @@ module RailsPortal
         resource '/api/v1/classes/*', :headers => :any, :methods => [:get, :put, :post]
         resource '/api/v1/students/join_class', :headers => :any, :methods => [:post]
         resource '/api/v1/jwt/*', :headers => :any, :methods => [:get]
+        # the OAuth token endpoint, for public clients (PKCE) exchanging a code from the browser;
+        # the code and verifier, not the origin, authenticate the request
+        resource '/oauth/token', :headers => :any, :methods => [:post]
         resource '/api/v1/bookmarks', :headers => :any, :methods => [:post]
         resource '/api/v1/bookmarks/*', :headers => :any, :methods => [:put, :delete]
       end
