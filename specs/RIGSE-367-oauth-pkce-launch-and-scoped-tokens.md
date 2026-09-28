@@ -1,37 +1,14 @@
 # RIGSE-367: OAuth2 PKCE launch and capability-scoped portal tokens
 
 **Jira**: https://concord-consortium.atlassian.net/browse/RIGSE-367
-**Repo**: https://github.com/concord-consortium/rigse
-**Implementation Spec**: [implementation.md](implementation.md)
-**Status**: **In Development**
+
+**Status**: **Closed**
 
 ## Overview
 
 rigse gains an RS256 signing key, an OAuth2 authorization code flow with PKCE for browser apps, and a capability convention for limiting what a token may do, so the Researcher Dashboard can be launched as an ordinary `ExternalReport` and obtain a short-lived token bound to one class without any token ever appearing in a URL. The same key signs the two service-to-service assertions the dashboard's later stories need, and RIGSE-352's minted tokens move onto the same capability convention.
 
-## Project Owner Overview
-
-Researchers open the Researcher Dashboard from a link on each class in the Research Classes table. The link now carries only which class was opened; the dashboard then asks the portal for access the standard OAuth2 way, the portal checks that the researcher may see that class, and the dashboard receives a credential that works only for that class and only for the things the dashboard is registered to do. Nothing that grants access ever sits in the address bar, browser history, a pasted link or a server log, and a link someone else sends a researcher cannot plant another person's credential on them.
-
-The dashboard stops being hardcoded into the portal. It is configured by an administrator as an external report with an OAuth client, the same way the class dashboard and portal report are, so enabling it in an environment, or adding a similar app later, is an admin change rather than a code change or a stack update. The work also fixes long-standing weaknesses in the portal's OAuth code flow that affect every existing OAuth client, and gives the portal one consistent way to say "this token may only do these things", which the OIDC-minted service tokens of RIGSE-352 now use too.
-
-## Background
-
-**Where this story came from.** RIGSE-367 was first implemented as PR #1487 (branch `RIGSE-367-portal-signing-key`): an RS256 key, a `researcher-dashboard` launch token carried in the dashboard URL's query string for two hours, `aud` values naming the app that held each token, and a dedicated launch route gated on `RESEARCHER_DASHBOARD_URL`. scytacki, the org's architect, requested changes on 2026-09-26 with five concerns: the token in the URL (RFC 6750 advises against it, and there was no `state` protection against planted tokens); `aud` naming the holding app rather than the recipient; the dashboard hardcoded in the portal where `ExternalReport` exists for exactly this; a second, opposite convention for limiting token reach beside RIGSE-352's; and new users for `check_for_auth_token`, which `docs/portal-authentication-unification-design.md` plans to delete. This spec implements his "Preferred direction" in full, as one PR that replaces #1487, on the branch `RIGSE-367-oauth-pkce-scoped-tokens` from `master`. Where the Jira story's text or `final-design.md` sections 4 and 11.1 describe the superseded launch, this spec wins; the global oob doc `researcher-dashboard/fy26-sprint-26.md` records the redesign under RIGSE-367 and its effect on the other stories.
-
-**What the review kept.** The signing key, routing by `kid`, the pinned algorithm, key objects rather than PEM strings, rotation, the `portal_signing_key:public` task, the researcher gate (`can_be_researcher_for_clazz?` and the batched `researcher_clazz_ids`), binding the token to one class and the `jwt/firebase` class-match check, keeping scoped tokens out of Rails sessions, and the `report-server` and `report-service-functions` assertions with their claim sets. None of this is on `master`: the branch starts from `master`, so it is written again here, informed by #1487's code and its closed spec (`specs/RIGSE-367-the-portal-signing-key-and-the-scoped-launch-token.md` on the old branch), whose verified findings (the `jwt` gem's alg-confusion and `aud`-array behaviour, the `REPORT_SERVICE_BEARER_TOKEN` finding, the `spec_helper` key setup, the `!If` stack-parameter pattern) carry over.
-
-**Decisions scytacki's review left open, taken with the defaults proposed to him** (Doug, 2026-09-28): the app names the class on the authorize request as `context=class:<id>`; the launch link carries `authDomain`, which the app checks against an allowlist in its build; and `run_package` gets its own capability, `class:researcher-run`, beside `class:researcher-read`. His open questions are answered as: this PR takes the preferred direction (Q1); `/oauth/token` returns the RS256 JWT, because report-server verifies it with the public key and never looks anything up (Q2); the scopes field lives on `Client`, which is all the token endpoint knows (Q3); RIGSE-368 needs `class:researcher-read` and `class:researcher-run` (Q4); and the per-token `store?` change lands in this PR (Q5).
-
-**One addition to his design.** The dashboard's token has two recipients, not one: the app presents it to report-server's catalog (`GET /api/v1/packages`), and RIGSE-368 forwards it to report-server's resolve. So its `aud` is a list naming rigse and report-server (JWT allows a list, RFC 7519 §4.1.3), and it carries a report-server capability, `packages:read`. report-server's identifier in the list is its URL, deliberately not the string `report-server` that the mint assertion's `aud` uses, so an access token can never pass report-server's assertion check.
-
-**What `master` has today** (verified in the code):
-- **The OAuth provider** is `AuthController#oauth_authorize` and `#access_token` over `AccessGrant` and `Client` rows. Public clients may use only the implicit flow and confidential clients only the code flow (`AccessGrant.matching_response_type`, `access_grant.rb:36`). `grant_type` is never read, there is no PKCE, no scope and no refresh.
-- **Code-flow defects** scytacki listed, all confirmed: a code is redeemable any number of times, each redemption pushing the expiry out a week (`access_grant.rb:21`, `auth_controller.rb:95-101`); an unredeemed code never expires and `prune!` never deletes it (`access_grant.rb:18`); `/oauth/token` and `/auth/concord_id/access_token` accept GET (`routes.rb:13,16`); `/oauth/token` has no CORS entry (`application.rb:102-116`); and `User.find_for_token_authentication` trusts a grant whose expiry is NULL (`user.rb:18-25`, with scytacki's 2015 comment saying so). **The last is worse than listed**: `generate_tokens` gives every grant an `access_token` at creation (`access_grant.rb:110`), including a code-flow grant whose code has not been redeemed and whose expiry is NULL, so that token is a working bearer, through `bearer_token_authenticatable` and through `?access_token=` via `token_authenticatable`, from the moment the code is issued, indefinitely. `check_for_auth_token` refuses it only by accident, with a `NoMethodError` on `nil >= Time` (`api_controller.rb:66`).
-- **Authentication paths.** Devise runs `token_authenticatable`, `bearer_token_authenticatable`, `jwt_bearer_token_authenticatable` and `oidc_bearer_token_authenticatable` (`user.rb:9`). The JWT strategy decodes HS256 portal tokens only and copies RIGSE-352's marker into `Current` (`lib/jwt_bearer_token_authenticatable.rb:8-27`). None overrides `store?`, and `config.skip_session_storage` is `[:http_auth]`, so a JWT bearer becomes a Rails session (RIGSE-352's D10 gap). Devise 4.9.4's `Authenticatable#store?` is an instance method Warden reads after `authenticate!` (`opts.fetch(:store, winning_strategy.store?)`, warden `proxy.rb:338`), so it can decide per token. `API::APIController#check_for_auth_token` decodes the bearer itself for `JwtController` (`api_controller.rb:26-83`).
-- **RIGSE-352's guards**: `confine_service_minted_tokens` refuses a marked token outside `API::APIController` (`application_controller.rb:71-83`); `JwtController#reject_credential_issuing_callers` refuses OIDC callers (D1) and marked callers (D9) (`jwt_controller.rb:14-21`); `AccessGrant#refuse_service_minted_tokens` blocks grant creation while the marker is set (D11 rule 2, `access_grant.rb:113-117`); `create_portal_token` copies the marker into any token minted during a marked request (`signed_jwt.rb:22-23`). Minted tokens live one hour (`PortalTokenClaims::STANDARD_TTL`).
-- **`ExternalReport`** has `url`, `name`, `launch_text`, `client_id`, `report_type` (`offering`, `class`, `researcher-learner`, `researcher-user`) and `supports_researchers` (`schema.rb:351-368`). `url_for_class` puts a two-hour opaque `AccessGrant` token in the report URL's query (`external_report.rb:66-81`), launched by `Portal::ClazzesController#external_report` at `classes/:id/external_report/:report_id` behind `Portal::ClazzPolicy#external_report?`, which admits class teachers, admins, class researchers and class students (`clazz_policy.rb:60-62`). Class reports reach teachers only through the reports attached to a class's runnables (`Portal::Clazz#external_class_reports`); the Research Classes table (`research_classes_controller.rb#classes_mapping`, `researcher-classes-form/table.tsx`) lists no reports at all.
-- **The launch convention** for OAuth2 launches is `authDomain`, `resourceLinkId` and `loginHint` (`docs/specs/2026-03-06-oauth2-launch-design.md`), and `oauth_authorize` already renders the `login_hint` mismatch page (`auth_controller.rb:64-78`).
+RIGSE-367 was first implemented as PR #1487, whose launch token rode in the dashboard URL; scytacki, the org's architect, requested changes on 2026-09-26, and this spec implements his preferred direction as one PR that replaces #1487, on `RIGSE-367-oauth-pkce-scoped-tokens` from `master`. It was implemented on 2026-09-28 in six step commits and two gap-fix commits; the full rspec suite ran 3,093 examples with 0 failures, and the react-components jest suite 175 tests, all passing.
 
 ## Requirements
 
@@ -92,7 +69,7 @@ The dashboard stops being hardcoded into the portal. It is configured by an admi
 ### The OAuth code flow fixes (every client)
 
 - R28. An authorization code is redeemable exactly once, within 5 minutes of issue, and only by the client it was issued to. A second redemption, a late one, or one by another client is refused. Only a grant created by `response_type=code` has a redeemable code: grants created by the implicit flow and by `Client#updated_grant_for` get none, although `generate_tokens` gives every grant one today.
-- R28a. A confidential client redeeming a code that was issued for a `redirect_uri` must present the same one (RFC 6749 §4.1.3): a different one is refused at once. A missing one is accepted and logged with the client's name for one release, because the confidential clients that predate the check may not send it, and becomes a refusal in a follow-up once the logs show none. Codes issued before the deploy stored no `redirect_uri` and are not checked. Only confidential clients matter, since implicit-flow clients never redeem a code, and all but one are Concord's own apps, which the logs will show. The outside one is Model My Watershed (WikiWatershed/model-my-watershed): it sends `redirect_uri` on authorize but not on the token request (`src/mmw/apps/user/sso.py` `get_session_from_code` posts only `code` and `grant_type`, and rauth adds only the client id and secret), so it would break when a missing `redirect_uri` is refused. The follow-up waits on it: if its client is unused it is deleted; if it is used, a PR to Model My Watershed sends `redirect_uri` on the token request, and the refusal ships after their release (scytacki, 2026-09-28). It does POST to the token endpoint, so R30 does not affect it. **Checked 2026-09-28** in CloudWatch Logs Insights over the 90 days of authorize requests `learn-ecs-production` keeps (from 2026-06-30): only three clients use the code flow, and every other client is implicit-flow and never redeems a code. `authoring` (LARA, 504 authorizations) and `codap_document_store` (document-store, 31 authorize requests, all 2026-08-03 to 08-05, but none of them real use: each came from a different residential or mobile IP in a dozen countries, and each IP made exactly two requests, the authorize and the redirect to `/auth/login`, with no sign-in and no return, so no code was ever issued; CODAP v3 registers document-store as a CFM provider at `deprecationPhase: 3`, which disables every capability, so its portal client looks deletable, a cleanup outside this story) use `omniauth-oauth2` (1.3.0 and 1.1.2), whose `build_access_token` sends `redirect_uri: callback_url` on the token request and whose `callback_url` override leaves out the query string, so both send exactly the URI they authorized with; neither app's `Concord::AuthPortal` strategy (`lib/concord/auth_portal.rb` in each, a subclass of `OmniAuth::Strategies::OAuth2` that sets only its name, client options and user info) overrides `callback_url` or `build_access_token`. `model-my-watershed` is in use: 26 authorizations on production, the latest on 2026-09-27, and one from `staging.modelmywatershed.org`, so its client cannot simply be deleted, and the refusal of a missing `redirect_uri` waits on a Model My Watershed release that sends it.
+- R28a. *(partial: a mismatched `redirect_uri`, and a missing one for a PKCE code, are refused; refusing a missing one for other codes is deferred until Model My Watershed releases WikiWatershed/model-my-watershed PR #3731, which sends it)* A confidential client redeeming a code that was issued for a `redirect_uri` must present the same one (RFC 6749 §4.1.3): a different one is refused at once. A missing one is accepted and logged with the client's name for one release, because the confidential clients that predate the check may not send it, and becomes a refusal in a follow-up once the logs show none. Codes issued before the deploy stored no `redirect_uri` and are not checked. Only confidential clients matter, since implicit-flow clients never redeem a code, and all but one are Concord's own apps, which the logs will show. The outside one is Model My Watershed (WikiWatershed/model-my-watershed): it sends `redirect_uri` on authorize but not on the token request (`src/mmw/apps/user/sso.py` `get_session_from_code` posts only `code` and `grant_type`, and rauth adds only the client id and secret), so it would break when a missing `redirect_uri` is refused. The follow-up waits on it: if its client is unused it is deleted; if it is used, a PR to Model My Watershed sends `redirect_uri` on the token request, and the refusal ships after their release (scytacki, 2026-09-28). It does POST to the token endpoint, so R30 does not affect it. **Checked 2026-09-28** in CloudWatch Logs Insights over the 90 days of authorize requests `learn-ecs-production` keeps (from 2026-06-30): only three clients use the code flow, and every other client is implicit-flow and never redeems a code. `authoring` (LARA, 504 authorizations) and `codap_document_store` (document-store, 31 authorize requests, all 2026-08-03 to 08-05, but none of them real use: each came from a different residential or mobile IP in a dozen countries, and each IP made exactly two requests, the authorize and the redirect to `/auth/login`, with no sign-in and no return, so no code was ever issued; CODAP v3 registers document-store as a CFM provider at `deprecationPhase: 3`, which disables every capability, so its portal client looks deletable, a cleanup outside this story) use `omniauth-oauth2` (1.3.0 and 1.1.2), whose `build_access_token` sends `redirect_uri: callback_url` on the token request and whose `callback_url` override leaves out the query string, so both send exactly the URI they authorized with; neither app's `Concord::AuthPortal` strategy (`lib/concord/auth_portal.rb` in each, a subclass of `OmniAuth::Strategies::OAuth2` that sets only its name, client options and user info) overrides `callback_url` or `build_access_token`. `model-my-watershed` is in use: 26 authorizations on production, the latest on 2026-09-27, and one from `staging.modelmywatershed.org`, so its client cannot simply be deleted, and the refusal of a missing `redirect_uri` waits on a Model My Watershed release that sends it.
 - R29. A grant's opaque `access_token` authenticates only when its expiry is set and in the future, on every path (`bearer_token_authenticatable`, `token_authenticatable`'s `?access_token=`, `check_for_auth_token`). An unredeemed code-flow grant's token authenticates no one, and `check_for_auth_token` refuses a NULL expiry as an ordinary refusal rather than a `NoMethodError`.
 - R30. `/oauth/token` and `/auth/concord_id/access_token` accept POST only. `/oauth/token` has a CORS entry allowing POST from any origin without credentials, since the code and verifier, not the origin, authenticate the request.
 - R31. `prune!` also removes code-flow grants whose code expired unredeemed.
@@ -113,7 +90,7 @@ The dashboard stops being hardcoded into the portal. It is configured by an admi
 
 ### The Researcher Dashboard as an ExternalReport
 
-- R40. The dashboard is configured per environment as data, not code: an `ExternalReport` with `report_type: "class"`, `supports_researchers: true`, its `url`, `name` and `launch_text`, linked to a public `Client` whose scopes are `class:researcher-read class:researcher-run packages:read` and whose `redirect_uris` hold the dashboard's URL. There is no `RESEARCHER_DASHBOARD_URL`, no dashboard-specific route or action, and no dashboard name in rigse's code. The README documents the two rows an administrator creates, and the settings (R46) they depend on.
+- R40. *(the two admin rows are created per environment at release)* The dashboard is configured per environment as data, not code: an `ExternalReport` with `report_type: "class"`, `supports_researchers: true`, its `url`, `name` and `launch_text`, linked to a public `Client` whose scopes are `class:researcher-read class:researcher-run packages:read` and whose `redirect_uris` hold the dashboard's URL. There is no `RESEARCHER_DASHBOARD_URL`, no dashboard-specific route or action, and no dashboard name in rigse's code. The README documents the two rows an administrator creates, and the settings (R46) they depend on.
 - R41. `ExternalReport#url_for_class`, for a report whose client has scopes, creates no grant and adds no token: it appends `authDomain` (the portal's root URL, built from the request's protocol and host as `root_url` is for an ExternalActivity OAuth2 launch, `offerings_controller.rb:73`), `classId` (the class's integer id) and `loginHint` (the user's id), and nothing else, ignoring `researcher`. Reports whose client has no scopes launch exactly as today.
 - R42. `GET /api/v1/research_classes` rows carry `external_reports: [{id, name, launch_text, url}]`, listing every `ExternalReport` with `report_type: "class"` and `supports_researchers: true`, with `url` the existing `classes/:id/external_report/:report_id` launch carrying `researcher=true` (which an unscoped report already reads, through `url_for_class`'s `additional_params[:researcher]`, and a scoped one ignores), only when the current user passes the researcher gate for that class. The gate is evaluated once for the whole list through `User#researcher_clazz_ids`.
 - R43. The Research Classes table renders each of a row's `external_reports` as a link, labelled with its `launch_text` or, when blank, its `name`, beside "View Roster".
@@ -143,6 +120,44 @@ The dashboard stops being hardcoded into the portal. It is configured by an admi
 - **Admin.** `Admin::ClientsController` permits `app_id, app_secret, client_type, domain_matchers, name, redirect_uris, site_url` (`admin/clients_controller.rb:72`) and renders them in `app/views/admin/clients/_form.html.haml` and `_show.html.haml`; `scopes` joins them.
 - **Test setup** carries over from #1487: `spec_helper.rb` requires `openssl` before generating a test keypair and setting the signing-key environment, since it runs before Rails loads.
 
+### As built
+
+Implemented on 2026-09-28, one commit per step, each through a `cc-code-review` pass until it reported nothing actionable. Departures from the plan and review decisions, by step:
+
+#### The portal signing key and the RS256 tokens
+
+- **Departure: `create_access_token` guards its own `aud`.** The review found that nothing stopped a caller passing an assertion audience into an access token's `aud` list, which R9a forbids, and that step 1's specs built access tokens by hand instead of through the real encoder. `create_access_token` now raises `SignedJwt::Error` unless the list starts with `site_url` and names neither `report-server` nor `report-service-functions`, and the specs run it through `decode_portal_token` (claims, `typ`, `kid`, a fresh `jti`, `context` present only when given) and check each refused list.
+- **Rejected: shorten `PortalSigningKey`'s header comment.** The review called it a duplicate of the README. It is #1487's header, which scytacki reviewed, and it carries the two facts a reader of the code most needs there: the literal `\n` form of the key and that staging and production must never share a keypair.
+
+#### Capabilities and the scoped-token check
+
+- **Departure: one Authorization-header parser for all three readers.** The review found, and confirmed with a probe, that the global check matched `Bearer <jwt>` and `Bearer/JWT <jwt>` with exactly one space while `check_for_auth_token` accepted any whitespace, so a scoped or service-minted token sent as `Bearer<TAB><jwt>` or with two spaces passed the global check unseen and was then accepted by `check_for_auth_token` as a full-user credential on every API action, including `jwt/portal`. `PortalBearer.raw_token` is now the only parser: the global check, the Devise JWT strategy's `jwt_token_value` and `check_for_auth_token`'s `extract_bearer_token` all call it. Specs send the three padded forms to an undeclared action and a marked token with a tab to `jwt/portal`, all refused; restoring the single-space pattern fails both.
+- **Comments name what they describe, not the ticket:** references to "RIGSE-352" in the new code comments were reworded (the service-mint marker, oidc_mint, Warden's lazy authentication), and the comments in `routes.rb`, `mounted_engines_spec.rb` and the confinement spec that still named the deleted `confine_service_minted_tokens` now name `enforce_token_capabilities`.
+
+#### The OAuth code-flow fixes
+
+- **Departure: the implicit flow's redirect is logged as `[FILTERED]`.** The review found that R47b was not met by `filter_parameters` alone: Rails logs `Redirected to <location>` from `response.filtered_location`, which filters a Location's query string but never its fragment, and the implicit flow puts a week-long access token in the fragment (`#access_token=…`). `config.filter_redirect << /[#&]access_token=/` makes Rails log such a redirect as `[FILTERED]`; the spec checks that and that a code-flow redirect still logs with only `code` filtered.
+- **Tests added for two behaviours the step had none for:** `check_for_auth_token` refusing a grant whose expiry was never set as an expired grant (R29), and a routing spec that both token routes answer POST and are not routable by GET (R30).
+
+#### PKCE and scoped clients
+
+- **Departure: a malformed `code_challenge` is refused at authorize.** The review found that only presence and `code_challenge_method` were checked, so a 300-character challenge reached the 255-character column and raised `ActiveRecord::ValueTooLong`, a 500 for the user. A challenge must now match RFC 7636's 43 to 128 unreserved characters (`AccessGrant::PKCE_VALUE`, which the verifier check shares) or authorize answers `invalid_request` with `state`.
+- **Departure: a change of a client's scopes cancels what it no longer covers.** R33a was enforced only when a grant was created, so an existing client an admin gives scopes kept its implicit-flow or report grants, usable as full-user tokens for up to a week, and a code issued before a scope change redeemed under the old scope for up to five minutes. A save that changes a client's scopes now deletes its pending codes, and, when it leaves the client scoped, every grant holding an opaque token; and the token endpoint signs only the capabilities the grant and the client still share, answering `invalid_grant` when none remain.
+- **Tests added:** a public client without scopes redeeming a PKCE code for an opaque one-week token (and refused without a challenge), a scoped confidential client redeeming with its secret and no PKCE, and a `code_challenge` sent as an array refused as `invalid_request` rather than raising.
+
+#### The Researcher Dashboard as an ExternalReport
+
+- **Departure: project admins may follow a class report's launch link.** The review found that the Research Classes rows list class reports for every class the researcher gate admits, which includes the class's project admins, while `Portal::ClazzPolicy#external_report?` admitted teachers, site admins, class researchers and class students but not project admins, so a project admin who is not a researcher saw a "Researcher Dashboard" link that answered not authorized. `external_report?` now also admits `class_project_admin?`, as `materials?` and `roster?` already do for the same role. This widens every class report's launch, not only the dashboard's, to a role that already has full access to the class's student data (`has_full_access_to_student_data?`); the launch still grants nothing a scoped report's authorize step does not check again.
+- **Test added:** a Research Classes row whose class fails the researcher gate lists no reports even when one supports researchers.
+
+#### After the six steps: comparing the code with both specs
+
+A requirement-by-requirement comparison found every requirement implemented and no code contradicting one. It found two code gaps and several untested behaviours, which one further commit closes:
+
+- **Departure: a confidential client's PKCE code needs its `redirect_uri`.** R37 requires an identical `redirect_uri` for a code issued with a challenge, but the confidential path's one-release leniency (R28a) also let such a code redeem without one. A client that sends a challenge is new to this flow, so the leniency no longer applies to it.
+- **`Portal::LearnersController#report` answers 404 for a scoped client's report**, as the offering routes do. It launches the offering's default report through `url_for_offering`, which raises for a scoped client; only an admin who made a scoped report an offering's default could reach it.
+- **Tests added:** a context the scope does not take, or a malformed one (`invalid_request` with `state`); another client's code, on both paths; a narrowed scope signing only what remains and `invalid_grant` when nothing does; the class launch route end to end, redirecting with `authDomain`, `classId` and `loginHint` and creating no grant; `authDomain` from `request.protocol`'s `"https://"`; an RS256 token with no `kid`; the admin form saving normalised scopes; and a Jest test of the table's report links. Not added: specs for the two rake tasks (a key generator and a printer) and assertions on the `server_error` log lines.
+
 ## Out of Scope
 
 - The dashboard app's PKCE client, its `authDomain` allowlist, its handling of `classId` and `loginHint`, and re-authorizing when the token expires: RD-3.
@@ -156,9 +171,17 @@ The dashboard stops being hardcoded into the portal. It is configured by an admi
 - The legacy token response's `expires_in` (it reports `Devise.timeout_in`, 90 minutes, while the grant lives a week) and its 200-with-`error` failure shape, both unchanged.
 - The researcher materials page never showing class reports, because `API::V1::ClassesController` omits `supports_researchers` from `external_class_reports` (`classes_controller.rb:165-172`): a latent bug noticed here and left for its own fix.
 
-## Open Questions
+## Not Yet Implemented
 
-### RESOLVED: Judgment call: where the access token's report-server audience comes from
+- Refusing a confidential client's code redemption that sends no `redirect_uri` (other than for a PKCE code, which is refused now) — deferred until Model My Watershed, the one code-flow client that omits it, releases WikiWatershed/model-my-watershed PR #3731; until then the portal logs each such redemption with the client's name (R28a).
+- Creating the Researcher Dashboard's `Client` and `ExternalReport` rows in each environment, and setting `PortalSigningKey`, `PortalSigningKeyId` and `ReportServerURL` on each stack — release and admin steps (R40, R46), documented in the README.
+- Release steps: run `AccessGrant.prune!` from a console straight after deploying (the first authorize would otherwise delete every unredeemed code ever issued inside a user's request); check which production class reports have `supports_researchers` set, since they will appear on Research Classes and project admins may now open them; and run the GET-callers check on any production portal other than learn.concord.org before its deploy.
+- Specs for the two `portal_signing_key` rake tasks, and assertions on the `server_error` log lines (R6, R39) — not added.
+- The `codap_document_store` portal client had no real use in 90 days and looks deletable — a cleanup outside this story, pending an owner's decision.
+
+## Decisions
+
+### Judgment call: where the access token's report-server audience comes from
 **Context**: The token needs an `aud` entry naming report-server, and something has to map a capability to its audience.
 **Options considered**:
 - A) A code registry maps each capability to its audience; report-server's is `REPORT_SERVER_URL`, which RIGSE-368 needs anyway.
@@ -167,7 +190,8 @@ The dashboard stops being hardcoded into the portal. It is configured by an admi
 
 **Decision**: A. Capabilities are declared by controllers in code, so their audiences belong in the same registry; B duplicates what the scopes already imply, and C would let an access token pass report-server's mint-assertion audience check.
 
-### RESOLVED: Judgment call: keep Warden's session precedence
+---
+### Judgment call: keep Warden's session precedence
 **Context**: A request with both a session and a scoped bearer is authenticated by the session, so `current_user` does not carry the bearer's scope.
 **Options considered**:
 - A) Keep Warden's behaviour and document it.
@@ -175,7 +199,8 @@ The dashboard stops being hardcoded into the portal. It is configured by an admi
 
 **Decision**: A. B would change authentication for every existing same-origin caller that sends a bearer alongside its cookie. Since the self-review, the global check reads the bearer itself (R14), so the ceiling applies regardless of which credential Warden chose.
 
-### RESOLVED: Judgment call: the gate runs at authorize, not at the launch link
+---
+### Judgment call: the gate runs at authorize, not at the launch link
 **Context**: `external_report?` admits class teachers and students too, so a non-researcher could follow a scoped report's launch link.
 **Options considered**:
 - A) Leave the launch action's policy as it is; the researcher gate runs at authorize (R36), and only researchers see the link (R42).
@@ -183,7 +208,8 @@ The dashboard stops being hardcoded into the portal. It is configured by an admi
 
 **Decision**: A. The link now carries nothing but a class id, so following it grants nothing; the authorize step is the only place a credential is issued and the only gate that matters, and B would add a dashboard-shaped branch to a generic action.
 
-### RESOLVED: Low confidence: production may already have class reports with `supports_researchers` set
+---
+### Low confidence: production may already have class reports with `supports_researchers` set
 **Context**: R42 lists every class-type report that supports researchers on every Research Classes row. If production has such reports today (for example the class dashboard), they will appear there alongside the Researcher Dashboard, which changes a page researchers use. This could not be checked from here.
 **Options considered**:
 - A) List every class report that supports researchers (R42 as written), accepting that existing ones appear.
@@ -192,7 +218,8 @@ The dashboard stops being hardcoded into the portal. It is configured by an admi
 
 **Decision**: A. It is scytacki's design as written ("the Research Classes table would list class reports that support researchers"), and `supports_researchers` is exactly a report's claim that it handles a researcher launch, so a class report carrying it appearing for researchers is the intended outcome rather than a side effect; today such a report reaches no researcher at all, because the materials page's class-report JSON omits the flag (Out of Scope). B would make the list depend on how the client authenticates, which is not what the flag means. The row's launch URL carries `researcher=true` so an unscoped report launches in researcher mode (R42). No local or repository data shows production's rows (the local database has no `external_reports` or `clients`), so the release checks production's class reports with the flag set and says in the PR which will appear.
 
-### RESOLVED: Low confidence: making the token endpoint POST-only may break an existing client
+---
+### Low confidence: making the token endpoint POST-only may break an existing client
 **Context**: R30 makes `/oauth/token` and `/auth/concord_id/access_token` POST-only, as scytacki asked. `omniauth-oauth2` defaults to POST, but a client configured for GET would stop being able to log in, and production's clients could not be checked from here.
 **Options considered**:
 - A) POST-only for both routes (R30 as written).
@@ -201,7 +228,8 @@ The dashboard stops being hardcoded into the portal. It is configured by an admi
 
 **Decision**: A. scytacki named it a defect; RFC 6749 §3.2 requires POST; both routes are the same action, so leaving one on GET keeps the defect under another name; and a GET carries the client secret or verifier in the query, which is the URL-exposure problem this story exists to remove. The only GET caller in the repository is the auto-generated `auth_controller_spec.rb` example (`GET access_token`), which changes with it. The release was to check the portal's access logs for GET requests to either route before deploying, which is C's information without C's extra release. Checked on 2026-09-28 in CloudWatch Logs Insights against learn.concord.org's production portal log group (`learn-ecs-production`, account `612297603577`): over the preceding 90 days, no request reached either token route by GET (the one `Started GET "/oauth/token...` line was `/oauth/token/info`, an unrouted scanner probe from `45.148.10.20` on 2026-09-02), while the last week alone logged 49 token exchanges by POST (2026-09-21 to 2026-09-28), so the query demonstrably sees token traffic. No other of the account's 182 log groups carried token traffic. A production portal logging to another account would need the same check before its own deploy.
 
-### RESOLVED: How long does an authorization code live?
+---
+### How long does an authorization code live?
 **Context**: R28 says 5 minutes. RFC 6749 §4.1.2 recommends at most 10; the dashboard redeems immediately, and existing confidential clients redeem server-side within a second or two.
 **Options considered**:
 - A) 5 minutes.
@@ -210,7 +238,8 @@ The dashboard stops being hardcoded into the portal. It is configured by an admi
 
 **Decision**: A, 5 minutes, in one named constant. Every client redeems immediately, so the lifetime only has to cover a slow redirect and clock skew between the portal's hosts; 5 minutes is inside the RFC's recommendation with room for both, and single use (R28) is what actually stops replay.
 
-### RESOLVED: Error shape on the token endpoint's existing path
+---
+### Error shape on the token endpoint's existing path
 **Context**: R37 gives the new PKCE and scoped path RFC 6749 §5.2 errors with 4xx statuses. The existing confidential path answers 200 with `{"error": "Could not find application"}`; clients may depend on that.
 **Options considered**:
 - A) RFC errors on the new path only; the existing path is unchanged.
@@ -218,7 +247,8 @@ The dashboard stops being hardcoded into the portal. It is configured by an admi
 
 **Decision**: A. The new path has no existing callers, so it can be correct from the start, while existing confidential clients (LARA and others via `omniauth-oauth2`) have a live contract whose failure handling could not be checked from here; changing it buys nothing this story needs. It is listed in Out of Scope beside the legacy `expires_in`.
 
-### RESOLVED: What happens to `packages:read` without `REPORT_SERVER_URL`?
+---
+### What happens to `packages:read` without `REPORT_SERVER_URL`?
 **Context**: The first draft dropped it silently from the granted scope, so the app would learn only from the response's `scope`, or from a 401 at report-server.
 **Options considered**:
 - A) Drop it from the granted scope (R39 as written).
@@ -227,71 +257,138 @@ The dashboard stops being hardcoded into the portal. It is configured by an admi
 
 **Decision**: B, as `server_error` rather than `invalid_scope`, since the request is valid and the portal is misconfigured (R39). A hands the app a token that fails later somewhere else, which is the "every failure looks identical" problem RIGSE-368 exists to avoid; C checks configuration at the wrong time, since an environment variable can change after the row is saved.
 
-## Self-Review
+---
+### A global check that forces authentication would start storing sessions on API endpoints
+**Context**: RIGSE-352's `confine_service_minted_tokens` forces `current_user` only outside `API::APIController` (`application_controller.rb:71-80`), and the JWT strategy stores a session for every token (no `store?` override; `skip_session_storage` is `[:http_auth]`). A global check forcing authentication on every request would therefore create Rails sessions for HS256 bearers on API endpoints that never touched `current_user` before.
 
-Roles: Security Engineer, OAuth and standards reviewer, Senior Rails Engineer, QA Engineer, DevOps and release, Education Researcher (the researcher's launch). Each finding below was checked against the code before being written; findings that did not survive were dropped (the `MiscController` bypass of `ApplicationController`'s filters, whose only authenticated action is a redirect; Devise's controllers bypassing the global check, which they do not, since they inherit `ApplicationController`).
+**Decision**: Fixed in R14 and R18: the check reads the bearer through the shared decoder without going through Warden, which also makes the ceiling apply when a session is present too.
 
-### Senior Rails Engineer
+---
 
-#### RESOLVED: A global check that forces authentication would start storing sessions on API endpoints
-RIGSE-352's `confine_service_minted_tokens` forces `current_user` only outside `API::APIController` (`application_controller.rb:71-80`), and the JWT strategy stores a session for every token (no `store?` override; `skip_session_storage` is `[:http_auth]`). A global check forcing authentication on every request would therefore create Rails sessions for HS256 bearers on API endpoints that never touched `current_user` before. Fixed in R14 and R18: the check reads the bearer through the shared decoder without going through Warden, which also makes the ceiling apply when a session is present too.
+### Authorize error redirects drop `state`
+**Context**: `ValidationResult#error` builds its redirect with `error:` alone (`access_grant.rb:30-33`). RFC 6749 §4.1.2.1 requires `state` on an error response when the request carried one, and a PKCE client that validates `state` would reject every genuine error.
 
-### OAuth and standards reviewer
+**Decision**: Fixed with R35a, for every error redirect, since adding a parameter an existing client ignores changes nothing for it.
 
-#### RESOLVED: Authorize error redirects drop `state`
-`ValidationResult#error` builds its redirect with `error:` alone (`access_grant.rb:30-33`). RFC 6749 §4.1.2.1 requires `state` on an error response when the request carried one, and a PKCE client that validates `state` would reject every genuine error. Fixed with R35a, for every error redirect, since adding a parameter an existing client ignores changes nothing for it.
+---
 
-### Security Engineer
+### Every grant carries a code, not only code-flow grants
+**Context**: `generate_tokens` (`access_grant.rb:110`) gives the implicit flow's grants and `Client#updated_grant_for`'s report grants a `code` too. They are never handed out, but R28 as first written made "a code" redeemable by its client without saying which grants have one.
 
-#### RESOLVED: Every grant carries a code, not only code-flow grants
-`generate_tokens` (`access_grant.rb:110`) gives the implicit flow's grants and `Client#updated_grant_for`'s report grants a `code` too. They are never handed out, but R28 as first written made "a code" redeemable by its client without saying which grants have one. Fixed in R28: only `response_type=code` grants have a redeemable code.
+**Decision**: Fixed in R28: only `response_type=code` grants have a redeemable code.
 
-### DevOps and release
+---
 
-#### RESOLVED: Enabling the dashboard is admin data with nowhere written down
-R40 moves the dashboard from a stack parameter to two admin rows, but only the settings were documented (R46), so an operator enabling an environment had no record of which rows and field values to create. Fixed in R40: the README documents the rows and the settings they depend on.
+### Enabling the dashboard is admin data with nowhere written down
+**Context**: R40 moves the dashboard from a stack parameter to two admin rows, but only the settings were documented (R46), so an operator enabling an environment had no record of which rows and field values to create.
 
-### Education Researcher
+**Decision**: Fixed in R40: the README documents the rows and the settings they depend on.
 
-#### RESOLVED: `authDomain`'s source was unstated
-R41 said "the portal's root URL" without saying which, while the existing OAuth2 launch passes `root_url` from the request (`offerings_controller.rb:73`). Fixed in R41 to match, so a portal reached under more than one host sends the researcher back to the host they used.
+---
 
-### scytacki's answers to the design page (2026-09-28)
+### `authDomain`'s source was unstated
+**Context**: R41 said "the portal's root URL" without saying which, while the existing OAuth2 launch passes `root_url` from the request (`offerings_controller.rb:73`).
 
-Doug published a design page for scytacki (https://claude.ai/artifact/VEnma6rLXLrnth6yhmCgTA) with four questions; his answers:
+**Decision**: Fixed in R41 to match, so a portal reached under more than one host sends the researcher back to the host they used.
 
-#### RESOLVED: Is the `aud` list right for the token's second recipient?
-Yes: RFC 7519 allows an array, and RFC 9700 accepts a small set of resource servers when one is not feasible. He asked for R9a (which tokens may carry a list, with a test that a multi-audience token cannot pass as an assertion) and R9b (RFC 8693 named as the upgrade path).
+---
 
-#### RESOLVED: Are the three defaults right?
-Yes: `context=class:<id>`, `authDomain` with a build allowlist, and a separate `class:researcher-run`. He asked for R13a, capabilities are flat.
+### Is the `aud` list right for the token's second recipient?
+**Decision**: Yes: RFC 7519 allows an array, and RFC 9700 accepts a small set of resource servers when one is not feasible. He asked for R9a (which tokens may carry a list, with a test that a multi-audience token cannot pass as an assertion) and R9b (RFC 8693 named as the upgrade path).
 
-#### RESOLVED: One release of logging, then refusing, for a missing `redirect_uri`?
-Yes, with the mismatch refused at once. Model My Watershed is the one outside client and does not send it; R28a records the plan for it.
+---
+### Are the three defaults right?
+**Decision**: Yes: `context=class:<id>`, `authDomain` with a build allowlist, and a separate `class:researcher-run`. He asked for R13a, capabilities are flat.
 
-#### RESOLVED: Use his diagram?
-Not needed; the page's sequence diagram is enough.
+---
+### One release of logging, then refusing, for a missing `redirect_uri`?
+**Decision**: Yes, with the mismatch refused at once. Model My Watershed is the one outside client and does not send it; R28a records the plan for it.
 
-### External adversarial review (2026-09-28)
+---
+### Use his diagram?
+**Decision**: Not needed; the page's sequence diagram is enough.
 
-A second model reviewed the spec and the stage 5 build against scytacki's review, the OAuth and JWT RFCs and the portal's architecture (`/tmp/rigse-367-adversarial-review.md`). All six findings were confirmed against the build and fixed, with Doug's agreement:
+---
+### F1 (blocker): a scoped report could launch through the offering route with a full-user token in its URL
+**Context**: `Portal::OfferingsController#external_report` names any report by id and calls `url_for_offering`, which always creates a grant and puts its token in the URL, and the offering policy admits the class teacher, admins and researchers.
 
-#### RESOLVED: F1 (blocker): a scoped report could launch through the offering route with a full-user token in its URL
-`Portal::OfferingsController#external_report` names any report by id and calls `url_for_offering`, which always creates a grant and puts its token in the URL, and the offering policy admits the class teacher, admins and researchers. Fixed with R33a.
+**Decision**: Fixed with R33a.
 
-#### RESOLVED: F2 (major): the confidential path did not bind the code to its `redirect_uri`
-Fixed with R28a, lenient for one release on a missing value.
+---
 
-#### RESOLVED: F3 (major): a present but malformed key passed the preflight and failed after the code was spent
-Fixed in R6 (the key must parse) and R38 (sign before spending).
+### F2 (major): the confidential path did not bind the code to its `redirect_uri`
+**Decision**: Fixed with R28a, lenient for one release on a missing value.
 
-#### RESOLVED: F4 (minor): the report-server assertion dropped #1487's `user_type`
-Restored in R9.
+---
+### F3 (major): a present but malformed key passed the preflight and failed after the code was spent
+**Decision**: Fixed in R6 (the key must parse) and R38 (sign before spending).
 
-#### RESOLVED: F5 (minor): a scoped client's code grant carried an unusable opaque token
-The claim in R38 is now true rather than reworded: such a grant has no opaque token.
+---
+### F4 (minor): the report-server assertion dropped #1487's `user_type`
+**Decision**: Restored in R9.
 
-#### RESOLVED: F6 (major): the first commit's assertion spec needed a constant from the second
-A plan sequencing defect; `PortalAssertions` moves to the capabilities step (implementation.md).
+---
+### F5 (minor): a scoped client's code grant carried an unusable opaque token
+**Decision**: The claim in R38 is now true rather than reworded: such a grant has no opaque token.
+
+---
+### F6 (major): the first commit's assertion spec needed a constant from the second
+**Decision**: A plan sequencing defect; `PortalAssertions` moves to the capabilities step (implementation.md).
 
 The review's question about `aud` normalisation between rigse and report-server is answered in R8.
+
+---
+### Judgment call: one-argument `decode_portal_token` rather than #1487's required `aud:` keyword
+**Context**: #1487 made every call site name the audience it accepted, because rigse then accepted a launch token on some endpoints and not others.
+**Options considered**:
+- A) Keep the one-argument signature; rigse accepts exactly one kind of RS256 token, its access token, and where it may be used is the capability check's job.
+- B) Keep the keyword, with one possible value.
+
+**Decision**: A. Audience no longer varies by call site, so the keyword would carry no information, and the question "may this token be used here" now has one answer in one place (R14) rather than two.
+
+---
+### Judgment call: the assertions leave the `ResearcherDashboard` namespace
+**Context**: #1487 put them in `ResearcherDashboard::Assertions`, and R40 keeps the dashboard's name out of the portal's launch code.
+**Options considered**:
+- A) `PortalAssertions`, since each is named for the service it is for.
+- B) Keep `ResearcherDashboard::Assertions` for RIGSE-368.
+
+**Decision**: A. Nothing in them is the dashboard's, and RIGSE-368 calls them by the service's name either way.
+
+---
+### Judgment call: a public client without scopes may also use the code flow with PKCE
+**Context**: R34 requires PKCE for a public client's code flow and keeps the implicit flow for public clients without scopes; it does not say whether such a client may choose the code flow.
+**Options considered**:
+- A) Allow it, issuing today's opaque token, so an existing public client can move off the implicit flow without also taking scopes.
+- B) Refuse it until the client has scopes.
+
+**Decision**: A. It is the OAuth-recommended migration path the unification design is heading towards, it costs one branch (`issue_opaque_access_token`), and nothing depends on refusing it.
+
+---
+### The researcher Firebase mint's declaration landed two steps before its class check
+**Context**: As first written, the capabilities step declared `class:researcher-read` on `jwt/firebase` and the researcher gate step added `require_token_capability!`, so at the commit between them a class-scoped token would pass the declaration with no check that the class was its own. No such token could be issued at that commit, but each commit should be safe on its own.
+
+**Decision**: Fixed: the declaration moves to the researcher gate step, beside the check.
+
+---
+
+### The code-flow step called a method the PKCE step defines
+**Context**: The built `access_token` checks `verifies_code_verifier?` on the confidential path, which the PKCE step adds, so the code-flow step would not load on its own.
+
+**Decision**: Fixed: the code-flow step's condition is `access_grant.nil? || !access_grant.spend_code!`, and the PKCE step adds the verifier to it.
+
+---
+
+### Five ALTERs on `access_grants`
+**Context**: `add_column` five times is five `ALTER TABLE` statements, each a table rebuild on MySQL 5.7 (the local server here; production moved to Aurora 3 under `docs/mysql-8-upgrade/`), on a table with a row per user and client.
+
+**Decision**: Fixed: one `change_table ... bulk: true`, verified to emit a single `ALTER TABLE access_grants` with all five columns.
+
+---
+
+### The first authorize after deploy pays for every unredeemed code ever issued
+**Context**: `prune!` runs inside `get_authorize_redirect_uri`, and the new clause deletes code-flow grants that were never redeemed, which nothing has deleted before.
+
+**Decision**: Fixed as a release step in the code-flow step: run `AccessGrant.prune!` from a console straight after deploying.
+
+---
