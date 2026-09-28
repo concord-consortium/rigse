@@ -367,4 +367,6 @@ His answers to the design page's four questions added R9a, R9b and R13a and exte
 
 ## Full suite
 
+**As implemented** (2026-09-28): on the branch head, after the six step commits and the gap-fix commits, `run-spec.sh` with `solr-test` up ran **3,093 examples, 0 failures, 202 pending**, and the react-components jest suite 175 tests, all passing. The paragraph below is the stage 5 throwaway build's record.
+
 Every full run is `docker compose run --rm app ./docker/dev/run-spec.sh` with `solr-test` up and nothing else using the test database. The final build, with the stage 8 answers, the adversarial review's fixes, scytacki's R9a and R13a specs and R47b's log filter, ran on 2026-09-28: **3,056 examples, 0 failures, 202 pending**. Before R47b it had run 3,051 with 0 failures. The first build without them had run 3,039 examples with 0 failures. An earlier run without Solr, and alongside other spec runs sharing the test database, showed 284 failures, all in areas the build does not touch; they were the environment. The saved patch is the final build, and the auth-design doc's trailing blank line is gone, so it applies with no whitespace warnings.
