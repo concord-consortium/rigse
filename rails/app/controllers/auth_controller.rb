@@ -93,7 +93,7 @@ class AuthController < ApplicationController
     end
 
     access_grant = AccessGrant.authenticate(params[:code], application.id)
-    if access_grant.nil?
+    if access_grant.nil? || !access_grant.spend_code!
       render :json => {:error => "Could not authenticate access code"}
       return
     end

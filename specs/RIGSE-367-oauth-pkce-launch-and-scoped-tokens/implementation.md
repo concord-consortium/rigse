@@ -326,6 +326,11 @@ Implemented on 2026-09-28, one commit per step, each through a `cc-code-review` 
 - **Departure: one Authorization-header parser for all three readers.** The review found, and confirmed with a probe, that the global check matched `Bearer <jwt>` and `Bearer/JWT <jwt>` with exactly one space while `check_for_auth_token` accepted any whitespace, so a scoped or service-minted token sent as `Bearer<TAB><jwt>` or with two spaces passed the global check unseen and was then accepted by `check_for_auth_token` as a full-user credential on every API action, including `jwt/portal`. `PortalBearer.raw_token` is now the only parser: the global check, the Devise JWT strategy's `jwt_token_value` and `check_for_auth_token`'s `extract_bearer_token` all call it. Specs send the three padded forms to an undeclared action and a marked token with a tab to `jwt/portal`, all refused; restoring the single-space pattern fails both.
 - **Comments name what they describe, not the ticket:** references to "RIGSE-352" in the new code comments were reworded (the service-mint marker, oidc_mint, Warden's lazy authentication), and the comments in `routes.rb`, `mounted_engines_spec.rb` and the confinement spec that still named the deleted `confine_service_minted_tokens` now name `enforce_token_capabilities`.
 
+### The OAuth code-flow fixes
+
+- **Departure: the implicit flow's redirect is logged as `[FILTERED]`.** The review found that R47b was not met by `filter_parameters` alone: Rails logs `Redirected to <location>` from `response.filtered_location`, which filters a Location's query string but never its fragment, and the implicit flow puts a week-long access token in the fragment (`#access_token=…`). `config.filter_redirect << /[#&]access_token=/` makes Rails log such a redirect as `[FILTERED]`; the spec checks that and that a code-flow redirect still logs with only `code` filtered.
+- **Tests added for two behaviours the step had none for:** `check_for_auth_token` refusing a grant whose expiry was never set as an expired grant (R29), and a routing spec that both token routes answer POST and are not routable by GET (R30).
+
 ## Stage 8 cross-reference
 
 Every requirement maps to a step. Doug's answers, 2026-09-28, each the recommendation:

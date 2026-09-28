@@ -16,6 +16,7 @@ describe AccessGrant do
     attributes = {
       :client_id => 'a',
       :state     => 'b',
+      :issue_code => true,
       :access_token_expires_at => 2.days.ago
     }
     3.times.map { |i| AccessGrant.create(attributes) }
@@ -25,6 +26,7 @@ describe AccessGrant do
     attributes = {
       :client_id => 'a',
       :state     => 'b',
+      :issue_code => true,
       :access_token_expires_at => 0.days.ago
     }
     2.times.map { |i| AccessGrant.create(attributes) }
@@ -62,9 +64,12 @@ describe AccessGrant do
         expect(subject).to be_valid
       end
       it "should have valid tokens" do
-        expect(subject.code).to match /[a-f|0-9]{32}/
         expect(subject.access_token).to match /[a-f|0-9]{32}/
         expect(subject.refresh_token).to match(/[a-f|0-9]{32}/)
+      end
+      it "should have no code unless the code flow issued it" do
+        expect(subject.code).to be_nil
+        expect(AccessGrant.create(valid_attributes.merge(issue_code: true)).code).to match /[a-f|0-9]{32}/
       end
       it "should not have an expiration time" do
         expect(subject.access_token_expires_at).to be_nil
@@ -222,6 +227,26 @@ describe AccessGrant do
       end
     end
 
+    describe "#prune! and unredeemed codes" do
+      it "deletes a code that expired unredeemed and keeps a live one" do
+        stale = AccessGrant.create!(valid_attributes.merge(issue_code: true))
+        stale.update_column(:created_at, (AccessGrant::CodeExpireTime + 1.second).ago)
+        live = AccessGrant.create!(valid_attributes.merge(issue_code: true))
+        AccessGrant.prune!
+        expect(AccessGrant.exists?(stale.id)).to be false
+        expect(AccessGrant.exists?(live.id)).to be true
+      end
+    end
+
+    describe "#validate_oauth_authorize error redirects" do
+      it "carries the request's state" do
+        client = FactoryBot.create(:client, app_id: 'state-client', redirect_uris: "http://test.com")
+        result = AccessGrant.validate_oauth_authorize(client_id: 'state-client', response_type: "foo",
+                                                      redirect_uri: "http://test.com", state: "st")
+        expect(result.error_redirect).to eq("http://test.com?error=unsupported_response_type&state=st")
+      end
+    end
+
     describe "#authenticate(code, application_id)" do
       before(:each) do
         all_grants  = old_grants + newer_grants
@@ -257,6 +282,7 @@ describe AccessGrant do
     end
 
     describe "#auth_code_redirect_uri_for" do
+      subject { AccessGrant.create(valid_attributes.merge(issue_code: true)) }
       let(:client) { FactoryBot.create(:client, redirect_uris: url) }
       let(:url) { "http://blarg.com/path" }
       it "should include the token and state" do

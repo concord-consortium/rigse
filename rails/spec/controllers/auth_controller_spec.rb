@@ -154,10 +154,36 @@ RSpec.describe AuthController, type: :controller do
 
   # TODO: auto-generated
   describe '#access_token' do
-    it 'GET access_token' do
-      get :access_token
+    it 'POST access_token without a client' do
+      post :access_token
 
       expect(response).to have_http_status(:ok)
+      expect(JSON.parse(response.body)).to eq('error' => 'Could not find application')
+    end
+
+    context 'for a confidential client' do
+      let(:client) { FactoryBot.create(:client, app_id: 'lara', app_secret: 's3cret', client_type: Client::CONFIDENTIAL, redirect_uris: 'https://lara.example.org/cb') }
+      let(:user)   { FactoryBot.create(:confirmed_user) }
+      let(:grant)  { AccessGrant.create!(client: client, user: user, issue_code: true) }
+
+      def redeem(code)
+        post :access_token, params: { client_id: 'lara', client_secret: 's3cret', code: code }
+        JSON.parse(response.body)
+      end
+
+      it 'redeems a code once' do
+        code = grant.code
+        expect(redeem(code)['access_token']).to eq(grant.access_token)
+        expect(grant.reload.access_token_expires_at).to be > Time.now
+        expect(redeem(code)).to eq('error' => 'Could not authenticate access code')
+      end
+
+      it 'refuses a code that expired unredeemed, and its token never authenticated' do
+        code = grant.code
+        expect(User.find_for_token_authentication(access_token: grant.access_token)).to be_nil
+        grant.update_column(:created_at, (AccessGrant::CodeExpireTime + 1.second).ago)
+        expect(redeem(code)).to eq('error' => 'Could not authenticate access code')
+      end
     end
   end
 

@@ -52,6 +52,11 @@ module RailsPortal
     config.eager_load_paths << Rails.root.join("app/helpers")
 
     config.filter_parameters << :password << :password_confirmation
+    # :token matches as a substring (access_token, refresh_token); code is exact so zipcode stays readable.
+    config.filter_parameters += [:client_secret, :code_verifier, :token, /\Acode\z/]
+    # The implicit flow's redirect carries its access token in the fragment, which parameter
+    # filtering never reaches, so such a redirect is logged as [FILTERED].
+    config.filter_redirect << /[#&]access_token=/
 
     # Expands posted content with a content-encoding of: 'b64gzip'
     # NOTE: pre-Rails 5 this was inserted before ActionController::ParamsParser but that middleware

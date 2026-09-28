@@ -120,6 +120,15 @@ RSpec.describe API::APIController, type: :controller do
           end
         end
 
+        describe 'with an access grant whose expiry was never set' do
+          let(:expires) { nil }
+
+          it 'should fail as an expired grant' do
+            set_standard_bearer_token(user_token)
+            expect { controller.check_for_auth_token({}) }.to raise_error('AccessGrant has expired')
+          end
+        end
+
         describe 'using a jwt bearer token' do
           let(:user)           { FactoryBot.create(:user) }
           let(:claims)         { {} }

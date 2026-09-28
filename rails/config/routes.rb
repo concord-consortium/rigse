@@ -10,10 +10,10 @@ RailsPortal::Application.routes.draw do
 
   # Provider stuff
   match '/auth/concord_id/authorize' => 'auth#oauth_authorize', via: [:get, :post]
-  match '/auth/concord_id/access_token' => 'auth#access_token', via: [:get, :post]
+  post  '/auth/concord_id/access_token' => 'auth#access_token'
   match '/auth/concord_id/user' => 'auth#user', via: [:get, :post]
   match '/auth/login' => 'auth#login', :as => :auth_login, via: [:get, :post]
-  match '/oauth/token' => 'auth#access_token', via: [:get, :post]
+  post  '/oauth/token' => 'auth#access_token'
   get   '/auth/failure' => 'auth#failure'
   post  '/auth/reauth' => 'auth#reauth', :as => :auth_reauth
   get   '/auth/isalive' => 'auth#isalive'

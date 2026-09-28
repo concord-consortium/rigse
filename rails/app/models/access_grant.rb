@@ -8,18 +8,29 @@ class AccessGrant < ApplicationRecord
 
   ExpireTime = 1.week
 
+  # How long an authorization code may wait to be redeemed. Every client redeems at once,
+  # so this only has to cover a slow redirect; single use is what stops a replay.
+  CodeExpireTime = 5.minutes
+
+  # Set on a grant created by response_type=code, the only kind with a redeemable code.
+  attr_accessor :issue_code
+
   # Returns all access grants valid at given time, ordered by expire date.
   scope :valid_at, lambda { |time| where("access_token_expires_at > ?", time).order('access_token_expires_at DESC') }
 
   SUPPORTED_RESPONSE_TYPES = ["token", "code"]
 
   def self.prune!
-    # We need to delete tokens that have expired...
     AccessGrant.where(["access_token_expires_at < ?", 1.minute.ago]).delete_all
+    AccessGrant.where(access_token_expires_at: nil).where.not(code: nil)
+      .where(["created_at < ?", CodeExpireTime.ago]).delete_all
   end
 
+  # The grant a code redeems, if the code is live: issued to this client, by the code flow,
+  # not yet redeemed and not expired.
   def self.authenticate(code, client_id)
-    AccessGrant.where("code = ? AND client_id = ?", code, client_id).first
+    return nil if code.blank?
+    AccessGrant.where(code: code, client_id: client_id).where(["created_at > ?", CodeExpireTime.ago]).first
   end
 
   ValidationResult = Struct.new(:valid, :client, :error_redirect) do
@@ -27,8 +38,12 @@ class AccessGrant < ApplicationRecord
       valid
     end
 
-    def error(error_msg, redirect_uri)
-      self.error_redirect = client.get_redirect_uri(redirect_uri, error: error_msg)
+    # RFC 6749 4.1.2.1: an error response carries the request's state, or a client that
+    # checks state cannot tell a genuine error from a forged one.
+    def error(error_msg, redirect_uri, state = nil)
+      query = { error: error_msg }
+      query[:state] = state if state.present?
+      self.error_redirect = client.get_redirect_uri(redirect_uri, query)
       self.valid = false
     end
   end
@@ -65,10 +80,10 @@ class AccessGrant < ApplicationRecord
 
     if ! SUPPORTED_RESPONSE_TYPES.include?(params[:response_type])
       # https://tools.ietf.org/html/rfc6749#section-4.2.2.1
-      result.error("unsupported_response_type", params[:redirect_uri])
+      result.error("unsupported_response_type", params[:redirect_uri], params[:state])
     elsif ! self.matching_response_type(result.client.client_type, params[:response_type])
       # https://tools.ietf.org/html/rfc6749#section-4.2.2.1
-      result.error("unauthorized_client", params[:redirect_uri])
+      result.error("unauthorized_client", params[:redirect_uri], params[:state])
     else
       result.valid = true
     end
@@ -90,7 +105,8 @@ class AccessGrant < ApplicationRecord
     client = validation.client
 
     AccessGrant.prune!
-    access_grant = user.access_grants.create({:client => client, :state => params[:state]})
+    access_grant = user.access_grants.create({:client => client, :state => params[:state],
+                                              :issue_code => params[:response_type] === "code"})
 
     # validate_oauth_authorize already checked that this client settings matched the response_type
     if params[:response_type] === "token"
@@ -106,8 +122,15 @@ class AccessGrant < ApplicationRecord
     end
   end
 
+  # Spends the code, so it can be redeemed only once even by two requests racing. Returns
+  # false if another request spent it first.
+  def spend_code!
+    AccessGrant.where(id: id).where.not(code: nil).update_all(code: nil) == 1
+  end
+
   def generate_tokens
-    self.code, self.access_token, self.refresh_token = SecureRandom.hex(16), SecureRandom.hex(16), SecureRandom.hex(16)
+    self.code = issue_code ? SecureRandom.hex(16) : nil
+    self.access_token, self.refresh_token = SecureRandom.hex(16), SecureRandom.hex(16)
   end
 
   # A scoped or service-minted token must never be turned into an unscoped opaque one.

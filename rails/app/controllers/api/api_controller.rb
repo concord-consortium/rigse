@@ -66,7 +66,7 @@ class API::APIController < ApplicationController
       grant = AccessGrant.find_by_access_token(token)
 
       if grant
-        if grant.access_token_expires_at >= Time.now
+        if grant.access_token_expires_at && grant.access_token_expires_at >= Time.now
           request.env['portal.auth_strategy'] = 'api_access_grant'
           request.env['portal.auth_client'] = grant.client&.name
           return [grant.user, {:learner => grant.learner, :teacher => grant.teacher}]
