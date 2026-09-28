@@ -85,6 +85,14 @@ describe ExternalReport do
       end
       let(:extra_params) { { researcher: true } }
 
+      it "overrides launch parameters the report URL already has, rather than repeating them" do
+        external_report.update!(url: 'https://example.com?cool=true&classId=999&authDomain=https://evil.example.org/')
+        url = external_report.url_for_class(offering.clazz, portal_teacher.user, 'https', 'perfect.host.com', extra_params)
+        expect(URI.parse(url).query.scan('classId=').size).to eq(1)
+        query = Rack::Utils.parse_query(URI.parse(url).query)
+        expect(query).to include('classId' => offering.clazz.id.to_s, 'authDomain' => 'https://perfect.host.com/')
+      end
+
       it "builds authDomain from request.protocol's form too" do
         url = external_report.url_for_class(offering.clazz, portal_teacher.user, 'https://', 'perfect.host.com', extra_params)
         expect(Rack::Utils.parse_query(URI.parse(url).query)['authDomain']).to eq('https://perfect.host.com/')

@@ -458,17 +458,13 @@ Because a minted token is an elevation, four controls bound where it can be used
 
 Verified before merge: report-service makes no `/api/v1/jwt` calls, and the Activity Player reaches those actions with a portal JWT or a session, so D1/D9 affect no current caller.
 
-### The D10 gap and what the audit needs
+### The D10 gap: closed for minted tokens, open for unscoped JWTs
 
-**Closed for minted tokens by RIGSE-367 (Section 11).** A minted token now carries `scope: portal-api` (one without a scope but with the marker is treated as if it had it), and the JWT strategy stores no session for a scoped token, so the trade described below is no longer possible for one; `spec/requests/service_minted_session_gap_spec.rb` is enabled. What follows still applies to unscoped portal JWTs, for which `store?` is unchanged and the audit is still the prerequisite.
+**Minted tokens (RIGSE-367, Section 11).** A minted token carries `scope: portal-api`, and one with the marker but no scope is treated as if it had it. The JWT strategy's `store?` answers false for any scoped token, so a minted token authenticates only the request that carries it and never becomes a Rails session. Its limits therefore cannot be shed by trading it for a cookie, and D9's guarantee no longer depends on the audit below. `spec/requests/service_minted_session_gap_spec.rb` checks it: a marked token leaves no session behind, and an unscoped portal JWT still does.
 
-**A marked token can still be traded for a Rails session, and the marker does not survive the trade.** `JwtBearerTokenAuthenticatable` defines no `store?` override, and Devise's `skip_session_storage` covers only `:http_auth`, so authenticating with a portal JWT writes a session cookie. A caller can then drop the token entirely and continue as a cookie-authenticated user, at which point D9, D11 and the confinement filter are all inert because there is no marker left to see.
+**Unscoped portal JWTs.** These still become a session. Devise's `skip_session_storage` covers only `:http_auth`, so authenticating with an unscoped portal JWT writes a session cookie, and a caller can then drop the token and continue as a cookie-authenticated user. That gives the caller no more than the token did, since an unscoped token is already a full-user credential, but it does make every portal JWT outlive its own expiry. Answering `store?` false for every JWT would change behavior for every portal-JWT consumer at once: any consumer that authenticates once with a JWT and then relies on the resulting cookie would break, and nothing in the current code distinguishes such a consumer from one that sends its token every time.
 
-This is pre-existing and portal-wide: it is true of every portal JWT, not just minted ones, and it predates this work. But it makes D9's guarantee conditional, so it is tracked as a blocking dependency rather than a nice-to-have, and it is covered by a **pending** (not omitted) spec at `spec/requests/service_minted_session_gap_spec.rb`.
-
-The fix is `def store?; false; end` on the strategy. The reason it is not in this PR is that it changes behavior for every portal-JWT consumer at once: any consumer that authenticates once with a JWT and then relies on the resulting cookie for subsequent requests would break, and nothing in the current code makes such a consumer easy to distinguish from one that sends its token every time.
-
-The audit therefore has to establish, for each portal-JWT consumer, whether it sends the token on **every** request or only the first. Three existing research documents supply most of the method and inventory:
+So before `store?` can be false for every JWT, an audit has to establish, for each portal-JWT consumer, whether it sends the token on **every** request or only the first. Three existing research documents supply most of the method and inventory:
 
 - `specs/2026-02-26-peer-to-peer-auth-removal-research.md`: the method to copy. It establishes "no production traffic uses this path" through a `concord-consortium` GitHub org search, a cross-reference against production Clients, and 365-day log analysis. The same three-part approach is what would establish "no consumer depends on the JWT-issued session".
 - `specs/2026-02-26-clientless-grants-replacement-research.md`: the inventory of runtimes that receive portal launch JWTs, derived from a production query on `ExternalActivity.where(append_auth_token: true)`. Those runtimes are precisely the JWT-holding consumers whose request pattern the audit needs to characterize.
@@ -476,13 +472,11 @@ The audit therefore has to establish, for each portal-JWT consumer, whether it s
 
 `specs/2026-03-04-controller-migration-caller-research.md` is a useful fourth reference for the per-endpoint caller-identification technique, though its subject matter (status-code compatibility) is unrelated.
 
-Once the audit lands and `store? false` ships, D9's guarantee becomes unconditional and the pending spec above can be enabled.
-
 ---
 
 ## 11. Scoped Tokens and Capabilities (RIGSE-367)
 
-**Added:** 2026-09-28. Full design: `specs/RIGSE-367-oauth-pkce-launch-and-scoped-tokens/`.
+**Added:** 2026-09-28. Full design: `specs/RIGSE-367-oauth-pkce-launch-and-scoped-tokens.md`.
 
 The portal has one convention for limiting what a token may do. A token may carry a `scope` claim: a space-separated list of capabilities (RFC 6749 section 3.3) from the registry in `lib/token_capabilities.rb`. **A token without `scope` is a full-user credential**, limited only by its user's permissions, which is what every token that predates this convention is (HS256 portal JWTs, `AccessGrant` tokens, sessions); none of them changed. A token with `scope` is refused everywhere except on actions that declare one of its capabilities (`accepts_token_capability`), and even there **the capability is a ceiling, never a grant**: the action still runs its own authorization. A context-bound capability, such as `class:researcher-read`, applies only to the one object in the token's `context` claim (`{"type": "class", "id": 123}`, the portal's integer id), checked with `require_token_capability!(capability, object)`; a scoped token without a context fails every such check.
 

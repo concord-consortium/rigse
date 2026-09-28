@@ -95,7 +95,7 @@ class AccessGrant < ApplicationRecord
     if ! SUPPORTED_RESPONSE_TYPES.include?(params[:response_type])
       # https://tools.ietf.org/html/rfc6749#section-4.2.2.1
       result.error("unsupported_response_type", redirect_uri, state)
-    elsif params[:code_challenge].present? &&
+    elsif (params[:code_challenge].present? || params[:code_challenge_method].present?) &&
           (params[:code_challenge_method] != CODE_CHALLENGE_METHOD ||
            !params[:code_challenge].is_a?(String) || params[:code_challenge] !~ PKCE_VALUE)
       result.error("invalid_request", redirect_uri, state)

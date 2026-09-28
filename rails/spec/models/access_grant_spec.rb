@@ -249,6 +249,16 @@ describe AccessGrant do
       end
     end
 
+    describe "#validate_oauth_authorize with a PKCE method but no challenge" do
+      it "refuses the malformed request rather than issuing a code without PKCE" do
+        FactoryBot.create(:client, app_id: 'method-only', client_type: Client::CONFIDENTIAL, redirect_uris: "http://test.com")
+        result = AccessGrant.validate_oauth_authorize(client_id: 'method-only', response_type: "code", redirect_uri: "http://test.com",
+                                                      code_challenge_method: 'S256', state: 'st')
+        expect(result).not_to be_valid
+        expect(result.error_redirect).to eq("http://test.com?error=invalid_request&state=st")
+      end
+    end
+
     describe "#validate_oauth_authorize error redirects" do
       it "carries the request's state" do
         client = FactoryBot.create(:client, app_id: 'state-client', redirect_uris: "http://test.com")

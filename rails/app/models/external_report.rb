@@ -105,7 +105,9 @@ class ExternalReport < ApplicationRecord
   def add_query_params(url, params)
     uri = URI.parse(url)
     query_hash = Rack::Utils.parse_query(uri.query)
-    query_hash.merge!(params)
+    # String keys, as parse_query returns, so the portal's values replace any the URL has
+    # rather than appearing beside them.
+    query_hash.merge!(params.transform_keys(&:to_s))
     uri.query = query_hash.to_query
     uri.to_s
   end
