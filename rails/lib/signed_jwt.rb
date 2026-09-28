@@ -9,6 +9,17 @@ module SignedJwt
   class Error < StandardError
   end
 
+  # The audiences of the two service assertions rigse signs. rigse accepts neither as a
+  # bearer: the only RS256 token it accepts is its own scoped access token.
+  AUD_REPORT_SERVER            = 'report-server'.freeze
+  AUD_REPORT_SERVICE_FUNCTIONS = 'report-service-functions'.freeze
+  ASSERTION_AUDIENCES = [AUD_REPORT_SERVER, AUD_REPORT_SERVICE_FUNCTIONS].freeze
+
+  # RFC 9068's media type for a JWT access token, set as the header typ. A verifier that
+  # requires it can never mistake an assertion, which has none, for an access token.
+  ACCESS_TOKEN_TYPE = 'at+jwt'.freeze
+
+  # The legacy HS256 portal token.
   def self.create_portal_token(user, claims={}, expires_in=3600)
     now = Time.now.to_i
     payload = {
@@ -30,10 +41,63 @@ module SignedJwt
     end
   end
 
+  # A short-lived RS256 assertion for another service, with exactly one audience.
+  def self.create_assertion(user, aud:, claims: {}, expires_in:)
+    raise SignedJwt::Error.new("Unknown assertion audience: #{aud}") unless ASSERTION_AUDIENCES.include?(aud)
+    now = Time.now.to_i
+    payload = { iss: APP_CONFIG[:site_url], aud: aud, iat: now, exp: now + expires_in, uid: user.id }
+    payload.merge!(claims) { |key, old, new| fail "Duplicate JWT claim key: #{key}" }
+    sign_rs256(payload)
+  end
+
+  # The scoped access token /oauth/token issues (RFC 9068). `aud` lists every service whose
+  # capability the token carries, rigse always first, and never an assertion's audience: a
+  # verifier that accepts any list containing its audience must not take this as one.
+  def self.create_access_token(user, client_id:, capabilities:, context:, audiences:, expires_in:)
+    audiences = Array(audiences)
+    unless audiences.first == APP_CONFIG[:site_url] && (audiences & ASSERTION_AUDIENCES).empty?
+      raise SignedJwt::Error.new("An access token's aud must start with this portal and name no assertion audience: #{audiences.inspect}")
+    end
+    now = Time.now.to_i
+    payload = {
+      iss: APP_CONFIG[:site_url],
+      sub: user.id.to_s,
+      uid: user.id,
+      aud: audiences,
+      client_id: client_id,
+      scope: capabilities.join(' '),
+      iat: now,
+      exp: now + expires_in,
+      jti: SecureRandom.uuid
+    }
+    payload[:context] = context if context
+    sign_rs256(payload, typ: ACCESS_TOKEN_TYPE)
+  end
+
+  def self.sign_rs256(payload, header = {})
+    JWT.encode payload, PortalSigningKey.private_key, PortalSigningKey::ALGORITHM, header.merge(kid: PortalSigningKey.kid)
+  rescue SignedJwt::Error
+    raise
+  rescue StandardError => e
+    raise SignedJwt::Error.new(e.message)
+  end
+  private_class_method :sign_rs256
+
+  # Routes by the kid header, never by the token's own alg: RS256 only for rigse's own
+  # at+jwt access token, HS256 for every legacy portal token. Assertions are refused.
   def self.decode_portal_token(token)
     begin
-      decoded = JWT.decode token, self.hmac_secret, true, {algorithm: self.hmac_algorithm}
-    rescue JWT::ExpiredSignature
+      header = JWT.decode(token, nil, false)[1]
+      decoded =
+        if header.key?('kid')
+          raise SignedJwt::Error.new('An RS256 portal token must be an access token') unless header['typ'] == ACCESS_TOKEN_TYPE
+          JWT.decode(token, nil, true, { algorithm: PortalSigningKey::ALGORITHM, aud: APP_CONFIG[:site_url], verify_aud: true }) do |h|
+            PortalSigningKey.verification_key(h['kid'])
+          end
+        else
+          JWT.decode token, self.hmac_secret, true, {algorithm: self.hmac_algorithm}
+        end
+    rescue JWT::ExpiredSignature, SignedJwt::Error
       raise
     rescue StandardError => e
       raise SignedJwt::Error.new(e.message)

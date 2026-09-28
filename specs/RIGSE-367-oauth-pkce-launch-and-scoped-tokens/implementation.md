@@ -312,6 +312,15 @@ The built `access_token` checks `verifies_code_verifier?` on the confidential pa
 #### RESOLVED: The first authorize after deploy pays for every unredeemed code ever issued
 `prune!` runs inside `get_authorize_redirect_uri`, and the new clause deletes code-flow grants that were never redeemed, which nothing has deleted before. Fixed as a release step in the code-flow step: run `AccessGrant.prune!` from a console straight after deploying.
 
+## As built
+
+Implemented on 2026-09-28, one commit per step, each through a `cc-code-review` pass until it reported nothing actionable. Departures from the plan and review decisions, by step:
+
+### The portal signing key and the RS256 tokens
+
+- **Departure: `create_access_token` guards its own `aud`.** The review found that nothing stopped a caller passing an assertion audience into an access token's `aud` list, which R9a forbids, and that step 1's specs built access tokens by hand instead of through the real encoder. `create_access_token` now raises `SignedJwt::Error` unless the list starts with `site_url` and names neither `report-server` nor `report-service-functions`, and the specs run it through `decode_portal_token` (claims, `typ`, `kid`, a fresh `jti`, `context` present only when given) and check each refused list.
+- **Rejected: shorten `PortalSigningKey`'s header comment.** The review called it a duplicate of the README. It is #1487's header, which scytacki reviewed, and it carries the two facts a reader of the code most needs there: the literal `\n` form of the key and that staging and production must never share a keypair.
+
 ## Stage 8 cross-reference
 
 Every requirement maps to a step. Doug's answers, 2026-09-28, each the recommendation:

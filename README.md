@@ -674,6 +674,20 @@ Create a set of OAuth credentials for the app following the steps above, but for
 
 For the "Authorized redirect URI" value use `https://[your domain]:[your port number]/users/auth/google/callback`. If, for example, you use lvh.me and Docker is serving your portal over port 32789, the value would be `https://lvh.me:32789/users/auth/google/callback`.
 
+### Portal signing key and scoped OAuth clients
+
+The portal signs two kinds of RS256 token with one key per environment: the scoped access token `/oauth/token` issues to a client that has scopes, and the short-lived assertions it sends to report-server (`aud: report-server`) and the report-service function (`aud: report-service-functions`). The legacy HS256 portal tokens, signed with `JWT_HMAC_SECRET`, are unchanged.
+
+* `PORTAL_SIGNING_KEY`: the RS256 private key as a PEM, with its newlines written as `\n` so it fits in one environment value.
+* `PORTAL_SIGNING_KEY_ID`: the key's `kid`, which every token names in its header.
+* `PORTAL_PREVIOUS_VERIFY_KEYS` (optional): a JSON object of `kid` to public key PEM, for tokens signed by the previous key during a rotation.
+
+Generate a keypair with `docker compose run --rm app bundle exec rake portal_signing_key:generate KID=<environment>-<yyyy-mm>`. Staging and production each generate their own and must never share one, or a staging token would verify in production. The private key is set only on the portal. report-server and the report-service function are configured by value with the public key and its `kid`, which `rake portal_signing_key:public` prints for the running environment. There is deliberately no JWKS or other public-key endpoint.
+
+A rotation is two deploys. First, configure the new public key in report-server and the report-service function, then switch the portal to the new key and `kid` while moving the old key's public half into `PORTAL_PREVIOUS_VERIFY_KEYS`. Second, once the old key's tokens have expired (an access token lives two hours), remove it from `PORTAL_PREVIOUS_VERIFY_KEYS` and from the verifiers.
+
+On AWS the values are the `PortalSigningKey`, `PortalSigningKeyId` and `PortalPreviousVerifyKeys` stack parameters, all empty by default. A normal release updates the stack with its previous template, so releasing this code does not add them to a running stack. Adding them is a deliberate template update per environment with that environment's own values, after which releases carry them forward.
+
 ## Uses the Database for Sessions
 
 ### Will Paginate
