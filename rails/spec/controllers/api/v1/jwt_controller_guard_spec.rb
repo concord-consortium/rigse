@@ -33,19 +33,29 @@ RSpec.describe API::V1::JwtController, type: :controller do
   describe 'D9: a service-minted token cannot be re-minted' do
     let(:teacher) { FactoryBot.create(:portal_teacher) }
 
+    # A real marked token in the header: the capability check reads the bearer itself, and
+    # a marked token carries portal-api, which no jwt/* action declares.
     before(:each) do
-      allow(controller).to receive(:current_user) do
-        Current.minted_via_oidc_client_id = 99
-        teacher.user
-      end
-      request.env['portal.auth_strategy'] = 'jwt_bearer_token'
+      token = SignedJwt.create_portal_token(teacher.user, { minted_via_oidc_client_id: 99, minted_for: 'spec' })
+      Current.reset
+      request.headers['Authorization'] = "Bearer #{token}"
     end
 
     it 'denies #portal and issues no token (holds even with a session present)' do
+      sign_in teacher.user
       expect(SignedJwt).not_to receive(:create_portal_token)
       post :portal, params: { as_teacher: 'true' }, format: :json
       expect(response).to have_http_status(:forbidden)
-      expect(response.body).to match(/may not be used to mint another token/)
+      expect(response.body).to match(/may not be used here/)
+    end
+
+    it 'denies #portal however the Authorization header is spaced' do
+      token = SignedJwt.create_portal_token(teacher.user, { minted_via_oidc_client_id: 99, minted_for: 'spec' })
+      Current.reset
+      request.headers['Authorization'] = "Bearer\t#{token}"
+      expect(SignedJwt).not_to receive(:create_portal_token)
+      post :portal, params: { as_teacher: 'true' }, format: :json
+      expect(response).to have_http_status(:forbidden)
     end
 
     it 'denies #firebase and issues no token' do
@@ -70,15 +80,15 @@ RSpec.describe API::V1::JwtController, type: :controller do
     let(:teacher) { FactoryBot.create(:portal_teacher) }
 
     it 'does not leak the marker between requests' do
-      allow(controller).to receive(:current_user) do
-        Current.minted_via_oidc_client_id = 5
-        teacher.user
-      end
-      request.env['portal.auth_strategy'] = 'jwt_bearer_token'
+      token = SignedJwt.create_portal_token(teacher.user, { minted_via_oidc_client_id: 5, minted_for: 'spec' })
+      Current.reset
+      request.headers['Authorization'] = "Bearer #{token}"
       post :portal, params: { as_teacher: 'true' }, format: :json
       expect(response).to have_http_status(:forbidden)
 
-      allow(controller).to receive(:current_user).and_return(teacher.user)
+      request.headers['Authorization'] = nil
+      Current.reset
+      sign_in teacher.user
       post :portal, params: { as_teacher: 'true' }, format: :json
       expect(response).to have_http_status(:created)
     end

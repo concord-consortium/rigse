@@ -39,7 +39,14 @@ describe AccessGrant do
       Current.minted_via_oidc_client_id = 42
       grant = AccessGrant.create(valid_attributes)
       expect(grant).not_to be_persisted
-      expect(grant.errors[:base]).to include('cannot be created from a service-minted token')
+      expect(grant.errors[:base]).to include('cannot be created from a scoped or service-minted token')
+    end
+
+    it "refuses creation while the request's credential carries a scope" do
+      TokenScope.apply!('scope' => 'class:researcher-read')
+      grant = AccessGrant.create(valid_attributes)
+      expect(grant).not_to be_persisted
+      expect(grant.errors[:base]).to include('cannot be created from a scoped or service-minted token')
     end
 
     it "allows creation when no marker is set" do

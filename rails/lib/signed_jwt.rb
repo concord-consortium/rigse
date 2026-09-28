@@ -19,7 +19,8 @@ module SignedJwt
   # requires it can never mistake an assertion, which has none, for an access token.
   ACCESS_TOKEN_TYPE = 'at+jwt'.freeze
 
-  # The legacy HS256 portal token.
+  # The legacy HS256 portal token. A token minted during a request authenticated by a
+  # scoped token inherits its scope and context, as it inherits the service-mint marker.
   def self.create_portal_token(user, claims={}, expires_in=3600)
     now = Time.now.to_i
     payload = {
@@ -32,6 +33,7 @@ module SignedJwt
     claims = claims.dup
     claims[:minted_via_oidc_client_id] ||= Current.minted_via_oidc_client_id if Current.minted_via_oidc_client_id
     claims[:minted_for]                ||= Current.minted_for                if Current.minted_for
+    TokenScope.inherited_claims.each { |key, value| claims[key] ||= value unless claims.key?(key.to_s) }
     # merge claims into payload, preventing duplicates
     payload.merge!(claims) { |key, old, new| fail "Duplicate JWT claim key: #{key}" }
     begin

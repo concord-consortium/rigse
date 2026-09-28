@@ -110,9 +110,10 @@ class AccessGrant < ApplicationRecord
     self.code, self.access_token, self.refresh_token = SecureRandom.hex(16), SecureRandom.hex(16), SecureRandom.hex(16)
   end
 
+  # A scoped or service-minted token must never be turned into an unscoped opaque one.
   def refuse_service_minted_tokens
-    return if Current.minted_via_oidc_client_id.blank?
-    errors.add(:base, 'cannot be created from a service-minted token')
+    return if Current.minted_via_oidc_client_id.blank? && !TokenScope.scoped?
+    errors.add(:base, 'cannot be created from a scoped or service-minted token')
     throw :abort
   end
 

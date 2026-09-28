@@ -201,5 +201,27 @@ gpZlAvdO9CFaBcBKsAcJnNDQBY2lhFsSeqYs78PoW7Zz
       expect { SignedJwt.create_assertion(user, aud: [SignedJwt::AUD_REPORT_SERVER], expires_in: 60) }.to raise_error(SignedJwt::Error)
       expect { SignedJwt.create_assertion(user, aud: SignedJwt::AUD_REPORT_SERVER, expires_in: 60, claims: { aud: ['x'] }) }.to raise_error(/Duplicate JWT claim key: aud/)
     end
+
+    it "never lets an access token's aud list name an assertion audience" do
+      TokenCapabilities.names.each do |name|
+        expect(SignedJwt::ASSERTION_AUDIENCES).not_to include(TokenCapabilities.audience_value(name))
+      end
+      token = SignedJwt.create_access_token(user, client_id: 'c', capabilities: TokenCapabilities.names, context: nil,
+                                            audiences: [site, 'https://report-server.example.org'], expires_in: 60)
+      data = JWT.decode(token, nil, false).first
+      expect(data['aud']).to be_an(Array)
+      expect(data['aud'] & SignedJwt::ASSERTION_AUDIENCES).to be_empty
+    end
+  end
+
+  describe "#create_portal_token under a scoped request" do
+    after(:each) { Current.reset }
+
+    it "inherits the request's scope and context" do
+      user = FactoryBot.create(:user)
+      TokenScope.apply!('scope' => 'portal-api', 'context' => { 'type' => 'class', 'id' => 7 })
+      data = SignedJwt.decode_portal_token(SignedJwt.create_portal_token(user))[:data]
+      expect(data).to include('scope' => 'portal-api', 'context' => { 'type' => 'class', 'id' => 7 })
+    end
   end
 end

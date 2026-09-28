@@ -1,23 +1,24 @@
 require 'spec_helper'
 
-# D11 rule 1: ApplicationController#confine_service_minted_tokens denies a marked (service-minted)
-# token on any non-API controller. The marker is set by the jwt_bearer_token strategy when it honors
-# a marked token; here we stub current_user to set it, matching what the strategy does at request time.
+# D11 rule 1: ApplicationController#enforce_token_capabilities denies a marked (service-minted)
+# token on any non-API controller. The spec presents a real marked token, which carries portal-api.
 RSpec.describe HomeController, type: :controller do
   before(:each) { generate_default_settings_with_mocks }
 
-  def stub_marked_token(client_id)
-    allow(controller).to receive(:current_user) do
-      Current.minted_via_oidc_client_id = client_id
-      nil
-    end
+  after(:each) { Current.reset }
+
+  def present_marked_token(client_id)
+    user = FactoryBot.create(:confirmed_user)
+    token = SignedJwt.create_portal_token(user, { minted_via_oidc_client_id: client_id, minted_for: 'spec' })
+    Current.reset
+    request.headers['Authorization'] = "Bearer #{token}"
   end
 
   it 'denies a request carrying a service-minted token' do
-    stub_marked_token(55)
+    present_marked_token(55)
     get :getting_started
     expect(response).to have_http_status(:forbidden)
-    expect(JSON.parse(response.body)['message']).to match(/service-minted token may only be used on the API/)
+    expect(JSON.parse(response.body)['message']).to match(/may not be used here/)
   end
 
   it 'does not deny a request with no marker' do
@@ -26,8 +27,8 @@ RSpec.describe HomeController, type: :controller do
   end
 end
 
-# D11 rule 1 (API side): confine_service_minted_tokens short-circuits for API controllers
-# (is_a?(API::APIController)) before touching auth, so a marked token is never denied on the
+# D11 rule 1 (API side): enforce_token_capabilities accepts portal-api on API controllers
+# (API::APIController declares it), so a marked token is never denied on the
 # pipeline's API endpoints. Asserted at the controller level (not via a request spec) so it verifies
 # the request actually succeeds (200) rather than merely that the confinement message is absent — the
 # latter would also hold for an unrelated 403. A controller spec runs the same inherited
@@ -41,15 +42,13 @@ RSpec.describe API::V1::OfferingsController, type: :controller do
   let(:offering) { FactoryBot.create(:portal_offering, clazz: teacher.clazzes.first) }
 
   it 'does not confine a marked token on an API controller' do
-    # Set the marker exactly as the jwt_bearer_token strategy would when honoring a marked token.
-    allow(controller).to receive(:current_user) do
-      Current.minted_via_oidc_client_id = 77
-      teacher.user
-    end
+    token = SignedJwt.create_portal_token(teacher.user, { minted_via_oidc_client_id: 77, minted_for: 'spec' })
+    Current.reset
+    request.headers['Authorization'] = "Bearer #{token}"
 
     get :show, params: { id: offering.id }, format: :json
 
     expect(response).to have_http_status(:ok)
-    expect(response.body).not_to match(/service-minted token may only be used on the API/)
+    expect(response.body).not_to match(/may not be used here/)
   end
 end

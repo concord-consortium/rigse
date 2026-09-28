@@ -16,7 +16,8 @@ class API::V1::OidcMintController < API::APIController
       :minted_via_oidc_client_id => oidc_client.id,
       :origin_offering_id => result.origin_offering.id,
       :origin_class_hash => result.origin_clazz.class_hash,
-      :minted_for => description
+      :minted_for => description,
+      :scope => TokenCapabilities::PORTAL_API
     )
     builder.add_admin_claims(subject_user, claims)
 

@@ -20,8 +20,8 @@ module JwtBearerTokenAuthenticatable
       end
       request.env['portal.auth_strategy'] = 'jwt_bearer_token'
       data = decoded_token[:data]
-      Current.minted_via_oidc_client_id = data['minted_via_oidc_client_id']
-      Current.minted_for                = data['minted_for']
+      TokenScope.apply!(data)
+      @scoped = TokenScope.scoped?
       request.env['portal.minted_via_oidc_client_id'] = data['minted_via_oidc_client_id']
       request.env['portal.minted_for']                = data['minted_for']
       success!(user)
@@ -33,22 +33,25 @@ module JwtBearerTokenAuthenticatable
       fail!(:invalid_token)
     end
 
+    # A scoped token never becomes a Rails session, which would keep none of its limits.
+    # Warden reads this after authenticate!, so it can decide per token.
+    def store?
+      !@scoped && super
+    end
+
     protected
 
     def has_jwt_bearer_token?
       jwt_token_value.present?
     end
 
-    # Extracts the JWT from the Authorization header. Matches both the
-    # explicit Bearer/JWT scheme and plain Bearer when the token looks
+    # Extracts the JWT from the Authorization header, through the parser the capability
+    # check shares: the explicit Bearer/JWT scheme, or plain Bearer when the token looks
     # like a JWT (contains dots).
     def jwt_token_value
       header = request.headers['Authorization'] || ''
-      if header =~ /^Bearer\/JWT (.+)$/i
-        $1
-      elsif header =~ /^Bearer (.+)$/i && SignedJwt.probably_jwt?($1)
-        $1
-      end
+      token = PortalBearer.raw_token(header)
+      token if token && (header =~ /^Bearer\/JWT/i || SignedJwt.probably_jwt?(token))
     end
 
   end

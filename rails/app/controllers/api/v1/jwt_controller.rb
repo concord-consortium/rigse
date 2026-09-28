@@ -5,6 +5,9 @@ class API::V1::JwtController < API::APIController
 
   before_action :reject_credential_issuing_callers
 
+  # Every jwt/* action mints a credential, so none accepts a scoped token.
+  accepts_no_token_capabilities
+
   # use exceptions to return errors
   # instead of directly calling APIController#error
   rescue_from StandardError, with: :error_400
@@ -15,9 +18,6 @@ class API::V1::JwtController < API::APIController
     current_user
     if request.env['portal.auth_strategy'] == 'oidc_bearer_token'
       return error('This endpoint does not accept OIDC service tokens; use /api/v1/jwt/oidc_mint', 403)
-    end
-    if Current.minted_via_oidc_client_id.present?
-      return error('A service-minted token may not be used to mint another token', 403)
     end
   end
 

@@ -39,7 +39,8 @@ Devise tries strategies in declaration order (see `app/models/user.rb`). Each st
 - Extracts `uid` claim, sets `current_user` to `User.find_by_id(uid)`
 - Does **not** extract role claims (learner_id, teacher_id, user_type)
 - Uses halting `fail!` with distinct messages: `:token_expired` for expired tokens, `:invalid_token` for signature failures or missing user — since `valid?` guarantees the token is ours, all failures are definitive
-- **Stores a Rails session.** The strategy defines no `store?` override and Devise's `skip_session_storage` covers only `:http_auth`, so authenticating with a portal JWT writes a session cookie. A caller can then stop sending the token and continue as a cookie-authenticated user. This is the D10 gap discussed in Section 10
+- **Stores a Rails session for an unscoped token only.** Since RIGSE-367 the strategy's `store?` answers false for a token that carries a `scope` (Section 11), which every service-minted token does. An unscoped portal JWT still writes a session cookie, since Devise's `skip_session_storage` covers only `:http_auth`, so a caller can stop sending it and continue as a cookie-authenticated user. This is what remains of the D10 gap discussed in Section 10
+- Since RIGSE-367 it also accepts the RS256 scoped access token `/oauth/token` issues (Section 11), routed by its `kid` header
 
 **Session-based** (Devise's built-in `database_authenticatable`)
 - Standard cookie/session authentication
@@ -459,6 +460,8 @@ Verified before merge: report-service makes no `/api/v1/jwt` calls, and the Acti
 
 ### The D10 gap and what the audit needs
 
+**Closed for minted tokens by RIGSE-367 (Section 11).** A minted token now carries `scope: portal-api` (one without a scope but with the marker is treated as if it had it), and the JWT strategy stores no session for a scoped token, so the trade described below is no longer possible for one; `spec/requests/service_minted_session_gap_spec.rb` is enabled. What follows still applies to unscoped portal JWTs, for which `store?` is unchanged and the audit is still the prerequisite.
+
 **A marked token can still be traded for a Rails session, and the marker does not survive the trade.** `JwtBearerTokenAuthenticatable` defines no `store?` override, and Devise's `skip_session_storage` covers only `:http_auth`, so authenticating with a portal JWT writes a session cookie. A caller can then drop the token entirely and continue as a cookie-authenticated user, at which point D9, D11 and the confinement filter are all inert because there is no marker left to see.
 
 This is pre-existing and portal-wide: it is true of every portal JWT, not just minted ones, and it predates this work. But it makes D9's guarantee conditional, so it is tracked as a blocking dependency rather than a nice-to-have, and it is covered by a **pending** (not omitted) spec at `spec/requests/service_minted_session_gap_spec.rb`.
@@ -474,3 +477,21 @@ The audit therefore has to establish, for each portal-JWT consumer, whether it s
 `specs/2026-03-04-controller-migration-caller-research.md` is a useful fourth reference for the per-endpoint caller-identification technique, though its subject matter (status-code compatibility) is unrelated.
 
 Once the audit lands and `store? false` ships, D9's guarantee becomes unconditional and the pending spec above can be enabled.
+
+---
+
+## 11. Scoped Tokens and Capabilities (RIGSE-367)
+
+**Added:** 2026-09-28. Full design: `specs/RIGSE-367-oauth-pkce-launch-and-scoped-tokens/`.
+
+The portal has one convention for limiting what a token may do. A token may carry a `scope` claim: a space-separated list of capabilities (RFC 6749 section 3.3) from the registry in `lib/token_capabilities.rb`. **A token without `scope` is a full-user credential**, limited only by its user's permissions, which is what every token that predates this convention is (HS256 portal JWTs, `AccessGrant` tokens, sessions); none of them changed. A token with `scope` is refused everywhere except on actions that declare one of its capabilities (`accepts_token_capability`), and even there **the capability is a ceiling, never a grant**: the action still runs its own authorization. A context-bound capability, such as `class:researcher-read`, applies only to the one object in the token's `context` claim (`{"type": "class", "id": 123}`, the portal's integer id), checked with `require_token_capability!(capability, object)`; a scoped token without a context fails every such check.
+
+**Where it is enforced.** One `ApplicationController` `before_action`, `enforce_token_capabilities`, reads the bearer itself through `PortalBearer` and `TokenScope` rather than through Warden. That avoids the lazy-Warden trap of Section 10 without authenticating requests that never touch `current_user` (which would store sessions for unscoped JWTs where none were stored before), and it keeps the ceiling when a request also carries a session, which Warden would otherwise prefer. The Devise JWT strategy and `check_for_auth_token` apply the same claims through the same `TokenScope.apply!`, so the three cannot disagree.
+
+**Who issues scoped tokens.**
+- `/oauth/token`, for a `Client` with `scopes`: an RS256 JWT access token (RFC 9068: header `typ: at+jwt`, `aud` listing rigse and any other service whose capability it carries, `client_id`, `scope`, `context`). Such a client must use the authorization code flow, with PKCE (S256) when it is public; the portal checks the capability's gate for the requested context at authorize, and binds the context into the single-use code. The Researcher Dashboard is the first such client, configured as an `ExternalReport` whose launch link carries `authDomain`, `classId` and `loginHint` and no token.
+- `POST /api/v1/jwt/oidc_mint` (Section 10): its HS256 tokens carry `scope: portal-api`.
+
+**RIGSE-352's containment under the convention.** `API::APIController` declares `portal-api` for every action, and `JwtController` declares nothing (except the researcher Firebase mint's `class:researcher-read`), so D9 and the confinement filter are now the one global check: `confine_service_minted_tokens` is gone. D1 is unchanged. D11 is widened: no `AccessGrant` is created while the request's credential carries any scope. A token minted during a scoped request inherits its scope and context as it inherits the marker.
+
+**The OAuth code flow**, which every confidential client uses, was fixed at the same time: a code is single-use and expires after five minutes, only a code-flow grant has one, a grant's opaque token is trusted only once its expiry is set (so an unredeemed code's token authenticates no one), error redirects carry `state`, and the token endpoint is POST-only with a CORS entry.
