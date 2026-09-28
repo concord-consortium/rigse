@@ -18,9 +18,9 @@ describe("ResearcherClassesTable", () => {
     expect(screen.getByRole("link", { name: "Other report" })).toHaveAttribute("href", "/portal/classes/1/external_report/8?researcher=true");
   });
 
-  it("shows no report links for a row without any", () => {
-    render(<ResearcherClassesTable classes={[row({})]} />);
-    expect(screen.queryByRole("link", { name: "Researcher Dashboard" })).not.toBeInTheDocument();
+  it("shows only the assignments link for a row with no external_reports field", () => {
+    render(<ResearcherClassesTable classes={[row({ external_reports: undefined })]} />);
+    expect(screen.getAllByRole("link")).toHaveLength(1);
     expect(screen.getByRole("link", { name: "View Assignments" })).toBeInTheDocument();
   });
 });
