@@ -141,6 +141,11 @@ gpZlAvdO9CFaBcBKsAcJnNDQBY2lhFsSeqYs78PoW7Zz
       expect(SignedJwt.decode_portal_token(token)[:data]['uid']).to eq(user.id)
     end
 
+    it "refuses an RS256 token with no kid, which routes to the HS256 check" do
+      token = JWT.encode({ iss: site, aud: [site], uid: user.id, exp: now + 60 }, key, 'RS256', { typ: 'at+jwt' })
+      expect { SignedJwt.decode_portal_token(token) }.to raise_error(SignedJwt::Error)
+    end
+
     it "refuses an unknown kid rather than falling back to a default key" do
       expect { SignedJwt.decode_portal_token(access_token({}, kid: 'nope')) }.to raise_error(SignedJwt::Error, /Unrecognized/)
     end

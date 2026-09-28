@@ -66,6 +66,14 @@ RSpec.describe Admin::ClientsController, type: :controller do
     end
   end
 
+  describe '#update with scopes' do
+    it "saves the client's scopes, normalized" do
+      client = FactoryBot.create(:client)
+      put :update, params: { id: client.id, client: { scopes: 'class:researcher-run class:researcher-read' } }
+      expect(client.reload.scopes).to eq('class:researcher-read class:researcher-run')
+    end
+  end
+
   # TODO: auto-generated
   describe '#update' do
     let(:stubs) {{update: true}}

@@ -41,6 +41,14 @@ describe Portal::LearnersController do
           get :report, params: post_params
           expect(response.location).to match(/token=([0-9]|[a-f]){32}/)
         end
+        it "is not found, and issues no token, when the default report's client has scopes" do
+          report = FactoryBot.create(:default_lara_report, { url: report_url })
+          report.client.update!(scopes: 'class:researcher-read')
+          allow(DefaultReportService).to receive(:default_report_for_offering).and_return(report)
+          expect {
+            expect { get :report, params: post_params }.to raise_error(ActionController::RoutingError)
+          }.not_to change { AccessGrant.count }
+        end
         it "should include the studentId parameter" do
           get :report, params: post_params
           match_data = /studentId=(\d+)/.match response.location

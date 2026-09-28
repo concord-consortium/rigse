@@ -342,6 +342,14 @@ Implemented on 2026-09-28, one commit per step, each through a `cc-code-review` 
 - **Departure: project admins may follow a class report's launch link.** The review found that the Research Classes rows list class reports for every class the researcher gate admits, which includes the class's project admins, while `Portal::ClazzPolicy#external_report?` admitted teachers, site admins, class researchers and class students but not project admins, so a project admin who is not a researcher saw a "Researcher Dashboard" link that answered not authorized. `external_report?` now also admits `class_project_admin?`, as `materials?` and `roster?` already do for the same role. This widens every class report's launch, not only the dashboard's, to a role that already has full access to the class's student data (`has_full_access_to_student_data?`); the launch still grants nothing a scoped report's authorize step does not check again.
 - **Test added:** a Research Classes row whose class fails the researcher gate lists no reports even when one supports researchers.
 
+### After the six steps: comparing the code with both specs
+
+A requirement-by-requirement comparison found every requirement implemented and no code contradicting one. It found two code gaps and several untested behaviours, which one further commit closes:
+
+- **Departure: a confidential client's PKCE code needs its `redirect_uri`.** R37 requires an identical `redirect_uri` for a code issued with a challenge, but the confidential path's one-release leniency (R28a) also let such a code redeem without one. A client that sends a challenge is new to this flow, so the leniency no longer applies to it.
+- **`Portal::LearnersController#report` answers 404 for a scoped client's report**, as the offering routes do. It launches the offering's default report through `url_for_offering`, which raises for a scoped client; only an admin who made a scoped report an offering's default could reach it.
+- **Tests added:** a context the scope does not take, or a malformed one (`invalid_request` with `state`); another client's code, on both paths; a narrowed scope signing only what remains and `invalid_grant` when nothing does; the class launch route end to end, redirecting with `authDomain`, `classId` and `loginHint` and creating no grant; `authDomain` from `request.protocol`'s `"https://"`; an RS256 token with no `kid`; the admin form saving normalised scopes; and a Jest test of the table's report links. Not added: specs for the two rake tasks (a key generator and a printer) and assertions on the `server_error` log lines.
+
 ## Stage 8 cross-reference
 
 Every requirement maps to a step. Doug's answers, 2026-09-28, each the recommendation:

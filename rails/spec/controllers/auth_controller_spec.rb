@@ -211,7 +211,8 @@ RSpec.describe AuthController, type: :controller do
         grant.update!(code_challenge: Base64.urlsafe_encode64(Digest::SHA256.digest(verifier), padding: false))
         post :access_token, params: { client_id: 'lara', client_secret: 's3cret', code: grant.code, code_verifier: 'w' * 43 }
         expect(JSON.parse(response.body)).to eq('error' => 'Could not authenticate access code')
-        post :access_token, params: { client_id: 'lara', client_secret: 's3cret', code: grant.code, code_verifier: verifier }
+        post :access_token, params: { client_id: 'lara', client_secret: 's3cret', code: grant.code, code_verifier: verifier,
+                                      redirect_uri: 'https://lara.example.org/cb' }
         expect(JSON.parse(response.body)['access_token']).to eq(grant.access_token)
       end
 
@@ -237,6 +238,20 @@ RSpec.describe AuthController, type: :controller do
         expect(AccessGrant.exists?(scoped_grant.id)).to be false
         post :access_token, params: { client_id: 'lara', client_secret: 's3cret', code: code, redirect_uri: 'https://lara.example.org/cb' }
         expect(JSON.parse(response.body)).to eq('error' => 'invalid_grant')
+      end
+
+      it "refuses another client's code" do
+        FactoryBot.create(:client, app_id: 'other', app_secret: 'x', client_type: Client::CONFIDENTIAL)
+        post :access_token, params: { client_id: 'other', client_secret: 'x', code: grant.code }
+        expect(JSON.parse(response.body)).to eq('error' => 'Could not authenticate access code')
+        expect(grant.reload.code).to be_present
+      end
+
+      it 'refuses a missing redirect_uri for a code issued with a PKCE challenge' do
+        verifier = 'v' * 43
+        grant.update!(code_challenge: Base64.urlsafe_encode64(Digest::SHA256.digest(verifier), padding: false))
+        post :access_token, params: { client_id: 'lara', client_secret: 's3cret', code: grant.code, code_verifier: verifier }
+        expect(JSON.parse(response.body)).to eq('error' => 'Could not authenticate access code')
       end
 
       it 'answers invalid_client for a scoped confidential client without its secret' do

@@ -85,6 +85,11 @@ describe ExternalReport do
       end
       let(:extra_params) { { researcher: true } }
 
+      it "builds authDomain from request.protocol's form too" do
+        url = external_report.url_for_class(offering.clazz, portal_teacher.user, 'https://', 'perfect.host.com', extra_params)
+        expect(Rack::Utils.parse_query(URI.parse(url).query)['authDomain']).to eq('https://perfect.host.com/')
+      end
+
       it "adds no token and creates no grant, only the launch parameters" do
         expect { subject }.not_to change { AccessGrant.count }
         query = Rack::Utils.parse_query(URI.parse(subject).query)

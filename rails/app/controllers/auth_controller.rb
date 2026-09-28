@@ -129,11 +129,13 @@ class AuthController < ApplicationController
     client.scoped? ? issue_scoped_access_token(client, grant) : issue_opaque_access_token(grant)
   end
 
-  # RFC 6749 4.1.3: a mismatched redirect_uri is refused; a missing one is logged and
-  # accepted, since not every confidential client sends it (Model My Watershed omits it).
+  # RFC 6749 4.1.3: a mismatched redirect_uri is refused, and so is a missing one for a PKCE
+  # code; otherwise a missing one is logged and accepted, since not every confidential
+  # client sends it (Model My Watershed omits it).
   def legacy_redirect_uri_matches?(grant, client)
     return true if grant.redirect_uri.blank?
     if params[:redirect_uri].blank?
+      return false if grant.code_challenge.present?
       Rails.logger.warn("OAuth token: #{client.name} (#{client.app_id}) redeemed a code without redirect_uri")
       return true
     end

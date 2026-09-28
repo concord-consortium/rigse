@@ -91,6 +91,13 @@ RSpec.describe 'Scoped OAuth clients', type: :request do
       expect(authorize(code_challenge: ['x' * 43])['error']).to eq('invalid_request')
     end
 
+    it 'refuses a context the scope does not take, and a malformed one, with state' do
+      expect(authorize(scope: 'packages:read')).to eq('error' => 'invalid_request', 'state' => 'st4te')
+      expect(authorize(context: 'class:abc')['error']).to eq('invalid_request')
+      expect(authorize(context: 'class:0')['error']).to eq('invalid_request')
+      expect(authorize(context: "cohort:#{clazz.id}")['error']).to eq('invalid_request')
+    end
+
     it 'refuses a scope outside the client and the implicit flow for a scoped client' do
       expect(authorize(scope: 'portal-api')['error']).to eq('invalid_scope')
       get '/auth/oauth_authorize', params: { client_id: client.app_id, redirect_uri: redirect_uri, response_type: 'token', state: 's' }
@@ -142,6 +149,25 @@ RSpec.describe 'Scoped OAuth clients', type: :request do
       expect(response.headers['Cache-Control']).to include('no-store')
     end
 
+    it "refuses another client's code" do
+      code = authorize['code']
+      Client.create!(name: 'Other', app_id: 'other', app_secret: 'x', client_type: Client::PUBLIC,
+                     redirect_uris: redirect_uri, scopes: 'class:researcher-read')
+      expect(exchange(code, client_id: 'other')).to eq('error' => 'invalid_grant')
+      expect(exchange(code)['access_token']).to be_present
+    end
+
+    it "signs only the capabilities the client still has, and refuses when none remain" do
+      code = authorize['code']
+      client.update_column(:scopes, 'class:researcher-read')
+      body = exchange(code)
+      expect(body['scope']).to eq('class:researcher-read')
+      expect(claims(body['access_token']).first['aud']).to eq([APP_CONFIG[:site_url]])
+      code = authorize(scope: 'class:researcher-read')['code']
+      client.update_column(:scopes, 'portal-api')
+      expect(exchange(code)).to eq('error' => 'invalid_grant')
+    end
+
     it 'leaves the code redeemable when signing fails, rather than spending it' do
       code = authorize['code']
       allow(SignedJwt).to receive(:create_access_token).and_raise(SignedJwt::Error, 'boom')
@@ -163,6 +189,23 @@ RSpec.describe 'Scoped OAuth clients', type: :request do
       expect { get '/oauth/token' }.to raise_error(ActionController::RoutingError)
       options '/oauth/token', headers: { 'Origin' => 'https://dashboard.example.org', 'Access-Control-Request-Method' => 'POST' }
       expect(response.headers['Access-Control-Allow-Origin']).to eq('*')
+    end
+  end
+
+  describe 'the class launch route' do
+    let(:report) do
+      FactoryBot.create(:external_report, client: client, report_type: ExternalReport::ClassReport,
+                        supports_researchers: true, url: redirect_uri)
+    end
+
+    it 'redirects a researcher to the report with the class and no token, creating no grant' do
+      sign_in_as(researcher)
+      expect {
+        get "/portal/classes/#{clazz.id}/external_report/#{report.id}", params: { researcher: 'true' }
+      }.not_to change { AccessGrant.count }
+      query = Rack::Utils.parse_query(URI.parse(response.location).query)
+      expect(query).to eq('authDomain' => 'http://www.example.com/', 'classId' => clazz.id.to_s,
+                          'loginHint' => researcher.id.to_s)
     end
   end
 
