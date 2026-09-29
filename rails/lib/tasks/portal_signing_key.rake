@@ -9,14 +9,23 @@ namespace :portal_signing_key do
     puts "PORTAL_SIGNING_KEY_ID=#{kid}"
     puts "PORTAL_SIGNING_KEY=#{key.to_pem.gsub("\n", '\n')}"
     puts
-    puts "Public key for report-server and the report-service function, under kid #{kid}:"
+    puts "Public key, under kid #{kid}. Once the two values above are configured here,"
+    puts 'portal_signing_key:public prints the entry report-server and the report-service'
+    puts 'function are configured with, which also names the issuer this key is trusted for:'
     puts key.public_key.to_pem
   end
 
-  desc 'Print the configured public key and kid, which report-server and the report-service function verify with'
+  desc 'Print this environment\'s PORTAL_PUBLIC_KEYS entry, which report-server and the report-service function verify with'
   task public: :environment do
     abort 'PORTAL_SIGNING_KEY and PORTAL_SIGNING_KEY_ID are not both set' unless PortalSigningKey.configured?
-    puts "kid: #{PortalSigningKey.kid}"
-    puts PortalSigningKey.private_key.public_key.to_pem
+    puts 'PORTAL_PUBLIC_KEYS entry for this environment. It joins the JSON array report-server'
+    puts "and the report-service function are configured with, beside every other portal's entry:"
+    puts JSON.generate(
+      kid: PortalSigningKey.kid,
+      # The site URL exactly as this portal signs it into iss, trailing slash and all: both
+      # verifiers trust a key only for its own issuer and compare the claim as a string.
+      iss: APP_CONFIG[:site_url],
+      pem: PortalSigningKey.private_key.public_key.to_pem
+    )
   end
 end
