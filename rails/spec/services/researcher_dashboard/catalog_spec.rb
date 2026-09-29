@@ -17,7 +17,7 @@ RSpec.describe ResearcherDashboard::Catalog do
   end
 
   def resolve
-    described_class.resolve(identity: identity, version: '1.0.0', launch_token: 'launch-token')
+    described_class.resolve(identity: identity, version: '1.0.0', access_token: 'access-token')
   end
 
   def refusal
@@ -27,10 +27,10 @@ RSpec.describe ResearcherDashboard::Catalog do
     e
   end
 
-  it 'sends the launch token and no Origin, and returns the checksum and catalog id' do
+  it 'sends the access token and no Origin, and returns the checksum and catalog id' do
     stub = stub_resolve(200, answer)
     expect(resolve).to eq(identity: identity, version: '1.0.0', checksum: checksum, catalog_id: 12, clue_prepull: false)
-    expect(a_request(:get, resolve_url).with { |r| r.headers['Authorization'] == 'Bearer launch-token' && !r.headers.key?('Origin') })
+    expect(a_request(:get, resolve_url).with { |r| r.headers['Authorization'] == 'Bearer access-token' && !r.headers.key?('Origin') })
       .to have_been_made.once
     expect(stub).to have_been_requested
   end

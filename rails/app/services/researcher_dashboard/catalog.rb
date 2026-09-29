@@ -1,15 +1,16 @@
 module ResearcherDashboard
-  # The run path's one read of report-server's catalog. It presents the app's own launch
-  # token, so report-server applies its visibility rule to this researcher, and it is the
-  # only place a checksum or catalog id comes from.
+  # The run path's one read of report-server's catalog. It presents the app's own access
+  # token, which names report-server in its audiences and carries packages:read, so
+  # report-server applies its visibility rule to this researcher; it is the only place a
+  # checksum or catalog id comes from.
   module Catalog
     # report-server reads the caller's grants from the portal with a five-second timeout.
     READ_TIMEOUT = 10
     CHECKSUM = /\Asha256:[0-9a-f]{64}\z/
 
-    def self.resolve(identity:, version:, launch_token:)
+    def self.resolve(identity:, version:, access_token:)
       response = Upstream.get(:report_server, "#{Settings.report_server_url}/api/v1/packages/resolve",
-                              query: { identity: identity, version: version }, bearer: launch_token,
+                              query: { identity: identity, version: version }, bearer: access_token,
                               read_timeout: READ_TIMEOUT)
       label = "#{identity}@#{version}"
       case response.code

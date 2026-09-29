@@ -1,6 +1,6 @@
 module ResearcherDashboard
   # The run request's body, which is exactly {"packages": [{"identity", "version"}]}. The
-  # scope is in the launch token and the checksum comes from the catalog, so any other key,
+  # scope is in the access token and the checksum comes from the catalog, so any other key,
   # a checksum or package key above all, is refused rather than ignored.
   module RunRequest
     # The function's default queue cap; a larger batch could never be queued whole.

@@ -6,9 +6,10 @@ module ResearcherDashboard
     READ_TIMEOUT = 10
 
     def self.call(user:, clazz:)
+      Settings.require_signing_key!
       body = Scope.new(clazz).derive_profile_body
       response = Upstream.post_json(:function, "#{Settings.function_url}/derive-profile",
-                                    body: body, bearer: Assertions.report_service_functions(user: user),
+                                    body: body, bearer: PortalAssertions.report_service_functions(user: user),
                                     read_timeout: READ_TIMEOUT)
       raise Upstream.refusal(:function, response, message: 'report-service refused the profile refresh') unless response.code == 202
       { queued: true, assignment_fingerprint: body[:assignment_fingerprint] }

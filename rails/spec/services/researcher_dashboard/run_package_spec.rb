@@ -39,7 +39,7 @@ RSpec.describe ResearcherDashboard::RunPackage do
   end
 
   def run(packages)
-    described_class.call(user: user, clazz: clazz, packages: packages, launch_token: 'launch-token')
+    described_class.call(user: user, clazz: clazz, packages: packages, access_token: 'access-token')
   end
 
   def refusal(packages)
@@ -57,6 +57,11 @@ RSpec.describe ResearcherDashboard::RunPackage do
 
   def firebase(token, app)
     SignedJwt.decode_firebase_token(token, app)[:data]
+  end
+
+  def assertion(token, aud)
+    JWT.decode(token, PortalSigningKey.private_key.public_key, true,
+               algorithm: 'RS256', aud: aud, verify_aud: true).first
   end
 
   let(:packages) { [{ identity: 'projects/20/b', version: '1.0.0' }, { identity: 'users/7/a', version: '2.0.0' }] }
@@ -86,12 +91,22 @@ RSpec.describe ResearcherDashboard::RunPackage do
     session = firebase(body['session_token'], 'report-service-dev')['claims']
     expect(session).to include('researcher_dashboard_runner' => true)
     expect(session).not_to have_key('class_hash')
-    assertion = SignedJwt.decode_portal_token(body['report_server_assertion'], aud: SignedJwt::AUD_REPORT_SERVER)[:data]
-    expect(assertion).to include('uid' => user.id, 'scope_id' => clazz.id)
+    report_server = assertion(body['report_server_assertion'], SignedJwt::AUD_REPORT_SERVER)
+    expect(report_server).to include('uid' => user.id, 'context' => { 'type' => 'class', 'id' => clazz.id })
     expect(a_request(:post, run_url).with { |r|
       bearer = r.headers['Authorization'].sub(/\ABearer /, '')
-      SignedJwt.decode_portal_token(bearer, aud: SignedJwt::AUD_REPORT_SERVICE_FUNCTIONS)[:data]['uid'] == user.id
+      assertion(bearer, SignedJwt::AUD_REPORT_SERVICE_FUNCTIONS)['uid'] == user.id
     }).to have_been_made.once
+  end
+
+  it 'refuses without a usable signing key, before anything is resolved or sent' do
+    previous = ENV['PORTAL_SIGNING_KEY']
+    ENV['PORTAL_SIGNING_KEY'] = ''
+    expect { run(packages) }.to raise_error(ResearcherDashboard::Settings::NotConfigured, /PORTAL_SIGNING_KEY/)
+    expect(a_request(:get, /packages\/resolve/)).not_to have_been_made
+    expect(a_request(:post, run_url)).not_to have_been_made
+  ensure
+    ENV['PORTAL_SIGNING_KEY'] = previous
   end
 
   it 'mints a CLUE class token when a package declares clue_prepull' do

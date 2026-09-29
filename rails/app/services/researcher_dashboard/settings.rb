@@ -6,6 +6,12 @@ module ResearcherDashboard
   module Settings
     class NotConfigured < StandardError; end
 
+    # Every outbound call carries an assertion signed with the portal's RS256 key, so a
+    # portal that cannot sign is refused by name here rather than inside the signer.
+    def self.require_signing_key!
+      raise NotConfigured, 'PORTAL_SIGNING_KEY is not usable' unless PortalSigningKey.usable?
+    end
+
     # report-server's base URL, for the run path's catalog resolve.
     def self.report_server_url
       fetch('REPORT_SERVER_URL').chomp('/')

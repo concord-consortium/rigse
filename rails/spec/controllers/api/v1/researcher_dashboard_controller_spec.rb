@@ -3,6 +3,9 @@ require 'spec_helper'
 describe API::V1::ResearcherDashboardController, type: :controller do
   include_context 'with the researcher dashboard configured'
 
+  let(:read_capability) { TokenCapabilities::CLASS_RESEARCHER_READ }
+  let(:run_capability)  { TokenCapabilities::CLASS_RESEARCHER_RUN }
+
   let(:project)    { FactoryBot.create(:project) }
   let(:cohort)     { FactoryBot.create(:admin_cohort, name: 'Cohort A', project: project) }
   let(:teacher)    { FactoryBot.create(:portal_teacher, cohorts: [cohort]) }
@@ -15,14 +18,24 @@ describe API::V1::ResearcherDashboardController, type: :controller do
     user.add_role_for_project('researcher', project)
     user
   }
-  let(:scope_claims) { { scope_kind: 'class', scope_id: clazz.id } }
 
-  def token_for(user, claims: scope_claims, ttl: 3600, aud: SignedJwt::AUD_RESEARCHER_DASHBOARD)
-    SignedJwt.create_portal_token(user, { user_type: 'researcher' }.merge(claims), ttl, aud: aud)
+  def token_for(user, capabilities: [read_capability, run_capability], context_clazz: clazz, ttl: 3600)
+    SignedJwt.create_access_token(user, client_id: 'researcher-dashboard', capabilities: capabilities,
+                                  context: context_clazz && { type: 'class', id: context_clazz.id },
+                                  audiences: [APP_CONFIG[:site_url]], expires_in: ttl)
   end
 
   def bearer(token)
     request.headers['Authorization'] = "Bearer #{token}"
+  end
+
+  # A controller spec reuses one request environment, and Warden memoizes both the user it
+  # authenticated and the strategy instances that ran, so a second call in one example has
+  # to start from nothing for its own bearer to be read.
+  def reset_credential
+    sign_out(:user)
+    warden.clear_strategies_cache!
+    Current.reset
   end
 
   def json
@@ -39,19 +52,20 @@ describe API::V1::ResearcherDashboardController, type: :controller do
 
   before(:each) { Current.reset }
 
-  describe 'GET clazz' do
-    def get_clazz(id = clazz.id)
-      get :clazz, params: { id: id }, format: :json
+  describe 'GET scope' do
+    def get_scope
+      get :scope, format: :json
     end
 
-    context 'with a launch token for the class' do
+    context 'with an access token scoped to the class' do
       before(:each) { bearer(token_for(researcher)) }
 
-      it 'describes the class' do
-        get_clazz
+      it 'describes the class in the token' do
+        get_scope
         expect(response.status).to eq(200)
-        expect(json.keys).to match_array(%w[id name class_hash platform_user_id teachers cohorts project_ids assignment_fingerprint assignments])
+        expect(json.keys).to match_array(%w[kind id name class_hash platform_user_id teachers cohorts project_ids assignment_fingerprint assignments])
         expect(json).to include(
+          'kind' => 'class',
           'id' => clazz.id,
           'name' => 'Class A',
           'class_hash' => clazz.class_hash,
@@ -68,64 +82,79 @@ describe API::V1::ResearcherDashboardController, type: :controller do
       end
 
       it 'carries no platform field and no credential' do
-        get_clazz
+        get_scope
         expect(keys_anywhere(json)).not_to include('platform')
         expect(response.body).not_to include('eyJ')
       end
+    end
 
-      it 'refuses another class with 403' do
-        get_clazz(other_clazz.id)
-        expect(response.status).to eq(403)
-        expect(json['message']).to match(/not the class this token was issued for/)
-      end
+    it 'answers for the class in the token, never for another the researcher may open' do
+      second = FactoryBot.create(:portal_clazz, name: 'Class B', teachers: [teacher])
+      bearer(token_for(researcher, context_clazz: second))
+      get_scope
+      expect(response.status).to eq(200)
+      expect(json).to include('id' => second.id, 'name' => 'Class B')
     end
 
     context 'refusing with 401' do
-      it 'without a bearer' do
-        get_clazz
+      it 'without a credential' do
+        get_scope
         expect(response.status).to eq(401)
       end
 
-      it 'for an expired launch token' do
+      it 'for an expired access token' do
         bearer(token_for(researcher, ttl: -60))
-        get_clazz
+        get_scope
         expect(response.status).to eq(401)
-        expect(json['message']).to match(/Launch the Researcher Dashboard again/)
       end
 
-      it 'for a legacy HS256 portal token for the same user' do
+      it 'for an unscoped HS256 portal token for the same user' do
         bearer(SignedJwt.create_portal_token(researcher, {}, 3600))
-        get_clazz
+        get_scope
         expect(response.status).to eq(401)
+        expect(json['message']).to match(/accept only a Researcher Dashboard access token/)
       end
 
       it 'for a session with no bearer' do
         sign_in researcher
-        get_clazz
+        get_scope
         expect(response.status).to eq(401)
-        expect(json['message']).to match(/accepts only a Researcher Dashboard launch token/)
+        expect(json['message']).to match(/accept only a Researcher Dashboard access token/)
       end
 
       [SignedJwt::AUD_REPORT_SERVER, SignedJwt::AUD_REPORT_SERVICE_FUNCTIONS].each do |aud|
-        it "for a #{aud} token" do
-          bearer(token_for(researcher, aud: aud))
-          get_clazz
+        it "for a #{aud} assertion" do
+          bearer(SignedJwt.create_assertion(researcher, aud: aud, expires_in: 60))
+          get_scope
           expect(response.status).to eq(401)
         end
       end
     end
 
     context 'refusing with 403' do
-      it 'a scope kind other than class' do
-        bearer(token_for(researcher, claims: { scope_kind: 'cohort', scope_id: clazz.id }))
-        get_clazz
+      it 'a token carrying no context' do
+        bearer(token_for(researcher, context_clazz: nil))
+        get_scope
         expect(response.status).to eq(403)
-        expect(json['message']).to match(/scope kind/)
+        expect(json['message']).to match(/not bound to a class/)
       end
 
-      it 'a user who may not research the class' do
+      it 'a token that does not carry class:researcher-read' do
+        bearer(token_for(researcher, capabilities: [run_capability]))
+        get_scope
+        expect(response.status).to eq(403)
+        expect(json).to include('success' => false, 'response_type' => 'ERROR')
+      end
+
+      it 'a service-minted portal-api token' do
+        bearer(token_for(researcher, capabilities: [TokenCapabilities::PORTAL_API]))
+        get_scope
+        expect(response.status).to eq(403)
+      end
+
+      it 'a user who may not research the class the token names' do
         bearer(token_for(FactoryBot.create(:confirmed_user)))
-        get_clazz
+        get_scope
         expect(response.status).to eq(403)
         expect(json['message']).to match(/do not have access/)
       end
@@ -134,26 +163,18 @@ describe API::V1::ResearcherDashboardController, type: :controller do
         token = token_for(researcher)
         researcher.project_users.update_all(expiration_date: Time.now - 1.day)
         bearer(token)
-        get_clazz
+        get_scope
         expect(response.status).to eq(403)
       end
     end
 
-    context 'refusing with 404' do
-      it 'when the scoped class has been deleted' do
-        bearer(token_for(researcher))
-        clazz.destroy
-        get_clazz
-        expect(response.status).to eq(404)
-        expect(json['message']).to match(/no longer exists/)
-      end
-
-      it 'when the dashboard is disabled' do
-        bearer(token_for(researcher))
-        ENV.delete('RESEARCHER_DASHBOARD_URL')
-        get_clazz
-        expect(response.status).to eq(404)
-      end
+    it 'answers 404 when the scoped class has been deleted' do
+      token = token_for(researcher)
+      clazz.destroy
+      bearer(token)
+      get_scope
+      expect(response.status).to eq(404)
+      expect(json['message']).to match(/no longer exists/)
     end
   end
 
@@ -166,13 +187,12 @@ describe API::V1::ResearcherDashboardController, type: :controller do
       allow(Rails.logger).to receive(:warn).with(/researcher_dashboard\.upstream_refusal/) { |message| warnings << message }
     end
 
-    def refresh(id = clazz.id)
-      post :refresh_profile, params: { id: id }, format: :json
+    def refresh
+      post :refresh_profile, format: :json
     end
 
-    context 'with a launch token for the class' do
-      let(:token) { token_for(researcher) }
-      before(:each) { bearer(token) }
+    context 'with an access token scoped to the class' do
+      before(:each) { bearer(token_for(researcher)) }
 
       it 'posts the URLs to the deriver and answers 202 with the fingerprint' do
         posted = nil
@@ -190,7 +210,8 @@ describe API::V1::ResearcherDashboardController, type: :controller do
           'assignment_urls' => ['HTTPS://ap.example:443/?activity=1']
         )
         assertion = posted.headers['Authorization'].sub(/\ABearer /, '')
-        data = SignedJwt.decode_portal_token(assertion, aud: SignedJwt::AUD_REPORT_SERVICE_FUNCTIONS)[:data]
+        data = JWT.decode(assertion, PortalSigningKey.private_key.public_key, true,
+                          algorithm: 'RS256', aud: SignedJwt::AUD_REPORT_SERVICE_FUNCTIONS, verify_aud: true).first
         expect(data['uid']).to eq(researcher.id)
       end
 
@@ -241,6 +262,21 @@ describe API::V1::ResearcherDashboardController, type: :controller do
         expect(a_request(:any, /.*/)).not_to have_been_made
       end
 
+      it 'answers 503 naming the signing key when the portal cannot sign, and sends nothing' do
+        previous = ENV.slice('PORTAL_SIGNING_KEY', 'PORTAL_PREVIOUS_VERIFY_KEYS')
+        # The presented token still verifies, through the rotation map, so the refusal can
+        # only be the signing key the assertion needs.
+        ENV['PORTAL_PREVIOUS_VERIFY_KEYS'] = JSON.generate(PortalSigningKey.kid => PortalSigningKey.private_key.public_key.to_pem)
+        ENV['PORTAL_SIGNING_KEY'] = ''
+        refresh
+        expect(response.status).to eq(503)
+        expect(json['message']).to match(/PORTAL_SIGNING_KEY is not usable/)
+        expect(a_request(:any, /.*/)).not_to have_been_made
+      ensure
+        ENV['PORTAL_SIGNING_KEY'] = previous['PORTAL_SIGNING_KEY']
+        ENV['PORTAL_PREVIOUS_VERIFY_KEYS'] = previous['PORTAL_PREVIOUS_VERIFY_KEYS']
+      end
+
       it 'answers 422 for an oversized list, and sends nothing' do
         allow_any_instance_of(ResearcherDashboard::Scope).to receive(:assignments).and_return(
           (1..501).map { |i| { offering_id: i, runnable_id: i, name: 'x', url: "https://a.example/#{i}", tool: nil } }
@@ -251,12 +287,13 @@ describe API::V1::ResearcherDashboardController, type: :controller do
       end
     end
 
-    it 'refuses a class other than the scoped one with 403, and sends nothing' do
-      bearer(token_for(researcher))
-      refresh(other_clazz.id)
-      expect(response.status).to eq(403)
-      expect(json['message']).to eq('The requested class is not the class this token was issued for')
-      expect(a_request(:any, /.*/)).not_to have_been_made
+    it 'refreshes the class in the token, never another' do
+      second = FactoryBot.create(:portal_clazz, teachers: [teacher])
+      bearer(token_for(researcher, context_clazz: second))
+      stub_request(:post, derive_url).to_return(status: 202, body: '{"queued":true}', headers: { 'Content-Type' => 'application/json' })
+      refresh
+      expect(response.status).to eq(202)
+      expect(a_request(:post, derive_url).with { |r| JSON.parse(r.body)['class_hash'] == second.class_hash }).to have_been_made.once
     end
 
     it 'refuses a non-researcher with 403, and sends nothing' do
@@ -267,11 +304,10 @@ describe API::V1::ResearcherDashboardController, type: :controller do
       expect(a_request(:any, /.*/)).not_to have_been_made
     end
 
-    it 'answers 404 when the dashboard is disabled, and sends nothing' do
-      bearer(token_for(researcher))
-      ENV.delete('RESEARCHER_DASHBOARD_URL')
+    it 'refuses a token without class:researcher-read with 403, and sends nothing' do
+      bearer(token_for(researcher, capabilities: [run_capability]))
       refresh
-      expect(response.status).to eq(404)
+      expect(response.status).to eq(403)
       expect(a_request(:any, /.*/)).not_to have_been_made
     end
 
@@ -302,7 +338,7 @@ describe API::V1::ResearcherDashboardController, type: :controller do
       post :run_package, body: body.is_a?(String) ? body : JSON.generate(body), format: :json
     end
 
-    context 'with a launch token for the class' do
+    context 'with an access token scoped to the class' do
       before(:each) { bearer(token_for(researcher)) }
 
       it 'answers 202 with the queue state only, and no credential' do
@@ -312,14 +348,6 @@ describe API::V1::ResearcherDashboardController, type: :controller do
         expect(response.status).to eq(202)
         expect(json).to eq('queue' => queue, 'appended' => ['projects-20-b'], 'vm' => 'running')
         expect(response.body).not_to include('eyJ')
-      end
-
-      it 'posts the class the token is scoped to' do
-        stub_request(:post, run_url).to_return(status: 202, headers: { 'Content-Type' => 'application/json' },
-                                               body: JSON.generate(queue: queue, appended: ['projects-20-b'], vm: 'launched'))
-        run({ 'packages' => [package] })
-        expect(a_request(:post, run_url).with { |r| JSON.parse(r.body)['scope']['classes'] == [{ 'class_hash' => clazz.class_hash, 'class_id' => clazz.id }] })
-          .to have_been_made.once
       end
 
       it 'refuses a checksum in the body with 400, and sends nothing' do
@@ -365,25 +393,47 @@ describe API::V1::ResearcherDashboardController, type: :controller do
       end
     end
 
+    it 'runs against the class in the token, and forwards that token to the resolve' do
+      stub_request(:post, run_url).to_return(status: 202, headers: { 'Content-Type' => 'application/json' },
+                                             body: JSON.generate(queue: queue, appended: ['projects-20-b'], vm: 'launched'))
+      token = token_for(researcher)
+      bearer(token)
+      run({ 'packages' => [package] })
+      expect(response.status).to eq(202)
+      expect(a_request(:post, run_url).with { |r| JSON.parse(r.body)['scope']['classes'] == [{ 'class_hash' => clazz.class_hash, 'class_id' => clazz.id }] })
+        .to have_been_made.once
+      expect(a_request(:get, /packages\/resolve/).with(headers: { 'Authorization' => "Bearer #{token}" })).to have_been_made.once
+    end
+
     it 'gives two researchers of the same class their own answers and assertions' do
       second = FactoryBot.create(:confirmed_user)
       second.add_role_for_project('researcher', project)
       answers = { researcher.id => 1, second.id => 2 }
+      key = PortalSigningKey.private_key.public_key
       stub_request(:post, run_url).to_return { |r|
-        uid = SignedJwt.decode_portal_token(r.headers['Authorization'].sub(/\ABearer /, ''), aud: SignedJwt::AUD_REPORT_SERVICE_FUNCTIONS)[:data]['uid']
-        assertion = SignedJwt.decode_portal_token(JSON.parse(r.body)['report_server_assertion'], aud: SignedJwt::AUD_REPORT_SERVER)[:data]
-        expect(assertion['uid']).to eq(uid)
+        bearer_claims = JWT.decode(r.headers['Authorization'].sub(/\ABearer /, ''), key, true,
+                                   algorithm: 'RS256', aud: SignedJwt::AUD_REPORT_SERVICE_FUNCTIONS, verify_aud: true).first
+        assertion = JWT.decode(JSON.parse(r.body)['report_server_assertion'], key, true,
+                               algorithm: 'RS256', aud: SignedJwt::AUD_REPORT_SERVER, verify_aud: true).first
+        expect(assertion['uid']).to eq(bearer_claims['uid'])
         { status: 202, headers: { 'Content-Type' => 'application/json' },
-          body: JSON.generate(queue: [{ class_hash: clazz.class_hash, package_key: "p#{answers[uid]}" }], appended: [], vm: 'running') }
+          body: JSON.generate(queue: [{ class_hash: clazz.class_hash, package_key: "p#{answers[bearer_claims['uid']]}" }], appended: [], vm: 'running') }
       }
       [researcher, second].each do |user|
-        Current.reset
+        reset_credential
         bearer(token_for(user))
         run({ 'packages' => [package] })
         expect(response.status).to eq(202)
         expect(json['queue'].first['package_key']).to eq("p#{answers[user.id]}")
       end
       expect(a_request(:post, run_url)).to have_been_made.twice
+    end
+
+    it 'refuses a token without class:researcher-run with 403, and resolves nothing' do
+      bearer(token_for(researcher, capabilities: [read_capability]))
+      run({ 'packages' => [package] })
+      expect(response.status).to eq(403)
+      expect(a_request(:any, /.*/)).not_to have_been_made
     end
 
     it 'refuses a non-researcher with 403, and resolves nothing' do
@@ -397,13 +447,6 @@ describe API::V1::ResearcherDashboardController, type: :controller do
       sign_in researcher
       run({ 'packages' => [package] })
       expect(response.status).to eq(401)
-    end
-
-    it 'answers 404 when the dashboard is disabled' do
-      bearer(token_for(researcher))
-      ENV.delete('RESEARCHER_DASHBOARD_URL')
-      run({ 'packages' => [package] })
-      expect(response.status).to eq(404)
     end
   end
 end

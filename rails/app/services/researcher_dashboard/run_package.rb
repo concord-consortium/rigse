@@ -8,20 +8,21 @@ module ResearcherDashboard
     READ_TIMEOUT = 45
     UPSTREAM = Upstream::NAMES[:function]
 
-    def self.call(user:, clazz:, packages:, launch_token:)
-      new(user: user, clazz: clazz, packages: packages, launch_token: launch_token).call
+    def self.call(user:, clazz:, packages:, access_token:)
+      new(user: user, clazz: clazz, packages: packages, access_token: access_token).call
     end
 
-    def initialize(user:, clazz:, packages:, launch_token:)
+    def initialize(user:, clazz:, packages:, access_token:)
       @user = user
       @clazz = clazz
       @packages = packages
-      @launch_token = launch_token
+      @access_token = access_token
     end
 
     def call
+      Settings.require_signing_key!
       # One at a time: each resolve is a portal read at report-server.
-      resolved = @packages.map { |p| Catalog.resolve(**p, launch_token: @launch_token) }
+      resolved = @packages.map { |p| Catalog.resolve(**p, access_token: @access_token) }
       firebase_app = Settings.firebase_app
       # Minted whenever a package asks for the CLUE pre-pull, whatever the runner does with
       # it: rigse learning the runner's configuration would be the wrong coupling.
@@ -30,7 +31,7 @@ module ResearcherDashboard
       url = "#{Settings.function_url}/run-package"
 
       response = Upstream.post_json(:function, url, body: body(resolved, apps, firebase_app),
-                                    bearer: Assertions.report_service_functions(user: @user),
+                                    bearer: PortalAssertions.report_service_functions(user: @user),
                                     read_timeout: READ_TIMEOUT)
       case response.code
       when 202
@@ -69,7 +70,7 @@ module ResearcherDashboard
         firebase_project: firebase_app,
         # An assertion, not a token: the function exchanges it at report-server only when it
         # launches a VM, so the reuse branch leaves the running VM's token alone.
-        report_server_assertion: Assertions.report_server(user: @user, clazz: @clazz)
+        report_server_assertion: PortalAssertions.report_server(user: @user, clazz: @clazz)
       }
     end
   end

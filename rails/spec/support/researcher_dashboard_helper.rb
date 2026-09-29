@@ -1,7 +1,6 @@
-# Enables the dashboard for an example (enabled? reads ENV per call) and restores ENV afterwards.
+# The settings the refresh and run paths read per call, set for an example and restored afterwards.
 module ResearcherDashboardHelper
   ENVIRONMENT = {
-    'RESEARCHER_DASHBOARD_URL' => 'https://researcher-dashboard.example/',
     'REPORT_SERVER_URL' => 'https://report-server.example/',
     'RESEARCHER_DASHBOARD_FUNCTION_URL' => 'https://functions.example/researcherDashboard',
     'RESEARCHER_DASHBOARD_FIREBASE_APP' => 'report-service-dev',
