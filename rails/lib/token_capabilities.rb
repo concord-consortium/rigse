@@ -16,6 +16,12 @@ module TokenCapabilities
 
   CLASS_CONTEXT = 'class'.freeze
 
+  # The record each context type names. A context is something rigse runs a capability's gate
+  # against, so every type here is a portal record with an integer id. The class is named
+  # rather than referenced, because this file is eager loaded and holding an autoloaded
+  # constant here would keep a reference to a class that is unloaded on every code reload.
+  CONTEXT_TYPES = { CLASS_CONTEXT => 'Portal::Clazz' }.freeze
+
   class Denied < StandardError; end
 
   Capability = Struct.new(:name, :context_type, :audience, :gate, keyword_init: true)
@@ -49,6 +55,16 @@ module TokenCapabilities
   # The context types the given capabilities are bound to, without nil.
   def self.context_types(names)
     names.map { |n| fetch(n).context_type }.compact.uniq
+  end
+
+  # The record a context names, or nil when there is no such record.
+  def self.context_record(type, id)
+    CONTEXT_TYPES[type]&.constantize&.find_by(id: id)
+  end
+
+  # The context type a record can be bound to, or nil for a record no context names.
+  def self.context_type_for(object)
+    CONTEXT_TYPES.find { |_type, model| object.is_a?(model.constantize) }&.first
   end
 
   # The audience a capability's service is known by, or nil when it is not configured.

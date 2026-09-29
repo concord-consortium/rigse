@@ -44,11 +44,7 @@ module TokenScope
     return true if context_type.nil?
     context = Current.token_context
     context.present? && context['type'] == context_type && object.present? &&
-      context_type_for(object) == context_type && context['id'] == object.id
-  end
-
-  def self.context_type_for(object)
-    object.is_a?(Portal::Clazz) ? TokenCapabilities::CLASS_CONTEXT : nil
+      TokenCapabilities.context_type_for(object) == context_type && context['id'] == object.id
   end
 
   def self.parse_context(context)

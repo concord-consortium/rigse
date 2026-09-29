@@ -340,4 +340,24 @@ describe AccessGrant do
 
 
 
+
+  # A context is spelled "<type>:<id>" on the authorize request. The type follows the same
+  # grammar as the capability names, which are hyphenated, so a hyphen has to survive here.
+  describe '.parse_context' do
+    it 'reads a hyphenated type, as the capability names are hyphenated' do
+      expect(AccessGrant.parse_context('research-project:7')).to eq(type: 'research-project', id: 7)
+      expect(AccessGrant.parse_context('class:123')).to eq(type: 'class', id: 123)
+    end
+
+    it 'refuses a type or an id outside the grammar' do
+      expect(AccessGrant.parse_context('Class:1')).to be_nil
+      expect(AccessGrant.parse_context('-class:1')).to be_nil
+      expect(AccessGrant.parse_context('class_set:1')).to be_nil
+      expect(AccessGrant.parse_context('class:0')).to be_nil
+      expect(AccessGrant.parse_context('class:01')).to be_nil
+      expect(AccessGrant.parse_context('class')).to be_nil
+      expect(AccessGrant.parse_context(nil)).to be_nil
+    end
+  end
+
 end

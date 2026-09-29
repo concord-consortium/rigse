@@ -139,7 +139,7 @@ class AccessGrant < ApplicationRecord
 
   # "class:123" => {type: "class", id: 123}
   def self.parse_context(value)
-    return nil unless value.is_a?(String) && value =~ /\A([a-z]+):([1-9][0-9]*)\z/
+    return nil unless value.is_a?(String) && value =~ /\A([a-z][a-z0-9-]*):([1-9][0-9]*)\z/
     { type: $1, id: $2.to_i }
   end
 
@@ -206,7 +206,7 @@ class AccessGrant < ApplicationRecord
       return "server_error"
     end
     return nil unless context
-    object = context[:type] == TokenCapabilities::CLASS_CONTEXT ? Portal::Clazz.find_by(id: context[:id]) : nil
+    object = TokenCapabilities.context_record(context[:type], context[:id])
     return "access_denied" unless object
     gates = scope.map { |name| TokenCapabilities.fetch(name) }.select { |c| c.context_type == context[:type] }.map(&:gate).compact
     gates.all? { |gate| gate.call(user, object) } ? nil : "access_denied"
