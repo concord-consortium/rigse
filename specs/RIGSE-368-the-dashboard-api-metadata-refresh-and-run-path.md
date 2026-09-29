@@ -12,8 +12,10 @@ rigse gains the three endpoints the Researcher Dashboard app calls with its laun
 
 **Read this section first; it overrides the requirements below where they disagree** (2026-09-28). RIGSE-367 was redesigned after scytacki's review of PR #1487 and re-implemented on `RIGSE-367-oauth-pkce-scoped-tokens` from `master` (spec `specs/RIGSE-367-oauth-pkce-launch-and-scoped-tokens/` on that branch). This branch stacks on #1487's `RIGSE-367-portal-signing-key`, which the redesign replaces, so it is rebased onto the new branch and reworked before it merges. What changes:
 
-- **The credential (R1, R2, R3).** There is no `aud: researcher-dashboard` launch token. The app gets an RS256 access token (RFC 9068, header `typ: at+jwt`) from `/oauth/token` by the authorization code flow with PKCE, carrying `scope` (space-separated capabilities) and `context: {"type": "class", "id": <integer>}` in place of `scope_kind`/`scope_id`. The three endpoints authenticate through `current_user` (the Devise JWT strategy accepts the access token and stores no session for it) and authorize with Pundit or the researcher gate, not through `check_for_auth_token(params, aud: ...)`, which the redesign removed the `aud:` keyword from. Each declares what it accepts with `accepts_token_capability`: the metadata and `refresh_profile` endpoints `class:researcher-read`, `run_package` `class:researcher-run` (capabilities are flat: neither implies the other, and the dashboard's client is configured with both). Each checks the class it touches with `require_token_capability!(capability, clazz)`, which is the class in the token's `context`, and still runs `can_be_researcher_for_clazz?`. `Current.token_scope_kind`/`token_scope_id` do not exist; `Current.token_scope` and `Current.token_context` do. A scoped token is refused everywhere that declares none of its capabilities by one global check, so "accept only the launch token" (the "endpoints accept only a launch token" decision) becomes "declare the capability"; an unscoped session or HS256 token is a full-user credential on these endpoints unless the controller also declares no `portal-api` (`API::APIController` accepts `portal-api` by default; this controller should `accepts_no_token_capabilities` first, then declare its two).
-- **Enabling (R5).** `RESEARCHER_DASHBOARD_URL` and `ResearcherDashboard.enabled?` are gone: the dashboard is an `ExternalReport` plus a public `Client` with scopes, created by an admin. The endpoints should answer 404 only when a setting they need is missing (the signing key via `PortalSigningKey.usable?`, `REPORT_SERVER_URL`, the function URL, the Firebase apps), which R5's second half already covers.
+- **The credential (R1, R2, R3).** There is no `aud: researcher-dashboard` launch token. The app gets an RS256 access token (RFC 9068, header `typ: at+jwt`) from `/oauth/token` by the authorization code flow with PKCE, carrying `scope` (space-separated capabilities) and `context: {"type": "class", "id": <integer>}` in place of `scope_kind`/`scope_id`. The three endpoints authenticate through `current_user` (the Devise JWT strategy accepts the access token and stores no session for it) and authorize with Pundit or the researcher gate, not through `check_for_auth_token(params, aud: ...)`, which the redesign removed the `aud:` keyword from. Each declares what it accepts with `accepts_token_capability`: the metadata and `refresh_profile` endpoints `class:researcher-read`, `run_package` `class:researcher-run` (capabilities are flat: neither implies the other, and the dashboard's client is configured with both). Each checks the class it touches with `require_token_capability!(capability, clazz)`, which is the class in the token's `context`, and still runs `can_be_researcher_for_clazz?`. `Current.token_scope_kind`/`token_scope_id` do not exist; `Current.token_scope` and `Current.token_context` do. A scoped token is refused everywhere that declares none of its capabilities by one global check, so "accept only the launch token" (the "endpoints accept only a launch token" decision) becomes "declare the capability"; an unscoped session or HS256 token is a full-user credential on these endpoints unless the controller also declares no `portal-api` (`API::APIController` accepts `portal-api` by default; this controller should `accepts_no_token_capabilities` first, then declare its two). R7's `platform_user_id` is `current_user`, not the token's `uid` read by hand: the two are the same user on every call the app makes, and differ only for a same-origin request that also carries a portal session, which Warden authenticates in preference to the bearer.
+- **The routes (R4, R7, R11, R16).** The three endpoints name no class. They are `GET /api/v1/researcher_dashboard/scope`, `POST /api/v1/researcher_dashboard/refresh_profile` and `POST /api/v1/researcher_dashboard/run_package`, and each acts on the class in the token's `context` claim. The metadata body gains `kind` beside the class fields, matching `scope.json`'s `kind`, `id` and `classes`. With no path id there is nothing to compare with the scope, so R4's comparison and `require_path_matches_scope` go away: `require_token_capability!(capability, clazz)` checks the capability against the token's own context and `can_be_researcher_for_clazz?` checks access. A second scope kind, most plausibly a cohort, then costs a `TokenCapabilities` registry entry and a method expanding a context into its classes rather than a second set of routes (Decisions).
+- **Refusing an unscoped credential (R1).** `TokenScope.allows?` passes any credential that carries no scope, so the controller refuses one itself with a 401 before any capability check. These are CSRF-exempt bearer endpoints that mint Firebase runner tokens, and a portal session reaching them would be a forgery hole.
+- **Enabling (R5).** `RESEARCHER_DASHBOARD_URL` and `ResearcherDashboard.enabled?` are gone: the dashboard is an `ExternalReport` plus a public `Client` with scopes, created by an admin. There is no longer a portal-wide "disabled" state and so no blanket 404; the only thing left to be missing is a setting an endpoint needs (the signing key via `PortalSigningKey.usable?`, `REPORT_SERVER_URL`, the function URL, the Firebase apps), which R5's second half already covers as a 503 naming it.
 - **The resolve bearer (R17).** rigse forwards the app's access token to report-server's resolve. That token's `aud` is a list naming rigse (`site_url`) and report-server (`REPORT_SERVER_URL` without a trailing slash); report-server's catalog pipeline accepts it once REPORT-142's verifier checks list membership and `packages:read`.
 - **The assertions (R13, R21).** `ResearcherDashboard::Assertions` is now `PortalAssertions` (`app/services/portal_assertions.rb`), built on `SignedJwt.create_assertion`: `report_server(user:, clazz:)` and `report_service_functions(user:)`, with the same claims and audiences, `context` in place of `scope_kind`/`scope_id`, and `user_type: "researcher"` kept. Both still carry a single-string `aud`.
 - **Settings.** `REPORT_SERVER_URL` and the `ReportServerURL` stack parameter are added by RIGSE-367, under the same names this branch uses, so the rebase drops this branch's copies of them.
@@ -114,7 +116,7 @@ rigse gains the three endpoints the Researcher Dashboard app calls with its laun
 
 ## Technical Notes
 
-- **What master had before this story.** None of the dashboard API: no `API::V1::ResearcherDashboardController`, no `/api/v1/researcher_dashboard` route and no CORS entry for it; the spike's metadata endpoint (`RIGSE-365-runner-token-service`) was never merged, so everything here was built fresh on the RIGSE-367 branch, which this story stacks on and whose primitives it uses: `decode_portal_token(token, aud:)`, `check_for_auth_token(params, aud:)` setting `Current.token_scope_kind` and `token_scope_id` (and refusing an unscoped launch token), `User#can_be_researcher_for_clazz?`, `ResearcherDashboard.enabled?` and `ResearcherDashboard::Assertions`.
+- **What master had before this story.** None of the dashboard API: no `API::V1::ResearcherDashboardController`, no `/api/v1/researcher_dashboard` route and no CORS entry for it; the spike's metadata endpoint (`RIGSE-365-runner-token-service`) was never merged, so everything here was built fresh on the RIGSE-367 branch, which this story stacks on and whose primitives it uses: the Devise JWT strategy's acceptance of the access token, `TokenScope` and `Current.token_scope`/`token_context`, `TokenCapabilityCheck`'s `accepts_token_capability` and `require_token_capability!`, `User#can_be_researcher_for_clazz?` and `PortalAssertions`.
 - **Portal facts the endpoints rest on.** `ExternalActivity#url` re-serializes the stored value (lowercasing the scheme, dropping a default port), so the stored `read_attribute(:url)` is what the endpoints report; it can be `""`, and an activity's name can be null. An offering whose `runnable_type` names a model that no longer exists raises `NameError` when loaded, so only `ExternalActivity` offerings are read. `tools.name` is the display name; `source_type` is what the portal branches on. The projects a class belongs to are the projects of its teachers' cohorts, the same join the researcher gate makes. `class_hash` is 48 lowercase hex.
 - **The other ends of its calls.** report-service's `researcherDashboard` function (REPORT-141) takes `/run-package` behind an `aud: report-service-functions` bearer, validates the whole batch before writing, and answers 202 `{success: true, queue: [{class_hash, package_key}], appended: [package_key], vm}`, 400 naming a field, 401, 409 `queue at its cap (N outstanding)`, 502 for an upstream failure after queueing, 500, or 503 naming its unset launch settings; every error body is `{success: false, error}`, and each of its upstream calls is made once with a 10-second timeout. The same function (REPORT-142) takes `/derive-profile` with `{class_hash, assignment_fingerprint, assignment_urls}` (at most 500 URLs of at most 2,048 characters, 256 KiB in all), answering 202 `{success: true, queued: true}`, 400, 502, or 503 while `RD_AUTHORING_HOSTS` is empty. report-server's `GET /api/v1/packages/resolve?identity=&version=` (REPORT-142) takes the app's launch token and answers `{catalog_id, identity, version, checksum, expected_duration_seconds, clue_prepull, archived, runnable, reason}`, 404 for a package the caller may not see, 401 without a launch token or for an unknown `uid`, and 503 when its portal read times out, with errors as `{error: CODE, message}`.
 - **Set-aside Jira clauses.** The story's rename of `platform` to `tool` and its deletion of the spike's wait (`waitUntilRunning`, the 30-second-against-180-second timeout, the unrescued `Net::ReadTimeout`) act on spike-only code, so they were set aside as a rename and a deletion and restated as requirements on the new code: the endpoint never has `platform` (R7), and the run path never waits and rescues its own timeouts (R26, R27).
@@ -137,7 +139,19 @@ Where the code departs from the implementation plan, and how it was verified.
 - **A FirebaseApp setting that names no row is a 503** (step 5). `SignedJwt.create_firebase_token` raises `SignedJwt::Error` for an unknown name, which the controller does not rescue, so a portal with `RESEARCHER_DASHBOARD_CLUE_FIREBASE_APP` set before its FirebaseApp row existed answered a bare 500. `Settings.firebase_app` and `clue_firebase_app` now raise `NotConfigured` naming the variable and the missing row, before anything is minted or sent.
 - **The run path's specs split by layer** (step 5). `run_package_spec.rb` covers the service: the posted body, the tokens and assertions, the CLUE token, all-or-nothing resolution, each function answer and the configuration refusals. The controller spec's `run_package` block covers what only the action can show: the 202 body sliced to the queue state, the 400s for a caller-supplied checksum, a scope key, malformed JSON and a non-object body, the error envelope around the function's 409, the 503, two researchers' independent answers, and the 401, 403 and 404 gates.
 - **Verification** (2026-09-24, after step 6). The dashboard's own specs: 154 examples, 0 failures. The full rspec suite (`docker/dev/run-spec.sh`): 3,207 examples, 3 failures, 203 pending. The three failures are in `research_classes_controller_spec.rb` and come from this machine's `.env`, which sets `RESEARCHER_DASHBOARD_URL`. The test container inherits it, so each class row gains the `researcher_dashboard_url` RIGSE-367 adds; the file passes (21 examples) with the variable blanked, and CI sets no such variable. The `react-components` jest suite: 173 tests, 2 failures, both in `external-report-button.test.tsx`, which fail identically on master under a full run on this machine (Node 24; CI uses 18) and pass when that file runs alone. This branch changes nothing in `react-components`. The stack template lints clean with `cfn-lint`, and `docker compose config` shows the four variables.
-- **The requirements were compared with the code, requirement by requirement, after step 6.** Nothing was missing. One reading was recorded as a judgment call, the bare 404 while the dashboard is disabled (Decisions).
+- **The requirements were compared with the code, requirement by requirement, after step 6.** Nothing was missing. One reading was recorded as a judgment call, the bare 404 while the dashboard is disabled, which the rework then deleted along with the disabled state itself.
+
+#### The rework onto RIGSE-367's redesigned token model
+
+The branch was rebased onto `RIGSE-367-oauth-pkce-scoped-tokens` and the code reworked on 2026-09-29. Beside what the redesign section above names:
+
+- **The class the controller acts on is the token's context, loaded once.** `authorize_scope` reads `Current.token_context`, refuses a token bound to nothing or to a type other than `class` with 403, answers 404 for a class that has been deleted, then runs `require_token_capability!` for the action's capability and `can_be_researcher_for_clazz?`. `ACTION_CAPABILITIES` is the one place each action's capability is written: the `accepts_token_capability` declarations are generated from it, so the declaration and the check cannot name different capabilities.
+- **A capability refusal on these endpoints uses the API error envelope.** `TokenCapabilityCheck#token_capability_denied` renders `{success, message}`; the controller overrides it with `error(...)`, so R28's shape covers every refusal these three actions make.
+- **`Settings.require_signing_key!` joins the other configuration checks.** Both the refresh and the run path sign an assertion, and a token signed by a previous key still verifies while `PORTAL_SIGNING_KEY` is unset or malformed, which would otherwise raise `SignedJwt::Error` as a 500. Each service calls it before anything is resolved or sent.
+- **Nothing reads `params`, so nothing parses the body.** `check_for_auth_token(params, ...)` was what forced Rails to parse it, so the controller's `ActionDispatch::Http::Parameters::ParseError` handler went with it and the message it rendered has one definition again. `RunRequest.parse` answers every malformed run body from `request.raw_post`, and `refresh_profile`, which takes no body (R11), ignores one rather than refusing it.
+- **The resolve bearer is the request's own access token**, read from the `Authorization` header with `PortalBearer.raw_token`; `Catalog.resolve` and `RunPackage.call` take it as `access_token:`.
+- **A request spec covers what a controller spec cannot.** `rails/spec/requests/researcher_dashboard_api_spec.rb` presents a real bearer through the routes and the Devise strategy: the class in the token and only it, no session stored for a scoped token, a signed-in session refused, and a read-only token refused on the run path. The controller spec's two-request example resets Warden between calls, since a controller spec reuses one request environment and Warden memoizes both the user and the strategies that ran.
+- **Verification of the rework** (2026-09-29). The dashboard's own specs, `scoped_oauth_flow_spec.rb`, `token_scope_spec.rb`, `token_capabilities_spec.rb`, `token_capability_check_spec.rb` and `jwt_controller_scoped_spec.rb`: 183 examples, 0 failures. The full rspec suite (`docker/dev/run-spec.sh`): 3,250 examples, 0 failures, 202 pending. The three `research_classes_controller_spec.rb` failures of the 2026-09-24 run are gone with `RESEARCHER_DASHBOARD_URL`, which no longer exists for this machine's `.env` to set. Nothing in `react-components` changed.
 
 ## Out of Scope
 
@@ -145,14 +159,25 @@ Where the code departs from the implementation plan, and how it was verified.
 - The app's use of these endpoints, the profile's maximum age and when the app asks for a refresh: RD-3.
 - Deleting the CLUE class-token mint and its setting: RIGSE-369.
 - Moving feedback metadata off `REPORT_SERVICE_BEARER_TOKEN` (RIGSE-367 R23).
-- A second scope kind. The endpoints refuse any `scope_kind` but `class` (R2); a cohort scope is `final-design.md` section 15.1's extension.
+- A second scope kind. The endpoints refuse a token whose `context` is not a class; a cohort scope is `final-design.md` section 15.1's extension, and the routes are shaped so that it costs a `TokenCapabilities` registry entry and a context expansion rather than new endpoints (Decisions).
 - Deleting spike-only code (see the set-aside clauses in Background).
 
 ## Not Yet Implemented
 
-- Enabling the refresh and the run path on the staging and production stacks — the release process updates stacks with their previous template, so the four new parameters (`ReportServerURL`, `ResearcherDashboardFunctionURL`, `ResearcherDashboardFirebaseApp`, `ResearcherDashboardClueFirebaseApp`) reach a stack only through a deliberate template update per environment; until then the metadata endpoint works and the refresh and run path answer 503 naming the missing setting.
+- Enabling the refresh and the run path on the staging and production stacks — the release process updates stacks with their previous template, so the three parameters this branch adds (`ResearcherDashboardFunctionURL`, `ResearcherDashboardFirebaseApp`, `ResearcherDashboardClueFirebaseApp`), beside RIGSE-367's `ReportServerURL`, reach a stack only through a deliberate template update per environment; until then the scope endpoint works and the refresh and run path answer 503 naming the missing setting.
 
 ## Decisions
+
+### The endpoints name no class in their routes
+
+**Context**: The redesign's token carries its scope in a `context` claim, so the class in `GET .../classes/:id` and `POST .../classes/:id/refresh_profile` duplicated something the credential already said, and `run_package` never had a path id at all. Decided during the rework (2026-09-29).
+**Options considered**:
+- A) `GET /scope`, `POST /refresh_profile` and `POST /run_package`, all three taking the class from `Current.token_context`, with `kind` added to the metadata body beside the class fields.
+- B) Keep `classes/:id` on the two that had it and compare the path id with the token's context, as R4 did.
+
+**Decision**: A. There is then no path id to disagree with the scope, so `require_path_matches_scope` and R4's integer comparison go away and the two ways of naming a class cannot drift apart; what is left is the capability check against the token's own context and the researcher gate. It also decides what a second scope kind costs: a cohort scope is a `TokenCapabilities` registry entry and a method expanding a context into its classes, answered by the same three routes, where B would have needed `cohorts/:id` beside `classes/:id` on every endpoint. `kind` in the metadata body is the same discriminator `scope.json` carries with `id` and `classes`, so the app reads the scope's shape from the one field in both places. The cost is that a person cannot read a request's class out of its URL, which the token's `context` claim carries instead.
+
+---
 
 ### rigse cannot learn `clue_prepull` from the resolve answer
 
@@ -201,14 +226,14 @@ Where the code departs from the implementation plan, and how it was verified.
 
 ---
 
-### The endpoints accept only a launch token
+### The endpoints accept only a scoped credential
 
-**Context**: `check_for_auth_token` also accepts a session cookie, an HS256 portal token and an AccessGrant, none of which carries a scope.
+**Context**: A session cookie, an HS256 portal token and an AccessGrant all authenticate a full user and carry no scope, and `TokenScope.allows?` passes every one of them, so the capability checks alone would let a session through.
 **Options considered**:
-- A) Refuse every credential but the launch token (R1).
+- A) Refuse every credential that carries no scope (R1).
 - B) Accept any credential and take the class from the path for unscoped callers.
 
-**Decision**: A. The story gates each endpoint on "the scope in the verified bearer", and `run_package` has no other way to name a class. Accepting a session would also make the two POSTs reachable by a cross-site form under `protect_from_forgery`'s null-session handling, and would give a portal session a path to mint runner tokens. The app is the only caller. Recorded as R1.
+**Decision**: A. The story gates each endpoint on "the scope in the verified bearer", and with no class in the route (Decisions) an unscoped caller names no class at all. Accepting a session would also make the two POSTs reachable by a cross-site form, since the controller skips the CSRF check, and would give a portal session a path to mint runner tokens. The app is the only caller. Recorded as R1.
 
 ---
 
@@ -232,32 +257,9 @@ Where the code departs from the implementation plan, and how it was verified.
 
 ---
 
-### The disabled 404 is a bare 404, not the error envelope
-
-**Context**: R5 says the endpoints answer 404 while the dashboard is disabled "as the launch action does", and the launch action answers `head :not_found`. R28 says every refusal uses `API::APIController#error`. Found in the post-implementation comparison of the code with this spec.
-**Options considered**:
-- A) A bare 404, as the launch action gives and the plan's controller wrote.
-- B) `error('The Researcher Dashboard is not enabled', 404)`, the envelope with a message.
-
-**Decision**: A (implementation, 2026-09-24). A disabled dashboard is a portal on which the endpoints do not exist, not a refusal of a request to them, and a bare 404 is how such a portal already answers every path, including the launch. R28 governs the refusals of an enabled dashboard.
-
----
-
-### R3 called the gate on `current_user`, which is nil for a launch-token request
-
-The Devise strategy refuses every RS256 token (RIGSE-367 implementation, step 1: `decode_portal_token(jwt_token_value, aud: nil)` fails and leaves `current_user` nil), so the only user on these requests is the one `check_for_auth_token` returns from the token's `uid`. As written, R3 would have raised on nil or refused every call. Fixed: R3 and R7 name the token's user.
-
----
-
 ### R16's "exactly this body" cannot be checked against `params`
 
 `config.load_defaults 7.0` turns on JSON parameter wrapping, so a scratch controller spec posting `{"packages": [...]}` saw `params.keys` of `packages, format, controller, action, researcher_dashboard` and `request.request_parameters.keys` of `packages, researcher_dashboard`. A top-level key check over either would refuse every valid request, and an unparsable body raised `ActionDispatch::Http::Parameters::ParseError` before the action. Fixed: R16 checks the parsed request body and names a non-object body as a 400.
-
----
-
-### R4 compared a string path id with an integer claim
-
-`params[:id]` is a string and `scope_id` an integer (RIGSE-367 R15), so a direct comparison refuses every request and a lenient one accepts `"12abc"`. Fixed: R4 compares as integers. (Stage 5 found the router already refuses a non-numeric id with a 404, `rails routes` showing `:id=>/\d+/` on the new routes, and R4 now says so.)
 
 ---
 
@@ -298,7 +300,7 @@ The Devise strategy refuses every RS256 token (RIGSE-367 implementation, step 1:
 - A) `skip_before_action :verify_authenticity_token`, as `jwt_controller`, `oidc_mint_controller` and the other bearer-only `/api/v1` controllers do.
 - B) Keep the null session, which lets a bearer POST through but logs a CSRF warning for each one.
 
-**Decision**: A. The endpoints read no session and refuse every request without a launch token (R1), so there is nothing for a forged request to ride, and B's only effect is a warning on every run and refresh. Recorded in "As built" under Technical Notes.
+**Decision**: A. The endpoints read no session and refuse every request without a scoped bearer (R1), so there is nothing for a forged request to ride, and B's only effect is a warning on every run and refresh. Recorded in "As built" under Technical Notes.
 
 ---
 
@@ -340,9 +342,3 @@ The Devise strategy refuses every RS256 token (RIGSE-367 implementation, step 1:
 ### Nothing recorded an upstream refusal server-side
 
 The plan reported each refusal's reason to the browser (R28) and wrote nothing to the portal's log, so a researcher's "my run failed" had no server-side trace beyond a 502 status line. Fixed: `Upstream` writes one `researcher_dashboard.upstream_refusal upstream=... status=... reason=...` warning for every refusal, timeout and connection failure, with no request body and so no token. Stage 8 found no requirement for it; Doug added it as R30 (2026-09-24).
-
----
-
-### Every action answers 404 unless the specs enable the dashboard
-
-`ResearcherDashboard.enabled?` needs `RESEARCHER_DASHBOARD_URL` as well as the signing key, and `spec_helper.rb` sets only the key (RIGSE-367 step 1). The first throwaway run of the disabled case confirmed the 404. Fixed: step 3 states the harness, an `around` hook setting and restoring the five variables.
