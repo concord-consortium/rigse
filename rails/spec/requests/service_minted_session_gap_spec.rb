@@ -15,9 +15,15 @@ RSpec.describe 'D10: a scoped token never becomes a session', type: :request do
     get '/api/v1/teacher_classes/1', headers: { 'Authorization' => "Bearer #{token}" }
   end
 
-  it 'does not establish a session from a marked token' do
-    token = SignedJwt.create_portal_token(user, { minted_via_oidc_client_id: 5, minted_for: 'spec' })
-    authenticate_on_the_api(token)
+  it 'does not establish a session from a minted token' do
+    authenticate_on_the_api(ServiceMintedTokenHelper.minted_token(user, oidc_client_id: 5))
+    expect(response.status).not_to eq(401)
+    get '/auth/user'
+    expect(response).to redirect_to('/auth/login')
+  end
+
+  it 'does not establish a session from the portal-api scope without the marker' do
+    authenticate_on_the_api(ServiceMintedTokenHelper.unmarked_portal_api_token(user))
     expect(response.status).not_to eq(401)
     get '/auth/user'
     expect(response).to redirect_to('/auth/login')

@@ -11,11 +11,6 @@ RSpec.describe TokenScope do
     expect(TokenScope.allows?(TokenCapabilities::CLASS_RESEARCHER_READ, clazz)).to be true
   end
 
-  it 'treats a marked token without a scope as portal-api' do
-    TokenScope.apply!('minted_via_oidc_client_id' => 3)
-    expect(TokenScope.capabilities).to eq([TokenCapabilities::PORTAL_API])
-  end
-
   it 'allows a context-bound capability only on the token context' do
     TokenScope.apply!('scope' => 'class:researcher-read', 'context' => { 'type' => 'class', 'id' => clazz.id })
     expect(TokenScope.allows?(TokenCapabilities::CLASS_RESEARCHER_READ, clazz)).to be true

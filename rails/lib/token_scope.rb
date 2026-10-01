@@ -8,9 +8,6 @@ module TokenScope
     Current.minted_via_oidc_client_id = data['minted_via_oidc_client_id']
     Current.minted_for                = data['minted_for']
     scope = data['scope']
-    # A token minted by oidc_mint before tokens carried a scope is limited exactly as a new
-    # one is; they live an hour, so this only matters across the deploy.
-    scope = TokenCapabilities::PORTAL_API if scope.nil? && data['minted_via_oidc_client_id'].present?
     Current.token_scope   = scope.nil? ? nil : TokenCapabilities.parse(scope)
     Current.token_context = parse_context(data['context'])
   end

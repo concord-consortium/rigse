@@ -3,7 +3,7 @@ class AccessGrant < ApplicationRecord
   belongs_to :client
   belongs_to :learner, :class_name => "Portal::Learner"
   belongs_to :teacher, :class_name => "Portal::Teacher"
-  before_create :refuse_service_minted_tokens
+  before_create :refuse_under_scoped_tokens
   before_create :refuse_opaque_grants_for_scoped_clients
   before_create :generate_tokens
 
@@ -253,10 +253,10 @@ class AccessGrant < ApplicationRecord
     throw :abort
   end
 
-  # A scoped or service-minted token must never be turned into an unscoped opaque one.
-  def refuse_service_minted_tokens
-    return if Current.minted_via_oidc_client_id.blank? && !TokenScope.scoped?
-    errors.add(:base, 'cannot be created from a scoped or service-minted token')
+  # A scoped token must never be turned into an unscoped opaque one.
+  def refuse_under_scoped_tokens
+    return unless TokenScope.scoped?
+    errors.add(:base, 'cannot be created from a scoped token')
     throw :abort
   end
 

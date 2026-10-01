@@ -1,39 +1,40 @@
 require 'spec_helper'
 
-# D11 rule 1: ApplicationController#enforce_token_capabilities denies a marked (service-minted)
-# token on any non-API controller. The spec presents a real marked token, which carries portal-api.
+# ApplicationController#enforce_token_capabilities refuses a portal-api token on a controller
+# outside the API, since such a controller declares no capability.
 RSpec.describe HomeController, type: :controller do
   before(:each) { generate_default_settings_with_mocks }
 
   after(:each) { Current.reset }
 
-  def present_marked_token(client_id)
-    user = FactoryBot.create(:confirmed_user)
-    token = SignedJwt.create_portal_token(user, { minted_via_oidc_client_id: client_id, minted_for: 'spec' })
+  let(:user) { FactoryBot.create(:confirmed_user) }
+
+  def present(token)
     Current.reset
     request.headers['Authorization'] = "Bearer #{token}"
   end
 
   it 'denies a request carrying a service-minted token' do
-    present_marked_token(55)
+    present(ServiceMintedTokenHelper.minted_token(user, oidc_client_id: 55))
     get :getting_started
     expect(response).to have_http_status(:forbidden)
     expect(JSON.parse(response.body)['message']).to match(/may not be used here/)
   end
 
-  it 'does not deny a request with no marker' do
+  it 'denies the portal-api scope without the marker' do
+    present(ServiceMintedTokenHelper.unmarked_portal_api_token(user))
+    get :getting_started
+    expect(response).to have_http_status(:forbidden)
+  end
+
+  it 'does not deny a request with no token' do
     get :getting_started
     expect(response).not_to have_http_status(:forbidden)
   end
 end
 
-# D11 rule 1 (API side): enforce_token_capabilities accepts portal-api on API controllers
-# (API::APIController declares it), so a marked token is never denied on the
-# pipeline's API endpoints. Asserted at the controller level (not via a request spec) so it verifies
-# the request actually succeeds (200) rather than merely that the confinement message is absent — the
-# latter would also hold for an unrelated 403. A controller spec runs the same inherited
-# ApplicationController before_action chain, so it exercises the confinement filter deterministically,
-# without the cold-boot first-request auth quirk of end-to-end bearer-token request specs.
+# API::APIController declares portal-api, so a minted token reaches the API. The spec asserts a 200,
+# since an unrelated 403 would also lack the refusal message.
 RSpec.describe API::V1::OfferingsController, type: :controller do
   before(:each) { generate_default_settings_with_mocks }
   after(:each) { Current.reset }
@@ -41,8 +42,8 @@ RSpec.describe API::V1::OfferingsController, type: :controller do
   let(:teacher) { FactoryBot.create(:portal_teacher) }
   let(:offering) { FactoryBot.create(:portal_offering, clazz: teacher.clazzes.first) }
 
-  it 'does not confine a marked token on an API controller' do
-    token = SignedJwt.create_portal_token(teacher.user, { minted_via_oidc_client_id: 77, minted_for: 'spec' })
+  it 'does not confine a minted token on an API controller' do
+    token = ServiceMintedTokenHelper.minted_token(teacher.user, oidc_client_id: 77)
     Current.reset
     request.headers['Authorization'] = "Bearer #{token}"
 
