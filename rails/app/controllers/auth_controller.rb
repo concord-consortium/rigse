@@ -126,7 +126,7 @@ class AuthController < ApplicationController
     return oauth_error("invalid_grant", 400) unless grant.verifies_code_verifier?(params[:code_verifier])
     return oauth_error("invalid_grant", 400) if grant.redirect_uri.present? && params[:redirect_uri] != grant.redirect_uri
 
-    client.scoped? ? issue_scoped_access_token(client, grant) : issue_opaque_access_token(grant)
+    issue_access_token(client, grant)
   end
 
   # RFC 6749 4.1.3: a mismatched redirect_uri is refused, and so is a missing one for a PKCE
@@ -146,13 +146,20 @@ class AuthController < ApplicationController
   # before the code is spent, so a signing failure leaves the code for a retry; the grant
   # is then deleted only if this request still holds its code, so a concurrent redemption
   # cannot also succeed, and a token signed for a lost race is discarded unsent.
-  def issue_scoped_access_token(client, grant)
-    # Only what the client may still request, in case its scopes narrowed since the code.
-    capabilities = grant.scope_list & client.scope_list
-    return oauth_error("invalid_grant", 400) if capabilities.empty?
-    audiences = capabilities.map { |c| TokenCapabilities.audience_value(c) }
-    return oauth_error("server_error", 500) if audiences.any?(&:nil?)
-    ttl = ExternalReport::ReportTokenValidFor.to_i
+  def issue_access_token(client, grant)
+    if client.scoped?
+      # Only what the client may still request, in case its scopes narrowed since the code.
+      capabilities = grant.scope_list & client.scope_list
+      return oauth_error("invalid_grant", 400) if capabilities.empty?
+      audiences = capabilities.map { |c| TokenCapabilities.audience_value(c) }
+      return oauth_error("server_error", 500) if audiences.any?(&:nil?)
+      ttl = SignedJwt::SCOPED_ACCESS_TOKEN_TTL.to_i
+    else
+      # A code issued with a scope never buys a full-user token.
+      return oauth_error("invalid_grant", 400) if grant.scope.present?
+      capabilities, audiences = nil, []
+      ttl = SignedJwt::UNSCOPED_ACCESS_TOKEN_TTL.to_i
+    end
     token = begin
       SignedJwt.create_access_token(grant.user,
         client_id: client.app_id,
@@ -161,19 +168,14 @@ class AuthController < ApplicationController
         audiences: [APP_CONFIG[:site_url], *audiences].uniq,
         expires_in: ttl)
     rescue SignedJwt::Error => e
-      Rails.logger.error("OAuth token: could not sign a scoped token for #{client.app_id}: #{e.message}")
+      Rails.logger.error("OAuth token: could not sign an access token for #{client.app_id}: #{e.message}")
       return oauth_error("server_error", 500)
     end
     return oauth_error("invalid_grant", 400) unless AccessGrant.where(id: grant.id).where.not(code: nil).delete_all == 1
     response.headers["Cache-Control"] = "no-store"
-    render json: { access_token: token, token_type: "Bearer", expires_in: ttl, scope: capabilities.join(" ") }
-  end
-
-  def issue_opaque_access_token(grant)
-    return oauth_error("invalid_grant", 400) unless grant.spend_code!
-    grant.start_expiry_period!
-    response.headers["Cache-Control"] = "no-store"
-    render json: { access_token: grant.access_token, token_type: "bearer", expires_in: AccessGrant::ExpireTime.to_i }
+    body = { access_token: token, token_type: "Bearer", expires_in: ttl }
+    body[:scope] = capabilities.join(" ") if capabilities
+    render json: body
   end
 
   def oauth_error(error, status)

@@ -234,11 +234,11 @@ class AccessGrant < ApplicationRecord
     AccessGrant.where(id: id).where.not(code: nil).update_all(code: nil) == 1
   end
 
-  # A scoped client's grant only carries its code across the redirect, so it gets no opaque
-  # token at all: the scoped JWT is the only credential such a client ever receives.
+  # A scoped client's grant, and a public client's code-flow grant, only carry the code across
+  # the redirect, so they get no opaque token: the code buys a JWT access token instead.
   def generate_tokens
     self.code = issue_code ? SecureRandom.hex(16) : nil
-    if client&.scoped?
+    if client&.scoped? || (issue_code && client&.public?)
       self.access_token = self.refresh_token = nil
     else
       self.access_token, self.refresh_token = SecureRandom.hex(16), SecureRandom.hex(16)

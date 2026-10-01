@@ -134,7 +134,7 @@ RSpec.describe 'Scoped OAuth clients', type: :request do
       body = exchange(code)
       expect(body.keys).to match_array(%w[access_token token_type expires_in scope])
       expect(response.headers['Cache-Control']).to include('no-store')
-      expect(body).to include('token_type' => 'Bearer', 'expires_in' => 7200,
+      expect(body).to include('token_type' => 'Bearer', 'expires_in' => SignedJwt::SCOPED_ACCESS_TOKEN_TTL.to_i,
                               'scope' => 'class:researcher-read class:researcher-run packages:read')
       data, header = claims(body['access_token'])
       expect(header).to include('typ' => 'at+jwt', 'kid' => PortalSigningKey.kid, 'alg' => 'RS256')

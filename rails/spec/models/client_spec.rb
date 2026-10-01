@@ -129,15 +129,22 @@ describe Client do
     end
   end
 
-  # TODO: auto-generated
   describe '#updated_grant_for' do
-    xit 'updated_grant_for' do
-      client = described_class.new
-      user = FactoryBot.create(:user)
-      time_to_live = double('time_to_live')
-      result = client.updated_grant_for(user, time_to_live)
+    let(:client) { FactoryBot.create(:client, client_type: Client::PUBLIC) }
+    let(:user)   { FactoryBot.create(:user) }
 
-      expect(result).not_to be_nil
+    it 'never reuses a grant whose code is still unredeemed' do
+      code_grant = user.access_grants.create!(client: client, issue_code: true)
+      grant = client.updated_grant_for(user, 1.hour)
+      expect(grant.id).not_to eq(code_grant.id)
+      expect(grant.access_token).to be_present
+      expect(code_grant.reload.access_token_expires_at).to be_nil
+    end
+
+    it 'reuses and extends the launch grant' do
+      first = client.updated_grant_for(user, 1.hour)
+      expect(client.updated_grant_for(user, 2.hours).id).to eq(first.id)
+      expect(first.reload.access_token_expires_at).to be_within(1.minute).of(2.hours.from_now)
     end
   end
 

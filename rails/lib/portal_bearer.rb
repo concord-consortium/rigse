@@ -16,7 +16,7 @@ module PortalBearer
   # An RS256 access token is accepted only as plain Bearer (RFC 6750). `jwt_header` is the
   # verified token's header.
   def self.scheme_accepts?(header, jwt_header)
-    !(legacy_scheme?(header) && jwt_header['typ'] == SignedJwt::ACCESS_TOKEN_TYPE)
+    !(legacy_scheme?(header) && SignedJwt.access_token_header?(jwt_header))
   end
 
   # The request's credential if it is a portal JWT. An opaque AccessGrant token never

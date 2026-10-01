@@ -171,15 +171,29 @@ RSpec.describe AuthController, type: :controller do
         JSON.parse(response.body)
       end
 
-      it 'exchanges the code once for an opaque token that lives a week' do
+      it 'exchanges the code once for an unscoped access token' do
         grant = AccessGrant.create!(client: client, user: user, issue_code: true, code_challenge: challenge, redirect_uri: 'https://spa.example.org/')
-        code = grant.code
+        expect(grant.access_token).to be_nil
         body = redeem(grant)
-        expect(body).to eq('access_token' => grant.access_token, 'token_type' => 'bearer', 'expires_in' => AccessGrant::ExpireTime.to_i)
+        ttl = SignedJwt::UNSCOPED_ACCESS_TOKEN_TTL.to_i
+        expect(body.keys).to match_array(%w[access_token token_type expires_in])
+        expect(body).to include('token_type' => 'Bearer', 'expires_in' => ttl)
         expect(response.headers['Cache-Control']).to include('no-store')
-        expect(grant.reload.access_token_expires_at).to be_within(1.minute).of(AccessGrant::ExpireTime.from_now)
-        grant.code = code
+        data, header = SignedJwt.decode_portal_token(body['access_token']).values_at(:data, :header)
+        expect(header['typ']).to eq(SignedJwt::ACCESS_TOKEN_TYPE)
+        expect(data).to include('uid' => user.id, 'client_id' => 'spa', 'aud' => [APP_CONFIG[:site_url]])
+        expect(data).not_to have_key('scope')
+        expect(data).not_to have_key('context')
+        expect(data['exp'] - data['iat']).to eq(ttl)
+        expect(AccessGrant.exists?(grant.id)).to be false
         expect(redeem(grant)).to eq('error' => 'invalid_grant')
+      end
+
+      it 'refuses a code issued with a scope once the client has none' do
+        grant = AccessGrant.create!(client: client, user: user, issue_code: true, code_challenge: challenge, redirect_uri: 'https://spa.example.org/')
+        grant.update_column(:scope, 'portal-api')
+        expect(redeem(grant)).to eq('error' => 'invalid_grant')
+        expect(AccessGrant.exists?(grant.id)).to be true
       end
 
       it 'refuses a code issued without a challenge' do
@@ -233,7 +247,8 @@ RSpec.describe AuthController, type: :controller do
         code = scoped_grant.code
         post :access_token, params: { client_id: 'lara', client_secret: 's3cret', code: code, redirect_uri: 'https://lara.example.org/cb' }
         expect(response.status).to eq(200)
-        expect(JSON.parse(response.body)).to include('token_type' => 'Bearer', 'scope' => 'portal-api')
+        expect(JSON.parse(response.body)).to include('token_type' => 'Bearer', 'scope' => 'portal-api',
+                                                     'expires_in' => SignedJwt::SCOPED_ACCESS_TOKEN_TTL.to_i)
         expect(AccessGrant.exists?(scoped_grant.id)).to be false
         post :access_token, params: { client_id: 'lara', client_secret: 's3cret', code: code, redirect_uri: 'https://lara.example.org/cb' }
         expect(JSON.parse(response.body)).to eq('error' => 'invalid_grant')

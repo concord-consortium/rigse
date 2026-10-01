@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-# A scoped token (every service-minted one is) never becomes a Rails session, so its limits
-# cannot be shed by trading it for a cookie; an unscoped portal JWT does.
-RSpec.describe 'D10: a scoped token never becomes a session', type: :request do
+# A scoped token (every service-minted one is) or an access token never becomes a Rails session,
+# so it cannot be traded for a cookie that outlives it; an unscoped portal JWT does.
+RSpec.describe 'D10: a scoped token or an access token never becomes a session', type: :request do
   # Rails 8 draws routes lazily in test, and Devise registers its Warden strategies from
   # the routes, so the first request of a process would otherwise run without them.
   before(:all) { Rails.application.reload_routes_unless_loaded }
@@ -24,6 +24,15 @@ RSpec.describe 'D10: a scoped token never becomes a session', type: :request do
 
   it 'does not establish a session from the portal-api scope without the marker' do
     authenticate_on_the_api(ServiceMintedTokenHelper.unmarked_portal_api_token(user))
+    expect(response.status).not_to eq(401)
+    get '/auth/user'
+    expect(response).to redirect_to('/auth/login')
+  end
+
+  it 'does not establish a session from an unscoped access token' do
+    token = SignedJwt.create_access_token(user, client_id: 'spa', capabilities: nil, context: nil,
+                                          audiences: [APP_CONFIG[:site_url]], expires_in: 600)
+    authenticate_on_the_api(token)
     expect(response.status).not_to eq(401)
     get '/auth/user'
     expect(response).to redirect_to('/auth/login')

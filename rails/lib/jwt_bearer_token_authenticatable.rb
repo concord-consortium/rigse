@@ -25,7 +25,7 @@ module JwtBearerTokenAuthenticatable
       request.env['portal.auth_strategy'] = 'jwt_bearer_token'
       data = decoded_token[:data]
       TokenScope.apply!(data)
-      @scoped = TokenScope.scoped?
+      @stateless = TokenScope.scoped? || SignedJwt.access_token_header?(decoded_token[:header])
       request.env['portal.minted_via_oidc_client_id'] = data['minted_via_oidc_client_id']
       request.env['portal.minted_for']                = data['minted_for']
       success!(user)
@@ -37,10 +37,10 @@ module JwtBearerTokenAuthenticatable
       fail!(:invalid_token)
     end
 
-    # A scoped token never becomes a Rails session, which would keep none of its limits.
-    # Warden reads this after authenticate!, so it can decide per token.
+    # A scoped token or an access token never becomes a Rails session, which would outlive it
+    # and keep none of its limits. Warden reads this after authenticate!, so it decides per token.
     def store?
-      !@scoped && super
+      !@stateless && super
     end
 
     protected

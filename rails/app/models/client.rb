@@ -25,9 +25,8 @@ class Client < ApplicationRecord
     client_type == CONFIDENTIAL
   end
 
-  # The capabilities this client may request. A client with any gets a scoped JWT from
-  # /oauth/token and may not use the implicit flow; one without gets an opaque AccessGrant
-  # token.
+  # The capabilities this client may request. A client with any may use only the code flow,
+  # and the access token /oauth/token gives it carries them as its scope.
   def scope_list
     TokenCapabilities.parse(scopes)
   end
@@ -112,8 +111,9 @@ class Client < ApplicationRecord
     errors.add(:scopes, "names unknown capabilities: #{unknown.join(' ')}") if unknown.any?
   end
 
+  # A grant still holding a code belongs to a code flow in progress, never to a launch.
   def find_grant_for_user(user)
-    access_grants.where({user_id: user.id, client_id:self.id}).first
+    access_grants.where({user_id: user.id, client_id:self.id, code: nil}).first
   end
 
   def create_grant_for_user(user)

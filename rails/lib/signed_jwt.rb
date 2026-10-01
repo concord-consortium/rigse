@@ -19,6 +19,15 @@ module SignedJwt
   # requires it can never mistake an assertion, which has none, for an access token.
   ACCESS_TOKEN_TYPE = 'at+jwt'.freeze
 
+  # A scoped access token reaches one context and its gate runs on every call, so it can
+  # last a working session; an unscoped one is a full-user credential nothing can revoke.
+  SCOPED_ACCESS_TOKEN_TTL   = 8.hours
+  UNSCOPED_ACCESS_TOKEN_TTL = 2.hours
+
+  def self.access_token_header?(jwt_header)
+    jwt_header['typ'] == ACCESS_TOKEN_TYPE
+  end
+
   # The legacy HS256 portal token. A token minted during a request authenticated by a
   # scoped token inherits its scope and context, as it inherits the service-mint marker.
   def self.create_portal_token(user, claims={}, expires_in=3600)
@@ -52,14 +61,16 @@ module SignedJwt
     sign_rs256(payload)
   end
 
-  # The scoped access token /oauth/token issues (RFC 9068). `aud` lists every service whose
-  # capability the token carries, rigse always first, and never an assertion's audience: a
-  # verifier that accepts any list containing its audience must not take this as one.
+  # The access token /oauth/token issues (RFC 9068). `capabilities` nil issues an unscoped,
+  # full-user token. `aud` lists every service whose capability the token carries, rigse
+  # always first, and never an assertion's audience: a verifier that accepts any list
+  # containing its audience must not take this as one.
   def self.create_access_token(user, client_id:, capabilities:, context:, audiences:, expires_in:)
     audiences = Array(audiences)
     unless audiences.first == APP_CONFIG[:site_url] && (audiences & ASSERTION_AUDIENCES).empty?
       raise SignedJwt::Error.new("An access token's aud must start with this portal and name no assertion audience: #{audiences.inspect}")
     end
+    raise SignedJwt::Error.new("A scoped access token needs at least one capability") if capabilities&.empty?
     now = Time.now.to_i
     payload = {
       iss: APP_CONFIG[:site_url],
@@ -67,11 +78,11 @@ module SignedJwt
       uid: user.id,
       aud: audiences,
       client_id: client_id,
-      scope: capabilities.join(' '),
       iat: now,
       exp: now + expires_in,
       jti: SecureRandom.uuid
     }
+    payload[:scope] = capabilities.join(' ') if capabilities
     payload[:context] = context if context
     sign_rs256(payload, typ: ACCESS_TOKEN_TYPE)
   end
@@ -92,7 +103,7 @@ module SignedJwt
       header = JWT.decode(token, nil, false)[1]
       decoded =
         if header.key?('kid')
-          raise SignedJwt::Error.new('An RS256 portal token must be an access token') unless header['typ'] == ACCESS_TOKEN_TYPE
+          raise SignedJwt::Error.new('An RS256 portal token must be an access token') unless access_token_header?(header)
           JWT.decode(token, nil, true, { algorithm: PortalSigningKey::ALGORITHM, aud: APP_CONFIG[:site_url], verify_aud: true }) do |h|
             PortalSigningKey.verification_key(h['kid'])
           end

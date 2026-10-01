@@ -180,6 +180,13 @@ gpZlAvdO9CFaBcBKsAcJnNDQBY2lhFsSeqYs78PoW7Zz
       expect(data['jti']).to be_present
     end
 
+    it "issues an unscoped access token without a scope claim, and no scoped one without a capability" do
+      token = SignedJwt.create_access_token(user, client_id: 'c', capabilities: nil, context: nil, audiences: [site], expires_in: 60)
+      expect(SignedJwt.decode_portal_token(token)[:data]).not_to have_key('scope')
+      expect { SignedJwt.create_access_token(user, client_id: 'c', capabilities: [], context: nil, audiences: [site], expires_in: 60) }
+        .to raise_error(SignedJwt::Error, /at least one capability/)
+    end
+
     it "carries the context when there is one, and a new jti each time" do
       mint = -> { SignedJwt.create_access_token(user, client_id: 'c', capabilities: ['class:researcher-read'],
                                                 context: { type: 'class', id: 7 }, audiences: [site], expires_in: 60) }
