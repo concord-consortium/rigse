@@ -8,6 +8,17 @@ module PortalBearer
     $1 if header =~ /^Bearer(?:\/JWT)?\s+(.+)$/i
   end
 
+  # Bearer/JWT is the legacy portal scheme, kept for the HS256 portal JWTs clients already send.
+  def self.legacy_scheme?(header)
+    header.to_s.match?(/^Bearer\/JWT/i)
+  end
+
+  # An RS256 access token is accepted only as plain Bearer (RFC 6750). `jwt_header` is the
+  # verified token's header.
+  def self.scheme_accepts?(header, jwt_header)
+    !(legacy_scheme?(header) && jwt_header['typ'] == SignedJwt::ACCESS_TOKEN_TYPE)
+  end
+
   # The request's credential if it is a portal JWT. An opaque AccessGrant token never
   # contains a dot and is not one.
   def self.token(request)

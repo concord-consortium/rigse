@@ -53,6 +53,15 @@ RSpec.describe ApplicationController, type: :controller do
     end
   end
 
+  it 'limits a scoped access token sent as Bearer/JWT, which no authenticator accepts' do
+    token = SignedJwt.create_access_token(user, client_id: 'c', capabilities: ['class:researcher-read'], context: nil,
+                                          audiences: [APP_CONFIG[:site_url]], expires_in: 600)
+    request.headers['Authorization'] = "Bearer/JWT #{token}"
+    Current.reset
+    get :undeclared
+    expect(response.status).to eq(403)
+  end
+
   it 'never affects an unscoped credential' do
     bearer({})
     get :undeclared

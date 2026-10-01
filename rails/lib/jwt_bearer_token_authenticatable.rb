@@ -11,6 +11,10 @@ module JwtBearerTokenAuthenticatable
         Rails.logger.warn("JwtBearerToken: token decode failed or missing uid")
         return fail!(:invalid_token)
       end
+      unless PortalBearer.scheme_accepts?(request.headers['Authorization'], decoded_token[:header])
+        Rails.logger.warn("JwtBearerToken: an access token sent as Bearer/JWT")
+        return fail!(:invalid_token)
+      end
       user = User.find_by_id(decoded_token[:data]["uid"])
       unless user
         Rails.logger.warn(
@@ -51,7 +55,7 @@ module JwtBearerTokenAuthenticatable
     def jwt_token_value
       header = request.headers['Authorization'] || ''
       token = PortalBearer.raw_token(header)
-      token if token && (header =~ /^Bearer\/JWT/i || SignedJwt.probably_jwt?(token))
+      token if token && (PortalBearer.legacy_scheme?(header) || SignedJwt.probably_jwt?(token))
     end
 
   end

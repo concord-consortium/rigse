@@ -260,6 +260,23 @@ RSpec.describe API::APIController, type: :controller do
           expect(auth_roles[:teacher]).to be_nil
         end
 
+        describe 'an RS256 access token' do
+          let(:access_token) do
+            SignedJwt.create_access_token(user, client_id: 'c', capabilities: [TokenCapabilities::PORTAL_API], context: nil,
+                                          audiences: [APP_CONFIG[:site_url]], expires_in: 600)
+          end
+
+          it 'is accepted as plain Bearer' do
+            set_standard_bearer_token(access_token)
+            expect(controller.check_for_auth_token({}).first).to eq(user)
+          end
+
+          it 'is refused as Bearer/JWT' do
+            set_jwt_bearer_token(access_token)
+            expect { controller.check_for_auth_token({}) }.to raise_error(SignedJwt::Error, /not Bearer\/JWT/)
+          end
+        end
+
         it 'should still route hex tokens to AccessGrant lookup' do
           token = addTokenForLearner(user, client, learner, 1.hour.from_now)
           set_standard_bearer_token(token)

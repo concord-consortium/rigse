@@ -31,11 +31,14 @@ class API::APIController < ApplicationController
     header = request.headers["Authorization"]
     token = extract_bearer_token(header)
 
-    if token && (header =~ /^Bearer\/JWT/i || SignedJwt.probably_jwt?(token))
+    if token && (PortalBearer.legacy_scheme?(header) || SignedJwt.probably_jwt?(token))
       if SignedJwt.portal_token?(token)
         # Portal JWT — decode and authenticate. Errors raise SignedJwt::Error
         # or JWT::ExpiredSignature, which callers should be listening for.
         decoded_token = SignedJwt.decode_portal_token(token)
+        unless PortalBearer.scheme_accepts?(header, decoded_token[:header])
+          raise SignedJwt::Error, 'An access token must be sent as Bearer, not Bearer/JWT'
+        end
         data = decoded_token[:data]
 
         user = User.find_by_id(data["uid"])
