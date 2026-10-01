@@ -58,13 +58,13 @@ class AccessGrant < ApplicationRecord
   def self.matching_response_type(client, response_type, params)
     if client.scoped?
       # A scoped token never travels in a URL, so a scoped client uses the code flow only.
-      response_type === "code" && (!client.public? || params[:code_challenge].present?)
-    elsif client.client_type == Client::PUBLIC
+      response_type === "code" && (client.confidential? || params[:code_challenge].present?)
+    elsif client.public?
       # Implicit flow for public clients (e.g. Glossary Authoring), or the code flow with PKCE.
       response_type === "token" || (response_type === "code" && params[:code_challenge].present?)
     else
       # Auth code flow (two steps) for confidential clients (e.g. LARA).
-      client.client_type == Client::CONFIDENTIAL && response_type === "code"
+      client.confidential? && response_type === "code"
     end
   end
 

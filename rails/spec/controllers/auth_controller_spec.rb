@@ -152,7 +152,6 @@ RSpec.describe AuthController, type: :controller do
     end
   end
 
-  # TODO: auto-generated
   describe '#access_token' do
     it 'POST access_token without a client' do
       post :access_token

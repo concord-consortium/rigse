@@ -141,7 +141,8 @@ describe AccessGrant do
         {client_type: Client::CONFIDENTIAL, response_type: "token", error: "unauthorized_client"},
         # a public client may use the code flow only with PKCE, so without a challenge the
         # request is malformed rather than unauthorized (RFC 7636 4.4.1)
-        {client_type: Client::PUBLIC,       response_type: "code",  error: "invalid_request"}
+        {client_type: Client::PUBLIC,       response_type: "code",  error: "invalid_request"},
+        {client_type: nil,                  response_type: "code",  error: "unauthorized_client"}
       ]
       mismatched_pairs.each do |pair|
         context "when response_type is '#{pair[:response_type]} and client_type is '#{pair[:client_type]}''" do
@@ -246,6 +247,20 @@ describe AccessGrant do
         result = AccessGrant.validate_oauth_authorize(client_id: 'pkce-client', response_type: "code", redirect_uri: "http://test.com",
                                                       code_challenge: 'c' * 43, code_challenge_method: 'S256')
         expect(result).to be_valid
+      end
+    end
+
+    describe "#validate_oauth_authorize for a scoped client without PKCE" do
+      it "accepts a confidential client" do
+        FactoryBot.create(:client, app_id: 'scoped-conf', client_type: Client::CONFIDENTIAL, scopes: 'portal-api', redirect_uris: "http://test.com")
+        result = AccessGrant.validate_oauth_authorize(client_id: 'scoped-conf', response_type: "code", redirect_uri: "http://test.com")
+        expect(result).to be_valid
+      end
+
+      it "refuses a client with no type" do
+        FactoryBot.create(:client, app_id: 'scoped-untyped', client_type: nil, scopes: 'portal-api', redirect_uris: "http://test.com")
+        result = AccessGrant.validate_oauth_authorize(client_id: 'scoped-untyped', response_type: "code", redirect_uri: "http://test.com")
+        expect(result).not_to be_valid
       end
     end
 

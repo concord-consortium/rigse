@@ -21,6 +21,10 @@ class Client < ApplicationRecord
     client_type == PUBLIC
   end
 
+  def confidential?
+    client_type == CONFIDENTIAL
+  end
+
   # The capabilities this client may request. A client with any gets a scoped JWT from
   # /oauth/token and may not use the implicit flow; one without gets an opaque AccessGrant
   # token.
