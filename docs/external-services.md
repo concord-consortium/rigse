@@ -43,11 +43,11 @@ There are two authorization approaches for non-LARA launches, controlled by the 
 
 **JWT launch (default):** The Portal generates a short-lived Portal JWT (via `SignedJwt::create_portal_token`) that includes the student's learner ID and user type as claims. This JWT is passed to the runtime as a URL parameter. The runtime can send this token back to the Portal in an Authorization header. If the runtime needs to access more APIs after the initial launch it can exchange this short-lived JWT for a longer-lived Portal JWT that can be renewed.
 
-**OAuth2 launch** (`launch_method: "oauth2"`): The Portal appends `authDomain`, `resourceLinkId`, and `loginHint` to the launch URL instead of a token. The runtime uses these to initiate a standard OAuth2 implicit grant flow (see the OAuth2 Authorization section below). This avoids the short-lived token problem — the runtime can re-authenticate via OAuth2 at any time (e.g., on page reload).
+**OAuth2 launch** (`launch_method: "oauth2"`): The Portal appends `authDomain`, `resourceLinkId`, and `loginHint` to the launch URL instead of a token. The runtime uses these to start an OAuth2 flow: the authorization code flow with PKCE, which new runtimes should use, or the implicit grant flow, which existing runtimes use (see the OAuth2 Authorization section below). This avoids the short-lived token problem: the runtime can re-authenticate via OAuth2 at any time (e.g., on page reload).
 
 **Note:** Collaboration launches (via `create_collaboration.rb`) are not yet migrated to OAuth2 and continue using JWT tokens.
 
-JWTs and OAuth2 access tokens can both be used with any Portal API endpoint — both the API Controller's `check_for_auth_token` and Devise's bearer token authentication recognize them.
+JWTs and OAuth2 access tokens can both be used with any Portal API endpoint: both the API Controller's `check_for_auth_token` and Devise's bearer token authentication recognize them. An access token from the code flow with PKCE is sent as `Authorization: Bearer <token>`; only the legacy HS256 portal JWTs are also accepted as `Bearer/JWT` (see `docs/token-capabilities.md`).
 
 References (search for these strings)
 - token generation: `SignedJwt::create_portal_token` (called from `external_activity.rb` and `create_collaboration.rb`)
@@ -58,9 +58,19 @@ Example [implementation in CLUE](https://github.com/concord-consortium/collabora
 ### OAuth2 Authorization
 The Portal supports OAuth2 authorization for SPAs and other external services that need to authenticate users. This is used by report SPAs (like portal-report) when they are opened standalone (not launched from the Portal with a token), and by other Portal-integrated SPAs like the token-service and glossary authoring.
 
-The Portal supports two OAuth2 grant types, determined by the Client's `client_type`:
-- **Implicit grant** (`response_type=token`) for PUBLIC clients (SPAs)
+The Portal supports these OAuth2 grant types, determined by the Client's `client_type` and `scopes`:
+- **Authorization code grant with PKCE** (`response_type=code` with an S256 `code_challenge`) for PUBLIC clients (SPAs). This is the preferred flow for new SPAs, and the only one a client with scopes may use.
+- **Implicit grant** (`response_type=token`) for PUBLIC clients without scopes. Existing SPAs use it; it is being phased out, because the token travels in the URL.
 - **Authorization code grant** (`response_type=code`) for CONFIDENTIAL clients (server-side apps like LARA)
+
+#### Authorization code flow with PKCE (SPAs)
+
+1. The SPA creates a random `code_verifier` and keeps it in memory, then redirects the user's browser to `/auth/oauth_authorize` with `client_id`, `redirect_uri`, `response_type=code`, `state`, `code_challenge` (the base64url SHA-256 of the verifier) and `code_challenge_method=S256`. A client with scopes may also send `scope` (a subset of its own; all of them by default) and must send `context` (for example `class:123`) when a requested capability is bound to one.
+2. After login, the Portal checks the request (and, for a context, the user's access to it) and redirects back to the `redirect_uri` with `code` and `state` in the query string, or with `error` and `state`.
+3. The SPA checks `state`, then POSTs `grant_type=authorization_code`, `code`, `code_verifier`, `client_id` and the same `redirect_uri` to `/oauth/token`, with no secret. A code is single-use and expires after `AccessGrant::CodeExpireTime`.
+4. The response is `{"access_token": ..., "token_type": "Bearer", "expires_in": ...}`, plus `scope` for a client with scopes, with `Cache-Control: no-store`. Errors follow RFC 6749 §5.2. There is no refresh token: when the token expires, the SPA runs the flow again, which needs no login while the user still has a Portal session.
+
+The access token is an RS256 JWT (see `docs/token-capabilities.md`). A public client without scopes gets a full-user token that lives `SignedJwt::UNSCOPED_ACCESS_TOKEN_TTL`; a client with scopes gets one limited to its capabilities that lives `SignedJwt::SCOPED_ACCESS_TOKEN_TTL`. Because it arrives in a response body rather than a URL, the SPA uses it directly for Portal API calls, as `Authorization: Bearer <token>`, and calls `/api/v1/jwt/firebase` (passing role parameters such as `resource_link_id`) or `/api/v1/jwt/portal` only when it needs a credential for another system. It does not exchange the token for a portal JWT at startup.
 
 #### Implicit grant flow (SPAs)
 
@@ -98,13 +108,14 @@ The Portal supports direct OAuth2 launches via the Tool model's `launch_method` 
 
 1. The app redirects the user to `/auth/concord_id/authorize` with `response_type=code` and the same other parameters.
 2. After login, the Portal redirects back with a `code` in the query string.
-3. The app exchanges the code for an access token server-to-server via `POST /oauth/token` with `client_id`, `client_secret`, and `code`. The response includes `access_token`, `refresh_token`, and `expires_in`.
+3. The app exchanges the code for an access token server-to-server via `POST /oauth/token` with `client_id`, `client_secret`, `code` and the `redirect_uri` it authorized with. The code is single-use and expires after `AccessGrant::CodeExpireTime`. The response includes `access_token`, `refresh_token`, and `expires_in`; the token is an opaque `AccessGrant` token. A confidential client with scopes gets the access token described above instead.
 
 References (search for these strings)
 - authorize endpoint: `oauth_authorize` (in `auth_controller.rb`)
 - validation: `validate_oauth_authorize` (in `access_grant.rb`)
 - redirect building: `implicit_flow_redirect_uri_for`, `auth_code_redirect_uri_for` (in `access_grant.rb`)
 - token exchange: `access_token` action (in `auth_controller.rb`)
+- access tokens: `SignedJwt.create_access_token` (in `lib/signed_jwt.rb`)
 
 ### LARA Runtime
 For a LARA launch, OAuth2 is used. The portal sends a `domain` and `domain_uid` parameter to LARA. LARA checks if there is a user currently signed in with an auth client for this domain and this uid. If not then LARA redirects the user back to the Portal to get signed in. And then the user is returned back to LARA with an AccessGrant token. The URL parameters are preserved throughout this process. In this case the AccessGrant has a client, so LARA can use this token with any API.
@@ -168,6 +179,8 @@ The Portal adds several parameters onto the URL provided by the ExternalReport. 
 ## Authorization
 When a report is launched from the Portal, the Portal creates an AccessGrant with the ExternalReport's Client and passes the token to the report as a URL parameter. The report can use this token to call back to the Portal. Since the token has a client, it can be used with any Portal API.
 
+A report whose Client has scopes is launched differently: the Portal creates no AccessGrant and puts no token in the URL. The link carries `authDomain`, `classId` and `loginHint`, and the report gets its own token through the authorization code flow with PKCE (see Researcher Reports below). Only a class launch can start that flow, so the offering and learner report routes refuse such a report.
+
 **Note:** Unlike resource launches (which exchange a short-lived JWT for a longer-lived Portal JWT via `JwtController`), portal-report does not exchange its AccessGrant token for a JWT after launch. It continues to use the AccessGrant token directly for Portal API calls throughout its session.
 
 When an ExternalReport is set up in the Portal a Client is needed and must have the correct settings. Our teacher reports are normally SPAs, so the Client should have a type of `public`, and it should specify the domain of the SPA.
@@ -180,11 +193,20 @@ Additionally if the user is a teacher then the teacher object is added to the ac
 
 # Researcher Reports
 
-**TODO**
+## Researcher Dashboard
+
+The Researcher Dashboard is a class report for researchers. It is an ExternalReport, so enabling it is admin data rather than code or configuration (the README's "Enabling the Researcher Dashboard" lists the rows):
+
+- An **ExternalReport** with report type `class` and `supports_researchers` set. The Research Classes page lists every such report on each class the user passes the researcher gate for (`can_be_researcher_for_clazz?`: a site admin, a project researcher for the class with an unexpired grant, or a project admin for the class).
+- A public **Client** with the dashboard's URL as its redirect URI and `scopes` naming the capabilities it needs: `class:researcher-read class:researcher-run packages:read`.
+
+The launch link is the report's URL with `authDomain` (the Portal's root URL), `classId` (the class's integer id) and `loginHint` (the user's id), and no token. The dashboard checks `authDomain` against an allowlist in its build, then runs the authorization code flow with PKCE described above, asking for `context=class:<classId>`. The Portal runs the researcher gate at authorize and binds the class into the code, so a `classId` edited in the address bar changes what is requested, never what is granted. The access token carries the class in its `context` claim and lists report-server in its `aud`, since `packages:read` is report-server's capability. What each capability lets the token do is in `docs/token-capabilities.md`.
+
+The Portal also needs its signing key and `REPORT_SERVER_URL` (see the README's "Portal signing key and scoped OAuth clients").
 
 # Standalone OAuth2 Clients
 
-Some external services are not launched from the Portal (not as assignments or reports). Instead, users navigate directly to the app, and it uses OAuth2 to authenticate the user against the Portal. These are all SPAs using the implicit grant flow described above.
+Some external services are not launched from the Portal (not as assignments or reports). Instead, users navigate directly to the app, and it uses OAuth2 to authenticate the user against the Portal. The SPAs below all use the implicit grant flow described above. Public clients can now use the authorization code flow with PKCE instead, and new SPAs should.
 
 Each app needs to know which Portal to authenticate with. The parameter name for this varies by client:
 
@@ -233,6 +255,8 @@ When data_helpers.rb generates JSON from the activity it includes `lara_activity
 Clients are used for authentication. When the Portal creates an AccessGrant to provide a token to an external service (e.g., report launches, OAuth flows), the AccessGrant has an associated Client. The Client is used to verify requests with the token. If the client specifies `domain_matchers` then only requests from those domains are accepted. Note: student assignment launches use Portal JWTs instead of AccessGrants (see the Non LARA Runtime section above), so Clients are not involved in that flow.
 
 When the Client is used for OAuth2, it must also specify `redirect_uris` — the exact URLs the Portal is allowed to redirect to after authorization. The Client's `client_type` (public or confidential) determines which OAuth2 grant type is used. See the OAuth2 Authorization section under Runtime Environments above for the full flow.
+
+A Client can also have `scopes`: the space-separated capabilities its tokens may carry, set on the admin client form. A Client with scopes may use only the authorization code flow (with PKCE when public), never gets an AccessGrant token, and gets an access token limited to those capabilities. Changing a Client's scopes cancels its pending codes, and giving a Client scopes deletes the AccessGrant tokens it already had. See `docs/token-capabilities.md`.
 
 ## Seeding the Database
 To make it easier for developers, when the database is seeded a few of the resources above are automatically created.
