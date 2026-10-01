@@ -10,7 +10,7 @@ module SignedJwt
   end
 
   # The audiences of the two service assertions rigse signs. rigse accepts neither as a
-  # bearer: the only RS256 token it accepts is its own scoped access token.
+  # bearer: the only RS256 token it accepts is its own access token.
   AUD_REPORT_SERVER            = 'report-server'.freeze
   AUD_REPORT_SERVICE_FUNCTIONS = 'report-service-functions'.freeze
   ASSERTION_AUDIENCES = [AUD_REPORT_SERVER, AUD_REPORT_SERVICE_FUNCTIONS].freeze
