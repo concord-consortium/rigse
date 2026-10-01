@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_27_150000) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_28_120000) do
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
     t.string "access_token"
@@ -23,6 +23,11 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_27_150000) do
     t.datetime "updated_at", precision: nil, null: false
     t.integer "learner_id"
     t.integer "teacher_id"
+    t.string "code_challenge"
+    t.text "redirect_uri"
+    t.text "scope"
+    t.string "context_type"
+    t.integer "context_id"
     t.index ["access_token"], name: "index_access_grants_on_access_token"
     t.index ["access_token_expires_at"], name: "index_access_grants_on_access_token_expires_at"
     t.index ["client_id"], name: "index_access_grants_on_client_id"
@@ -256,6 +261,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_27_150000) do
     t.string "domain_matchers"
     t.string "client_type", default: "confidential"
     t.text "redirect_uris"
+    t.text "scopes"
   end
 
   create_table "commons_licenses", id: false, charset: "utf8", force: :cascade do |t|

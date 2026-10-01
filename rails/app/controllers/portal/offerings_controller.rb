@@ -164,6 +164,12 @@ class Portal::OfferingsController < ApplicationController
     redirect_to next_url, allow_other_host: true
   end
 
+  # Any report can be named by id here, so a scoped client's report, which must never have
+  # a token in its URL, is simply not found on this route.
+  rescue_from ExternalReport::LaunchNotSupported do
+    raise ActionController::RoutingError.new('Not Found')
+  end
+
   def external_report
     offering_id = params[:id]
     researcher = params[:researcher] # Might be null

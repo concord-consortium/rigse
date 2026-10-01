@@ -67,6 +67,20 @@ describe JwtBearerTokenAuthenticatable::BearerToken do
     end
   end
 
+  context 'an RS256 access token' do
+    let(:token) { PortalTokenHelper.access_token(user, capabilities: [TokenCapabilities::PORTAL_API]) }
+
+    it 'authenticates as plain Bearer' do
+      allow(request).to receive(:headers).and_return({ "Authorization" => "Bearer #{token}" })
+      expect(strategy.authenticate!).to eql :success
+    end
+
+    it 'is refused as Bearer/JWT' do
+      expect(strategy.authenticate!).not_to eql :success
+      expect(strategy.message).to eq(:invalid_token)
+    end
+  end
+
   context 'a user with an expired authentication token' do
     let(:expires_in) { -10.minutes.to_i }
     it 'should NOT authenticate the user' do

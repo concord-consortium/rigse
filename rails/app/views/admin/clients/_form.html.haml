@@ -29,4 +29,7 @@
         %li
           Allowed redirect URIs (multiple URLs separated by whitespace):
           = f.text_area :redirect_uris, class: 'mceNoEditor'
+        %li
+          = "Scopes (capabilities separated by spaces; a client with any gets a scoped token and must use the code flow; known: #{TokenCapabilities.names.join(' ')}):"
+          = f.text_field :scopes
       = submit_tag

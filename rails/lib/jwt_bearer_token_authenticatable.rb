@@ -11,6 +11,10 @@ module JwtBearerTokenAuthenticatable
         Rails.logger.warn("JwtBearerToken: token decode failed or missing uid")
         return fail!(:invalid_token)
       end
+      unless PortalBearer.scheme_accepts?(request.headers['Authorization'], decoded_token[:header])
+        Rails.logger.warn("JwtBearerToken: an access token sent as Bearer/JWT")
+        return fail!(:invalid_token)
+      end
       user = User.find_by_id(decoded_token[:data]["uid"])
       unless user
         Rails.logger.warn(
@@ -20,8 +24,8 @@ module JwtBearerTokenAuthenticatable
       end
       request.env['portal.auth_strategy'] = 'jwt_bearer_token'
       data = decoded_token[:data]
-      Current.minted_via_oidc_client_id = data['minted_via_oidc_client_id']
-      Current.minted_for                = data['minted_for']
+      TokenScope.apply!(data)
+      @stateless = TokenScope.scoped? || SignedJwt.access_token_header?(decoded_token[:header])
       request.env['portal.minted_via_oidc_client_id'] = data['minted_via_oidc_client_id']
       request.env['portal.minted_for']                = data['minted_for']
       success!(user)
@@ -33,22 +37,25 @@ module JwtBearerTokenAuthenticatable
       fail!(:invalid_token)
     end
 
+    # A scoped token or an access token never becomes a Rails session, which would outlive it
+    # and keep none of its limits. Warden reads this after authenticate!, so it decides per token.
+    def store?
+      !@stateless && super
+    end
+
     protected
 
     def has_jwt_bearer_token?
       jwt_token_value.present?
     end
 
-    # Extracts the JWT from the Authorization header. Matches both the
-    # explicit Bearer/JWT scheme and plain Bearer when the token looks
+    # Extracts the JWT from the Authorization header, through the parser the capability
+    # check shares: the explicit Bearer/JWT scheme, or plain Bearer when the token looks
     # like a JWT (contains dots).
     def jwt_token_value
       header = request.headers['Authorization'] || ''
-      if header =~ /^Bearer\/JWT (.+)$/i
-        $1
-      elsif header =~ /^Bearer (.+)$/i && SignedJwt.probably_jwt?($1)
-        $1
-      end
+      token = PortalBearer.raw_token(header)
+      token if token && (PortalBearer.legacy_scheme?(header) || SignedJwt.probably_jwt?(token))
     end
 
   end

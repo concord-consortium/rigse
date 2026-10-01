@@ -161,6 +161,8 @@ class API::V1::ResearchClassesController < API::APIController
   end
 
   def classes_mapping(classes_query)
+    reports = ExternalReport.where(report_type: ExternalReport::ClassReport, supports_researchers: true).order(:launch_text).to_a
+    researcher_ids = reports.any? ? current_user.researcher_clazz_ids(classes_query.map(&:id)).to_set : Set.new
     classes_query.map do |c|
       {
         id: c.id,
@@ -173,8 +175,18 @@ class API::V1::ResearchClassesController < API::APIController
         # It seems the number of classes is not limited by pagination. Also there are other places
         # where this will be inefficient, so if we need to show a lot of classes hopefully we can
         # make time to paginate it.
-        roster_url: policy(c).roster? ? roster_portal_clazz_url(c.id) : nil
+        roster_url: policy(c).roster? ? roster_portal_clazz_url(c.id) : nil,
+        external_reports: researcher_ids.include?(c.id) ? reports.map { |r| external_report_row(c, r) } : []
       }
     end
+  end
+
+  def external_report_row(clazz, report)
+    {
+      id: report.id,
+      name: report.name,
+      launch_text: report.launch_text,
+      url: portal_external_class_report_url(clazz.id, report.id, researcher: true)
+    }
   end
 end

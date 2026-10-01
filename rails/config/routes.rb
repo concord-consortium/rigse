@@ -10,10 +10,10 @@ RailsPortal::Application.routes.draw do
 
   # Provider stuff
   match '/auth/concord_id/authorize' => 'auth#oauth_authorize', via: [:get, :post]
-  match '/auth/concord_id/access_token' => 'auth#access_token', via: [:get, :post]
+  post  '/auth/concord_id/access_token' => 'auth#access_token'
   match '/auth/concord_id/user' => 'auth#user', via: [:get, :post]
   match '/auth/login' => 'auth#login', :as => :auth_login, via: [:get, :post]
-  match '/oauth/token' => 'auth#access_token', via: [:get, :post]
+  post  '/oauth/token' => 'auth#access_token'
   get   '/auth/failure' => 'auth#failure'
   post  '/auth/reauth' => 'auth#reauth', :as => :auth_reauth
   get   '/auth/isalive' => 'auth#isalive'
@@ -542,8 +542,8 @@ RailsPortal::Application.routes.draw do
   end
 
   # Web interface to show the delayed jobs for admins.
-  # Mounted Rack engines do not run ApplicationController#confine_service_minted_tokens, so a future
-  # engine authenticated by a bearer/portal token must add its own service-minted-token confinement
+  # Mounted Rack engines do not run ApplicationController#enforce_token_capabilities, so a future
+  # engine authenticated by a bearer/portal token must add its own scoped-token check
   # (Rack middleware ahead of the router). This engine is session-authed and already fail-closed for
   # bearer tokens (warden.user reads the session only), so no confinement is needed here today.
   # The mounted_engines_spec tripwire fails if another mount is added without revisiting this.

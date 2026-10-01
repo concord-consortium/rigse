@@ -142,6 +142,17 @@ services:
       REPORT_SERVICE_SOURCE: "${REPORT_SERVICE_SOURCE:-authoring.lara.staging.concord.org}"
       REPORT_SERVICE_BEARER_TOKEN:
 
+      #
+      # The RS256 key that signs the access tokens /oauth/token issues to public and scoped
+      # clients and the service assertions, and report-server's URL, which is the audience
+      # of a token carrying packages:read. See
+      # "Portal signing key and scoped OAuth clients" in the README for generating a key.
+      #
+      PORTAL_SIGNING_KEY:
+      PORTAL_SIGNING_KEY_ID:
+      PORTAL_PREVIOUS_VERIFY_KEYS:
+      REPORT_SERVER_URL:
+
     # open standard in and turn on tty so we can attach to the container and debug it
     stdin_open: true
     tty: true

@@ -5,6 +5,12 @@ class API::V1::JwtController < API::APIController
 
   before_action :reject_credential_issuing_callers
 
+  # Every jwt/* action mints a credential, so none accepts a scoped token except the
+  # researcher Firebase mint, which a class-scoped token may use for its own class.
+  accepts_no_token_capabilities
+  accepts_token_capability TokenCapabilities::CLASS_RESEARCHER_READ, only: :firebase,
+    if: -> { request.get? && params[:researcher] == "true" }
+
   # use exceptions to return errors
   # instead of directly calling APIController#error
   rescue_from StandardError, with: :error_400
@@ -15,9 +21,6 @@ class API::V1::JwtController < API::APIController
     current_user
     if request.env['portal.auth_strategy'] == 'oidc_bearer_token'
       return error('This endpoint does not accept OIDC service tokens; use /api/v1/jwt/oidc_mint', 403)
-    end
-    if Current.minted_via_oidc_client_id.present?
-      return error('A service-minted token may not be used to mint another token', 403)
     end
   end
 
@@ -232,8 +235,10 @@ class API::V1::JwtController < API::APIController
         raise StandardError, "A class with the requested class_hash does not exist"
       end
 
-      can_be_researcher = user.is_researcher_for_clazz?(clazz) || user.is_project_admin_for_clazz?(clazz) || user.has_role?('admin')
-      if !can_be_researcher
+      # A class-scoped token may mint only for its own class; the Denied it raises is this
+      # endpoint's ordinary 400, like its other researcher refusals.
+      require_token_capability!(TokenCapabilities::CLASS_RESEARCHER_READ, clazz)
+      if !user.can_be_researcher_for_clazz?(clazz)
         raise StandardError, "You do not have access to the requested class_hash as a researcher"
       end
       class_hash = params[:class_hash]

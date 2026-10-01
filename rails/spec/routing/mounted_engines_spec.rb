@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-# Tripwire: D11 confinement (ApplicationController#confine_service_minted_tokens) does not run for
+# Tripwire: D11 confinement (ApplicationController#enforce_token_capabilities) does not run for
 # mounted Rack engines. If you add a `mount`, decide how marked (service-minted) tokens are confined
 # for it, then update this list.
 RSpec.describe 'mounted Rack engines' do

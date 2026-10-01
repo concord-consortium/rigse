@@ -105,6 +105,9 @@ export default class ResearcherClassesTable extends React.Component<any, any> {
                     { c.roster_url && 
                       <><br /><a href={c.roster_url} target="_blank" rel="noreferrer">View Roster</a></>
                     }
+                    { (c.external_reports || []).map((r: any) => (
+                      <React.Fragment key={r.id}><br /><a href={r.url} target="_blank" rel="noreferrer">{ r.launch_text || r.name }</a></React.Fragment>
+                    )) }
                   </td>
                 </tr>
               ))

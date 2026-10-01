@@ -1,13 +1,45 @@
 require 'spec_helper'
 
-# D10 KNOWN GAP (accepted, deferred): a marked (service-minted) token can still be converted into a
-# Rails session, after which no marker exists and D9 propagation, the jwt_controller denial, and the
-# D11 rules are all inert. jwt_bearer_token_authenticatable calls success!(user) with no store?
-# override and skip_session_storage covers only :http_auth, so Warden serializes the user into the
-# session. Skipped until the separate D10 story (store? false, after a consumer audit) lands.
-RSpec.describe 'D10 known gap: marked token -> Rails session', type: :request do
-  it 'must not establish a session from a marked token' do
-    skip 'Blocked on the D10 portal-JWT session-storage story (store? false after a consumer audit). ' \
-         'Until then a marked token still establishes a session and drops the marker. Un-skip when it lands.'
+# A scoped token (every service-minted one is) or an access token never becomes a Rails session,
+# so it cannot be traded for a cookie that outlives it; an unscoped portal JWT does.
+RSpec.describe 'a scoped token or an access token never becomes a session', type: :request do
+  # Rails 8 draws routes lazily in test, and Devise registers its Warden strategies from
+  # the routes, so the first request of a process would otherwise run without them.
+  before(:all) { Rails.application.reload_routes_unless_loaded }
+
+  let(:user) { FactoryBot.create(:confirmed_user) }
+
+  # An API action that accepts portal-api and authenticates through Devise, so Warden asks
+  # the strategy whether to store the user; it refuses a non-teacher with a 400 only afterwards.
+  def authenticate_on_the_api(token)
+    get '/api/v1/teacher_classes/1', headers: { 'Authorization' => "Bearer #{token}" }
+  end
+
+  it 'does not establish a session from a minted token' do
+    authenticate_on_the_api(PortalTokenHelper.minted_token(user, oidc_client_id: 5))
+    expect(response.status).to eq(400)
+    get '/auth/user'
+    expect(response).to redirect_to('/auth/login')
+  end
+
+  it 'does not establish a session from the portal-api scope without the marker' do
+    authenticate_on_the_api(PortalTokenHelper.unmarked_portal_api_token(user))
+    expect(response.status).to eq(400)
+    get '/auth/user'
+    expect(response).to redirect_to('/auth/login')
+  end
+
+  it 'does not establish a session from an unscoped access token' do
+    authenticate_on_the_api(PortalTokenHelper.access_token(user, capabilities: nil))
+    expect(response.status).to eq(400)
+    get '/auth/user'
+    expect(response).to redirect_to('/auth/login')
+  end
+
+  it 'still establishes a session from an unscoped portal JWT' do
+    authenticate_on_the_api(SignedJwt.create_portal_token(user))
+    expect(response.status).to eq(400)
+    get '/auth/user'
+    expect(response.status).to eq(200)
   end
 end

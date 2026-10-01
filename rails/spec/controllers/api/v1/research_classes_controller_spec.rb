@@ -118,6 +118,7 @@ describe API::V1::ResearchClassesController do
           "classes"=>[{
             "materials_url"=>materials_portal_clazz_url(clazz.id, researcher: true, host: 'test.host'),
             "roster_url"=>nil,
+            "external_reports"=>[],
             "cohort_names"=>@cohort1.name,
             "id"=>clazz.id,
             "name"=>clazz.name,
@@ -227,6 +228,7 @@ describe API::V1::ResearchClassesController do
           "classes"=>[{
             "materials_url"=>materials_portal_clazz_url(clazz.id, researcher: true, host: 'test.host'),
             "roster_url"=>roster_portal_clazz_url(clazz.id, host: 'test.host'),
+            "external_reports"=>[],
             "cohort_names"=>@cohort1.name,
             "id"=>clazz.id,
             "name"=>clazz.name,
@@ -266,6 +268,7 @@ describe API::V1::ResearchClassesController do
             # No roster for class2 since the logged in user is only researcher for project2
             # and class2 only has a teacher from project2
             "roster_url"=>nil,
+            "external_reports"=>[],
             "cohort_names"=>@cohort1.name,
             "id"=>@clazz2.id,
             "name"=>@clazz2.name,
@@ -276,6 +279,7 @@ describe API::V1::ResearchClassesController do
           {
             "materials_url"=>materials_portal_clazz_url(@clazz1.id, researcher: true, host: 'test.host'),
             "roster_url"=>roster_portal_clazz_url(@clazz1.id, host: 'test.host'),
+            "external_reports"=>[],
             "cohort_names"=>@cohort1.name,
             "id"=>@clazz1.id,
             "name"=>@clazz1.name,
@@ -287,4 +291,36 @@ describe API::V1::ResearchClassesController do
     end
   end
 
+
+  describe "external_reports on each row" do
+    let(:cohort)  { FactoryBot.create(:admin_cohort) }
+    let(:project) { FactoryBot.create(:project, cohorts: [cohort]) }
+    let(:teacher) { FactoryBot.create(:portal_teacher, cohorts: [cohort]) }
+    let!(:clazz)  { FactoryBot.create(:portal_clazz, teachers: [teacher]) }
+    let!(:report) { FactoryBot.create(:external_report, report_type: ExternalReport::ClassReport, supports_researchers: true, launch_text: 'Researcher Dashboard') }
+    let!(:teacher_only) { FactoryBot.create(:external_report, report_type: ExternalReport::ClassReport, supports_researchers: false) }
+    let(:researcher) do
+      u = FactoryBot.create(:confirmed_user)
+      u.add_role_for_project('researcher', project)
+      u
+    end
+
+    it "lists no reports on a row whose class fails the researcher gate" do
+      sign_in researcher
+      allow_any_instance_of(User).to receive(:researcher_clazz_ids).and_return([])
+      get :index, params: { project_id: project.id }
+      row = JSON.parse(response.body)["hits"]["classes"].find { |c| c["id"] == clazz.id }
+      expect(row["external_reports"]).to eq([])
+    end
+
+    it "lists the class reports that support researchers, launched in researcher mode, for a researcher of the class" do
+      sign_in researcher
+      get :index, params: { project_id: project.id }
+      row = JSON.parse(response.body)["hits"]["classes"].find { |c| c["id"] == clazz.id }
+      expect(row["external_reports"]).to eq([{
+        "id" => report.id, "name" => report.name, "launch_text" => "Researcher Dashboard",
+        "url" => portal_external_class_report_url(clazz.id, report.id, researcher: true, host: 'test.host')
+      }])
+    end
+  end
 end

@@ -1,5 +1,9 @@
 class API::APIController < ApplicationController
 
+  # Service-minted tokens carry portal-api, which the whole API accepts unless a controller
+  # says otherwise; everywhere outside the API refuses them.
+  accepts_token_capability TokenCapabilities::PORTAL_API
+
   rescue_from ActionController::ParameterMissing, with: :parameter_missing
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
@@ -27,11 +31,14 @@ class API::APIController < ApplicationController
     header = request.headers["Authorization"]
     token = extract_bearer_token(header)
 
-    if token && (header =~ /^Bearer\/JWT/i || SignedJwt.probably_jwt?(token))
+    if token && (PortalBearer.legacy_scheme?(header) || SignedJwt.probably_jwt?(token))
       if SignedJwt.portal_token?(token)
         # Portal JWT — decode and authenticate. Errors raise SignedJwt::Error
         # or JWT::ExpiredSignature, which callers should be listening for.
         decoded_token = SignedJwt.decode_portal_token(token)
+        unless PortalBearer.scheme_accepts?(header, decoded_token[:header])
+          raise SignedJwt::Error, 'An access token must be sent as Bearer, not Bearer/JWT'
+        end
         data = decoded_token[:data]
 
         user = User.find_by_id(data["uid"])
@@ -41,8 +48,7 @@ class API::APIController < ApplicationController
             :teacher => data["user_type"] == "teacher" ? Portal::Teacher.find_by_id(data["teacher_id"]) : nil
           }
           request.env['portal.auth_strategy'] = 'api_jwt'
-          Current.minted_via_oidc_client_id = data['minted_via_oidc_client_id']
-          Current.minted_for                = data['minted_for']
+          TokenScope.apply!(data)
           request.env['portal.minted_via_oidc_client_id'] = data['minted_via_oidc_client_id']
           request.env['portal.minted_for']                = data['minted_for']
           return [user, role]
@@ -63,7 +69,7 @@ class API::APIController < ApplicationController
       grant = AccessGrant.find_by_access_token(token)
 
       if grant
-        if grant.access_token_expires_at >= Time.now
+        if grant.access_token_expires_at && grant.access_token_expires_at >= Time.now
           request.env['portal.auth_strategy'] = 'api_access_grant'
           request.env['portal.auth_client'] = grant.client&.name
           return [grant.user, {:learner => grant.learner, :teacher => grant.teacher}]
@@ -154,9 +160,6 @@ class API::APIController < ApplicationController
   # Extracts the token value from an Authorization header.
   # Supports both "Bearer/JWT <token>" and "Bearer <token>".
   def extract_bearer_token(header)
-    return nil unless header
-    if header =~ /^Bearer(?:\/JWT)?\s+(.+)$/i
-      $1
-    end
+    PortalBearer.raw_token(header)
   end
 end

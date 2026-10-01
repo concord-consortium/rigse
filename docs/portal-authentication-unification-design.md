@@ -1,6 +1,6 @@
 # Portal API Authentication — Current State & Unification Options
 
-**Date:** 2026-02-25 (updated 2026-07-28)
+**Date:** 2026-02-25 (updated 2026-10-01)
 **Status:** Draft / Discussion
 
 ## Overview
@@ -32,6 +32,7 @@ Devise tries strategies in declaration order (see `app/models/user.rb`). Each st
 - **Requires** `grant.client` to be present
 - **Requires** the request referer to match `grant.client.domain_matchers` (see Section 5)
 - Sets `current_user` to `grant.user`
+- **Stores a Rails session.** It does not override `store?`, and Devise's `skip_session_storage` covers only `:http_auth`, so a caller that authenticates once with an `AccessGrant` token can continue as a cookie-authenticated user after the token expires (see the D10 subsection of Section 10)
 
 **`JwtBearerTokenAuthenticatable`** (`lib/jwt_bearer_token_authenticatable.rb`)
 - Matches: `Authorization: Bearer/JWT <token>` or `Authorization: Bearer <jwt-with-dots>` when `SignedJwt.portal_token?` returns true (checks unverified `iss` matches `APP_CONFIG[:site_url]`, or for legacy tokens, `uid` present without `iss`)
@@ -39,7 +40,14 @@ Devise tries strategies in declaration order (see `app/models/user.rb`). Each st
 - Extracts `uid` claim, sets `current_user` to `User.find_by_id(uid)`
 - Does **not** extract role claims (learner_id, teacher_id, user_type)
 - Uses halting `fail!` with distinct messages: `:token_expired` for expired tokens, `:invalid_token` for signature failures or missing user — since `valid?` guarantees the token is ours, all failures are definitive
-- **Stores a Rails session.** The strategy defines no `store?` override and Devise's `skip_session_storage` covers only `:http_auth`, so authenticating with a portal JWT writes a session cookie. A caller can then stop sending the token and continue as a cookie-authenticated user. This is the D10 gap discussed in Section 10
+- **Stores a Rails session for an unscoped HS256 portal JWT only.** The strategy's `store?` answers false for a token that carries a `scope`, which every service-minted token does, and for any RS256 access token (see `docs/token-capabilities.md`). An unscoped portal JWT still writes a session cookie, so a caller can stop sending it and continue as a cookie-authenticated user. This is part of the D10 gap discussed in Section 10
+- Also accepts the RS256 access tokens `/oauth/token` issues, routed by their `kid` header, but only as plain `Bearer`: `Bearer/JWT` is kept for HS256 portal JWTs (see `docs/token-capabilities.md`)
+
+**`OidcBearerTokenAuthenticatable`** (`lib/oidc_bearer_token_authenticatable.rb`)
+- Matches: `Authorization: Bearer <jwt>` whose unverified `iss` is a Google issuer; never `Bearer/JWT`
+- Verifies the token against Google's published keys (`GoogleOidcVerifier`)
+- Requires an active `Admin::OidcClient` whose `sub` matches the token's, and sets `current_user` to that client's mapped user
+- **Stores a Rails session**, like `BearerTokenAuthenticatable`, although its callers are services that never use the cookie
 
 **Session-based** (Devise's built-in `database_authenticatable`)
 - Standard cookie/session authentication
@@ -108,7 +116,7 @@ The `check_for_auth_token` method was updated to route `Bearer <token>` to JWT d
 
 Client-backed AccessGrants (created by OAuth clients via `Client#updated_grant_for`) are unaffected — they still flow through the Devise bearer strategy and Case 2 of `check_for_auth_token`.
 
-**Note on current inconsistency:** This stepping stone means resource launches (ExternalActivity, collaborations) now use JWTs while report launches (ExternalReport) still use client-backed AccessGrants. The two launch paths use different token types, different Devise strategies, and different cases in `check_for_auth_token`. This is a temporary inconsistency — both paths are planned to converge on OAuth2 implicit flow (see Next Steps, Steps 3-5), at which point neither will use portal-minted launch tokens.
+**Note on current inconsistency:** This stepping stone means resource launches (ExternalActivity, collaborations) now use JWTs while report launches (ExternalReport) still use client-backed AccessGrants. The two launch paths use different token types, different Devise strategies, and different cases in `check_for_auth_token`. This is a temporary inconsistency: both paths are planned to converge on the OAuth2 authorization code flow with PKCE (see `docs/token-capabilities.md` and Next Steps, Steps 3-5), at which point neither will use portal-minted launch tokens.
 
 ### 2.2 Peer-to-peer Authentication (Resolved)
 
@@ -134,7 +142,7 @@ Role is either embedded at token-creation time or resolved from parameters:
 
 2. **Report launch AccessGrant path:** When an ExternalReport is launched for a teacher, `grant.teacher` is set; for a student, `grant.learner` is set (see the report Authorization section in `docs/external-services.md`). These are client-backed grants (created via `Client#updated_grant_for`). The behavior after launch varies by report: the CLUE dashboard exchanges its AccessGrant token for a Portal JWT (like resource launches do), while portal-report uses the AccessGrant token directly for all Portal API calls without exchanging it. Once launch JWTs are replaced with OAuth2 (Next Steps, Step 3), this would be the only remaining source of token-embedded role. Report launches could also be migrated to use OAuth2 with parameter-based role in the future, but that is out of scope for this document.
 
-3. **OAuth2 implicit grant path:** When an SPA authenticates via the OAuth2 implicit grant flow (see the OAuth2 Authorization section in `docs/external-services.md`), the resulting AccessGrant has no learner or teacher set — it carries only user identity. Role must be resolved from URL parameters (e.g., `resource_link_id`) when the SPA requests a JWT from `JwtController`. This is the pattern we want all launch paths to converge on (see Next Steps, Step 3).
+3. **OAuth2 implicit grant path:** When an SPA authenticates via the OAuth2 implicit grant flow (see the OAuth2 Authorization section in `docs/external-services.md`), the resulting AccessGrant has no learner or teacher set, so it carries only user identity. Role must be resolved from URL parameters (e.g., `resource_link_id`) when the SPA requests a JWT from `JwtController`. Launch paths should converge on the authorization code flow with PKCE instead (`docs/token-capabilities.md`). Its access token also carries only identity, so the SPA uses it directly and passes role parameters such as `resource_link_id` when it requests a Firebase JWT, with no exchange for a portal JWT.
 
 4. **JwtController minting path:** When `JwtController` mints a Portal JWT, it includes `user_type`, `learner_id`, and `teacher_id` claims based on the role from the incoming token (or from parameter-based overrides like `resource_link_id` and `as_learner`).
 
@@ -397,7 +405,9 @@ For debugging and client-side error handling, clients cannot distinguish between
 
 7. **OIDC fallback in `check_for_auth_token` — COMPLETED.** `check_for_auth_token` now uses `SignedJwt.portal_token?` to explicitly route portal JWTs vs non-portal JWTs (e.g., OIDC). Non-portal JWTs fall through to `current_user` (already set by the Devise strategy) instead of failing at `SignedJwt::decode_portal_token`. This unblocks OIDC callers for JwtController.
 
-8. **Service-minted scoped tokens (RIGSE-352).** A new OIDC-authenticated mint endpoint issues scoped portal JWTs for a subject derived from a forwarded, server-verified Firebase token, so a service can act through existing portal endpoints with ordinary portal authorization. This adds a new *producer* of portal JWTs and a request-scoped audit marker that both auth paths must set. See Section 10.
+8. **Service-minted tokens (RIGSE-352).** A new OIDC-authenticated mint endpoint issues scoped portal JWTs for a subject derived from a forwarded, server-verified Firebase token, so a service can act through existing portal endpoints with ordinary portal authorization. This adds a new *producer* of portal JWTs and a request-scoped audit marker that both auth paths must set. See Section 10.
+
+9. **Token capabilities and the code flow with PKCE (RIGSE-367).** A token may carry a `scope` of capabilities that actions declare, and `/oauth/token` issues an RS256 access token to every public PKCE client and every client with scopes. See `docs/token-capabilities.md`.
 
 ### Next steps
 
@@ -425,7 +435,9 @@ Everything above describes how the Portal *consumes* credentials. This section d
 
 ### What it is
 
-`POST /api/v1/jwt/oidc_mint` (`API::V1::OidcMintController`) is an OIDC-authenticated endpoint that exchanges a forwarded student Firebase token for a scoped portal JWT. The caller is a service (the report-service "I'm Done!" pipeline); the *subject* of the minted token is derived only from the Firebase token, which the Portal verifies server-side (`SignedJwt.decode_firebase_token_by_iss` via `ForwardedFirebaseToken`). The endpoint issues only `learner` or `teacher` scopes, never a plain `user`/admin token, and is gated by a new `can_mint_scoped_tokens` boolean on `admin_oidc_clients` that defaults to false.
+`POST /api/v1/jwt/oidc_mint` (`API::V1::OidcMintController`) is an OIDC-authenticated endpoint that exchanges a forwarded student Firebase token for a scoped portal JWT. The caller is a service (the report-service "I'm Done!" pipeline); the *subject* of the minted token is derived only from the Firebase token, which the Portal verifies server-side (`SignedJwt.decode_firebase_token_by_iss` via `ForwardedFirebaseToken`). The endpoint issues only `learner` or `teacher` tokens, never a plain `user`/admin token, and is gated by a new `can_mint_scoped_tokens` boolean on `admin_oidc_clients` that defaults to false.
+
+**Terminology.** RIGSE-352 called these tokens "scoped" because each is limited to one learner or teacher. That limit is the token's role. Its `scope` claim, in the sense `docs/token-capabilities.md` defines, is `portal-api`.
 
 The motivation is the alternative it replaces. The pipeline needs to perform teacher-only operations (enroll a student, lock and open offerings, notify teachers) on behalf of a student it can prove. Teaching every affected endpoint to recognize a new "forwarded student" identity would have spread new permission logic across many policies and required a Portal deploy per pipeline feature. Instead all of the elevation happens at one auditable choke point, and every downstream call is an ordinary portal request by a real portal teacher, authorized by the existing policies with no new branches.
 
@@ -436,36 +448,33 @@ A minted token is a normal portal JWT: same HMAC secret, same `iss`, same `uid`/
 Two consequences worth recording against the direction of this document:
 
 - **It is a new source of token-embedded role.** Section 3 argues that token-embedded role is a pattern to phase out in favor of parameter-based resolution, and Section 6 lists four existing sources. The mint adds a fifth. This is deliberate rather than accidental: the whole design depends on the minted token being indistinguishable from any other portal JWT, and a minted token that carried no role would push the pipeline back toward parameter-based calls into `JwtController`, which is exactly the surface the mint is meant to keep it away from (see D1 below). If the Step 3-5 convergence on OAuth2 eventually removes token-embedded role, this endpoint has to be revisited with it.
-- **It is the first thing that both decode paths must keep in sync.** Section 2 notes the two systems now agree on user identity and diverge only on role. The audit marker below adds a second field they must both set, in `jwt_bearer_token_authenticatable.rb` and in `api_controller#check_for_auth_token`. The duplication is the same duplication Section 6 Step 2 accepts for role; it disappears the same way, when `check_for_auth_token` is deleted.
+- **Both decode paths read its claims through one shared reader.** Section 2 notes the two systems agree on user identity and diverge only on role. The Devise JWT strategy and `api_controller#check_for_auth_token` both set the token's scope, context and audit marker on `Current` through `TokenScope.apply!`, and each also copies the marker onto `request.env` for the auth log line.
 
 ### The audit marker
 
-A minted token carries `minted_via_oidc_client_id` and `minted_for` claims. Both decode paths copy them onto a request-scoped `Current` (`ActiveSupport::CurrentAttributes`) and onto `request.env`, where `auth_log_subscriber.rb` emits them as `minted_via` / `minted_for` on the auth log line. `SignedJwt.create_portal_token` is the single choke point through which all five token-minting sites pass, so it propagates the marker onto any token derived from a marked one.
+A minted token carries `minted_via_oidc_client_id` and `minted_for` claims. Both decode paths copy them onto a request-scoped `Current` (`ActiveSupport::CurrentAttributes`) and onto `request.env`, where `auth_log_subscriber.rb` emits them as `minted_via` / `minted_for` on the auth log line. `SignedJwt.create_portal_token` is the single choke point through which all five token-minting sites pass, so a token derived from a marked one inherits the marker, along with its `scope` and `context`. The marker is an audit trail only: what a minted token may do is decided by its `scope`.
 
 There is no audit *infrastructure* in the Portal (no `audited`/`paper_trail`, no audit tables), so the marker reaches the request logs and nothing more. A persisted audit trail was out of scope.
 
-Note the "lazy Warden" trap that this introduces for any future `before_action` reading the marker: Warden authenticates lazily, so a filter that reads `Current` or `request.env` before anything has touched `current_user` runs before any strategy has stamped, and silently sees nothing. The shape is always "force `current_user`, then read the marker" (see `ApplicationController#confine_service_minted_tokens`).
+Note the "lazy Warden" trap for any `before_action` reading the marker: Warden authenticates lazily, so a filter that reads `Current` or `request.env` before anything has touched `current_user` runs before any strategy has stamped, and silently sees nothing. The capability check avoids it by reading the bearer itself (see `docs/token-capabilities.md`), and a new filter should do the same rather than force `current_user`, which would store sessions on requests that never had one.
 
 ### Containment
 
-Because a minted token is an elevation, four controls bound where it can be used. Each is a deliberate behavior change to existing endpoints:
+A minted token carries `scope: portal-api`, so the capability check in `docs/token-capabilities.md` contains it: it is accepted under `API::APIController` and refused everywhere else, including `jwt/portal` and `jwt/firebase`, so it cannot be re-minted as an unscoped token; it never becomes a session; and no `AccessGrant` is created under it. One control is about the caller rather than the token:
 
-- **D1**: `jwt_controller#portal` and `#firebase` now reject OIDC-authenticated callers outright. These are the two actions that can pivot to a different user or hand out a Firebase token, and an OIDC caller has the mint for its legitimate needs.
-- **D9**: the same two actions reject any caller whose own token carries the marker, closing JWT-to-JWT laundering (trading a scoped minted token for an unscoped one).
-- **D11**: `AccessGrant` creation is refused while the marker is present, so a minted token cannot be converted into an OAuth credential that outlives it.
-- **Confinement**: an `ApplicationController` `before_action` rejects marked tokens outside the `API::APIController` namespace. Mounted engines are not covered by that filter; the current engine is session-authed and fail-closed for bearer tokens, and a guard spec trips if another engine is mounted.
+- **D1**: `jwt_controller#portal` and `#firebase` reject OIDC-authenticated callers outright. These are the two actions that can pivot to a different user or hand out a Firebase token, and an OIDC caller has the mint for its legitimate needs.
 
-Verified before merge: report-service makes no `/api/v1/jwt` calls, and the Activity Player reaches those actions with a portal JWT or a session, so D1/D9 affect no current caller.
+Mounted engines are not covered by `ApplicationController`'s filters; the current engine is session-authed and fail-closed for bearer tokens, and a guard spec trips if another engine is mounted.
 
-### The D10 gap and what the audit needs
+Verified before merge: report-service makes no `/api/v1/jwt` calls, and the Activity Player reaches those actions with a portal JWT or a session, so D1 affects no current caller.
 
-**A marked token can still be traded for a Rails session, and the marker does not survive the trade.** `JwtBearerTokenAuthenticatable` defines no `store?` override, and Devise's `skip_session_storage` covers only `:http_auth`, so authenticating with a portal JWT writes a session cookie. A caller can then drop the token entirely and continue as a cookie-authenticated user, at which point D9, D11 and the confinement filter are all inert because there is no marker left to see.
+### The D10 gap: closed for scoped and access tokens, open for the others
 
-This is pre-existing and portal-wide: it is true of every portal JWT, not just minted ones, and it predates this work. But it makes D9's guarantee conditional, so it is tracked as a blocking dependency rather than a nice-to-have, and it is covered by a **pending** (not omitted) spec at `spec/requests/service_minted_session_gap_spec.rb`.
+**Scoped tokens and access tokens.** The JWT strategy's `store?` answers false for a token that carries a `scope`, which every minted token does, and for any RS256 access token. Such a token authenticates only the request that carries it and never becomes a Rails session, so its limits cannot be shed by trading it for a cookie. `spec/requests/service_minted_session_gap_spec.rb` checks it, and checks that an unscoped portal JWT still leaves a session behind.
 
-The fix is `def store?; false; end` on the strategy. The reason it is not in this PR is that it changes behavior for every portal-JWT consumer at once: any consumer that authenticates once with a JWT and then relies on the resulting cookie for subsequent requests would break, and nothing in the current code makes such a consumer easy to distinguish from one that sends its token every time.
+**Every other bearer credential still becomes a session.** Devise's `skip_session_storage` covers only `:http_auth`, so an unscoped HS256 portal JWT (`JwtBearerTokenAuthenticatable`), an opaque `AccessGrant` token (`BearerTokenAuthenticatable`) and a Google OIDC token (`OidcBearerTokenAuthenticatable`) each write a session cookie. That includes a portal JWT an unscoped access token obtained from `jwt/portal`. A caller can then drop the credential and continue as a cookie-authenticated user after it expires. That gives the caller no more than the credential did, since each is already a full-user credential, but it makes every one of them outlive its own expiry, and an OIDC service call sets a cookie nobody wants. Answering `store?` false for every bearer credential would change behavior for every consumer at once: any consumer that authenticates once with a token and then relies on the resulting cookie would break, and nothing in the current code distinguishes such a consumer from one that sends its token every time.
 
-The audit therefore has to establish, for each portal-JWT consumer, whether it sends the token on **every** request or only the first. Three existing research documents supply most of the method and inventory:
+So before `store?` can be false for these strategies, an audit has to establish, for each consumer of each of the three, whether it sends its credential on **every** request or only the first. The OIDC strategy is the cheapest to settle, since its callers are server-to-server services. Three existing research documents supply most of the method and inventory:
 
 - `specs/2026-02-26-peer-to-peer-auth-removal-research.md`: the method to copy. It establishes "no production traffic uses this path" through a `concord-consortium` GitHub org search, a cross-reference against production Clients, and 365-day log analysis. The same three-part approach is what would establish "no consumer depends on the JWT-issued session".
 - `specs/2026-02-26-clientless-grants-replacement-research.md`: the inventory of runtimes that receive portal launch JWTs, derived from a production query on `ExternalActivity.where(append_auth_token: true)`. Those runtimes are precisely the JWT-holding consumers whose request pattern the audit needs to characterize.
@@ -473,4 +482,8 @@ The audit therefore has to establish, for each portal-JWT consumer, whether it s
 
 `specs/2026-03-04-controller-migration-caller-research.md` is a useful fourth reference for the per-endpoint caller-identification technique, though its subject matter (status-code compatibility) is unrelated.
 
-Once the audit lands and `store? false` ships, D9's guarantee becomes unconditional and the pending spec above can be enabled.
+---
+
+## 11. Scoped Tokens and Capabilities (RIGSE-367)
+
+The convention for limiting what a token may do, and the tokens rigse issues, are in `docs/token-capabilities.md`. Full design: `specs/RIGSE-367-oauth-pkce-launch-and-scoped-tokens.md`.

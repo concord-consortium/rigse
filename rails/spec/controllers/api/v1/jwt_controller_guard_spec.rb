@@ -33,24 +33,41 @@ RSpec.describe API::V1::JwtController, type: :controller do
   describe 'D9: a service-minted token cannot be re-minted' do
     let(:teacher) { FactoryBot.create(:portal_teacher) }
 
+    # portal-api is declared by no jwt/* action, and the check reads the bearer itself.
     before(:each) do
-      allow(controller).to receive(:current_user) do
-        Current.minted_via_oidc_client_id = 99
-        teacher.user
-      end
-      request.env['portal.auth_strategy'] = 'jwt_bearer_token'
+      token = PortalTokenHelper.minted_token(teacher.user, oidc_client_id: 99)
+      Current.reset
+      request.headers['Authorization'] = "Bearer #{token}"
     end
 
     it 'denies #portal and issues no token (holds even with a session present)' do
+      sign_in teacher.user
       expect(SignedJwt).not_to receive(:create_portal_token)
       post :portal, params: { as_teacher: 'true' }, format: :json
       expect(response).to have_http_status(:forbidden)
-      expect(response.body).to match(/may not be used to mint another token/)
+      expect(response.body).to match(/may not be used here/)
+    end
+
+    it 'denies #portal however the Authorization header is spaced' do
+      token = PortalTokenHelper.minted_token(teacher.user, oidc_client_id: 99)
+      Current.reset
+      request.headers['Authorization'] = "Bearer\t#{token}"
+      expect(SignedJwt).not_to receive(:create_portal_token)
+      post :portal, params: { as_teacher: 'true' }, format: :json
+      expect(response).to have_http_status(:forbidden)
     end
 
     it 'denies #firebase and issues no token' do
       expect(SignedJwt).not_to receive(:create_firebase_token)
       post :firebase, params: { firebase_app: 'report-service-dev' }, format: :json
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'denies #portal to the portal-api scope without the marker' do
+      request.headers['Authorization'] = "Bearer #{PortalTokenHelper.unmarked_portal_api_token(teacher.user)}"
+      Current.reset
+      expect(SignedJwt).not_to receive(:create_portal_token)
+      post :portal, params: { as_teacher: 'true' }, format: :json
       expect(response).to have_http_status(:forbidden)
     end
   end
@@ -69,16 +86,16 @@ RSpec.describe API::V1::JwtController, type: :controller do
   describe 'marker hygiene' do
     let(:teacher) { FactoryBot.create(:portal_teacher) }
 
-    it 'does not leak the marker between requests' do
-      allow(controller).to receive(:current_user) do
-        Current.minted_via_oidc_client_id = 5
-        teacher.user
-      end
-      request.env['portal.auth_strategy'] = 'jwt_bearer_token'
+    it "does not leak a token's limits between requests" do
+      token = PortalTokenHelper.minted_token(teacher.user, oidc_client_id: 5)
+      Current.reset
+      request.headers['Authorization'] = "Bearer #{token}"
       post :portal, params: { as_teacher: 'true' }, format: :json
       expect(response).to have_http_status(:forbidden)
 
-      allow(controller).to receive(:current_user).and_return(teacher.user)
+      request.headers['Authorization'] = nil
+      Current.reset
+      sign_in teacher.user
       post :portal, params: { as_teacher: 'true' }, format: :json
       expect(response).to have_http_status(:created)
     end
