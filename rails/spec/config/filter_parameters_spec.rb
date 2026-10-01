@@ -12,6 +12,11 @@ RSpec.describe 'config.filter_parameters' do
     expect(filtered.values.uniq).to eq(['[FILTERED]'])
   end
 
+  it "keeps a client's secret out of the admin form's logs" do
+    expect(filter.filter('client' => { 'app_secret' => 's3cret', 'name' => 'LARA' }))
+      .to eq('client' => { 'app_secret' => '[FILTERED]', 'name' => 'LARA' })
+  end
+
   it 'leaves the parameters that identify a request readable' do
     kept = { 'client_id' => 'lara', 'redirect_uri' => 'https://lara.example.org/cb', 'grant_type' => 'authorization_code',
              'code_challenge_method' => 'S256', 'zipcode' => '01742', 'state' => 'st' }

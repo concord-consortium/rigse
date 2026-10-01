@@ -143,8 +143,9 @@ services:
       REPORT_SERVICE_BEARER_TOKEN:
 
       #
-      # The RS256 key that signs scoped OAuth access tokens and service assertions, and
-      # report-server's URL, which is the audience of a token carrying packages:read. See
+      # The RS256 key that signs the access tokens /oauth/token issues to public and scoped
+      # clients and the service assertions, and report-server's URL, which is the audience
+      # of a token carrying packages:read. See
       # "Portal signing key and scoped OAuth clients" in the README for generating a key.
       #
       PORTAL_SIGNING_KEY:

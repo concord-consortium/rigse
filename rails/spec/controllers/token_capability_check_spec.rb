@@ -54,8 +54,7 @@ RSpec.describe ApplicationController, type: :controller do
   end
 
   it 'limits a scoped access token sent as Bearer/JWT, which no authenticator accepts' do
-    token = SignedJwt.create_access_token(user, client_id: 'c', capabilities: ['class:researcher-read'], context: nil,
-                                          audiences: [APP_CONFIG[:site_url]], expires_in: 600)
+    token = PortalTokenHelper.access_token(user, capabilities: ['class:researcher-read'])
     request.headers['Authorization'] = "Bearer/JWT #{token}"
     Current.reset
     get :undeclared

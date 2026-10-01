@@ -155,6 +155,12 @@ class AccessGrant < ApplicationRecord
     end
 
     client = validation.client
+    # No code is issued that /oauth/token could not honor with a signed access token.
+    if params[:response_type] === "code" && (client.scoped? || client.public?) && !PortalSigningKey.usable?
+      Rails.logger.error("OAuth authorize: #{client.app_id} needs a valid PORTAL_SIGNING_KEY and PORTAL_SIGNING_KEY_ID, which are not configured")
+      validation.error("server_error", params[:redirect_uri], params[:state])
+      return validation.error_redirect
+    end
     if client.scoped?
       error = authorize_scope_for(user, validation.scope, validation.context)
       if error
@@ -195,11 +201,6 @@ class AccessGrant < ApplicationRecord
   # to this context. A missing object and a refused one are the same access_denied, so the
   # endpoint cannot be used to find out which classes exist.
   def self.authorize_scope_for(user, scope, context)
-    # No code is issued that /oauth/token could not honour.
-    unless PortalSigningKey.usable?
-      Rails.logger.error("OAuth authorize: a scoped client needs a valid PORTAL_SIGNING_KEY and PORTAL_SIGNING_KEY_ID, which are not configured")
-      return "server_error"
-    end
     missing = TokenCapabilities.missing_settings(scope)
     if missing.any?
       Rails.logger.error("OAuth authorize: #{scope.join(' ')} needs #{missing.join(', ')}, which is not configured")

@@ -198,8 +198,8 @@ gpZlAvdO9CFaBcBKsAcJnNDQBY2lhFsSeqYs78PoW7Zz
     it "refuses an access token aud that does not start with this portal or names an assertion audience" do
       [[SignedJwt::AUD_REPORT_SERVER], [site, SignedJwt::AUD_REPORT_SERVER], [site, SignedJwt::AUD_REPORT_SERVICE_FUNCTIONS],
        ['https://other.example.org', site]].each do |audiences|
-        expect { SignedJwt.create_access_token(user, client_id: 'c', capabilities: [], context: nil, audiences: audiences, expires_in: 60) }
-          .to raise_error(SignedJwt::Error)
+        expect { SignedJwt.create_access_token(user, client_id: 'c', capabilities: ['class:researcher-read'], context: nil, audiences: audiences, expires_in: 60) }
+          .to raise_error(SignedJwt::Error, /aud must start with this portal/)
       end
     end
 

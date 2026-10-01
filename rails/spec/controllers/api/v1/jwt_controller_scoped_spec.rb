@@ -19,9 +19,7 @@ RSpec.describe API::V1::JwtController, type: :controller do
   end
 
   def present(capabilities, context_clazz)
-    token = SignedJwt.create_access_token(researcher, client_id: 'c', capabilities: capabilities,
-                                          context: { type: 'class', id: context_clazz.id },
-                                          audiences: [APP_CONFIG[:site_url]], expires_in: 60)
+    token = PortalTokenHelper.access_token(researcher, capabilities: capabilities, context: { type: 'class', id: context_clazz.id })
     Current.reset
     request.headers['Authorization'] = "Bearer #{token}"
   end
@@ -54,9 +52,7 @@ RSpec.describe API::V1::JwtController, type: :controller do
 
   it 'still runs the researcher gate for the matching class' do
     outsider = FactoryBot.create(:confirmed_user)
-    token = SignedJwt.create_access_token(outsider, client_id: 'c', capabilities: ['class:researcher-read'],
-                                          context: { type: 'class', id: clazz.id },
-                                          audiences: [APP_CONFIG[:site_url]], expires_in: 60)
+    token = PortalTokenHelper.access_token(outsider, capabilities: ['class:researcher-read'], context: { type: 'class', id: clazz.id })
     request.headers['Authorization'] = "Bearer #{token}"
     get :firebase, params: { firebase_app: firebase_app.name, researcher: 'true', class_hash: clazz.class_hash }, format: :json
     expect(response).to have_http_status(:bad_request)

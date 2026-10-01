@@ -52,8 +52,8 @@ module RailsPortal
     config.eager_load_paths << Rails.root.join("app/helpers")
 
     config.filter_parameters << :password << :password_confirmation
-    # :token matches as a substring (access_token, refresh_token); code is exact so zipcode stays readable.
-    config.filter_parameters += [:client_secret, :code_verifier, :token, /\Acode\z/]
+    # :secret and :token match as substrings (app_secret, access_token); code is exact so zipcode stays readable.
+    config.filter_parameters += [:secret, :code_verifier, :token, /\Acode\z/]
     # The implicit flow's redirect carries its access token in the fragment, which parameter
     # filtering never reaches, so such a redirect is logged as [FILTERED].
     config.filter_redirect << /[#&]access_token=/

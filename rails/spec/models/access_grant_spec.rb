@@ -243,6 +243,35 @@ describe AccessGrant do
       end
     end
 
+    describe ".get_authorize_redirect_uri without a signing key" do
+      let(:user) { FactoryBot.create(:confirmed_user) }
+      around(:each) do |example|
+        key = ENV.delete('PORTAL_SIGNING_KEY')
+        example.run
+      ensure
+        ENV['PORTAL_SIGNING_KEY'] = key
+      end
+
+      def authorize(app_id, extra = {})
+        AccessGrant.get_authorize_redirect_uri(user, { client_id: app_id, redirect_uri: "http://test.com", state: 'st' }.merge(extra))
+      end
+
+      it "issues no code to a public client, whose code would buy a signed token" do
+        FactoryBot.create(:client, app_id: 'spa', client_type: Client::PUBLIC, redirect_uris: "http://test.com")
+        expect {
+          expect(authorize('spa', response_type: "code", code_challenge: 'c' * 43, code_challenge_method: 'S256'))
+            .to eq("http://test.com?error=server_error&state=st")
+        }.not_to change { AccessGrant.count }
+      end
+
+      it "still serves the implicit flow and a confidential client's code" do
+        FactoryBot.create(:client, app_id: 'spa', client_type: Client::PUBLIC, redirect_uris: "http://test.com")
+        FactoryBot.create(:client, app_id: 'lara', client_type: Client::CONFIDENTIAL, redirect_uris: "http://test.com")
+        expect(authorize('spa', response_type: "token")).to include("#access_token=")
+        expect(authorize('lara', response_type: "code")).to match(/\?code=\h+/)
+      end
+    end
+
     describe "#validate_oauth_authorize for a scoped client without PKCE" do
       it "accepts a confidential client" do
         FactoryBot.create(:client, app_id: 'scoped-conf', client_type: Client::CONFIDENTIAL, scopes: 'portal-api', redirect_uris: "http://test.com")

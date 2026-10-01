@@ -68,10 +68,7 @@ describe JwtBearerTokenAuthenticatable::BearerToken do
   end
 
   context 'an RS256 access token' do
-    let(:token) do
-      SignedJwt.create_access_token(user, client_id: 'c', capabilities: [TokenCapabilities::PORTAL_API], context: nil,
-                                    audiences: [APP_CONFIG[:site_url]], expires_in: 600)
-    end
+    let(:token) { PortalTokenHelper.access_token(user, capabilities: [TokenCapabilities::PORTAL_API]) }
 
     it 'authenticates as plain Bearer' do
       allow(request).to receive(:headers).and_return({ "Authorization" => "Bearer #{token}" })

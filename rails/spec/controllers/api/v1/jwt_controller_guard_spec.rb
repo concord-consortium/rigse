@@ -33,10 +33,9 @@ RSpec.describe API::V1::JwtController, type: :controller do
   describe 'D9: a service-minted token cannot be re-minted' do
     let(:teacher) { FactoryBot.create(:portal_teacher) }
 
-    # A real minted token in the header: the capability check reads the bearer itself, and
-    # portal-api is declared by no jwt/* action.
+    # portal-api is declared by no jwt/* action, and the check reads the bearer itself.
     before(:each) do
-      token = ServiceMintedTokenHelper.minted_token(teacher.user, oidc_client_id: 99)
+      token = PortalTokenHelper.minted_token(teacher.user, oidc_client_id: 99)
       Current.reset
       request.headers['Authorization'] = "Bearer #{token}"
     end
@@ -50,7 +49,7 @@ RSpec.describe API::V1::JwtController, type: :controller do
     end
 
     it 'denies #portal however the Authorization header is spaced' do
-      token = ServiceMintedTokenHelper.minted_token(teacher.user, oidc_client_id: 99)
+      token = PortalTokenHelper.minted_token(teacher.user, oidc_client_id: 99)
       Current.reset
       request.headers['Authorization'] = "Bearer\t#{token}"
       expect(SignedJwt).not_to receive(:create_portal_token)
@@ -65,7 +64,7 @@ RSpec.describe API::V1::JwtController, type: :controller do
     end
 
     it 'denies #portal to the portal-api scope without the marker' do
-      request.headers['Authorization'] = "Bearer #{ServiceMintedTokenHelper.unmarked_portal_api_token(teacher.user)}"
+      request.headers['Authorization'] = "Bearer #{PortalTokenHelper.unmarked_portal_api_token(teacher.user)}"
       Current.reset
       expect(SignedJwt).not_to receive(:create_portal_token)
       post :portal, params: { as_teacher: 'true' }, format: :json
@@ -88,7 +87,7 @@ RSpec.describe API::V1::JwtController, type: :controller do
     let(:teacher) { FactoryBot.create(:portal_teacher) }
 
     it "does not leak a token's limits between requests" do
-      token = ServiceMintedTokenHelper.minted_token(teacher.user, oidc_client_id: 5)
+      token = PortalTokenHelper.minted_token(teacher.user, oidc_client_id: 5)
       Current.reset
       request.headers['Authorization'] = "Bearer #{token}"
       post :portal, params: { as_teacher: 'true' }, format: :json

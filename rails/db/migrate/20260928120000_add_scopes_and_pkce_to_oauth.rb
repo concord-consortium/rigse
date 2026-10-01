@@ -12,5 +12,11 @@ class AddScopesAndPkceToOauth < ActiveRecord::Migration[8.0]
       t.string  :context_type
       t.integer :context_id
     end
+
+    # Every grant used to get a code. Only an unredeemed code-flow grant may hold one, which is
+    # what lets a report launch reuse a grant (Client#find_grant_for_user).
+    reversible do |dir|
+      dir.up { execute "UPDATE access_grants SET code = NULL WHERE access_token_expires_at IS NOT NULL" }
+    end
   end
 end

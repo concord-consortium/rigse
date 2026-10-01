@@ -47,7 +47,7 @@ There are two authorization approaches for non-LARA launches, controlled by the 
 
 **Note:** Collaboration launches (via `create_collaboration.rb`) are not yet migrated to OAuth2 and continue using JWT tokens.
 
-JWTs and OAuth2 access tokens can both be used with any Portal API endpoint: both the API Controller's `check_for_auth_token` and Devise's bearer token authentication recognize them. An access token from the code flow with PKCE is sent as `Authorization: Bearer <token>`; only the legacy HS256 portal JWTs are also accepted as `Bearer/JWT` (see `docs/token-capabilities.md`).
+Unscoped JWTs and OAuth2 access tokens can be used with any Portal API endpoint: both the API Controller's `check_for_auth_token` and Devise's bearer token authentication recognize them. A token with a `scope` is accepted only by actions that declare one of its capabilities (see `docs/token-capabilities.md`). An access token from the code flow with PKCE is sent as `Authorization: Bearer <token>`; only the legacy HS256 portal JWTs are also accepted as `Bearer/JWT` (see `docs/token-capabilities.md`).
 
 References (search for these strings)
 - token generation: `SignedJwt::create_portal_token` (called from `external_activity.rb` and `create_collaboration.rb`)

@@ -15,14 +15,14 @@ RSpec.describe HomeController, type: :controller do
   end
 
   it 'denies a request carrying a service-minted token' do
-    present(ServiceMintedTokenHelper.minted_token(user, oidc_client_id: 55))
+    present(PortalTokenHelper.minted_token(user, oidc_client_id: 55))
     get :getting_started
     expect(response).to have_http_status(:forbidden)
     expect(JSON.parse(response.body)['message']).to match(/may not be used here/)
   end
 
   it 'denies the portal-api scope without the marker' do
-    present(ServiceMintedTokenHelper.unmarked_portal_api_token(user))
+    present(PortalTokenHelper.unmarked_portal_api_token(user))
     get :getting_started
     expect(response).to have_http_status(:forbidden)
   end
@@ -43,7 +43,7 @@ RSpec.describe API::V1::OfferingsController, type: :controller do
   let(:offering) { FactoryBot.create(:portal_offering, clazz: teacher.clazzes.first) }
 
   it 'does not confine a minted token on an API controller' do
-    token = ServiceMintedTokenHelper.minted_token(teacher.user, oidc_client_id: 77)
+    token = PortalTokenHelper.minted_token(teacher.user, oidc_client_id: 77)
     Current.reset
     request.headers['Authorization'] = "Bearer #{token}"
 

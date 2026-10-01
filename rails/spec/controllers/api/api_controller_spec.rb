@@ -261,10 +261,7 @@ RSpec.describe API::APIController, type: :controller do
         end
 
         describe 'an RS256 access token' do
-          let(:access_token) do
-            SignedJwt.create_access_token(user, client_id: 'c', capabilities: [TokenCapabilities::PORTAL_API], context: nil,
-                                          audiences: [APP_CONFIG[:site_url]], expires_in: 600)
-          end
+          let(:access_token) { PortalTokenHelper.access_token(user, capabilities: [TokenCapabilities::PORTAL_API]) }
 
           it 'is accepted as plain Bearer' do
             set_standard_bearer_token(access_token)
