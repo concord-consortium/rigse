@@ -3,7 +3,7 @@
 # `context` claim, so no route names a class and no path can disagree with the scope.
 #
 # A capability is a ceiling and never a grant, so the researcher gate runs on every call:
-# a token lives two hours and a researcher's access can be withdrawn inside one.
+# a researcher's access can be withdrawn while a token is still live.
 class API::V1::ResearcherDashboardController < API::APIController
   # Bearer-only: no session is read, so there is no session for a forged request to ride.
   skip_before_action :verify_authenticity_token

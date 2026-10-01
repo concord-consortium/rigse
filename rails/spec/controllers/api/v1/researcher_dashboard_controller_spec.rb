@@ -115,6 +115,13 @@ describe API::V1::ResearcherDashboardController, type: :controller do
         expect(json['message']).to match(/accept only a Researcher Dashboard access token/)
       end
 
+      it 'for an unscoped access token for the same user' do
+        bearer(token_for(researcher, capabilities: nil, context_clazz: nil))
+        get_scope
+        expect(response.status).to eq(401)
+        expect(json['message']).to match(/accept only a Researcher Dashboard access token/)
+      end
+
       it 'for a session with no bearer' do
         sign_in researcher
         get_scope
