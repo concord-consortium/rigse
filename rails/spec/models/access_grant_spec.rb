@@ -16,6 +16,7 @@ describe AccessGrant do
     attributes = {
       :client_id => 'a',
       :state     => 'b',
+      :issue_code => true,
       :access_token_expires_at => 2.days.ago
     }
     3.times.map { |i| AccessGrant.create(attributes) }
@@ -25,6 +26,7 @@ describe AccessGrant do
     attributes = {
       :client_id => 'a',
       :state     => 'b',
+      :issue_code => true,
       :access_token_expires_at => 0.days.ago
     }
     2.times.map { |i| AccessGrant.create(attributes) }
@@ -32,17 +34,17 @@ describe AccessGrant do
 
   subject{ AccessGrant.create(valid_attributes)}
 
-  describe "service-minted token refusal" do
+  describe "scoped token refusal" do
     after(:each) { Current.reset }
 
-    it "refuses creation while a service-mint marker is set" do
-      Current.minted_via_oidc_client_id = 42
+    it "refuses creation while the request's credential carries a scope" do
+      TokenScope.apply!('scope' => 'class:researcher-read')
       grant = AccessGrant.create(valid_attributes)
       expect(grant).not_to be_persisted
-      expect(grant.errors[:base]).to include('cannot be created from a service-minted token')
+      expect(grant.errors[:base]).to include('cannot be created from a scoped token')
     end
 
-    it "allows creation when no marker is set" do
+    it "allows creation when the credential carries no scope" do
       Current.reset
       grant = AccessGrant.create(valid_attributes)
       expect(grant).to be_persisted
@@ -55,9 +57,12 @@ describe AccessGrant do
         expect(subject).to be_valid
       end
       it "should have valid tokens" do
-        expect(subject.code).to match /[a-f|0-9]{32}/
         expect(subject.access_token).to match /[a-f|0-9]{32}/
         expect(subject.refresh_token).to match(/[a-f|0-9]{32}/)
+      end
+      it "should have no code unless the code flow issued it" do
+        expect(subject.code).to be_nil
+        expect(AccessGrant.create(valid_attributes.merge(issue_code: true)).code).to match /[a-f|0-9]{32}/
       end
       it "should not have an expiration time" do
         expect(subject.access_token_expires_at).to be_nil
@@ -126,8 +131,11 @@ describe AccessGrant do
       end
 
       mismatched_pairs = [
-        {client_type: Client::CONFIDENTIAL, response_type: "token"},
-        {client_type: Client::PUBLIC,       response_type: "code"}
+        {client_type: Client::CONFIDENTIAL, response_type: "token", error: "unauthorized_client"},
+        # a public client may use the code flow only with PKCE, so without a challenge the
+        # request is malformed rather than unauthorized (RFC 7636 4.4.1)
+        {client_type: Client::PUBLIC,       response_type: "code",  error: "invalid_request"},
+        {client_type: nil,                  response_type: "code",  error: "unauthorized_client"}
       ]
       mismatched_pairs.each do |pair|
         context "when response_type is '#{pair[:response_type]} and client_type is '#{pair[:client_type]}''" do
@@ -151,7 +159,7 @@ describe AccessGrant do
             it { should_not be_valid }
 
             it "should return an error_redirect" do
-              expect(subject.error_redirect).to eq("http://test.com?error=unauthorized_client")
+              expect(subject.error_redirect).to eq("http://test.com?error=#{pair[:error]}")
             end
           end
         end
@@ -215,6 +223,88 @@ describe AccessGrant do
       end
     end
 
+    describe "#prune! and unredeemed codes" do
+      it "deletes a code that expired unredeemed and keeps a live one" do
+        stale = AccessGrant.create!(valid_attributes.merge(issue_code: true))
+        stale.update_column(:created_at, (AccessGrant::CodeExpireTime + 1.second).ago)
+        live = AccessGrant.create!(valid_attributes.merge(issue_code: true))
+        AccessGrant.prune!
+        expect(AccessGrant.exists?(stale.id)).to be false
+        expect(AccessGrant.exists?(live.id)).to be true
+      end
+    end
+
+    describe "#validate_oauth_authorize for a public client using PKCE" do
+      it "accepts the code flow with an S256 challenge" do
+        FactoryBot.create(:client, app_id: 'pkce-client', client_type: Client::PUBLIC, redirect_uris: "http://test.com")
+        result = AccessGrant.validate_oauth_authorize(client_id: 'pkce-client', response_type: "code", redirect_uri: "http://test.com",
+                                                      code_challenge: 'c' * 43, code_challenge_method: 'S256')
+        expect(result).to be_valid
+      end
+    end
+
+    describe ".get_authorize_redirect_uri without a signing key" do
+      let(:user) { FactoryBot.create(:confirmed_user) }
+      around(:each) do |example|
+        key = ENV.delete('PORTAL_SIGNING_KEY')
+        example.run
+      ensure
+        ENV['PORTAL_SIGNING_KEY'] = key
+      end
+
+      def authorize(app_id, extra = {})
+        AccessGrant.get_authorize_redirect_uri(user, { client_id: app_id, redirect_uri: "http://test.com", state: 'st' }.merge(extra))
+      end
+
+      it "issues no code to a public client, whose code would buy a signed token" do
+        FactoryBot.create(:client, app_id: 'spa', client_type: Client::PUBLIC, redirect_uris: "http://test.com")
+        expect {
+          expect(authorize('spa', response_type: "code", code_challenge: 'c' * 43, code_challenge_method: 'S256'))
+            .to eq("http://test.com?error=server_error&state=st")
+        }.not_to change { AccessGrant.count }
+      end
+
+      it "still serves the implicit flow and a confidential client's code" do
+        FactoryBot.create(:client, app_id: 'spa', client_type: Client::PUBLIC, redirect_uris: "http://test.com")
+        FactoryBot.create(:client, app_id: 'lara', client_type: Client::CONFIDENTIAL, redirect_uris: "http://test.com")
+        expect(authorize('spa', response_type: "token")).to include("#access_token=")
+        expect(authorize('lara', response_type: "code")).to match(/\?code=\h+/)
+      end
+    end
+
+    describe "#validate_oauth_authorize for a scoped client without PKCE" do
+      it "accepts a confidential client" do
+        FactoryBot.create(:client, app_id: 'scoped-conf', client_type: Client::CONFIDENTIAL, scopes: 'portal-api', redirect_uris: "http://test.com")
+        result = AccessGrant.validate_oauth_authorize(client_id: 'scoped-conf', response_type: "code", redirect_uri: "http://test.com")
+        expect(result).to be_valid
+      end
+
+      it "refuses a client with no type" do
+        FactoryBot.create(:client, app_id: 'scoped-untyped', client_type: nil, scopes: 'portal-api', redirect_uris: "http://test.com")
+        result = AccessGrant.validate_oauth_authorize(client_id: 'scoped-untyped', response_type: "code", redirect_uri: "http://test.com")
+        expect(result).not_to be_valid
+      end
+    end
+
+    describe "#validate_oauth_authorize with a PKCE method but no challenge" do
+      it "refuses the malformed request rather than issuing a code without PKCE" do
+        FactoryBot.create(:client, app_id: 'method-only', client_type: Client::CONFIDENTIAL, redirect_uris: "http://test.com")
+        result = AccessGrant.validate_oauth_authorize(client_id: 'method-only', response_type: "code", redirect_uri: "http://test.com",
+                                                      code_challenge_method: 'S256', state: 'st')
+        expect(result).not_to be_valid
+        expect(result.error_redirect).to eq("http://test.com?error=invalid_request&state=st")
+      end
+    end
+
+    describe "#validate_oauth_authorize error redirects" do
+      it "carries the request's state" do
+        client = FactoryBot.create(:client, app_id: 'state-client', redirect_uris: "http://test.com")
+        result = AccessGrant.validate_oauth_authorize(client_id: 'state-client', response_type: "foo",
+                                                      redirect_uri: "http://test.com", state: "st")
+        expect(result.error_redirect).to eq("http://test.com?error=unsupported_response_type&state=st")
+      end
+    end
+
     describe "#authenticate(code, application_id)" do
       before(:each) do
         all_grants  = old_grants + newer_grants
@@ -250,6 +340,7 @@ describe AccessGrant do
     end
 
     describe "#auth_code_redirect_uri_for" do
+      subject { AccessGrant.create(valid_attributes.merge(issue_code: true)) }
       let(:client) { FactoryBot.create(:client, redirect_uris: url) }
       let(:url) { "http://blarg.com/path" }
       it "should include the token and state" do
@@ -285,5 +376,25 @@ describe AccessGrant do
 
 
 
+
+
+  # A context is spelled "<type>:<id>" on the authorize request. The type follows the same
+  # grammar as the capability names, which are hyphenated, so a hyphen has to survive here.
+  describe '.parse_context' do
+    it 'reads a hyphenated type, as the capability names are hyphenated' do
+      expect(AccessGrant.parse_context('research-project:7')).to eq(type: 'research-project', id: 7)
+      expect(AccessGrant.parse_context('class:123')).to eq(type: 'class', id: 123)
+    end
+
+    it 'refuses a type or an id outside the grammar' do
+      expect(AccessGrant.parse_context('Class:1')).to be_nil
+      expect(AccessGrant.parse_context('-class:1')).to be_nil
+      expect(AccessGrant.parse_context('class_set:1')).to be_nil
+      expect(AccessGrant.parse_context('class:0')).to be_nil
+      expect(AccessGrant.parse_context('class:01')).to be_nil
+      expect(AccessGrant.parse_context('class')).to be_nil
+      expect(AccessGrant.parse_context(nil)).to be_nil
+    end
+  end
 
 end

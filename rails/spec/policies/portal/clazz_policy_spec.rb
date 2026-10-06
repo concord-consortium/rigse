@@ -89,4 +89,20 @@ RSpec.describe Portal::ClazzPolicy do
       end
     end
   end
+
+  describe "#external_report?" do
+    let(:cohort)  { FactoryBot.create(:admin_cohort) }
+    let(:project) { FactoryBot.create(:project, cohorts: [cohort]) }
+    let(:teacher) { FactoryBot.create(:portal_teacher, cohorts: [cohort]) }
+    let(:clazz)   { FactoryBot.create(:portal_clazz, teachers: [teacher]) }
+
+    it "allows a project admin of the class, who can see its class reports on Research Classes" do
+      user.add_role_for_project('admin', project)
+      expect(described_class.new(user, clazz).external_report?).to be true
+    end
+
+    it "refuses a user with no role in the class" do
+      expect(described_class.new(user, clazz).external_report?).to be false
+    end
+  end
 end

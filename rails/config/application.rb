@@ -52,6 +52,11 @@ module RailsPortal
     config.eager_load_paths << Rails.root.join("app/helpers")
 
     config.filter_parameters << :password << :password_confirmation
+    # :secret and :token match as substrings (app_secret, access_token); code is exact so zipcode stays readable.
+    config.filter_parameters += [:secret, :code_verifier, :token, /\Acode\z/]
+    # The implicit flow's redirect carries its access token in the fragment, which parameter
+    # filtering never reaches, so such a redirect is logged as [FILTERED].
+    config.filter_redirect << /[#&]access_token=/
 
     # Expands posted content with a content-encoding of: 'b64gzip'
     # NOTE: pre-Rails 5 this was inserted before ActionController::ParamsParser but that middleware
@@ -111,6 +116,9 @@ module RailsPortal
         resource '/api/v1/classes/*', :headers => :any, :methods => [:get, :put, :post]
         resource '/api/v1/students/join_class', :headers => :any, :methods => [:post]
         resource '/api/v1/jwt/*', :headers => :any, :methods => [:get]
+        # the OAuth token endpoint, for public clients (PKCE) exchanging a code from the browser;
+        # the code and verifier, not the origin, authenticate the request
+        resource '/oauth/token', :headers => :any, :methods => [:post]
         resource '/api/v1/bookmarks', :headers => :any, :methods => [:post]
         resource '/api/v1/bookmarks/*', :headers => :any, :methods => [:put, :delete]
       end

@@ -11,6 +11,10 @@ class ExternalReport < ApplicationRecord
 
   ReportTokenValidFor = 2.hours
 
+  # Raised for a launch this report's client cannot take: a scoped client gets its token
+  # from the code flow, never in a URL, and only a class launch knows how to start that.
+  class LaunchNotSupported < StandardError; end
+
   def options_for_client
     Client.all.map { |c| [c.name, c.id] }
   end
@@ -21,6 +25,7 @@ class ExternalReport < ApplicationRecord
 
   # Return a the external_report url and the short-lived bearer token for the user.
   def url_for_offering(offering, user, protocol, host, additional_params = {})
+    raise LaunchNotSupported, "#{name} is launched by class, through the OAuth2 code flow" if client&.scoped?
     grant = client.updated_grant_for(user, ReportTokenValidFor)
     if user.portal_teacher
       grant.teacher = user.portal_teacher
@@ -64,6 +69,7 @@ class ExternalReport < ApplicationRecord
   end
 
   def url_for_class(clazz, user, protocol, host, additional_params = {})
+    return oauth2_url_for_class(clazz, user, protocol, host) if client&.scoped?
     class_id = clazz.id
     grant = client.updated_grant_for(user, ReportTokenValidFor)
     routes = Rails.application.routes.url_helpers
@@ -81,11 +87,27 @@ class ExternalReport < ApplicationRecord
   end
 
   private
+  # A report whose client has scopes gets no token in its URL: the link names the class, and
+  # the app asks the portal for a token itself with the OAuth2 code flow and PKCE, binding
+  # that class as the token's context. The parameters follow the OAuth2 launch convention
+  # of ExternalActivity#url (authDomain, loginHint).
+  def oauth2_url_for_class(clazz, user, protocol, host)
+    add_query_params(url, {
+      # the root URL, as root_url gives ExternalActivity#url; callers pass the protocol both
+      # as request.protocol ("https://") and bare ("https"), as the url helpers accept
+      authDomain: "#{protocol.to_s.delete_suffix('://')}://#{host}/",
+      classId:    clazz.id,
+      loginHint:  user.id
+    })
+  end
+
   # this returns the url with the new params merged in
   def add_query_params(url, params)
     uri = URI.parse(url)
     query_hash = Rack::Utils.parse_query(uri.query)
-    query_hash.merge!(params)
+    # String keys, as parse_query returns, so the portal's values replace any the URL has
+    # rather than appearing beside them.
+    query_hash.merge!(params.transform_keys(&:to_s))
     uri.query = query_hash.to_query
     uri.to_s
   end

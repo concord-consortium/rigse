@@ -60,7 +60,7 @@ module OidcBearerTokenAuthenticatable
     def oidc_token_value
       header = request.headers['Authorization'] || ''
       # Must NOT match Bearer/JWT — those go to jwt_bearer_token_authenticatable
-      return nil if header =~ /^Bearer\/JWT/i
+      return nil if PortalBearer.legacy_scheme?(header)
       # Only match standard Bearer scheme with JWT-shaped token (has dots)
       if header =~ /^Bearer ([^\s]+)$/i
         token = $1

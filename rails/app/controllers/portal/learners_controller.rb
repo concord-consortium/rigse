@@ -63,6 +63,11 @@ class Portal::LearnersController < ApplicationController
     end
   end
 
+  # A scoped client's report launches only by class, through the code flow.
+  rescue_from ExternalReport::LaunchNotSupported do
+    raise ActionController::RoutingError.new('Not Found')
+  end
+
   def report
     # This report is for the teacher at the moment so for authentication
     # we just check pundit for offering report method. See reports_controller.rb

@@ -101,4 +101,139 @@ gpZlAvdO9CFaBcBKsAcJnNDQBY2lhFsSeqYs78PoW7Zz
     end
   end
 
+
+  describe "RS256 tokens" do
+    let(:user) { FactoryBot.create(:user) }
+    let(:key)  { PortalSigningKey.private_key }
+    let(:now)  { Time.now.to_i }
+    let(:site) { APP_CONFIG[:site_url] }
+
+    def access_token(claims = {}, header = {})
+      JWT.encode({ iss: site, aud: [site], uid: user.id, exp: now + 60, scope: 'class:researcher-read' }.merge(claims),
+                 key, 'RS256', { kid: PortalSigningKey.kid, typ: 'at+jwt' }.merge(header))
+    end
+
+    it "accepts rigse's own access token, whose aud lists rigse among others" do
+      data = SignedJwt.decode_portal_token(access_token(aud: [site, 'https://report-server.example.org']))[:data]
+      expect(data['uid']).to eq(user.id)
+    end
+
+    it "refuses an access token whose aud does not name rigse" do
+      expect { SignedJwt.decode_portal_token(access_token(aud: ['https://elsewhere.example.org'])) }.to raise_error(SignedJwt::Error)
+    end
+
+    it "refuses an RS256 token that is not an access token, which is every assertion" do
+      expect { SignedJwt.decode_portal_token(access_token({}, typ: 'JWT')) }.to raise_error(SignedJwt::Error)
+      assertion = SignedJwt.create_assertion(user, aud: SignedJwt::AUD_REPORT_SERVER, expires_in: 60)
+      expect { SignedJwt.decode_portal_token(assertion) }.to raise_error(SignedJwt::Error)
+    end
+
+    it "refuses an HS256 token signed with the public key as its secret" do
+      forged = JWT.encode({ iss: site, aud: [site], uid: user.id, exp: now + 60 }, key.public_key.to_pem, 'HS256',
+                          { kid: PortalSigningKey.kid, typ: 'at+jwt' })
+      expect { SignedJwt.decode_portal_token(forged) }.to raise_error(SignedJwt::Error)
+    end
+
+    it "accepts a token signed by the previous key during a rotation" do
+      old = OpenSSL::PKey::RSA.generate(2048)
+      stub_const('ENV', ENV.to_h.merge('PORTAL_PREVIOUS_VERIFY_KEYS' => { 'old-key' => old.public_key.to_pem }.to_json))
+      token = JWT.encode({ iss: site, aud: [site], uid: user.id, exp: now + 60 }, old, 'RS256', { kid: 'old-key', typ: 'at+jwt' })
+      expect(SignedJwt.decode_portal_token(token)[:data]['uid']).to eq(user.id)
+    end
+
+    it "refuses an RS256 token with no kid, which routes to the HS256 check" do
+      token = JWT.encode({ iss: site, aud: [site], uid: user.id, exp: now + 60 }, key, 'RS256', { typ: 'at+jwt' })
+      expect { SignedJwt.decode_portal_token(token) }.to raise_error(SignedJwt::Error)
+    end
+
+    it "refuses an unknown kid rather than falling back to a default key" do
+      expect { SignedJwt.decode_portal_token(access_token({}, kid: 'nope')) }.to raise_error(SignedJwt::Error, /Unrecognized/)
+    end
+
+    it "refuses a token signed by another environment's key under the same kid" do
+      other = OpenSSL::PKey::RSA.generate(2048)
+      token = JWT.encode({ iss: site, aud: [site], uid: user.id, exp: now + 60 }, other, 'RS256', { kid: PortalSigningKey.kid, typ: 'at+jwt' })
+      expect { SignedJwt.decode_portal_token(token) }.to raise_error(SignedJwt::Error)
+    end
+
+    it "still accepts a legacy HS256 portal token" do
+      expect(SignedJwt.decode_portal_token(SignedJwt.create_portal_token(user))[:data]['uid']).to eq(user.id)
+    end
+
+    it "signs each assertion with exactly one audience" do
+      [SignedJwt::AUD_REPORT_SERVER, SignedJwt::AUD_REPORT_SERVICE_FUNCTIONS].each do |aud|
+        data, header = JWT.decode(SignedJwt.create_assertion(user, aud: aud, expires_in: 60), key.public_key, true, algorithm: 'RS256', aud: aud, verify_aud: true)
+        expect(data['aud']).to eq(aud)
+        expect(header['kid']).to eq(PortalSigningKey.kid)
+      end
+      expect { SignedJwt.create_assertion(user, aud: 'researcher-dashboard', expires_in: 60) }.to raise_error(SignedJwt::Error)
+    end
+
+    it "issues an access token that decode_portal_token accepts" do
+      token = SignedJwt.create_access_token(user, client_id: 'c', capabilities: ['class:researcher-read'], context: nil,
+                                            audiences: [site], expires_in: 60)
+      data, header = SignedJwt.decode_portal_token(token).values_at(:data, :header)
+      expect(header).to include('typ' => 'at+jwt', 'kid' => PortalSigningKey.kid, 'alg' => 'RS256')
+      expect(data).to include('iss' => site, 'sub' => user.id.to_s, 'uid' => user.id, 'aud' => [site],
+                              'client_id' => 'c', 'scope' => 'class:researcher-read')
+      expect(data).not_to have_key('context')
+      expect(data['jti']).to be_present
+    end
+
+    it "issues an unscoped access token without a scope claim, and no scoped one without a capability" do
+      token = SignedJwt.create_access_token(user, client_id: 'c', capabilities: nil, context: nil, audiences: [site], expires_in: 60)
+      expect(SignedJwt.decode_portal_token(token)[:data]).not_to have_key('scope')
+      expect { SignedJwt.create_access_token(user, client_id: 'c', capabilities: [], context: nil, audiences: [site], expires_in: 60) }
+        .to raise_error(SignedJwt::Error, /at least one capability/)
+    end
+
+    it "carries the context when there is one, and a new jti each time" do
+      mint = -> { SignedJwt.create_access_token(user, client_id: 'c', capabilities: ['class:researcher-read'],
+                                                context: { type: 'class', id: 7 }, audiences: [site], expires_in: 60) }
+      first, second = [mint.call, mint.call].map { |t| JWT.decode(t, nil, false).first }
+      expect(first['context']).to eq('type' => 'class', 'id' => 7)
+      expect(first['jti']).not_to eq(second['jti'])
+    end
+
+    it "refuses an access token aud that does not start with this portal or names an assertion audience" do
+      [[SignedJwt::AUD_REPORT_SERVER], [site, SignedJwt::AUD_REPORT_SERVER], [site, SignedJwt::AUD_REPORT_SERVICE_FUNCTIONS],
+       ['https://other.example.org', site]].each do |audiences|
+        expect { SignedJwt.create_access_token(user, client_id: 'c', capabilities: ['class:researcher-read'], context: nil, audiences: audiences, expires_in: 60) }
+          .to raise_error(SignedJwt::Error, /aud must start with this portal/)
+      end
+    end
+
+    # The jwt gem accepts any aud list containing the expected value, so an assertion's aud
+    # must always be a single string.
+    it "never signs an assertion with an aud list" do
+      [SignedJwt::AUD_REPORT_SERVER, SignedJwt::AUD_REPORT_SERVICE_FUNCTIONS].each do |aud|
+        data = JWT.decode(SignedJwt.create_assertion(user, aud: aud, expires_in: 60), nil, false).first
+        expect(data['aud']).to be_a(String)
+      end
+      expect { SignedJwt.create_assertion(user, aud: [SignedJwt::AUD_REPORT_SERVER], expires_in: 60) }.to raise_error(SignedJwt::Error)
+      expect { SignedJwt.create_assertion(user, aud: SignedJwt::AUD_REPORT_SERVER, expires_in: 60, claims: { aud: ['x'] }) }.to raise_error(/Duplicate JWT claim key: aud/)
+    end
+
+    it "never lets an access token's aud list name an assertion audience" do
+      TokenCapabilities.names.each do |name|
+        expect(SignedJwt::ASSERTION_AUDIENCES).not_to include(TokenCapabilities.audience_value(name))
+      end
+      token = SignedJwt.create_access_token(user, client_id: 'c', capabilities: TokenCapabilities.names, context: nil,
+                                            audiences: [site, 'https://report-server.example.org'], expires_in: 60)
+      data = JWT.decode(token, nil, false).first
+      expect(data['aud']).to be_an(Array)
+      expect(data['aud'] & SignedJwt::ASSERTION_AUDIENCES).to be_empty
+    end
+  end
+
+  describe "#create_portal_token under a scoped request" do
+    after(:each) { Current.reset }
+
+    it "inherits the request's scope and context" do
+      user = FactoryBot.create(:user)
+      TokenScope.apply!('scope' => 'portal-api', 'context' => { 'type' => 'class', 'id' => 7 })
+      data = SignedJwt.decode_portal_token(SignedJwt.create_portal_token(user))[:data]
+      expect(data).to include('scope' => 'portal-api', 'context' => { 'type' => 'class', 'id' => 7 })
+    end
+  end
 end

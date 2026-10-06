@@ -120,6 +120,15 @@ RSpec.describe API::APIController, type: :controller do
           end
         end
 
+        describe 'with an access grant whose expiry was never set' do
+          let(:expires) { nil }
+
+          it 'should fail as an expired grant' do
+            set_standard_bearer_token(user_token)
+            expect { controller.check_for_auth_token({}) }.to raise_error('AccessGrant has expired')
+          end
+        end
+
         describe 'using a jwt bearer token' do
           let(:user)           { FactoryBot.create(:user) }
           let(:claims)         { {} }
@@ -249,6 +258,20 @@ RSpec.describe API::APIController, type: :controller do
           expect(auth_user).to eq(user)
           expect(auth_roles[:learner]).to eq(learner)
           expect(auth_roles[:teacher]).to be_nil
+        end
+
+        describe 'an RS256 access token' do
+          let(:access_token) { PortalTokenHelper.access_token(user, capabilities: [TokenCapabilities::PORTAL_API]) }
+
+          it 'is accepted as plain Bearer' do
+            set_standard_bearer_token(access_token)
+            expect(controller.check_for_auth_token({}).first).to eq(user)
+          end
+
+          it 'is refused as Bearer/JWT' do
+            set_jwt_bearer_token(access_token)
+            expect { controller.check_for_auth_token({}) }.to raise_error(SignedJwt::Error, /not Bearer\/JWT/)
+          end
         end
 
         it 'should still route hex tokens to AccessGrant lookup' do

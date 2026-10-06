@@ -15,13 +15,9 @@ class User < ApplicationRecord
     authentications.build(:provider => omniauth['provider'], :uid => omniauth['uid'])
   end
 
-  # scytacki: This code should be revised because the access_grant should not be trusted if
-  #  access_token_expires_at is NULL. It should only be trusted once it has been requested
-  #  by a Client that has verified its ID and SECRET.
-  #  I'm not fixing this now (Jan 30, 2015) because we are about
-  #  to do a release and we don't have time to fully test this change
+  # A grant with no expiry (an unredeemed code) authenticates no one.
   def self.find_for_token_authentication(conditions)
-    where(["access_grants.access_token = ? AND (access_grants.access_token_expires_at IS NULL OR access_grants.access_token_expires_at > ?)", conditions[:access_token], Time.now]).joins(:access_grants).select("users.*").first
+    where(["access_grants.access_token = ? AND access_grants.access_token_expires_at IS NOT NULL AND access_grants.access_token_expires_at > ?", conditions[:access_token], Time.now]).joins(:access_grants).select("users.*").first
   end
 
   NO_EMAIL_STRING = 'no-email-'
@@ -458,11 +454,7 @@ class User < ApplicationRecord
     # bunch of unneeded object instantiation
     projects_scope = check_can_manage_permission_forms ? researcher_for_projects.where("can_manage_permission_forms = ?", true) : researcher_for_projects
 
-    projects_scope
-      .joins("INNER JOIN admin_cohorts __ac ON __ac.project_id = admin_projects.id")
-      .joins("INNER JOIN admin_cohort_items __aci ON __aci.admin_cohort_id = __ac.id AND __aci.item_type = 'Portal::Teacher'")
-      .joins("INNER JOIN portal_teachers __pt ON __pt.id = __aci.item_id")
-      .joins("INNER JOIN portal_teacher_clazzes __ptc ON __ptc.teacher_id = __pt.id")
+    with_teacher_clazzes(projects_scope)
       .where("__ptc.clazz_id = ?", clazz.id)
       .count > 0
   end
@@ -470,13 +462,28 @@ class User < ApplicationRecord
   def is_project_admin_for_clazz?(clazz)
     # check if class has teacher in a cohort of a project the user is a admin of using a explicit join to avoid a
     # bunch of unneeded object instantiation
-    admin_for_projects
-      .joins("INNER JOIN admin_cohorts __ac ON __ac.project_id = admin_projects.id")
-      .joins("INNER JOIN admin_cohort_items __aci ON __aci.admin_cohort_id = __ac.id AND __aci.item_type = 'Portal::Teacher'")
-      .joins("INNER JOIN portal_teachers __pt ON __pt.id = __aci.item_id")
-      .joins("INNER JOIN portal_teacher_clazzes __ptc ON __ptc.teacher_id = __pt.id")
+    with_teacher_clazzes(admin_for_projects)
       .where("__ptc.clazz_id = ?", clazz.id)
       .count > 0
+  end
+
+  # The gate on reading a class's data as a researcher: a project researcher (whose grant
+  # has not expired) or project admin reaching the class through one of its teachers'
+  # cohorts, or a site admin.
+  def can_be_researcher_for_clazz?(clazz)
+    researcher_clazz_ids([clazz.id]).include?(clazz.id)
+  end
+
+  # The subset of clazz_ids that can_be_researcher_for_clazz? allows, in the same few queries
+  # however many ids are asked about.
+  def researcher_clazz_ids(clazz_ids)
+    return clazz_ids.to_a if has_role?('admin')
+    [researcher_for_projects, admin_for_projects].flat_map do |projects|
+      with_teacher_clazzes(projects)
+        .where("__ptc.clazz_id IN (?)", clazz_ids)
+        .distinct
+        .pluck("__ptc.clazz_id")
+    end.uniq
   end
 
   def has_full_access_to_student_data?(clazz)
@@ -678,6 +685,18 @@ end
   def make_activation_code
     self.deleted_at = nil
     self.activation_code = self.class.make_token
+  end
+
+  private
+
+  # Joins a project scope to the classes its cohorts' teachers teach (as __ptc), explicitly,
+  # to avoid a bunch of unneeded object instantiation.
+  def with_teacher_clazzes(projects_scope)
+    projects_scope
+      .joins("INNER JOIN admin_cohorts __ac ON __ac.project_id = admin_projects.id")
+      .joins("INNER JOIN admin_cohort_items __aci ON __aci.admin_cohort_id = __ac.id AND __aci.item_type = 'Portal::Teacher'")
+      .joins("INNER JOIN portal_teachers __pt ON __pt.id = __aci.item_id")
+      .joins("INNER JOIN portal_teacher_clazzes __ptc ON __ptc.teacher_id = __pt.id")
   end
 
 end

@@ -96,6 +96,7 @@ RSpec.describe API::V1::OidcMintController, type: :controller do
       expect(claims['minted_via_oidc_client_id']).to eq(oidc_client.id)
       expect(claims['origin_offering_id']).to eq(offering.id)
       expect(claims['origin_class_hash']).to eq(clazz.class_hash)
+      expect(claims['scope']).to eq('portal-api')
     end
   end
 
