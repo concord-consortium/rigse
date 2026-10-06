@@ -119,6 +119,7 @@ module RailsPortal
         # the OAuth token endpoint, for public clients (PKCE) exchanging a code from the browser;
         # the code and verifier, not the origin, authenticate the request
         resource '/oauth/token', :headers => :any, :methods => [:post]
+        resource '/api/v1/researcher_dashboard/*', :headers => :any, :methods => [:get, :post]
         resource '/api/v1/bookmarks', :headers => :any, :methods => [:post]
         resource '/api/v1/bookmarks/*', :headers => :any, :methods => [:put, :delete]
       end

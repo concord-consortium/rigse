@@ -420,6 +420,14 @@ RailsPortal::Application.routes.draw do
           end
         end
 
+        # No route names the scope: it is the context of the token the caller presents.
+        # `to:` is absolute: inside a namespace a relative controller path resolves one level deeper.
+        namespace :researcher_dashboard do
+          get  :scope, to: '/api/v1/researcher_dashboard#scope'
+          post :refresh_profile, to: '/api/v1/researcher_dashboard#refresh_profile'
+          post :run_package, to: '/api/v1/researcher_dashboard#run_package'
+        end
+
         namespace :jwt do
           post :portal
           get  :portal
