@@ -26,9 +26,8 @@
   # The access token /oauth/token issues (RFC 9068). `capabilities` nil issues an unscoped,
   # full-user token. `aud` lists every service whose capability the token carries, rigse
   # always first, and never an assertion's audience: a verifier that accepts any list
-  # containing its audience must not take this as one. A scoped token also names its user,
-  # for the client to show and never to authorize: the portal JWT's `first_name` and
-  # `last_name`, and the login as `username`, `/auth/user`'s key for it.
+  # containing its audience must not take this as one. A scoped token also names its user
+  # (`first_name`, `last_name`, and the login as `username`) for display, never for authorization.
   def self.create_access_token(user, client_id:, capabilities:, context:, audiences:, expires_in:)
     ...
     payload = { ... unchanged ... }

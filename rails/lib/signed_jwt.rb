@@ -64,7 +64,8 @@ module SignedJwt
   # The access token /oauth/token issues (RFC 9068). `capabilities` nil issues an unscoped,
   # full-user token. `aud` lists every service whose capability the token carries, rigse
   # always first, and never an assertion's audience: a verifier that accepts any list
-  # containing its audience must not take this as one.
+  # containing its audience must not take this as one. A scoped token also names its user
+  # (`first_name`, `last_name`, and the login as `username`) for display, never for authorization.
   def self.create_access_token(user, client_id:, capabilities:, context:, audiences:, expires_in:)
     audiences = Array(audiences)
     unless audiences.first == APP_CONFIG[:site_url] && (audiences & ASSERTION_AUDIENCES).empty?
@@ -82,7 +83,10 @@ module SignedJwt
       exp: now + expires_in,
       jti: SecureRandom.uuid
     }
-    payload[:scope] = capabilities.join(' ') if capabilities
+    if capabilities
+      payload[:scope] = capabilities.join(' ')
+      payload.merge!(first_name: user.first_name, last_name: user.last_name, username: user.login)
+    end
     payload[:context] = context if context
     sign_rs256(payload, typ: ACCESS_TOKEN_TYPE)
   end

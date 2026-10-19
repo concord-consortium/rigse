@@ -175,14 +175,17 @@ gpZlAvdO9CFaBcBKsAcJnNDQBY2lhFsSeqYs78PoW7Zz
       data, header = SignedJwt.decode_portal_token(token).values_at(:data, :header)
       expect(header).to include('typ' => 'at+jwt', 'kid' => PortalSigningKey.kid, 'alg' => 'RS256')
       expect(data).to include('iss' => site, 'sub' => user.id.to_s, 'uid' => user.id, 'aud' => [site],
-                              'client_id' => 'c', 'scope' => 'class:researcher-read')
+                              'client_id' => 'c', 'scope' => 'class:researcher-read',
+                              'first_name' => user.first_name, 'last_name' => user.last_name, 'username' => user.login)
       expect(data).not_to have_key('context')
       expect(data['jti']).to be_present
     end
 
     it "issues an unscoped access token without a scope claim, and no scoped one without a capability" do
       token = SignedJwt.create_access_token(user, client_id: 'c', capabilities: nil, context: nil, audiences: [site], expires_in: 60)
-      expect(SignedJwt.decode_portal_token(token)[:data]).not_to have_key('scope')
+      data = SignedJwt.decode_portal_token(token)[:data]
+      expect(data).not_to have_key('scope')
+      expect(data.keys & %w[first_name last_name username]).to be_empty
       expect { SignedJwt.create_access_token(user, client_id: 'c', capabilities: [], context: nil, audiences: [site], expires_in: 60) }
         .to raise_error(SignedJwt::Error, /at least one capability/)
     end

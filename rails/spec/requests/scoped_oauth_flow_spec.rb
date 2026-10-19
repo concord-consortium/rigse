@@ -149,6 +149,15 @@ RSpec.describe 'Scoped OAuth clients', type: :request do
       expect(response.headers['Cache-Control']).to include('no-store')
     end
 
+    it 'names the user as the portal JWT does, with the login as username' do
+      data, _header = claims(exchange(authorize['code'])['access_token'])
+      post '/api/v1/jwt/portal'
+      portal = SignedJwt.decode_portal_token(JSON.parse(response.body)['token'])[:data]
+      names = { 'first_name' => researcher.first_name, 'last_name' => researcher.last_name }
+      expect(portal).to include(names)
+      expect(data).to include(names.merge('username' => researcher.login))
+    end
+
     it "refuses another client's code" do
       code = authorize['code']
       Client.create!(name: 'Other', app_id: 'other', app_secret: 'x', client_type: Client::PUBLIC,

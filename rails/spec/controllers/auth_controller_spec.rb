@@ -183,6 +183,7 @@ RSpec.describe AuthController, type: :controller do
         expect(header['typ']).to eq(SignedJwt::ACCESS_TOKEN_TYPE)
         expect(data).to include('uid' => user.id, 'client_id' => 'spa', 'aud' => [APP_CONFIG[:site_url]])
         expect(data).not_to have_key('scope')
+        expect(data.keys & %w[first_name last_name username]).to be_empty
         expect(data).not_to have_key('context')
         expect(data['exp'] - data['iat']).to eq(ttl)
         expect(AccessGrant.exists?(grant.id)).to be false
