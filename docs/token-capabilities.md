@@ -40,6 +40,8 @@ A token may carry a `scope` claim: a space-separated list of capabilities (RFC 6
 | `AccessGrant` token | the implicit flow, the confidential code flow, report launches | opaque | none | none | `AccessGrant::ExpireTime`; `ExternalReport::ReportTokenValidFor` for report launches | `Bearer` |
 | Service assertion | rigse, to report-server and the report-service function | RS256 | one string: `report-server` or `report-service-functions` | none | `PortalAssertions::TTL` | never accepted by rigse |
 
+The scoped access token also carries its user's `first_name`, `last_name` and `username` (the login), for the client to show who is signed in; nothing reads them to authorize, and a token minted under it does not inherit them.
+
 **Only the access tokens carry an `aud` list.** An access token has more than one recipient when it carries `packages:read`, so RFC 7519's array is its shape, and it never names an assertion's audience. Each assertion carries exactly one string, and every assertion verifier refuses a list, even one containing its own audience, because the `jwt` gem, `jsonwebtoken` and Joken all accept any list that contains the expected value. rigse accepts an RS256 token only when its header `typ` is `at+jwt` and its `aud` contains rigse's site URL, so an assertion authenticates no one here.
 
 ## Authorization schemes

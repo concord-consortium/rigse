@@ -27,7 +27,7 @@ A scoped access token from `/oauth/token` gains three claims naming the user it 
 
 - R8. A unit spec of `SignedJwt.create_access_token` shows a scoped token carrying the user's first name, last name and login under the three keys, with three distinct values, so a swapped or misnamed claim fails; and an unscoped token having none of the three keys.
 - R9. The scoped flow's request spec (`spec/requests/scoped_oauth_flow_spec.rb`) shows the token `/oauth/token` issues to the dashboard's client carrying the same `first_name` and `last_name` as `POST /api/v1/jwt/portal` gives the same user, and `username` equal to the login. The unscoped exchange in `spec/controllers/auth_controller_spec.rb` shows none of the three keys.
-- R10. `docs/external-services.md`'s Researcher Dashboard section names the three claims and says they are for display only. The README's **Scopes** paragraph names them too and leaves them out of the unscoped token.
+- R10. `docs/external-services.md`'s Researcher Dashboard section names the three claims and says they are for display only. The README's **Scopes** paragraph names them too and leaves them out of the unscoped token, and a sentence under `docs/token-capabilities.md`'s token table names them as granting nothing.
 
 ## Technical Notes
 
@@ -75,7 +75,7 @@ A scoped access token from `/oauth/token` gains three claims naming the user it 
 - A) `docs/external-services.md`, beside the sentence on the `context` claim.
 - B) `docs/token-capabilities.md`.
 
-**Decision**: A. The claims grant nothing, so they do not belong with capabilities. The README's **Scopes** paragraph was added later, since it called the unscoped token "the same JWT with no `scope` or `context`".
+**Decision**: A. The claims grant nothing, so they do not belong with capabilities. The README's **Scopes** paragraph was added later, since it called the unscoped token "the same JWT with no `scope` or `context`", and so was one sentence under `docs/token-capabilities.md`'s token table, so a reader checking what each token carries sees the personal data there.
 
 ---
 
