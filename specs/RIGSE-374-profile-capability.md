@@ -2,6 +2,8 @@
 
 **Jira**: https://concord-consortium.atlassian.net/browse/RIGSE-374
 
+**Status**: **Closed**
+
 ## Overview
 
 A new `profile` capability lets a scoped access token call `/auth/user`, which answers it with the user's id, names and username and nothing else. The Researcher Dashboard's client gets `profile` in its scopes, so its header (RD-9) can ask the portal whose account the page is signed in as. The access token itself carries no name claims: RFC 9068 section 6 says a client must not inspect its access token, and our other apps never decode theirs. The dashboard's call to `/auth/user` is RD-14.
@@ -39,7 +41,7 @@ A new `profile` capability lets a scoped access token call `/auth/user`, which a
 - **Session and bearer together.** A same-origin request carrying both a portal session and a `profile` token is answered for the session's user, since Warden prefers the session, but still with the R3 body, since the bearer's scope applies. It does not arise for the dashboard: on another origin, a page cannot read a cookie-authenticated response, since the static CORS block sends no `Access-Control-Allow-Credentials`.
 - **CORS ordering.** rack-cors uses the first allow block whose origin and resource both match, so `/auth/user` in the static `origins '*'` block also wins over the `allow_cors` block for `*.concord.org` origins, which sends credentials. A GitHub code search of the organization for `auth/user` found no browser caller from another origin: LARA's OmniAuth strategy, CLUE's scripts and the Classroom add-on call it from servers, and the portal's own page header calls it same-origin.
 - **Values.** The names and login pass through as stored; a `nil` name is JSON `null`, as in the full response.
-- **Verification.** Removing the CORS line, the declaration, either branch of the `scoped?` test, or swapping two names in the narrow body each fails the tests aimed at it, and so does adding a name claim to `create_access_token`.
+- **Verification.** Removing the CORS line, the declaration, either branch of the `scoped?` test, swapping two names in the narrow body, or dropping a name field from the full response each fails the tests aimed at it, and so does adding a name claim to `create_access_token`. A local run with the dashboard's dev server against this branch read the narrow body from `/auth/user` cross-origin with the dashboard's own token, and a cookie-only request from that origin could not be read.
 - **Deploying.** The dashboard's client on staging and production is admin data: an admin adds `profile` to its scopes on the client form after deploy. Changing a client's scopes cancels its pending codes, which costs a user mid-login one retry.
 
 ## Out of Scope
