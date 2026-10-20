@@ -37,8 +37,7 @@ A scoped access token from `/oauth/token` gains three claims naming the user it 
 - **Measured:** a token for a typical name grows by about 100 characters (868 to 974 in one run), far below Bandit's header limit. `Zoë` round-trips as UTF-8 and a `nil` first name signs as `null`.
 - **Factory values:** `FactoryBot.create(:user)` gives `joe`, `user` and a unique `login_...`, three distinct values, so R8 and R9 need no custom names to catch a swap.
 - **Consumer:** RD-9's `tokenUser()` (`app/src/shell/oauth.ts`) decodes the payload unverified, trims each value, treats a missing, `null` or non-string value as empty, and shows no user when both names are empty.
-- **RIGSE-369** also edits the README (lines 690 and 701 to 707) near this story's line 692; a test merge of both edits had no conflict.
-- **Verification:** the three spec files went from 77 to 78 examples. Deleting the merge, moving it outside `if capabilities`, or swapping the two names each fails exactly the two tests aimed at it. A local end-to-end run with RD-9's dev server showed the header naming the researcher, with the claims in the dashboard's scoped token and absent from an unscoped one.
+- **Verification:** deleting the merge, moving it outside `if capabilities`, or swapping the two names each fails exactly the two tests aimed at it. A local end-to-end run with RD-9's dev server showed the header naming the researcher, with the claims in the dashboard's scoped token and absent from an unscoped one.
 
 ## Out of Scope
 
