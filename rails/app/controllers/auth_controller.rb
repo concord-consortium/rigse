@@ -191,8 +191,7 @@ class AuthController < ApplicationController
     render :plain => "ERROR: #{params[:message]}"
   end
 
-  # A scoped token gets only the user's names, as OIDC's `profile` scope gives them: no email,
-  # roles or domain.
+  # Any scoped token here holds profile, and gets only the OIDC profile fields: no email, roles or domain.
   def user
     names = {
       :first_name => current_user.first_name,
