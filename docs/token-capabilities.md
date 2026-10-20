@@ -12,6 +12,7 @@ A token may carry a `scope` claim: a space-separated list of capabilities (RFC 6
 | `class:researcher-run` | class | rigse | Starting researcher work on one class |
 | `packages:read` | no | report-server | Reading report-server's package catalog |
 | `portal-api` | no | rigse | Any action under `API::APIController`; the scope of every service-minted token |
+| `profile` | no | rigse | Reading the user's id, names and username from `/auth/user`, without email, roles or domain; named for the OIDC scope |
 
 - **A token without `scope` is a full-user credential**, limited only by its user's permissions. Every token that predates the convention is one: HS256 portal JWTs, `AccessGrant` tokens and sessions. So is the unscoped access token `/oauth/token` gives a public client without scopes.
 - **A token with `scope` is refused everywhere except on actions that declare one of its capabilities.**

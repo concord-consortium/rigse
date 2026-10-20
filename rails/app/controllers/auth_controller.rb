@@ -8,6 +8,8 @@ class AuthController < ApplicationController
   skip_before_action :authenticate_user!, :only => [:authorize], :raise => false  # this is handled by verify_logged_in
   skip_before_action :verify_authenticity_token, :only => [:access_token]
 
+  accepts_token_capability TokenCapabilities::PROFILE, only: :user
+
   def verify_logged_in
     if current_user.nil?
         redirect_to auth_login_path
@@ -189,23 +191,29 @@ class AuthController < ApplicationController
     render :plain => "ERROR: #{params[:message]}"
   end
 
+  # A scoped token gets only the user's names, as OIDC's `profile` scope gives them: no email,
+  # roles or domain.
   def user
+    names = {
+      :first_name => current_user.first_name,
+      :last_name  => current_user.last_name,
+      :full_name  => current_user.name,
+      :username   => current_user.login
+    }
     hash = {
       :provider => 'concord_id',
-      :id => current_user.id.to_s,
-      :info => {
-        :email      => current_user.email,
-      },
-      :extra => {
-        :first_name => current_user.first_name,
-        :last_name  => current_user.last_name,
-        :full_name  => current_user.name,
-        :username   => current_user.login,
+      :id => current_user.id.to_s
+    }
+    if TokenScope.scoped?
+      hash[:extra] = names
+    else
+      hash[:info] = { :email => current_user.email }
+      hash[:extra] = names.merge(
         :user_id    => current_user.id,
         :roles      => current_user.role_names,
         :domain     => request.host_with_port
-      }
-    }
+      )
+    end
 
     render :json => hash.to_json
   end

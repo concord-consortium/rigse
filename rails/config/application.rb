@@ -120,6 +120,7 @@ module RailsPortal
         # the code and verifier, not the origin, authenticate the request
         resource '/oauth/token', :headers => :any, :methods => [:post]
         resource '/api/v1/researcher_dashboard/*', :headers => :any, :methods => [:get, :post]
+        resource '/auth/user', :headers => :any, :methods => :get
         resource '/api/v1/bookmarks', :headers => :any, :methods => [:post]
         resource '/api/v1/bookmarks/*', :headers => :any, :methods => [:put, :delete]
       end

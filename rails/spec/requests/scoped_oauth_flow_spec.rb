@@ -13,7 +13,7 @@ RSpec.describe 'Scoped OAuth clients', type: :request do
   let(:redirect_uri) { 'https://dashboard.example.org/' }
   let(:client) do
     Client.create!(name: 'Dashboard', app_id: 'dashboard', app_secret: 'unused', client_type: Client::PUBLIC,
-                   redirect_uris: redirect_uri, scopes: 'class:researcher-read class:researcher-run packages:read')
+                   redirect_uris: redirect_uri, scopes: 'class:researcher-read class:researcher-run packages:read profile')
   end
   let(:cohort)     { FactoryBot.create(:admin_cohort) }
   let(:project)    { FactoryBot.create(:project, cohorts: [cohort]) }
@@ -72,7 +72,7 @@ RSpec.describe 'Scoped OAuth clients', type: :request do
       expect(query['state']).to eq('st4te')
       grant = AccessGrant.find_by(code: query['code'])
       expect(grant.context).to eq(type: 'class', id: clazz.id)
-      expect(grant.scope_list).to eq(%w[class:researcher-read class:researcher-run packages:read])
+      expect(grant.scope_list).to eq(%w[class:researcher-read class:researcher-run packages:read profile])
       expect(grant.access_token).to be_nil
       expect(grant.refresh_token).to be_nil
     end
@@ -135,13 +135,13 @@ RSpec.describe 'Scoped OAuth clients', type: :request do
       expect(body.keys).to match_array(%w[access_token token_type expires_in scope])
       expect(response.headers['Cache-Control']).to include('no-store')
       expect(body).to include('token_type' => 'Bearer', 'expires_in' => SignedJwt::SCOPED_ACCESS_TOKEN_TTL.to_i,
-                              'scope' => 'class:researcher-read class:researcher-run packages:read')
+                              'scope' => 'class:researcher-read class:researcher-run packages:read profile')
       data, header = claims(body['access_token'])
       expect(header).to include('typ' => 'at+jwt', 'kid' => PortalSigningKey.kid, 'alg' => 'RS256')
       expect(data).to include('iss' => APP_CONFIG[:site_url], 'sub' => researcher.id.to_s, 'uid' => researcher.id,
                               'client_id' => 'dashboard', 'context' => { 'type' => 'class', 'id' => clazz.id },
                               'aud' => [APP_CONFIG[:site_url], 'https://report-server.example.org'])
-      expect(data.keys).not_to include('is_admin', 'user_type', 'scope_kind', 'scope_id')
+      expect(data.keys).to match_array(%w[iss sub uid aud client_id iat exp jti scope context])
       expect(AccessGrant.where(client_id: client.id)).to be_empty
 
       expect(exchange(code)).to eq('error' => 'invalid_grant')
@@ -250,8 +250,19 @@ RSpec.describe 'Scoped OAuth clients', type: :request do
       expect(response.status).to eq(403)
       get '/api/v1/research_classes', headers: bearer
       expect(response.status).to eq(403)
-      get '/auth/user', headers: bearer
+      get '/auth/isalive', headers: bearer
       expect(response.status).to eq(403)
+    end
+
+    it "reads its user's names from /auth/user, and nothing else about them" do
+      get '/auth/user', headers: bearer
+      expect(response.status).to eq(200)
+      expect(JSON.parse(response.body)).to eq(
+        'provider' => 'concord_id',
+        'id'       => researcher.id.to_s,
+        'extra'    => { 'first_name' => researcher.first_name, 'last_name' => researcher.last_name,
+                        'full_name' => researcher.name, 'username' => researcher.login }
+      )
     end
 
     it 'never becomes a session' do
@@ -262,8 +273,10 @@ RSpec.describe 'Scoped OAuth clients', type: :request do
 
     it 'keeps its ceiling on a request that also carries a session' do
       sign_in_as(researcher)
-      get '/auth/user', headers: bearer
+      get '/auth/isalive', headers: bearer
       expect(response.status).to eq(403)
+      get '/auth/user', headers: bearer
+      expect(JSON.parse(response.body).keys).to match_array(%w[provider id extra])
     end
   end
 end
