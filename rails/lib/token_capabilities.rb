@@ -13,6 +13,7 @@ module TokenCapabilities
   CLASS_RESEARCHER_RUN  = 'class:researcher-run'.freeze
   PACKAGES_READ         = 'packages:read'.freeze
   PORTAL_API            = 'portal-api'.freeze
+  PROFILE               = 'profile'.freeze
 
   CLASS_CONTEXT = 'class'.freeze
 
@@ -32,7 +33,8 @@ module TokenCapabilities
     Capability.new(name: CLASS_RESEARCHER_READ, context_type: CLASS_CONTEXT, audience: :portal, gate: RESEARCHER_GATE),
     Capability.new(name: CLASS_RESEARCHER_RUN,  context_type: CLASS_CONTEXT, audience: :portal, gate: RESEARCHER_GATE),
     Capability.new(name: PACKAGES_READ,         context_type: nil,           audience: :report_server),
-    Capability.new(name: PORTAL_API,            context_type: nil,           audience: :portal)
+    Capability.new(name: PORTAL_API,            context_type: nil,           audience: :portal),
+    Capability.new(name: PROFILE,               context_type: nil,           audience: :portal)
   ].index_by(&:name).freeze
 
   def self.names

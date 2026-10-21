@@ -300,6 +300,19 @@ RSpec.describe AuthController, type: :controller do
 
       expect(response).to have_http_status(:redirect)
     end
+
+    it 'gives a signed-in user their email, roles and domain' do
+      user = FactoryBot.create(:confirmed_user)
+      sign_in user
+      get :user
+
+      body = JSON.parse(response.body)
+      expect(body.keys).to match_array(%w[provider id info extra])
+      expect(body['info']).to eq('email' => user.email)
+      expect(body['extra']).to eq('first_name' => user.first_name, 'last_name' => user.last_name,
+                                  'full_name' => user.name, 'username' => user.login, 'user_id' => user.id,
+                                  'roles' => user.role_names, 'domain' => request.host_with_port)
+    end
   end
 
   # TODO: auto-generated
