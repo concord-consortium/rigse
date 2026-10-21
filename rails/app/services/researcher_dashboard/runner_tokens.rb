@@ -1,7 +1,7 @@
 module ResearcherDashboard
   # The Firebase custom tokens a researcher's runner signs in with. Both carry
   # researcher_dashboard_runner, which report-service's rules require for the runner's
-  # writes and CLUE's rules use to deny them; neither is ever returned to a browser.
+  # writes; neither is ever returned to a browser.
   #
   # The session token names no class. A class token carries the class_hash the
   # class-scoped rules key on, one per Firebase project, since a custom token is signed by

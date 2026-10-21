@@ -3,8 +3,7 @@ module ResearcherDashboardHelper
   ENVIRONMENT = {
     'REPORT_SERVER_URL' => 'https://report-server.example/',
     'RESEARCHER_DASHBOARD_FUNCTION_URL' => 'https://functions.example/researcherDashboard',
-    'RESEARCHER_DASHBOARD_FIREBASE_APP' => 'report-service-dev',
-    'RESEARCHER_DASHBOARD_CLUE_FIREBASE_APP' => 'collaborative-learning-staging'
+    'RESEARCHER_DASHBOARD_FIREBASE_APP' => 'report-service-dev'
   }.freeze
 
   RSpec.shared_context 'with the researcher dashboard configured' do

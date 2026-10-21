@@ -336,7 +336,7 @@ describe API::V1::ResearcherDashboardController, type: :controller do
         .with(query: { identity: 'projects/20/b', version: '1.0.0' })
         .to_return(status: 200, headers: { 'Content-Type' => 'application/json' }, body: JSON.generate(
           identity: 'projects/20/b', version: '1.0.0', checksum: "sha256:#{'a' * 64}", catalog_id: 12,
-          clue_prepull: false, archived: false, runnable: true, reason: nil
+          archived: false, runnable: true, reason: nil
         ))
     end
 
