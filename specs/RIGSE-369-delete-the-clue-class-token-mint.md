@@ -16,7 +16,7 @@ RIGSE-368 built the run path: `ResearcherDashboard::RunPackage` resolves each pa
 
 - R1. `RunPackage` mints exactly one class runner token per run, in the report-service FirebaseApp (`Settings.firebase_app`). `class_tokens` stays a map from FirebaseApp name to token, with that one entry.
 - R2. No run reads or requires `RESEARCHER_DASHBOARD_CLUE_FIREBASE_APP`, so a package whose manifest or resolve answer still declares the CLUE pre-pull runs like any other. This holds by construction: nothing in rigse reads the field (R3, R5).
-- R3. `Catalog.resolve` returns `{identity, version, checksum, catalog_id}`. It reads nothing else from the resolve answer, so a field it does not name is accepted and ignored.
+- R3. `Catalog.resolve` returns `{identity, version, checksum, catalog_id}`. It also requires a boolean `runnable` and refuses a package that is not runnable; any field it does not name, `clue_prepull` included, is accepted and ignored.
 - R4. Nothing else on the run path changes: the batch still resolves whole before anything is minted or sent, and the session token, `firebase_project`, the assertions, the scope block, the 503 for an unset or row-less `RESEARCHER_DASHBOARD_FIREBASE_APP`, and every refusal mapping keep their behavior and tests.
 
 ### Configuration
