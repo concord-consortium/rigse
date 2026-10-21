@@ -282,11 +282,6 @@ Parameters:
     Default: ""
     Description: Name of the FirebaseApp row for report-service's Firebase project, whose name is the project id; the Researcher Dashboard runner's tokens are minted in it (report-service-dev for staging).
 
-  ResearcherDashboardClueFirebaseApp:
-    Type: String
-    Default: ""
-    Description: Name of the FirebaseApp row for CLUE's Firebase project, for Researcher Dashboard packages that pre-pull CLUE documents (collaborative-learning-staging for staging).
-
   EnableALBAccessLogs:
     Type: String
     Default: "false"
@@ -305,7 +300,6 @@ Conditions:
   PortalPreviousVerifyKeysDefined: !Not [!Equals [!Ref PortalPreviousVerifyKeys, ""]]
   ResearcherDashboardFunctionURLDefined: !Not [!Equals [!Ref ResearcherDashboardFunctionURL, ""]]
   ResearcherDashboardFirebaseAppDefined: !Not [!Equals [!Ref ResearcherDashboardFirebaseApp, ""]]
-  ResearcherDashboardClueFirebaseAppDefined: !Not [!Equals [!Ref ResearcherDashboardClueFirebaseApp, ""]]
   CreateLoadBalancerHTTPRedirectCond:
     !Equals [!Ref CreateLoadBalancerHTTPRedirect, "true"]
   EnableALBAccessLogsCond:
@@ -620,11 +614,6 @@ Resources:
               - Name: RESEARCHER_DASHBOARD_FIREBASE_APP
                 Value: !Ref ResearcherDashboardFirebaseApp
               - !Ref "AWS::NoValue"
-            - !If
-              - ResearcherDashboardClueFirebaseAppDefined
-              - Name: RESEARCHER_DASHBOARD_CLUE_FIREBASE_APP
-                Value: !Ref ResearcherDashboardClueFirebaseApp
-              - !Ref "AWS::NoValue"
 
   # Notes from 2017-11-14:
   # Values where changed to match the changed made to the CPU reservation value for the
@@ -885,11 +874,6 @@ Resources:
               - ResearcherDashboardFirebaseAppDefined
               - Name: RESEARCHER_DASHBOARD_FIREBASE_APP
                 Value: !Ref ResearcherDashboardFirebaseApp
-              - !Ref "AWS::NoValue"
-            - !If
-              - ResearcherDashboardClueFirebaseAppDefined
-              - Name: RESEARCHER_DASHBOARD_CLUE_FIREBASE_APP
-                Value: !Ref ResearcherDashboardClueFirebaseApp
               - !Ref "AWS::NoValue"
 
   WorkerService:
