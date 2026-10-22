@@ -16,17 +16,16 @@ RSpec.describe ResearcherDashboard::RunPackage do
 
   before(:each) do
     FirebaseTestHelper.create_test_firebase_app(name: 'report-service-dev')
-    FirebaseTestHelper.create_test_firebase_app(name: 'collaborative-learning-staging')
   end
 
   def checksum(n)
     "sha256:#{n.to_s * 64}"
   end
 
-  def stub_resolve(identity, version = '1.0.0', status: 200, catalog_id: 12, clue_prepull: false, runnable: true, reason: nil)
+  def stub_resolve(identity, version = '1.0.0', status: 200, catalog_id: 12, runnable: true, reason: nil)
     body = status == 200 ?
       { identity: identity, version: version, checksum: checksum(catalog_id % 10), catalog_id: catalog_id,
-        clue_prepull: clue_prepull, archived: !runnable, runnable: runnable, reason: reason } :
+        archived: !runnable, runnable: runnable, reason: reason } :
       { error: 'NOT_FOUND', message: 'not found' }
     stub_request(:get, 'https://report-server.example/api/v1/packages/resolve')
       .with(query: { identity: identity, version: version })
@@ -109,16 +108,6 @@ RSpec.describe ResearcherDashboard::RunPackage do
     ENV['PORTAL_SIGNING_KEY'] = previous
   end
 
-  it 'mints a CLUE class token when a package declares clue_prepull' do
-    stub_resolve('projects/20/b', clue_prepull: true)
-    stub_run
-    run(packages.first(1))
-    tokens = posted_body['class_tokens']
-    expect(tokens.keys).to eq(%w[report-service-dev collaborative-learning-staging])
-    expect(firebase(tokens['collaborative-learning-staging'], 'collaborative-learning-staging')['claims'])
-      .to include('class_hash' => clazz.class_hash, 'researcher_dashboard_runner' => true)
-  end
-
   it 'queues none of five packages when the third cannot be resolved' do
     five = (1..5).map { |i| { identity: "users/7/p#{i}", version: '1.0.0' } }
     stub_resolve('users/7/p1')
@@ -193,26 +182,10 @@ RSpec.describe ResearcherDashboard::RunPackage do
 
   context 'when a configured FirebaseApp has no row' do
     it 'refuses before minting or sending anything' do
-      FirebaseApp.where(name: 'collaborative-learning-staging').delete_all
-      stub_resolve('projects/20/b', clue_prepull: true)
-      expect { run(packages.first(1)) }
-        .to raise_error(ResearcherDashboard::Settings::NotConfigured, /RESEARCHER_DASHBOARD_CLUE_FIREBASE_APP names FirebaseApp collaborative-learning-staging, which does not exist/)
-      expect(a_request(:post, run_url)).not_to have_been_made
-    end
-  end
-
-  context 'without the CLUE FirebaseApp configured' do
-    before(:each) { ENV.delete('RESEARCHER_DASHBOARD_CLUE_FIREBASE_APP') }
-
-    it 'still runs a batch without clue_prepull' do
+      FirebaseApp.where(name: 'report-service-dev').delete_all
       stub_resolve('projects/20/b')
-      stub_run
-      expect(run(packages.first(1))).to eq(queue_state)
-    end
-
-    it 'refuses a batch with clue_prepull and sends nothing' do
-      stub_resolve('projects/20/b', clue_prepull: true)
-      expect { run(packages.first(1)) }.to raise_error(ResearcherDashboard::Settings::NotConfigured, /RESEARCHER_DASHBOARD_CLUE_FIREBASE_APP/)
+      expect { run(packages.first(1)) }
+        .to raise_error(ResearcherDashboard::Settings::NotConfigured, /RESEARCHER_DASHBOARD_FIREBASE_APP names FirebaseApp report-service-dev, which does not exist/)
       expect(a_request(:post, run_url)).not_to have_been_made
     end
   end

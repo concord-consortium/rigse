@@ -25,9 +25,7 @@ module ResearcherDashboard
         unless body['runnable']
           raise Upstream.refusal(:report_server, response, status: 409, message: "#{label} cannot be run")
         end
-        # Absent on a report-server that predates the field: no CLUE token rather than a failed run.
-        { identity: identity, version: version, checksum: body['checksum'], catalog_id: body['catalog_id'],
-          clue_prepull: body['clue_prepull'] == true }
+        { identity: identity, version: version, checksum: body['checksum'], catalog_id: body['catalog_id'] }
       when 404
         raise Upstream.refusal(:report_server, response, status: 409,
                                message: "#{label} cannot be resolved: it does not exist or you may not see it")

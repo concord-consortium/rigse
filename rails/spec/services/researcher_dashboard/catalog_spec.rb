@@ -8,7 +8,7 @@ RSpec.describe ResearcherDashboard::Catalog do
   let(:resolve_url) { 'https://report-server.example/api/v1/packages/resolve?identity=projects%2F20%2Fclass-counts&version=1.0.0' }
   let(:answer) {
     { identity: identity, version: '1.0.0', checksum: checksum, catalog_id: 12, expected_duration_seconds: 30,
-      clue_prepull: false, archived: false, runnable: true, reason: nil }
+      archived: false, runnable: true, reason: nil }
   }
 
   def stub_resolve(status, body)
@@ -29,17 +29,10 @@ RSpec.describe ResearcherDashboard::Catalog do
 
   it 'sends the access token and no Origin, and returns the checksum and catalog id' do
     stub = stub_resolve(200, answer)
-    expect(resolve).to eq(identity: identity, version: '1.0.0', checksum: checksum, catalog_id: 12, clue_prepull: false)
+    expect(resolve).to eq(identity: identity, version: '1.0.0', checksum: checksum, catalog_id: 12)
     expect(a_request(:get, resolve_url).with { |r| r.headers['Authorization'] == 'Bearer access-token' && !r.headers.key?('Origin') })
       .to have_been_made.once
     expect(stub).to have_been_requested
-  end
-
-  it 'reads clue_prepull, and treats its absence as false' do
-    stub_resolve(200, answer.merge(clue_prepull: true))
-    expect(resolve[:clue_prepull]).to be true
-    stub_resolve(200, answer.except(:clue_prepull))
-    expect(resolve[:clue_prepull]).to be false
   end
 
   it 'turns a 404 into a 409 saying the package cannot be resolved' do

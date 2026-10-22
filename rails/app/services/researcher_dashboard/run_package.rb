@@ -24,13 +24,9 @@ module ResearcherDashboard
       # One at a time: each resolve is a portal read at report-server.
       resolved = @packages.map { |p| Catalog.resolve(**p, access_token: @access_token) }
       firebase_app = Settings.firebase_app
-      # Minted whenever a package asks for the CLUE pre-pull, whatever the runner does with
-      # it: rigse learning the runner's configuration would be the wrong coupling.
-      apps = [firebase_app]
-      apps << Settings.clue_firebase_app if resolved.any? { |r| r[:clue_prepull] }
       url = "#{Settings.function_url}/run-package"
 
-      response = Upstream.post_json(:function, url, body: body(resolved, apps, firebase_app),
+      response = Upstream.post_json(:function, url, body: body(resolved, firebase_app),
                                     bearer: PortalAssertions.report_service_functions(user: @user),
                                     read_timeout: READ_TIMEOUT)
       case response.code
@@ -55,7 +51,7 @@ module ResearcherDashboard
 
     private
 
-    def body(resolved, apps, firebase_app)
+    def body(resolved, firebase_app)
       {
         packages: resolved.map { |r| r.slice(:identity, :version, :checksum, :catalog_id) },
         scope: {
@@ -65,7 +61,7 @@ module ResearcherDashboard
           classes: [{ class_hash: @clazz.class_hash, class_id: @clazz.id }],
           assignments: Scope.new(@clazz).run_assignments
         },
-        class_tokens: apps.index_with { |app| RunnerTokens.class_token(user: @user, clazz: @clazz, firebase_app: app) },
+        class_tokens: { firebase_app => RunnerTokens.class_token(user: @user, clazz: @clazz, firebase_app: firebase_app) },
         session_token: RunnerTokens.session_token(user: @user, firebase_app: firebase_app),
         firebase_project: firebase_app,
         # An assertion, not a token: the function exchanges it at report-server only when it
