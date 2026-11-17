@@ -1,11 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: portal ecs stack
 Parameters:
-  Environment:
-    Type: String
-    Default: qa
-    AllowedValues: [qa, staging, production]
-    Description: Enter staging or production. Default is qa.
   ShortName:
     Type: String
     Description: 12 character or less name to use for naming created resources
@@ -188,13 +183,6 @@ Parameters:
   RollbarClientAccessToken:
     Type: String
     Description: token for client side error messages sent to Rollbar
-
-  AppSignalPushAPIKey:
-    Type: String
-    Description: API Key for appsignal service
-  AppSignalAppName:
-    Type: String
-    Description: Name of app in the appsignal dashboard
 
   EnewsAPIKey:
     Type: String
@@ -443,15 +431,6 @@ Resources:
           Environment:
             - Name: ADMIN_EMAIL
               Value: !Ref AdminEmail
-            - Name: APPSIGNAL_PUSH_API_KEY
-              Value: !Ref AppSignalPushAPIKey
-            - Name: APPSIGNAL_APP_NAME
-              Value: !Ref AppSignalAppName
-            - Name: APPSIGNAL_APP_ENV
-              Value: !Ref Environment
-            # this is to help appsignal track revisions
-            - Name: APP_REVISION
-              Value: !Select [1, !Split [":", !Ref PortalDockerImage]]
             - Name: AUTHORING_SITE_URL
               Value: !Ref AuthoringSiteURL
             - Name: DB_HOST
@@ -735,15 +714,6 @@ Resources:
           Environment:
             - Name: ADMIN_EMAIL
               Value: !Ref AdminEmail
-            - Name: APPSIGNAL_PUSH_API_KEY
-              Value: !Ref AppSignalPushAPIKey
-            - Name: APPSIGNAL_APP_NAME
-              Value: !Ref AppSignalAppName
-            - Name: APPSIGNAL_APP_ENV
-              Value: !Ref Environment
-            # this is to help appsignal track revisions
-            - Name: APP_REVISION
-              Value: !Select [1, !Split [":", !Ref PortalDockerImage]]
             - Name: AUTHORING_SITE_URL
               Value: !Ref AuthoringSiteURL
             - Name: DB_HOST
