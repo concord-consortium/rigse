@@ -1,11 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: portal ecs stack
 Parameters:
-  Environment:
-    Type: String
-    Default: qa
-    AllowedValues: [qa, staging, production]
-    Description: Enter staging or production. Default is qa.
   ShortName:
     Type: String
     Description: 12 character or less name to use for naming created resources
