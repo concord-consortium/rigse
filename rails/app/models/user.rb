@@ -582,6 +582,22 @@ end
     updating_password
   end
 
+  # True for a teacher's learner account (the separate student account used in learner mode).
+  def teacher_learner?
+    !!portal_student&.is_teacher_learner
+  end
+
+  # For a teacher, the User of their learner account, or nil if they have none yet.
+  def teacher_learner_user
+    portal_teacher&.teacher_learner&.user
+  end
+
+  # For a learner account, the User of the teacher it belongs to. Nil for everyone else.
+  def linked_teacher_user
+    return nil unless teacher_learner?
+    portal_student.linked_teacher&.user
+  end
+
   def only_a_student?
     portal_student and !has_role?('admin', 'manager', 'researcher', 'author') and portal_teacher.nil?
   end

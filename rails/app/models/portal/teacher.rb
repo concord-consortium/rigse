@@ -8,6 +8,8 @@ class Portal::Teacher < ApplicationRecord
   acts_as_taggable_on :subject_areas
 
   belongs_to :user, :class_name => "User", :foreign_key => "user_id", :inverse_of => :portal_teacher
+  # The teacher's learner account, used for learner mode. Nil until first use.
+  belongs_to :teacher_learner, :class_name => "Portal::Student", :optional => true, :inverse_of => :linked_teacher
 
   has_many :grade_levels, :as => :has_grade_levels, :class_name => "Portal::GradeLevel"
   has_many :grades, :through => :grade_levels, :class_name => "Portal::Grade"

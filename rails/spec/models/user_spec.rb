@@ -1590,4 +1590,55 @@ protected
     end
   end
 
+  describe 'teacher learner helpers' do
+    let(:teacher) { FactoryBot.create(:portal_teacher) }
+    let(:normal_student) { FactoryBot.create(:full_portal_student) }
+
+    context 'for a teacher with no learner account' do
+      it 'returns no learner account and is not a learner account' do
+        expect(teacher.user.teacher_learner?).to be false
+        expect(teacher.user.teacher_learner_user).to be_nil
+        expect(teacher.user.linked_teacher_user).to be_nil
+      end
+    end
+
+    context 'for a teacher with a learner account, and that learner account' do
+      let(:learner) { FactoryBot.create(:full_portal_student, is_teacher_learner: true) }
+
+      before do
+        teacher.update!(teacher_learner: learner)
+      end
+
+      it 'links the teacher to the learner account' do
+        expect(teacher.user.teacher_learner?).to be false
+        expect(teacher.user.teacher_learner_user).to eq(learner.user)
+        expect(teacher.user.linked_teacher_user).to be_nil
+      end
+
+      it 'links the learner account to the teacher' do
+        learner_user = User.find(learner.user_id)
+        expect(learner_user.teacher_learner?).to be true
+        expect(learner_user.linked_teacher_user).to eq(teacher.user)
+        expect(learner_user.teacher_learner_user).to be_nil
+      end
+    end
+
+    context 'for a normal student' do
+      it 'is not a learner account and has no links' do
+        expect(normal_student.user.teacher_learner?).to be false
+        expect(normal_student.user.teacher_learner_user).to be_nil
+        expect(normal_student.user.linked_teacher_user).to be_nil
+      end
+    end
+
+    context 'for a user with no teacher or student record' do
+      it 'is not a learner account and has no links' do
+        user = FactoryBot.create(:confirmed_user)
+        expect(user.teacher_learner?).to be false
+        expect(user.teacher_learner_user).to be_nil
+        expect(user.linked_teacher_user).to be_nil
+      end
+    end
+  end
+
 end
