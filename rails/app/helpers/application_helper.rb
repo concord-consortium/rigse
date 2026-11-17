@@ -498,51 +498,6 @@ module ApplicationHelper
     all_students.to_a.compact.uniq.sort{|a,b| (a.user ? [a.first_name, a.last_name] : ["",""]) <=> (b.user ? [b.first_name, b.last_name] : ["",""])}
   end
 
-#            Welcome
-#            = "#{current_visitor.name}."
-#            - unless current_visitor.anonymous?
-#              = link_to 'Preferences', preferences_user_path(current_visitor)
-#              \/
-#              = link_to 'Logout', logout_path
-#            - else
-#              = link_to 'Login', login_path
-#              \/
-#              = link_to 'Sign Up', pick_signup_path
-#            - if @original_user.has_role?('admin', 'manager')
-#              \/
-#              = link_to 'Switch', switch_user_path(current_visitor)
-  def login_line(options = {})
-    opts = {
-      :welcome  => "Welcome",
-      :login => "Login",
-      :signup => "Sign up",
-      :logout => "Logout",
-      :prefs => "Preferences",
-      :guest => false,
-      :name_method => "name"
-    }
-    opts.merge!(options)
-    message = ""
-    if current_visitor.anonymous?
-      if opts[:guest]
-        message += "#{opts[:welcome]} #{opts[:guest]} &nbsp;"
-      end
-      message += link_to opts[:login], login_path
-      message += " / "
-      message += link_to opts[:signup], 'javascript:Portal.openSignupModal();'
-    else
-      message += "#{opts[:welcome]} #{current_visitor.send(opts[:name_method])} &nbsp;"
-      message += link_to opts[:prefs],  preferences_user_path(current_visitor)
-      message += " / "
-      message += link_to opts[:logout], logout_path
-      if @original_user.has_role?('admin','manager')
-        message += " "
-        message += link_to 'Switch', switch_user_path(current_visitor)
-      end
-    end
-    message
-  end
-
   def settings_for(key)
     Admin::Settings.settings_for(key)
   end
