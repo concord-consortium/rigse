@@ -45,6 +45,26 @@ class Portal::Teacher < ApplicationRecord
   validates_presence_of :user,  :message => "user association not specified"
 
   after_create :add_to_default_cohort
+  # Deleting a teacher deletes their learner account. User#destroy reaches this through
+  # User's `has_one :portal_teacher, dependent: :destroy`.
+  after_destroy :destroy_teacher_learner_user
+
+  # Returns the User of this teacher's learner account (used for learner mode),
+  # creating it on first use. Raises if the account cannot be created; nothing is
+  # saved in that case.
+  def find_or_create_teacher_learner!
+    transaction do
+      # Lock this teacher row before checking the link. Without the lock, two requests at
+      # the same time (for example a double click) could both see no link and each
+      # create a learner account. `lock!` also reloads, so the link check below is fresh.
+      lock!
+      if teacher_learner
+        teacher_learner.user
+      else
+        create_teacher_learner_user!
+      end
+    end
+  end
 
   # Added to force Teachers to belong to at least one school, virtual or otherwise.
   # There should be no Teachers without schools, but if there are any that predate this change,
@@ -176,6 +196,38 @@ class Portal::Teacher < ApplicationRecord
     if default_cohort
       self.cohorts << default_cohort
     end
+  end
+
+  # Called only by find_or_create_teacher_learner!, inside its transaction, with this row locked.
+  # Follows API::V1::StudentsController#register. There is no retry if the generated login is
+  # taken at the same moment: that is very rare, and the save then fails and rolls back.
+  def create_teacher_learner_user!
+    password = SecureRandom.hex(32)
+    learner_user = User.new(
+      first_name: user.first_name,
+      last_name: user.last_name,
+      login: Portal::Student.generate_user_login(user.first_name, user.last_name),
+      email: Portal::Student.generate_user_email,
+      # Nobody is told this password, so nobody can sign in to this account directly.
+      password: password,
+      password_confirmation: password,
+      require_password_reset: false,
+      asked_age: user.asked_age,
+      have_consent: user.have_consent,
+      of_consenting_age: user.of_consenting_age
+    )
+    learner_user.skip_notifications = true
+    learner_user.save!
+    # Devise does not sign in an unconfirmed user.
+    raise ActiveRecord::RecordNotSaved.new("Could not confirm the learner account", learner_user) unless learner_user.confirm
+
+    student = Portal::Student.create!(user: learner_user, is_teacher_learner: true)
+    update!(teacher_learner: student)
+    learner_user
+  end
+
+  def destroy_teacher_learner_user
+    teacher_learner&.user&.destroy
   end
 
 end

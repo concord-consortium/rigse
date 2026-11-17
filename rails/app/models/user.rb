@@ -74,6 +74,10 @@ class User < ApplicationRecord
 
   before_validation :strip_spaces
 
+  # This must stay before `after_update :set_passive_users_as_pending`. That callback calls
+  # `reload`, which clears the record of which fields changed, so a later callback would never
+  # see the name change.
+  after_update :copy_name_to_teacher_learner, if: -> { saved_change_to_first_name? || saved_change_to_last_name? }
   after_update :set_passive_users_as_pending
   after_create :set_passive_users_as_pending
 
@@ -696,6 +700,14 @@ end
   def send_on_create_confirmation_instructions
     return if skip_notifications
     super
+  end
+
+  # A teacher's learner account keeps the teacher's stored name, because rosters, reports,
+  # and activity apps read the stored name.
+  def copy_name_to_teacher_learner
+    learner_user = teacher_learner_user
+    return unless learner_user
+    learner_user.update!(first_name: first_name, last_name: last_name)
   end
 
   def make_activation_code

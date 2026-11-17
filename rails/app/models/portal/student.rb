@@ -6,7 +6,10 @@ class Portal::Student < ApplicationRecord
   belongs_to :user, :class_name => "User", :foreign_key => "user_id", :inverse_of => :portal_student
   belongs_to :grade_level, :class_name => "Portal::GradeLevel", :foreign_key => "grade_level_id"
   # For a teacher's learner account (is_teacher_learner), the teacher it belongs to.
-  has_one :linked_teacher, :class_name => "Portal::Teacher", :foreign_key => "teacher_learner_id", :inverse_of => :teacher_learner
+  # If the learner account is deleted on its own (for example by an admin), clear the
+  # teacher's link, so the next use of learner mode creates a new account.
+  has_one :linked_teacher, :class_name => "Portal::Teacher", :foreign_key => "teacher_learner_id",
+    :inverse_of => :teacher_learner, :dependent => :nullify
 
   # because of has many polymorphs, we don't need the following relationships defined
   # TODO: Schools must be queried through clazzes.
