@@ -93,7 +93,7 @@ GEM
       activesupport (>= 6.1)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
-    appsignal (4.5.3)
+    appsignal (5.0.7)
       logger
       rack (>= 2.0.0)
     arrayfields (4.9.2)
