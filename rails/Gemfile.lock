@@ -93,9 +93,6 @@ GEM
       activesupport (>= 6.1)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
-    appsignal (5.0.7)
-      logger
-      rack (>= 2.0.0)
     arrayfields (4.9.2)
     aws-eventstream (1.3.2)
     aws-partitions (1.1062.0)
@@ -649,7 +646,6 @@ DEPENDENCIES
   activerecord-session_store
   acts-as-taggable-on
   acts_as_list
-  appsignal
   arrayfields
   aws-sdk-s3
   axlsx
