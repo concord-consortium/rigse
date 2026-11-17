@@ -108,6 +108,76 @@ describe UsersController do
       end
     end
 
+    describe "PUT switch" do
+      # Devise only signs in confirmed users.
+      let(:target_user) { FactoryBot.create(:confirmed_user) }
+      let(:other_user)  { FactoryBot.create(:confirmed_user) }
+
+      def switch_to(user, extra_params = {})
+        put :switch, params: { id: user.id, commit: "Switch" }.merge(extra_params)
+      end
+
+      describe "as admin" do
+        let!(:admin) { login_admin }
+
+        it "signs in as the user in the URL" do
+          switch_to(target_user)
+          expect(controller.current_user).to eq(target_user)
+          expect(session[:original_user_id]).to eq(admin.id)
+          expect(session[:recently_switched_from_users]).to eq([admin.id])
+          expect(response).to redirect_to(home_path)
+        end
+
+        it "ignores a different user ID sent in the request body" do
+          switch_to(target_user, user: { id: other_user.id })
+          expect(controller.current_user).to eq(target_user)
+        end
+
+        it "does not switch when the commit value is not 'Switch'" do
+          put :switch, params: { id: target_user.id }
+          expect(controller.current_user).to eq(admin)
+        end
+      end
+
+      describe "as manager" do
+        before(:each) { login_manager }
+
+        it "signs in as the user in the URL" do
+          switch_to(target_user)
+          expect(controller.current_user).to eq(target_user)
+        end
+      end
+
+      describe "as project admin" do
+        let(:cohort)        { FactoryBot.create(:admin_cohort) }
+        let(:project)       { FactoryBot.create(:project, cohorts: [cohort]) }
+        let(:project_admin) { FactoryBot.create(:confirmed_user) }
+        let(:cohort_teacher) { FactoryBot.create(:portal_teacher, cohorts: [cohort]).user.tap(&:confirm) }
+        let(:admin_user)    { FactoryBot.generate(:admin_user) }
+
+        before(:each) do
+          project_admin.add_role_for_project('admin', project)
+          sign_in project_admin
+        end
+
+        it "signs in as a user in one of their project cohorts" do
+          switch_to(cohort_teacher)
+          expect(controller.current_user).to eq(cohort_teacher)
+        end
+
+        it "does not sign in as an admin whose ID is sent in the request body" do
+          switch_to(cohort_teacher, user: { id: admin_user.id })
+          expect(controller.current_user).to eq(cohort_teacher)
+        end
+
+        it "does not sign in as a user outside their project cohorts" do
+          switch_to(other_user)
+          expect(controller.current_user).to eq(project_admin)
+          expect(session[:original_user_id]).to be_nil
+        end
+      end
+    end
+
   end
 
   context "when logged out" do

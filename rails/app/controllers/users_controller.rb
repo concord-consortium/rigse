@@ -124,21 +124,22 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     authorize @user
     if params[:commit] == "Switch"
-      if switch_to_user = User.find(params[:user][:id])
-        switch_from_user = current_visitor
-        original_user_from_session = session[:original_user_id]
-        recently_switched_from_users = (session[:recently_switched_from_users] || []).clone
-        sign_out self.current_visitor
-        sign_in switch_to_user
+      # Always switch to @user, the same user that `authorize` checked above.
+      # Do not read a second user ID from the request body: a tampered request
+      # could then pass the check for one user but sign in as another.
+      switch_from_user = current_visitor
+      original_user_from_session = session[:original_user_id]
+      recently_switched_from_users = (session[:recently_switched_from_users] || []).clone
+      sign_out self.current_visitor
+      sign_in @user
 
-        # the original user is only set on the session once:
-        # the first time an admin switches to another user
-        unless original_user_from_session
-          session[:original_user_id] = switch_from_user.id
-        end
-        recently_switched_from_users.insert(0, switch_from_user.id)
-        session[:recently_switched_from_users] = recently_switched_from_users.uniq
+      # the original user is only set on the session once:
+      # the first time an admin switches to another user
+      unless original_user_from_session
+        session[:original_user_id] = switch_from_user.id
       end
+      recently_switched_from_users.insert(0, switch_from_user.id)
+      session[:recently_switched_from_users] = recently_switched_from_users.uniq
     end
     redirect_to home_path
   end
