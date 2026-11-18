@@ -8,12 +8,8 @@ RSpec.describe 'Home pages after a learner mode switch', type: :request do
   before(:all) { Rails.application.reload_routes_unless_loaded }
   before(:each) { generate_default_settings_with_mocks }
 
-  let(:to_learner_text) do
-    "You may have switched to learner mode in another tab. Use 'Switch back to teacher' in the sidebar to see this page."
-  end
-  let(:to_teacher_text) do
-    "You may have switched back to teacher in another tab. Use 'Switch to learner mode' in the sidebar to see this page."
-  end
+  let(:to_learner_text) { LearnerModeTextHelper::SWITCHED_TO_LEARNER_TEXT }
+  let(:to_teacher_text) { LearnerModeTextHelper::SWITCHED_TO_TEACHER_TEXT }
 
   let(:teacher)      { FactoryBot.create(:portal_teacher) }
   let(:learner_user) { teacher.find_or_create_teacher_learner! }

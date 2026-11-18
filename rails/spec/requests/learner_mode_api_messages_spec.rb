@@ -7,12 +7,8 @@ RSpec.describe 'Learner mode text in API refusals', type: :request do
   # See learner_account_changes_spec.rb.
   before(:all) { Rails.application.reload_routes_unless_loaded }
 
-  let(:to_learner_text) do
-    "You may have switched to learner mode in another tab. Use 'Switch back to teacher' in the sidebar to see this page."
-  end
-  let(:to_teacher_text) do
-    "You may have switched back to teacher in another tab. Use 'Switch to learner mode' in the sidebar to see this page."
-  end
+  let(:to_learner_text) { LearnerModeTextHelper::SWITCHED_TO_LEARNER_TEXT }
+  let(:to_teacher_text) { LearnerModeTextHelper::SWITCHED_TO_TEACHER_TEXT }
 
   let(:teacher)       { FactoryBot.create(:portal_teacher) }
   let(:clazz)         { teacher.clazzes.first }

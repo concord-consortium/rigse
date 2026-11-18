@@ -28,9 +28,7 @@ RSpec.describe 'A stale tab after switching to learner mode', type: :request do
 
     put user_path(teacher.user), params: { authenticity_token: token, user: { first_name: 'Changed' } }
     expect(response).to redirect_to(my_classes_path)
-    expect(flash['alert']).to end_with(
-      "You may have switched to learner mode in another tab. Use 'Switch back to teacher' in the sidebar to see this page."
-    )
+    expect(flash['alert']).to end_with(LearnerModeTextHelper::SWITCHED_TO_LEARNER_TEXT)
     expect(teacher.user.reload.first_name).not_to eq('Changed')
   end
 end
