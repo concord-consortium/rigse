@@ -53,7 +53,7 @@ describe LearnerModeController do
 
         expect(teacher.reload.teacher_learner_id).to be_nil
         expect(controller.current_user).to eq(teacher_user)
-        expect(flash['alert']).to eq("We couldn't set up your learner account. Please try again.")
+        expect(flash['alert']).to eq("We couldn't start learner mode. Please try again.")
         expect(response).to redirect_to(teacher_home_path)
       end
     end

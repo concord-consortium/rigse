@@ -591,6 +591,12 @@ end
     !!portal_student&.is_teacher_learner
   end
 
+  # The name to show people. Same as `name`, plus " (Learner)" for a teacher's learner account.
+  # The suffix is never stored. Do not use this where `name` is used as data (exports, matching).
+  def display_name
+    teacher_learner? ? "#{name} (Learner)" : name
+  end
+
   # For a teacher, the User of their learner account, or nil if they have none yet.
   def teacher_learner_user
     portal_teacher&.teacher_learner&.user

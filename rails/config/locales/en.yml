@@ -164,6 +164,8 @@ en:
     full_status: Full Status
     links: Links
     switch_back: Switch back
+    switch_to_learner_mode: Switch to learner mode
+    switch_back_to_teacher: Switch back to teacher
     research_projects: Research Projects
     researcher_reports: Researcher Reports
   will_paginate:

@@ -20,7 +20,7 @@ class LearnerModeController < ApplicationController
         learner_user = teacher.find_or_create_teacher_learner!
       rescue ActiveRecord::ActiveRecordError => e
         Rails.logger.error("Could not create learner account for teacher #{teacher.id}: #{e.class}: #{e.message}")
-        flash['alert'] = "We couldn't set up your learner account. Please try again."
+        flash['alert'] = "We couldn't start learner mode. Please try again."
         return redirect_to view_context.current_user_home_path
       end
     end

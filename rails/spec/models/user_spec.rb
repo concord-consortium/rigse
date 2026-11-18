@@ -1641,4 +1641,24 @@ protected
     end
   end
 
+  describe '#display_name' do
+    let(:teacher) { FactoryBot.create(:portal_teacher, user: FactoryBot.create(:confirmed_user, first_name: 'Jane', last_name: 'Doe')) }
+
+    it 'is the name for a teacher' do
+      expect(teacher.user.display_name).to eq('Jane Doe')
+    end
+
+    it 'adds (Learner) for a learner account, without changing the stored name' do
+      learner_user = teacher.find_or_create_teacher_learner!
+      expect(learner_user.display_name).to eq('Jane Doe (Learner)')
+      expect(learner_user.name).to eq('Jane Doe')
+      expect(learner_user.reload.last_name).to eq('Doe')
+    end
+
+    it 'is the name for a normal student' do
+      student_user = FactoryBot.create(:full_portal_student).user
+      expect(student_user.display_name).to eq(student_user.name)
+    end
+  end
+
 end

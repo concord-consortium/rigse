@@ -51,6 +51,15 @@ module NavigationHelper
     @original_user && @original_user != current_visitor
   end
 
+  # Uses the same rules as LearnerModeController, so the link shows only when it works.
+  def learner_mode_policy
+    LearnerModePolicy.new(current_visitor, :learner_mode)
+  end
+
+  def show_learner_mode_link
+    learner_mode_policy.enter_learner_mode? || learner_mode_policy.exit_learner_mode?
+  end
+
   def getting_started_params
     if is_teacher && !teaches_classes
       return {
@@ -310,11 +319,20 @@ module NavigationHelper
     }
   end
 
+  # Sort 2.5 puts it right after the admin "Switch back" link, when both show.
+  def learner_mode_link
+    if current_visitor.teacher_learner?
+      { label: nav_label('switch_back_to_teacher'), id: "learner_mode", url: exit_learner_mode_path, sort: 2.5 }
+    else
+      { label: nav_label('switch_to_learner_mode'), id: "learner_mode", url: enter_learner_mode_path, sort: 2.5 }
+    end
+  end
+
 
   public
   def navigation_service(params={})
     _params = {
-      name: current_visitor.name,
+      name: current_visitor.display_name,
       request_path: request.path,
     }
 
@@ -335,6 +353,10 @@ module NavigationHelper
 
     if show_switch_user_link
       service.add_item switch_user_link
+    end
+
+    if show_learner_mode_link
+      service.add_item learner_mode_link
     end
 
     if show_research_projects_links
