@@ -301,8 +301,14 @@ class User < ApplicationRecord
     return access_grants.create!(access_token_expires_at: time.from_now + 1.second).access_token
   end
 
+  # Devise checks this on every request. A teacher learner account also stops working when its
+  # teacher is suspended or deleted, so the teacher cannot keep using it.
   def active_for_authentication?
-    super && user_active?
+    super && user_active? && !teacher_learner_of_inactive_teacher?
+  end
+
+  def teacher_learner_of_inactive_teacher?
+    teacher_learner? && !linked_teacher_user&.user_active?
   end
 
   def finish_enews_subscription
@@ -323,7 +329,7 @@ class User < ApplicationRecord
   end
 
   def inactive_message
-    user_active? ? super : "You cannot login since your account has been suspended."
+    user_active? && !teacher_learner_of_inactive_teacher? ? super : "You cannot login since your account has been suspended."
   end
 
   #
