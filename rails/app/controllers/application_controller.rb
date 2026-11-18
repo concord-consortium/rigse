@@ -265,8 +265,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # A teacher learner account skips these two checks. It has no security questions, and its
+  # consent values are copied from its teacher.
   def check_student_security_questions_ok
-    if request.format && request.format.html? && current_settings && current_settings.use_student_security_questions && !current_visitor.portal_student.nil? && current_visitor.security_questions.size < 3
+    if request.format && request.format.html? && current_settings && current_settings.use_student_security_questions && !current_visitor.portal_student.nil? && !current_visitor.teacher_learner? && current_visitor.security_questions.size < 3
       unless session_sensitive_path
         flash.keep
         redirect_to(edit_user_security_questions_path(current_visitor))
@@ -275,7 +277,7 @@ class ApplicationController < ActionController::Base
   end
 
   def check_student_consent
-    if request.format && request.format.html? && current_settings && current_settings.require_user_consent? && !current_visitor.portal_student.nil? && !current_visitor.asked_age?
+    if request.format && request.format.html? && current_settings && current_settings.require_user_consent? && !current_visitor.portal_student.nil? && !current_visitor.teacher_learner? && !current_visitor.asked_age?
       unless session_sensitive_path
         flash.keep
         redirect_to(ask_consent_portal_student_path(current_visitor.portal_student))
