@@ -7,6 +7,9 @@ class LearnerModeController < ApplicationController
   # GET /learner_mode/enter
   # GET /learner_mode/enter?create=true
   def enter_learner_mode
+    # Already in learner mode, for example after a click in a stale tab. Go home with no error.
+    return redirect_to(view_context.current_user_home_path) if in_learner_mode?
+
     authorize :learner_mode, :enter_learner_mode?
 
     teacher = current_user.portal_teacher
@@ -30,11 +33,18 @@ class LearnerModeController < ApplicationController
 
   # GET /learner_mode/exit
   def exit_learner_mode
+    # Already switched back, for example after a click in a stale tab. Go home with no error.
+    return redirect_to(view_context.current_user_home_path) if current_user&.has_teacher_learner?
+
     authorize :learner_mode, :exit_learner_mode?
     switch_to(current_user.linked_teacher_user)
   end
 
   private
+
+  def in_learner_mode?
+    current_user.present? && current_user.teacher_learner? && current_user.linked_teacher_user.present?
+  end
 
   # Like UsersController#switch, but it only keeps the admin switch values that are already
   # in the session. It never sets them.

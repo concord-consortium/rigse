@@ -91,13 +91,16 @@ describe LearnerModeController do
       expect { get :enter_learner_mode, params: { create: "true" } }.not_to change(User, :count)
       expect(controller.current_user).to eq(normal_student)
       expect(response).to redirect_to(my_classes_path)
+      expect(flash['alert']).to include("permission")
     end
 
-    it "does not let a learner account enter" do
+    it "sends a learner account home with no error, for example from a stale tab" do
       learner_user = teacher.find_or_create_teacher_learner!
       sign_in learner_user
       expect { get :enter_learner_mode, params: { create: "true" } }.not_to change(User, :count)
       expect(controller.current_user).to eq(learner_user)
+      expect(response).to redirect_to(my_classes_path)
+      expect(flash['alert']).to be_nil
     end
 
     it "does not let an anonymous visitor enter" do
@@ -125,16 +128,27 @@ describe LearnerModeController do
       expect(controller.current_user).to eq(teacher_user)
     end
 
-    it "does not let a teacher exit" do
+    it "sends a teacher with a learner account home with no error, for example from a stale tab" do
       sign_in teacher_user
       get :exit_learner_mode
       expect(controller.current_user).to eq(teacher_user)
+      expect(response).to redirect_to(teacher_home_path)
+      expect(flash['alert']).to be_nil
+    end
+
+    it "does not let a teacher with no learner account exit" do
+      other_teacher_user = FactoryBot.create(:portal_teacher).user
+      sign_in other_teacher_user
+      get :exit_learner_mode
+      expect(controller.current_user).to eq(other_teacher_user)
+      expect(flash['alert']).to include("permission")
     end
 
     it "does not let a normal student exit" do
       sign_in normal_student
       get :exit_learner_mode
       expect(controller.current_user).to eq(normal_student)
+      expect(flash['alert']).to include("permission")
     end
 
     it "does not let an anonymous visitor exit" do
