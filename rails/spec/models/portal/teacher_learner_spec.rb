@@ -48,6 +48,19 @@ describe Portal::Teacher, 'learner account' do
       expect(calls.first(2)).to eq([:lock, :check])
     end
 
+    it 'works for a teacher whose last name is longer than a login can be' do
+      teacher_user.update!(last_name: 'L' * 45)
+      learner_user = teacher.reload.find_or_create_teacher_learner!
+      expect(learner_user.login.length).to eq(User::MAX_LOGIN_LENGTH)
+    end
+
+    it 'works when a disabled user owns the login it would generate' do
+      login = Portal::Student.generate_user_login(teacher_user.first_name, teacher_user.last_name)
+      FactoryBot.create(:confirmed_user, login: login).update_column(:state, 'disabled')
+      learner_user = teacher.find_or_create_teacher_learner!
+      expect(learner_user.login).not_to eq(login)
+    end
+
     it 'saves nothing when creation fails' do
       allow(Portal::Student).to receive(:create!).and_raise(ActiveRecord::RecordInvalid.new(Portal::Student.new))
       expect {
@@ -71,6 +84,18 @@ describe Portal::Teacher, 'learner account' do
 
     it 'does nothing for a teacher with no learner account' do
       expect { teacher_user.update!(first_name: 'Janet') }.not_to change(User, :count)
+    end
+
+    # See the note on the creation lock test above.
+    it 'locks the teacher row before it checks the link' do
+      teacher.find_or_create_teacher_learner!
+      teacher_user.reload
+      portal_teacher = teacher_user.portal_teacher
+      calls = []
+      allow(portal_teacher).to receive(:lock!).and_wrap_original { |m, *args| calls << :lock; m.call(*args) }
+      allow(portal_teacher).to receive(:teacher_learner).and_wrap_original { |m, *args| calls << :check; m.call(*args) }
+      teacher_user.update!(first_name: 'Janet')
+      expect(calls.first(2)).to eq([:lock, :check])
     end
   end
 

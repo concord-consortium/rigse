@@ -54,7 +54,8 @@ class Portal::Student < ApplicationRecord
 
     suggested_login =   "#{first_name.downcase.gsub(/[^\p{L}\d]/,'')[0..0]}" +
                         "#{last_name.downcase.gsub(/[^\p{L}\d]/,'')}"
-
+    # Names can be longer than a login is allowed to be.
+    suggested_login = suggested_login[0, User::MAX_LOGIN_LENGTH]
 
     counter = 0
     generated_login = suggested_login
@@ -65,7 +66,8 @@ class Portal::Student < ApplicationRecord
     ApplicationRecord.uncached do
       while (User.login_exists? generated_login)
         counter = counter + 1
-        generated_login = "#{suggested_login}#{counter}"
+        suffix = counter.to_s
+        generated_login = "#{suggested_login[0, User::MAX_LOGIN_LENGTH - suffix.length]}#{suffix}"
       end
     end
 

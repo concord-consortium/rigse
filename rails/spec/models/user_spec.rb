@@ -888,23 +888,20 @@ protected
     end
   end
 
-  # TODO: auto-generated
-  describe '.login_exists?' do
-    it 'login_exists?' do
-      login = 'login'
-      result = described_class.login_exists?(login)
-
-      expect(result).not_to be_nil
+  describe '.login_exists? and .login_does_not_exist?' do
+    it 'finds an active user and no unused login' do
+      user = FactoryBot.create(:confirmed_user)
+      expect(described_class.login_exists?(user.login)).to be true
+      expect(described_class.login_does_not_exist?(user.login)).to be false
+      expect(described_class.login_exists?('unused-login')).to be false
+      expect(described_class.login_does_not_exist?('unused-login')).to be true
     end
-  end
 
-  # TODO: auto-generated
-  describe '.login_does_not_exist?' do
-    it 'login_does_not_exist?' do
-      login = double('login')
-      result = described_class.login_does_not_exist?(login)
-
-      expect(result).not_to be_nil
+    it 'counts a disabled user\'s login as used' do
+      user = FactoryBot.create(:confirmed_user)
+      user.update_column(:state, 'disabled')
+      expect(described_class.login_exists?(user.login)).to be true
+      expect(described_class.login_does_not_exist?(user.login)).to be false
     end
   end
 

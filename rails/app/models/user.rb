@@ -99,6 +99,8 @@ class User < ApplicationRecord
 
   # Validations
 
+  MAX_LOGIN_LENGTH = 40
+
   @@login_regex     = /\A[\p{L}\d][\p{L}\d\.\-\+_@]+\z/ # ASCII and unicode
   bad_login_message = "use only letters, numbers, and +.-_@ please.".freeze
 
@@ -135,7 +137,7 @@ class User < ApplicationRecord
 
 
   validates_presence_of     :login
-  validates_length_of       :login,    :within => 1..40
+  validates_length_of       :login,    :within => 1..MAX_LOGIN_LENGTH
   validates_uniqueness_of   :login, :case_sensitive => false
   validates_format_of       :login,    :with => @@login_regex, :message => bad_login_message
 
@@ -174,12 +176,13 @@ class User < ApplicationRecord
       @@searchable_attributes
     end
 
+    # Disabled users still own their logins, so they are included here.
     def login_exists?(login)
-      User.where("`login` = '#{login}'").count >= 1
+      User.unscoped.where(login: login).exists?
     end
 
     def login_does_not_exist?(login)
-      User.where("`login` = '#{login}'").count == 0
+      !login_exists?(login)
     end
 
     def suggest_login(first,last)
@@ -721,6 +724,11 @@ end
   # A teacher's learner account keeps the teacher's stored name, because rosters, reports,
   # and activity apps read the stored name.
   def copy_name_to_teacher_learner
+    return unless portal_teacher
+    # Lock the same teacher row as Portal::Teacher#find_or_create_teacher_learner!, so a learner
+    # account being created at the same time gets the new name. `lock!` also reloads, so the
+    # link check below is fresh.
+    portal_teacher.lock!
     learner_user = teacher_learner_user
     return unless learner_user
     learner_user.update!(first_name: first_name, last_name: last_name)
