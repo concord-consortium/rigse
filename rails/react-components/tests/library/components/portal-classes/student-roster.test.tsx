@@ -1,7 +1,8 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import StudentRoster from "../../../../src/library/components/portal-classes/student-roster";
+import { mockJquery } from "../../helpers/mock-jquery";
 
 describe("When I try to render a student roster", () => {
   const students = [
@@ -70,6 +71,29 @@ describe("When I try to render a student roster", () => {
     expect(screen.getByText("Cancel")).toBeInTheDocument();
 
     (window as any).location = savedLocation;
+  });
+
+  describe("when the server refuses to remove a student", () => {
+    // For example, a stale tab after the teacher switched to learner mode in another tab.
+    const serverMessage = "Not authorized. You may have switched to learner mode in another tab. Use 'Switch back to teacher' in the sidebar to see this page.";
+
+    mockJquery({
+      ajax: jest.fn().mockImplementation((options) => {
+        options.error({ responseText: JSON.stringify({ success: false, message: serverMessage }) }, "error", "Forbidden");
+      })
+    });
+
+    it("should show the server's message in the alert", () => {
+      jest.spyOn(window, "confirm").mockReturnValue(true);
+      const alertSpy = jest.spyOn(window, "alert").mockImplementation(() => undefined);
+
+      render(<StudentRoster canEdit={true} clazz={{ name: "Class 1" }} students={students} otherStudents={otherStudents} />);
+      fireEvent.click(screen.getAllByText("Remove Student")[0]);
+
+      expect(alertSpy).toHaveBeenCalledWith(`Unable to remove student!\n${serverMessage}`);
+
+      jest.restoreAllMocks();
+    });
   });
 
   // NOTE: the header and the rows are tested fully in their own component tests

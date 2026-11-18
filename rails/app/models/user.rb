@@ -602,6 +602,10 @@ end
     portal_teacher&.teacher_learner&.user
   end
 
+  def has_teacher_learner?
+    teacher_learner_user.present?
+  end
+
   # For a learner account, the User of the teacher it belongs to. Nil for everyone else.
   def linked_teacher_user
     return nil unless teacher_learner?

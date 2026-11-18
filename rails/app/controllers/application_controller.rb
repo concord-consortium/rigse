@@ -77,9 +77,9 @@ class ApplicationController < ActionController::Base
     # strong enough.
     response.headers['Cache-Control'] = 'no-store'
 
-    error_message = not_authorized_error_message
+    error_message = with_learner_mode_tab_message(not_authorized_error_message)
     if request.xhr?
-      render :html => "<div class='flash_error'>#{error_message}</div>", :status => 403
+      render :html => helpers.tag.div(error_message, :class => 'flash_error'), :status => 403
     else
       if current_user
         # only show the error alert if we are not redirecting after signing in
@@ -183,6 +183,32 @@ class ApplicationController < ActionController::Base
       end
     end
     name.humanize
+  end
+
+  SWITCHED_TO_LEARNER_TEXT = "You may have switched to learner mode in another tab. " \
+    "Use 'Switch back to teacher' in the sidebar to see this page."
+  SWITCHED_TO_TEACHER_TEXT = "You may have switched back to teacher in another tab. " \
+    "Use 'Switch to learner mode' in the sidebar to see this page."
+
+  # Extra text for an error that may come from switching to or from learner mode in another
+  # tab. All tabs share one session, so a tab can show a page for the other account. Returns nil
+  # unless the signed-in user is a teacher with a learner account, or a learner account.
+  def learner_mode_tab_message
+    return nil unless current_user
+    if current_user.teacher_learner? && current_user.linked_teacher_user
+      # A learner account. Another tab may have switched to learner mode.
+      SWITCHED_TO_LEARNER_TEXT
+    elsif current_user.has_teacher_learner?
+      # A teacher with a learner account. Another tab may have switched back to teacher.
+      SWITCHED_TO_TEACHER_TEXT
+    end
+  end
+
+  # Adds learner_mode_tab_message, when there is one, to the end of an error message.
+  def with_learner_mode_tab_message(message)
+    tab_message = learner_mode_tab_message
+    return message unless tab_message
+    message.match?(/[.!?]\z/) ? "#{message} #{tab_message}" : "#{message}. #{tab_message}"
   end
 
   def not_authorized_error_message(options={})

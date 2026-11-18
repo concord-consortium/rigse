@@ -1598,6 +1598,7 @@ protected
       it 'returns no learner account and is not a learner account' do
         expect(teacher.user.teacher_learner?).to be false
         expect(teacher.user.teacher_learner_user).to be_nil
+        expect(teacher.user.has_teacher_learner?).to be false
         expect(teacher.user.linked_teacher_user).to be_nil
       end
     end
@@ -1612,6 +1613,7 @@ protected
       it 'links the teacher to the learner account' do
         expect(teacher.user.teacher_learner?).to be false
         expect(teacher.user.teacher_learner_user).to eq(learner.user)
+        expect(teacher.user.has_teacher_learner?).to be true
         expect(teacher.user.linked_teacher_user).to be_nil
       end
 
@@ -1620,6 +1622,7 @@ protected
         expect(learner_user.teacher_learner?).to be true
         expect(learner_user.linked_teacher_user).to eq(teacher.user)
         expect(learner_user.teacher_learner_user).to be_nil
+        expect(learner_user.has_teacher_learner?).to be false
       end
     end
 
@@ -1627,6 +1630,7 @@ protected
       it 'is not a learner account and has no links' do
         expect(normal_student.user.teacher_learner?).to be false
         expect(normal_student.user.teacher_learner_user).to be_nil
+        expect(normal_student.user.has_teacher_learner?).to be false
         expect(normal_student.user.linked_teacher_user).to be_nil
       end
     end
@@ -1636,6 +1640,7 @@ protected
         user = FactoryBot.create(:confirmed_user)
         expect(user.teacher_learner?).to be false
         expect(user.teacher_learner_user).to be_nil
+        expect(user.has_teacher_learner?).to be false
         expect(user.linked_teacher_user).to be_nil
       end
     end
