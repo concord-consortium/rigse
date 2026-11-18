@@ -1,4 +1,6 @@
 class PasswordsController < ApplicationController
+  before_action :authorize_own_password_change, only: [:reset, :update_users_password]
+
   def login
     @user_login = User.new
   end
@@ -80,6 +82,19 @@ class PasswordsController < ApplicationController
   end
 
   protected
+
+  # reset_code "0" means "change my own password", and find_password_user then returns the
+  # current user with no other check. A teacher learner account must not change its own password.
+  # Other reset codes are not checked here: an admin's reset (UsersController#reset_password)
+  # creates a real reset code and comes through these same actions.
+  def authorize_own_password_change
+    return unless params[:reset_code] == "0" && !current_visitor.anonymous?
+    authorize current_visitor, :change_own_password?
+  end
+
+  def not_authorized_error_message
+    "You don't have permission to change this password"
+  end
 
   def find_password_user
     return current_visitor if params[:reset_code] == "0" && !current_visitor.anonymous?

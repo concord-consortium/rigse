@@ -35,8 +35,9 @@ class UserPolicy < ApplicationPolicy
   end
 
   def update?
-    # the preferences page uses the update action so the user needs to be able to update themselves
-    its_me? || admin_or_manager? || (project_admin_for_user? && record_not_admin?)
+    # the preferences page uses the update action so the user needs to be able to update themselves.
+    # A teacher learner account cannot: its teacher could otherwise give it a login and password they know.
+    (its_me? && !record_teacher_learner?) || admin_or_manager? || (project_admin_for_user? && record_not_admin?)
   end
 
   def make_admin?
@@ -70,7 +71,17 @@ class UserPolicy < ApplicationPolicy
   end
 
   def reset_password?
+    # Nobody can reset a teacher learner account's password. Nobody signs in to it with one, and
+    # the roles that could reset it can switch to it instead.
+    return false if record_teacher_learner?
     (project_admin_for_user? && record_not_admin?) || admin_or_manager? || am_teacher? || its_me?
+  end
+
+  # Setting your own password at /change_password/0 (PasswordsController). Users are sent there
+  # when they must set a new password, and any signed-in user can open it. A teacher learner
+  # account cannot use it.
+  def change_own_password?
+    its_me? && !record_teacher_learner?
   end
 
   def add_teachers_to_cohorts?
@@ -98,6 +109,10 @@ class UserPolicy < ApplicationPolicy
 
   def its_me?
     record == user
+  end
+
+  def record_teacher_learner?
+    !!record&.teacher_learner?
   end
 
   def switching_back?

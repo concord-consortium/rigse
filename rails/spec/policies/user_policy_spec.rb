@@ -247,6 +247,61 @@ describe UserPolicy do
   end
 
 
+  describe "a teacher learner account" do
+    let(:teacher)      { FactoryBot.create(:portal_teacher) }
+    let(:learner_user) { teacher.find_or_create_teacher_learner! }
+    let(:user)         { learner_user }
+
+    before(:each) do
+      # The learner account joins its teacher's own class, so the teacher is its teacher of record.
+      learner_user.portal_student.student_clazzes.create!(clazz: teacher.clazzes.first)
+    end
+
+    context "acting on itself" do
+      let(:active_user) { learner_user }
+      it { is_expected.not_to permit(:update)                 }
+      it { is_expected.not_to permit(:reset_password)         }
+      it { is_expected.not_to permit(:change_own_password)    }
+      it { is_expected.to permit(:preferences)                }
+    end
+
+    context "acted on by its teacher of record" do
+      let(:active_user) { teacher.user }
+      it { is_expected.not_to permit(:reset_password)         }
+      it { is_expected.not_to permit(:update)                 }
+    end
+
+    context "acted on by an admin" do
+      let(:active_user) { FactoryBot.generate(:admin_user) }
+      it { is_expected.not_to permit(:reset_password)         }
+      it { is_expected.to permit(:switch)                     }
+      it { is_expected.to permit(:update)                     }
+    end
+
+    context "acted on by a manager" do
+      let(:active_user) { FactoryBot.generate(:manager_user) }
+      it { is_expected.not_to permit(:reset_password)         }
+      it { is_expected.to permit(:switch)                     }
+    end
+
+    context "acted on by a project admin for its class's teacher" do
+      let(:cohort)      { FactoryBot.create(:admin_cohort) }
+      let(:project)     { FactoryBot.create(:project, cohorts: [cohort]) }
+      let(:teacher)     { FactoryBot.create(:portal_teacher, cohorts: [cohort]) }
+      let(:active_user) { FactoryBot.create(:confirmed_user).tap { |u| u.add_role_for_project('admin', project) } }
+      it { is_expected.not_to permit(:reset_password)         }
+      it { is_expected.to permit(:switch)                     }
+    end
+  end
+
+  describe "a normal student acting on itself" do
+    let(:user)        { FactoryBot.create(:full_portal_student).user }
+    let(:active_user) { user }
+    it { is_expected.to permit(:update)                       }
+    it { is_expected.to permit(:reset_password)               }
+    it { is_expected.to permit(:change_own_password)          }
+  end
+
   # TODO: auto-generated
   describe '#index?' do
     it 'index?' do
