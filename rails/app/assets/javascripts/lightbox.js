@@ -89,7 +89,7 @@
 
     Lightbox.flash = function (key, message) {
         var title = '<span style="text-transform: capitalize;">' + key + '</span>';
-        var content = '<div style="padding: 5px 15px;">' +
+        var content = '<div class="flash_message" style="padding: 5px 15px;">' +
                       message +
                       '</div>';
 
@@ -101,7 +101,40 @@
             height: 160
         };
         var lightbox = new Lightbox(lightboxConfig);
+        Lightbox.fitFlashToMessage(lightbox);
         return lightbox;
+    };
+
+    // The OK button sits at the bottom of the window, on top of the content. A long message
+    // would run under it, so make the window tall enough for the message and the button.
+    // The window is never taller than most of the browser window. If the message does not fit,
+    // the message scrolls and the button stays visible.
+    Lightbox.fitFlashToMessage = function (lightbox) {
+        var win = lightbox.handle;
+        var messageEl = win.content.down('.flash_message');
+        var buttonsEl = win.content.down('.buttons_container');
+        if (!messageEl || !buttonsEl) {
+            return;
+        }
+
+        var innerHeight = win.getSize(true).height;
+        var neededHeight = messageEl.offsetHeight + buttonsEl.offsetHeight;
+        if (neededHeight <= innerHeight) {
+            return;
+        }
+
+        var outerExtra = win.getSize().height - innerHeight;
+        var maxInnerHeight = Math.floor(document.viewport.getHeight() * 0.8) - outerExtra;
+        var newInnerHeight = Math.max(innerHeight, Math.min(neededHeight, maxInnerHeight));
+        if (neededHeight > newInnerHeight) {
+            messageEl.setStyle({
+                maxHeight: (newInnerHeight - buttonsEl.offsetHeight) + 'px',
+                overflowY: 'auto'
+            });
+        }
+
+        win.setSize(win.getSize(true).width, newInnerHeight, true);
+        win.center();
     };
 
 
