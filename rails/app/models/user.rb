@@ -591,6 +591,12 @@ end
     !!portal_student&.is_teacher_learner
   end
 
+  # Nobody can directly sign in to a teacher learner account with a password, even if someone
+  # learns or sets one. Learner mode switches the teacher to it without a password.
+  def valid_password?(password)
+    !teacher_learner? && super
+  end
+
   # The name to show people. Same as `name`, plus " (Learner)" for a teacher's learner account.
   # The suffix is never stored. Do not use this where `name` is used as data (exports, matching).
   def display_name
