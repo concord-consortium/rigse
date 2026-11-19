@@ -120,7 +120,7 @@ class API::V1::BookmarksController < API::APIController
     end
 
     if !current_user.portal_teacher || !current_user.portal_teacher.has_clazz?(portal_class)
-      return {error: 'You are not authorized to edit bookmarks for this class'}
+      return {error: with_learner_mode_tab_message('You are not authorized to edit bookmarks for this class')}
     end
 
     return {portal_class: portal_class, error: nil}

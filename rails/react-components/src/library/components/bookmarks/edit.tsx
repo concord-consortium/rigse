@@ -48,42 +48,34 @@ export class EditBookmarks extends React.Component<any, any> {
       .catch(err => {
         // reset the bookmark on error
         update(oldName, oldUrl);
-        this.showError(err, "Unable to update link!");
+        this.showErrorAfterRender(err, "Unable to update link!");
       });
   }
 
   handleDelete (bookmark: any) {
     if (window.confirm(`Are you sure you want to delete this link?\n\n${bookmark.name} -> ${bookmark.url}`)) {
-      const { bookmarks } = this.state;
-      const index = bookmarks.indexOf(bookmark);
-      bookmarks.splice(index, 1);
-      this.setState({ bookmarks });
-
+      // Remove the link only after the server agrees, so a refused request leaves the list as it was.
       this.apiCall("delete", { bookmark })
-        .catch(err => {
-          // add the bookmark back on error
-          bookmarks.splice(index, 0, bookmark);
+        .then(() => {
+          const { bookmarks } = this.state;
+          bookmarks.splice(bookmarks.indexOf(bookmark), 1);
           this.setState({ bookmarks });
-          this.showError(err, "Unable to delete link!");
-        });
+        })
+        .catch(err => this.showError(err, "Unable to delete link!"));
     }
   }
 
   handleVisibilityToggle (bookmark: any) {
-    const toggle = () => {
-      bookmark.is_visible = !bookmark.is_visible;
-      // This is conceptually broken, but maybe it somehow works (?)
-      // eslint-disable-next-line react/no-access-state-in-setstate
-      this.setState({ bookmarks: this.state.bookmarks });
-    };
-
-    toggle();
-    this.apiCall("visibilityToggle", { bookmark, data: { is_visible: bookmark.is_visible } })
-      .catch(err => {
-        // retoggle back on error
-        toggle();
-        this.showError(err, "Unable to toggle visibility of link!");
-      });
+    // Change the link only after the server agrees, so a refused request leaves the list as it was.
+    const isVisible = !bookmark.is_visible;
+    this.apiCall("visibilityToggle", { bookmark, data: { is_visible: isVisible } })
+      .then(() => {
+        bookmark.is_visible = isVisible;
+        // This is conceptually broken, but maybe it somehow works (?)
+        // eslint-disable-next-line react/no-access-state-in-setstate
+        this.setState({ bookmarks: this.state.bookmarks });
+      })
+      .catch(err => this.showError(err, "Unable to toggle visibility of link!"));
   }
 
   handleSortEnd ({
@@ -98,7 +90,7 @@ export class EditBookmarks extends React.Component<any, any> {
     this.apiCall("sort", { data: { ids } })
       .catch(err => {
         this.setState({ bookmarks: arrayMove(bookmarks, newIndex, oldIndex) });
-        this.showError(err, "Unable to save link sort order!");
+        this.showErrorAfterRender(err, "Unable to save link sort order!");
       });
   }
 
@@ -108,6 +100,11 @@ export class EditBookmarks extends React.Component<any, any> {
     } else {
       window.alert(message);
     }
+  }
+
+  // The alert stops the page from drawing, so show it after the undone change is on screen.
+  showErrorAfterRender (err: any, message: any) {
+    requestAnimationFrame(() => setTimeout(() => this.showError(err, message)));
   }
 
   apiCall (action: any, options: any) {
@@ -136,8 +133,10 @@ export class EditBookmarks extends React.Component<any, any> {
         dataType: "json",
         contentType: "application/json",
         success: json => {
+          // Reject instead of throwing. A throw here stops jQuery, so the promise never settles.
           if (!json.success) {
-            throw new Error(json.message);
+            reject(json);
+            return;
           }
           if (onSuccess) {
             onSuccess(json.data);
@@ -145,6 +144,12 @@ export class EditBookmarks extends React.Component<any, any> {
           resolve(json.data);
         },
         error: (jqXHR, textStatus, error) => {
+          // Use the server's JSON, which has its message, when there is one.
+          try {
+            error = JSON.parse(jqXHR.responseText);
+          } catch (e) {
+            // noop
+          }
           reject(error);
         }
       });

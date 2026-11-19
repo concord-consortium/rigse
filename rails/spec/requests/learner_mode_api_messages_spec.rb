@@ -43,6 +43,12 @@ RSpec.describe 'Learner mode text in API refusals', type: :request do
       expect(response).to have_http_status(:bad_request)
       expect(message).to eq("You must be a teacher of the class to register and add students. #{to_learner_text}")
     end
+
+    it 'gets the text from the bookmarks API' do
+      post sort_api_v1_bookmarks_path, params: { clazz_id: clazz.id, ids: [] }, as: :json
+      expect(response).to have_http_status(:bad_request)
+      expect(message).to eq("You are not authorized to edit bookmarks for this class. #{to_learner_text}")
+    end
   end
 
   describe 'joining a class as a teacher' do
