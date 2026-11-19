@@ -47,6 +47,8 @@ class Portal::Teacher < ApplicationRecord
   after_create :add_to_default_cohort
   # Deleting a teacher deletes their learner account. User#destroy reaches this through
   # User's `has_one :portal_teacher, dependent: :destroy`.
+  # `lock!` waits for find_or_create_teacher_learner! and reloads, so the link is fresh.
+  before_destroy :lock!
   after_destroy :destroy_teacher_learner_user
 
   # Returns the User of this teacher's learner account (used for learner mode),

@@ -122,6 +122,17 @@ describe Portal::Teacher, 'learner account' do
       expect(teacher.reload.teacher_learner.user).to eq(new_learner_user)
     end
 
+    it 'destroys a learner account that was created after the teacher was loaded' do
+      stale_teacher = Portal::Teacher.find(teacher.id)
+      learner_user = Portal::Teacher.find(teacher.id).find_or_create_teacher_learner!
+      student_id = learner_user.portal_student.id
+
+      stale_teacher.destroy
+
+      expect(User.where(id: learner_user.id)).to be_empty
+      expect(Portal::Student.where(id: student_id)).to be_empty
+    end
+
     it 'works for a teacher with no learner account' do
       expect { teacher_user.reload.destroy }.to change(User, :count).by(-1)
     end
