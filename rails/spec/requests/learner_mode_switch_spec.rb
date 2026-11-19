@@ -21,12 +21,12 @@ RSpec.describe 'Learner mode after an admin switch', type: :request do
     expect(controller.current_user).to eq(teacher_user)
     expect(session[:original_user_id]).to eq(admin.id)
 
-    get enter_learner_mode_path
+    post enter_learner_mode_path
     expect(controller.current_user).to eq(learner_user)
     expect(session[:original_user_id]).to eq(admin.id)
     expect(session[:recently_switched_from_users]).to eq([admin.id])
 
-    get exit_learner_mode_path
+    post exit_learner_mode_path
     expect(controller.current_user).to eq(teacher_user)
     expect(session[:original_user_id]).to eq(admin.id)
     expect(session[:recently_switched_from_users]).to eq([admin.id])
@@ -38,12 +38,12 @@ RSpec.describe 'Learner mode after an admin switch', type: :request do
   it 'does not set the admin switch values for a teacher who was not switched into' do
     sign_in teacher_user
 
-    get enter_learner_mode_path
+    post enter_learner_mode_path
     expect(controller.current_user).to eq(learner_user)
     expect(session[:original_user_id]).to be_nil
     expect(session[:recently_switched_from_users]).to be_nil
 
-    get exit_learner_mode_path
+    post exit_learner_mode_path
     expect(controller.current_user).to eq(teacher_user)
     expect(session[:original_user_id]).to be_nil
     expect(session[:recently_switched_from_users]).to be_nil

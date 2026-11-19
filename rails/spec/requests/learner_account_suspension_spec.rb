@@ -15,7 +15,7 @@ RSpec.describe 'A teacher learner account when its teacher is suspended or delet
 
   before(:each) do
     sign_in teacher.user
-    get enter_learner_mode_path(create: true)
+    post enter_learner_mode_path
   end
 
   def signed_in_user_id
@@ -48,7 +48,7 @@ RSpec.describe 'A teacher learner account when its teacher is suspended or delet
       m.receiver.teacher_learner? ? true : m.call(*args)
     end
     teacher.user.suspend!
-    get exit_learner_mode_path, headers: referer
+    post exit_learner_mode_path, headers: referer
     expect(signed_in_user_id).to be_nil
     expect(flash['alert']).to eq('You cannot login since your account has been suspended.')
   end

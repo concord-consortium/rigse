@@ -202,7 +202,9 @@ describe NavigationHelper, type: :helper  do
 
       it "shows 'Switch to learner mode' and not 'Switch back to teacher'" do
         link = subject[:links].find { |l| l[:label] == "Switch to learner mode" }
-        expect(link).to include(url: enter_learner_mode_path)
+        # This teacher has no learner account yet, so the link is a GET to the explanation page.
+        expect(link).to include(url: learner_mode_path)
+        expect(link).not_to have_key(:httpMethod)
         expect(labels).not_to include("Switch back to teacher")
         expect(labels).not_to include("Switch back")
       end
@@ -212,12 +214,22 @@ describe NavigationHelper, type: :helper  do
       end
     end
 
+    describe "for a teacher with a learner account" do
+      let(:fake_visitor) { fake_teacher.user }
+
+      it "links 'Switch to learner mode' straight to the POST switch" do
+        learner_user
+        link = subject[:links].find { |l| l[:label] == "Switch to learner mode" }
+        expect(link).to include(url: enter_learner_mode_path, httpMethod: "post")
+      end
+    end
+
     describe "for a learner account" do
       let(:fake_visitor) { learner_user }
 
       it "shows 'Switch back to teacher' and not 'Switch to learner mode'" do
         link = subject[:links].find { |l| l[:label] == "Switch back to teacher" }
-        expect(link).to include(url: exit_learner_mode_path)
+        expect(link).to include(url: exit_learner_mode_path, httpMethod: "post")
         expect(labels).not_to include("Switch to learner mode")
         expect(labels).not_to include("Switch back")
       end

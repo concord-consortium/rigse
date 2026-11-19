@@ -320,11 +320,16 @@ module NavigationHelper
   end
 
   # Sort 2.5 puts it right after the admin "Switch back" link, when both show.
+  # The switches are POST requests (see LearnerModeController). A teacher with no learner account
+  # goes to the explanation page first, with a GET.
   def learner_mode_link
+    link = { id: "learner_mode", sort: 2.5 }
     if current_visitor.teacher_learner?
-      { label: nav_label('switch_back_to_teacher'), id: "learner_mode", url: exit_learner_mode_path, sort: 2.5 }
+      link.merge(label: nav_label('switch_back_to_teacher'), url: exit_learner_mode_path, httpMethod: "post")
+    elsif current_visitor.has_teacher_learner?
+      link.merge(label: nav_label('switch_to_learner_mode'), url: enter_learner_mode_path, httpMethod: "post")
     else
-      { label: nav_label('switch_to_learner_mode'), id: "learner_mode", url: enter_learner_mode_path, sort: 2.5 }
+      link.merge(label: nav_label('switch_to_learner_mode'), url: learner_mode_path)
     end
   end
 

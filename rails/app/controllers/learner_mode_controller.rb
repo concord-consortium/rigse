@@ -1,11 +1,23 @@
 # Switches between a teacher and the teacher's own learner account (a separate student account).
-# Neither action reads a user ID from the request: the target always comes from the
+# Neither switch action reads a user ID from the request: the target always comes from the
 # teacher-to-learner link. Neither action sets session[:original_user_id], so the admin
 # "Switch back" link keeps working as it does today.
+#
+# The switches use POST, so the form security token protects them. With GET, another website
+# could switch a signed-in teacher, or create a learner account, with no click.
 class LearnerModeController < ApplicationController
 
-  # GET /learner_mode/enter
-  # GET /learner_mode/enter?create=true
+  # GET /learner_mode
+  # The explanation page that a teacher sees before the first switch. Its "Continue" button
+  # posts to enter_learner_mode.
+  def explain_learner_mode
+    # Already in learner mode, for example after a click in a stale tab. Go home with no error.
+    return redirect_to(view_context.current_user_home_path) if in_learner_mode?
+
+    authorize :learner_mode, :enter_learner_mode?
+  end
+
+  # POST /learner_mode/enter
   def enter_learner_mode
     # Already in learner mode, for example after a click in a stale tab. Go home with no error.
     return redirect_to(view_context.current_user_home_path) if in_learner_mode?
@@ -16,9 +28,6 @@ class LearnerModeController < ApplicationController
     learner_user = teacher.teacher_learner&.user
 
     if learner_user.nil?
-      # First use: explain learner mode. The page's "Continue" button comes back with create=true.
-      return render(:enter_learner_mode) unless params[:create] == "true"
-
       begin
         learner_user = teacher.find_or_create_teacher_learner!
       rescue ActiveRecord::ActiveRecordError => e
@@ -31,7 +40,7 @@ class LearnerModeController < ApplicationController
     switch_to(learner_user)
   end
 
-  # GET /learner_mode/exit
+  # POST /learner_mode/exit
   def exit_learner_mode
     # Already switched back, for example after a click in a stale tab. Go home with no error.
     return redirect_to(view_context.current_user_home_path) if current_user&.has_teacher_learner?

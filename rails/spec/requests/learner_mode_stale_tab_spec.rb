@@ -24,7 +24,7 @@ RSpec.describe 'A stale tab after switching to learner mode', type: :request do
     token = response.body[/name="authenticity_token" value="([^"]+)"/, 1]
     expect(token).to be_present
 
-    get enter_learner_mode_path(create: true)
+    post enter_learner_mode_path, params: { authenticity_token: token }
 
     put user_path(teacher.user), params: { authenticity_token: token, user: { first_name: 'Changed' } }
     expect(response).to redirect_to(my_classes_path)

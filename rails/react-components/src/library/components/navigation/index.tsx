@@ -64,8 +64,26 @@ export default class Navigation extends React.Component<any, any> {
     return classes;
   }
 
+  // A link can only send a GET request. For a link with httpMethod "post", send a POST request
+  // instead, with the page's form security token, as a Rails form would.
+  submitPost (url: string) {
+    const form = document.createElement("form");
+    form.method = "post";
+    form.action = url;
+    const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute("content");
+    if (token) {
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "authenticity_token";
+      input.value = token;
+      form.appendChild(input);
+    }
+    document.body.appendChild(form);
+    form.submit();
+  }
+
   renderLink (linkDef: any) {
-    const { popOut, iconName, label, url, onClick, noIcon } = linkDef;
+    const { popOut, iconName, label, url, onClick, noIcon, httpMethod } = linkDef;
     const { location } = this.state;
     const target = popOut ? "_blank" : "_self";
     const icon = noIcon ? undefined : (popOut && iconName !== "icon-help" ? "icon-arrow-circle-right" : iconName);
@@ -84,11 +102,16 @@ export default class Navigation extends React.Component<any, any> {
       if (onClick) {
         onClick(e);
       }
+      if (httpMethod === "post") {
+        e.preventDefault();
+        this.submitPost(url);
+      }
       return true;
     };
     return (
       <li className={linkStyles} onClick={clickHandler} key={linkDef.id}>
-        <a href={url} target={target}>
+        {/* A POST link has no real address: opening it in a new tab would send a GET. */}
+        <a href={httpMethod === "post" ? "#" : url} target={target}>
           { icon ? <div className={css.icon}><i className={icon} /></div> : null }
           { label }
         </a>

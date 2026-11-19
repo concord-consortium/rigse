@@ -516,8 +516,12 @@ RailsPortal::Application.routes.draw do
     get '/home'       => 'home#index', :as => :home
     get '/my_classes' => 'home#my_classes', :as => :my_classes
     get '/recent_activity' => 'home#recent_activity', :as => :recent_activity
-    get '/learner_mode/enter' => 'learner_mode#enter_learner_mode', :as => :enter_learner_mode
-    get '/learner_mode/exit' => 'learner_mode#exit_learner_mode', :as => :exit_learner_mode
+    get '/learner_mode' => 'learner_mode#explain_learner_mode', :as => :learner_mode
+    post '/learner_mode/enter' => 'learner_mode#enter_learner_mode', :as => :enter_learner_mode
+    post '/learner_mode/exit' => 'learner_mode#exit_learner_mode', :as => :exit_learner_mode
+    # A GET never switches. These only redirect, for example after signing in from a POST.
+    get '/learner_mode/enter' => redirect('/learner_mode')
+    get '/learner_mode/exit' => redirect('/')
     get '/getting_started' => 'home#getting_started', :as => :getting_started
     get '/about' => 'home#about'
     get '/ways-to-give' => 'home#ways_to_give'
