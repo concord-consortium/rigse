@@ -38,9 +38,11 @@ RSpec.describe 'Changes to a teacher learner account', type: :request do
     end
 
     it 'cannot change its password through /change_password/0' do
-      post '/passwords/update_users_password', params: password_params.merge(reset_code: '0')
+      # valid_password? is always false for a learner account, so check the stored password.
+      expect {
+        post '/passwords/update_users_password', params: password_params.merge(reset_code: '0')
+      }.not_to change { learner_user.reload.encrypted_password }
       refused_with("You don't have permission to change this password")
-      expect(learner_user.reload.valid_password?(new_password)).to be false
     end
 
     it 'cannot reset its password through users#reset_password' do
