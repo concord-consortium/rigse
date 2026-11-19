@@ -30,14 +30,17 @@ class UserPolicy < ApplicationPolicy
     admin_or_manager? || (project_admin? && record.portal_teacher)
   end
 
+  # Nobody can edit a teacher learner account, not even admins. Its name comes from its teacher,
+  # and nobody signs in to it with a login and password.
   def edit?
-    admin_or_manager? || (project_admin_for_user? && record_not_admin?)
+    return false if record_teacher_learner?
+    admin_or_project_admin_for_user?
   end
 
   def update?
+    return false if record_teacher_learner?
     # the preferences page uses the update action so the user needs to be able to update themselves.
-    # A teacher learner account cannot: its teacher could otherwise give it a login and password they know.
-    (its_me? && !record_teacher_learner?) || admin_or_manager? || (project_admin_for_user? && record_not_admin?)
+    its_me? || admin_or_project_admin_for_user?
   end
 
   def make_admin?
@@ -45,7 +48,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def show?
-    edit? || limited_edit?
+    admin_or_project_admin_for_user? || limited_edit?
   end
 
   def destroy?
@@ -97,6 +100,11 @@ class UserPolicy < ApplicationPolicy
   end
 
   private
+
+  def admin_or_project_admin_for_user?
+    admin_or_manager? || (project_admin_for_user? && record_not_admin?)
+  end
+
   def project_admin_for_user?
     return false unless record.respond_to? :cohorts
     return false unless user

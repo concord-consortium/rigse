@@ -338,13 +338,16 @@ describe UsersController do
       assert_select "a", "Change Password"
     end
 
-    it "shows an admin the learner account's settings as editable" do
+    it "shows an admin the learner account's settings read-only, with an admin message" do
       login_admin
       get :preferences, params: { id: learner_user.id }
 
+      expect(response).to have_http_status(:ok)
       expect(response.body).not_to include(message)
-      assert_select "fieldset#learner-mode-read-only[disabled]", false
-      assert_select "input[type=submit][value=Save]"
+      expect(response.body).to include("This is a teacher's learner account. Its settings can't be changed.")
+      assert_select "fieldset#learner-mode-read-only[disabled]"
+      assert_select "input[type=submit][value=Save]", false
+      assert_select "a", { text: "Change Password", count: 0 }
     end
   end
 

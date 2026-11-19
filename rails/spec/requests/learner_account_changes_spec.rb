@@ -89,4 +89,32 @@ RSpec.describe 'Changes to a teacher learner account', type: :request do
     }.not_to change(Password, :count)
     refused_with("You don't have permission")
   end
+
+  describe 'an admin' do
+    before(:each) { sign_in FactoryBot.generate(:admin_user) }
+
+    it 'cannot update it' do
+      put user_path(learner_user), params: { user: { first_name: 'Changed', login: 'known-login' } }
+      refused_with("You don't have permission")
+      learner_user.reload
+      expect(learner_user.first_name).not_to eq('Changed')
+      expect(learner_user.login).not_to eq('known-login')
+    end
+
+    it 'cannot open its edit page' do
+      get edit_user_path(learner_user)
+      refused_with("You don't have permission")
+    end
+
+    it 'can still view it' do
+      get user_path(learner_user)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'can still edit a normal student' do
+      student_user = FactoryBot.create(:full_portal_student).user
+      put user_path(student_user), params: { user: { first_name: 'Changed' } }
+      expect(student_user.reload.first_name).to eq('Changed')
+    end
+  end
 end

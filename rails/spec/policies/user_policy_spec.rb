@@ -275,13 +275,18 @@ describe UserPolicy do
       let(:active_user) { FactoryBot.generate(:admin_user) }
       it { is_expected.not_to permit(:reset_password)         }
       it { is_expected.to permit(:switch)                     }
-      it { is_expected.to permit(:update)                     }
+      it { is_expected.to permit(:show)                       }
+      it { is_expected.not_to permit(:edit)                   }
+      it { is_expected.not_to permit(:update)                 }
     end
 
     context "acted on by a manager" do
       let(:active_user) { FactoryBot.generate(:manager_user) }
       it { is_expected.not_to permit(:reset_password)         }
       it { is_expected.to permit(:switch)                     }
+      it { is_expected.to permit(:show)                       }
+      it { is_expected.not_to permit(:edit)                   }
+      it { is_expected.not_to permit(:update)                 }
     end
 
     context "acted on by a project admin for its class's teacher" do
@@ -291,6 +296,9 @@ describe UserPolicy do
       let(:active_user) { FactoryBot.create(:confirmed_user).tap { |u| u.add_role_for_project('admin', project) } }
       it { is_expected.not_to permit(:reset_password)         }
       it { is_expected.to permit(:switch)                     }
+      it { is_expected.to permit(:show)                       }
+      it { is_expected.not_to permit(:edit)                   }
+      it { is_expected.not_to permit(:update)                 }
     end
   end
 
