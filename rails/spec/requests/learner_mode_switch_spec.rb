@@ -31,7 +31,7 @@ RSpec.describe 'Learner mode after an admin switch', type: :request do
     expect(session[:original_user_id]).to eq(admin.id)
     expect(session[:recently_switched_from_users]).to eq([admin.id])
 
-    get switch_back_user_path(teacher_user)
+    post switch_back_user_path(teacher_user)
     expect(controller.current_user).to eq(admin)
   end
 
@@ -47,5 +47,16 @@ RSpec.describe 'Learner mode after an admin switch', type: :request do
     expect(controller.current_user).to eq(teacher_user)
     expect(session[:original_user_id]).to be_nil
     expect(session[:recently_switched_from_users]).to be_nil
+  end
+
+  it 'does not switch back to the admin on a GET' do
+    sign_in admin
+    put switch_user_path(teacher_user), params: { commit: 'Switch' }
+    expect(controller.current_user).to eq(teacher_user)
+
+    get switch_back_user_path(teacher_user)
+    expect(response).to redirect_to('/')
+    get preferences_user_path(teacher_user)
+    expect(controller.current_user).to eq(teacher_user)
   end
 end

@@ -187,7 +187,9 @@ RailsPortal::Application.routes.draw do
         put :suspend
         put :unsuspend
         put :switch
-        get :switch_back
+        post :switch_back
+        # A GET never switches. It only redirects, for example from a tab opened before this change.
+        get :switch_back, to: redirect('/')
         get :favorites
         get :preferences
         put :preferences

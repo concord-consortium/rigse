@@ -253,6 +253,8 @@ describe NavigationHelper, type: :helper  do
 
       it "shows only 'Switch back'" do
         expect(labels).to include("Switch back")
+        link = subject[:links].find { |l| l[:label] == "Switch back" }
+        expect(link).to include(url: switch_back_user_path(fake_visitor), httpMethod: "post")
         expect(labels).not_to include("Switch to learner mode", "Switch back to teacher")
       end
     end

@@ -315,6 +315,7 @@ module NavigationHelper
       label: nav_label('switch_back'),
       id: "switch",
       url: switch_back_user_path(current_visitor),
+      httpMethod: "post",
       sort: 2
     }
   end
