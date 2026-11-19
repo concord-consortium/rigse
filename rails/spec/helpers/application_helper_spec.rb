@@ -15,39 +15,6 @@ describe ApplicationHelper, type: :helper do
     end
   end
 
-  describe "login_line" do
-    before(:each) do
-      @anonymous_user = mock_model(User, :roles => ["guest"], :anonymous? => true, :name => "guest")
-      @admin_user = mock_model(User, :roles => ["admin"], :anonymous? => false, :name => "admin", :has_role? => true)
-    end
-
-    describe "as anonymous" do
-      before(:each) do
-        allow(self).to receive(:current_visitor).and_return(@anonymous_user)
-        @original_user = @anonymous_user
-      end
-      it "should display appropriate login messages" do
-        expect(login_line).to match(/login/i)
-        expect(login_line).not_to match(/welcome/i)
-        expect(login_line(:guest => "guest")).to match(/welcome\s*guest/i)
-        expect(login_line(:login => "Log In")).to match(/Log In/)
-        expect(login_line(:signup => "Sign Up")).to match(/Sign Up/)
-      end
-    end
-
-    describe "as admin" do
-      before(:each) do
-        allow(self).to receive(:current_visitor).and_return(@admin_user)
-        @original_user = @admin_user
-      end
-      it "should display appropriate login messages" do
-        expect(login_line).to match(/log\s*out/i)
-        expect(login_line).to match(/switch/i)
-        expect(login_line(:logout => "Log Out")).to match(/Log Out/)
-      end
-    end
-  end
-
   let(:component) { User.new }
   let(:model) { User.new }
 
@@ -475,15 +442,6 @@ describe ApplicationHelper, type: :helper do
   describe '#students_in_class' do
     it 'works' do
       result = helper.students_in_class([])
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#login_line' do
-    xit 'works' do
-      result = helper.login_line({})
 
       expect(result).not_to be_nil
     end
