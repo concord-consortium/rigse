@@ -75,7 +75,7 @@ describe("When I try to render a student roster", () => {
 
   describe("when the server refuses to remove a student", () => {
     // For example, a stale tab after the teacher switched to learner mode in another tab.
-    const serverMessage = "Not authorized. You may have switched to learner mode in another tab. Use 'Switch back to teacher' in the sidebar to see this page.";
+    const serverMessage = "Not authorized. You may have switched to learner mode in another tab, so this page is out of date. Reload the page to continue.";
 
     mockJquery({
       ajax: jest.fn().mockImplementation((options) => {

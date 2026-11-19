@@ -189,18 +189,26 @@ class ApplicationController < ActionController::Base
     "Use 'Switch back to teacher' in the sidebar to see this page."
   SWITCHED_TO_TEACHER_TEXT = "You may have switched back to teacher in another tab. " \
     "Use 'Switch to learner mode' in the sidebar to see this page."
+  # For a background request. The page that sent it still shows the old sidebar, so do not name
+  # a sidebar link. A reload shows the page for the current account, or the home page with the
+  # message above.
+  SWITCHED_TO_LEARNER_BACKGROUND_TEXT = "You may have switched to learner mode in another tab, " \
+    "so this page is out of date. Reload the page to continue."
+  SWITCHED_TO_TEACHER_BACKGROUND_TEXT = "You may have switched back to teacher in another tab, " \
+    "so this page is out of date. Reload the page to continue."
 
   # Extra text for an error that may come from switching to or from learner mode in another
   # tab. All tabs share one session, so a tab can show a page for the other account. Returns nil
   # unless the signed-in user is a teacher with a learner account, or a learner account.
   def learner_mode_tab_message
     return nil unless current_user
+    background = request.xhr? || request.format.json?
     if current_user.teacher_preview_student? && current_user.previewing_teacher_user
       # A learner account. Another tab may have switched to learner mode.
-      SWITCHED_TO_LEARNER_TEXT
+      background ? SWITCHED_TO_LEARNER_BACKGROUND_TEXT : SWITCHED_TO_LEARNER_TEXT
     elsif current_user.has_teacher_preview_student?
       # A teacher with a learner account. Another tab may have switched back to teacher.
-      SWITCHED_TO_TEACHER_TEXT
+      background ? SWITCHED_TO_TEACHER_BACKGROUND_TEXT : SWITCHED_TO_TEACHER_TEXT
     end
   end
 

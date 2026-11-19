@@ -1,14 +1,16 @@
 require 'spec_helper'
 
 # API refusals that a stale tab can hit after a switch add the learner mode text, but only for a
-# teacher preview student user or a teacher user with a linked teacher preview student.
+# teacher preview student user or a teacher user with a linked teacher preview student. These are
+# background requests, so they get the text that says to reload, not the one that names a sidebar
+# link.
 RSpec.describe 'Learner mode text in API refusals', type: :request do
   include Devise::Test::IntegrationHelpers
   # See learner_account_changes_spec.rb.
   before(:all) { Rails.application.reload_routes_unless_loaded }
 
-  let(:to_learner_text) { LearnerModeTextHelper::SWITCHED_TO_LEARNER_TEXT }
-  let(:to_teacher_text) { LearnerModeTextHelper::SWITCHED_TO_TEACHER_TEXT }
+  let(:to_learner_text) { LearnerModeTextHelper::SWITCHED_TO_LEARNER_BACKGROUND_TEXT }
+  let(:to_teacher_text) { LearnerModeTextHelper::SWITCHED_TO_TEACHER_BACKGROUND_TEXT }
 
   let(:teacher)       { FactoryBot.create(:portal_teacher) }
   let(:clazz)         { teacher.clazzes.first }

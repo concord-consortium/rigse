@@ -12,6 +12,8 @@ describe ApplicationController, type: :controller do
 
   let(:to_learner_text) { LearnerModeTextHelper::SWITCHED_TO_LEARNER_TEXT }
   let(:to_teacher_text) { LearnerModeTextHelper::SWITCHED_TO_TEACHER_TEXT }
+  let(:to_learner_background_text) { LearnerModeTextHelper::SWITCHED_TO_LEARNER_BACKGROUND_TEXT }
+  let(:to_teacher_background_text) { LearnerModeTextHelper::SWITCHED_TO_TEACHER_BACKGROUND_TEXT }
 
   let(:teacher)      { FactoryBot.create(:portal_teacher) }
   let(:learner_user) { teacher.find_or_create_teacher_preview_student! }
@@ -48,13 +50,13 @@ describe ApplicationController, type: :controller do
 
   describe 'on a background (xhr) request' do
     it 'adds the text for a learner account' do
-      expect(refusal_message(learner_user, xhr: true)).to include(to_learner_text)
+      expect(refusal_message(learner_user, xhr: true)).to include(to_learner_background_text)
       expect(response).to have_http_status(:forbidden)
     end
 
     it 'adds the text for a teacher with a learner account' do
       learner_user
-      expect(refusal_message(teacher.user, xhr: true)).to include(to_teacher_text)
+      expect(refusal_message(teacher.user, xhr: true)).to include(to_teacher_background_text)
     end
 
     it 'does not add the text for a teacher with no learner account' do

@@ -41,7 +41,7 @@ describe("When I try to render join class", () => {
 
   describe("when the server refuses the join", () => {
     // For example, a stale tab after the teacher switched back from learner mode in another tab.
-    const serverMessage = "You can't signup for a class while logged in as a teacher! You may have switched back to teacher in another tab. Use 'Switch to learner mode' in the sidebar to see this page.";
+    const serverMessage = "You can't signup for a class while logged in as a teacher! You may have switched back to teacher in another tab, so this page is out of date. Reload the page to continue.";
 
     mockJquery({
       ajax: jest.fn().mockImplementation((options) => {
