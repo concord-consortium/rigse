@@ -306,6 +306,27 @@ describe UserPolicy do
       it { is_expected.not_to permit(:limited_edit)           }
       it { is_expected.not_to permit(:limited_update)         }
     end
+
+    # "Switch back to teacher" would sign this project admin in as a teacher they can't switch to.
+    context "acted on by a project admin for another class's teacher, but not for its own teacher" do
+      let(:cohort)        { FactoryBot.create(:admin_cohort) }
+      let(:project)       { FactoryBot.create(:project, cohorts: [cohort]) }
+      let(:other_teacher) { FactoryBot.create(:portal_teacher, cohorts: [cohort]) }
+      let(:active_user)   { FactoryBot.create(:confirmed_user).tap { |u| u.add_role_for_project('admin', project) } }
+      before(:each) do
+        learner_user.portal_student.student_clazzes.create!(clazz: other_teacher.clazzes.first)
+      end
+      it { is_expected.to permit(:show)                       }
+      it { is_expected.not_to permit(:switch)                 }
+    end
+
+    context "acted on by a project admin for its teacher, when its teacher is an admin" do
+      let(:cohort)      { FactoryBot.create(:admin_cohort) }
+      let(:project)     { FactoryBot.create(:project, cohorts: [cohort]) }
+      let(:teacher)     { FactoryBot.create(:portal_teacher, cohorts: [cohort]).tap { |t| t.user.add_role('admin') } }
+      let(:active_user) { FactoryBot.create(:confirmed_user).tap { |u| u.add_role_for_project('admin', project) } }
+      it { is_expected.not_to permit(:switch)                 }
+    end
   end
 
   describe "a normal student acting on itself" do

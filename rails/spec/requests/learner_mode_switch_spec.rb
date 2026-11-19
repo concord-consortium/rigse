@@ -59,4 +59,23 @@ RSpec.describe 'Learner mode after an admin switch', type: :request do
     get preferences_user_path(teacher_user)
     expect(controller.current_user).to eq(teacher_user)
   end
+
+  # A learner account can join classes outside its teacher's cohorts. A project admin for one of
+  # those cohorts must not be able to switch to the learner account. If they could, "Switch back
+  # to teacher" would sign them in as a teacher they can't switch to.
+  it 'does not let a project admin switch to a learner account whose teacher is outside their cohorts' do
+    cohort = FactoryBot.create(:admin_cohort)
+    project = FactoryBot.create(:project, cohorts: [cohort])
+    other_teacher = FactoryBot.create(:portal_teacher, cohorts: [cohort])
+    learner_user.portal_student.student_clazzes.create!(clazz: other_teacher.clazzes.first)
+    project_admin = FactoryBot.create(:confirmed_user)
+    project_admin.add_role_for_project('admin', project)
+
+    sign_in project_admin
+    put switch_user_path(learner_user), params: { commit: 'Switch' }
+    expect(controller.current_user).to eq(project_admin)
+
+    post exit_learner_mode_path
+    expect(controller.current_user).to eq(project_admin)
+  end
 end

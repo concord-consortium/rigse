@@ -68,6 +68,11 @@ class UserPolicy < ApplicationPolicy
   end
 
   def switch?
+    # A project admin must not reach a teacher they can't switch to, for example a teacher outside
+    # their cohorts or a teacher who is an admin, through "Switch back to teacher". So only a user
+    # who can switch to the teacher can switch to the teacher's learner account.
+    return switch_to_linked_teacher? if record_teacher_learner?
+
     (project_admin_for_user? && record_not_admin?) ||  admin_or_manager? || switching_back?
   end
 
@@ -127,6 +132,15 @@ class UserPolicy < ApplicationPolicy
 
   def switching_back?
     record == original_user
+  end
+
+  def switch_to_linked_teacher?
+    teacher_user = record.linked_teacher_user
+    return false unless teacher_user
+
+    # This policy has the same user, original_user, request, and params readers as the context
+    # that Pundit gives, so it can be the context of the teacher's policy.
+    UserPolicy.new(self, teacher_user).switch?
   end
 
   def am_teacher?
