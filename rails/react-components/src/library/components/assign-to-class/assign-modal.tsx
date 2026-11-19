@@ -3,13 +3,29 @@ import ReactModal from "react-modal";
 
 import css from "./style.scss";
 
+// The text to show when an assign request fails: the server's message, or a general one if the
+// response has none (for example a server error page).
+export const requestErrorMessage = (err: any) => {
+  let message;
+  try {
+    message = JSON.parse(err?.responseText).message;
+  } catch (e) {
+    // noop
+  }
+  if (message) {
+    return "There was an error: " + message + (message.endsWith(".") ? "" : ".");
+  }
+  return "There was an error. Please try again.";
+};
+
 export default class AssignModal extends React.Component<any, any> {
   constructor (props: any) {
     super(props);
 
     this.state = {
       assignedClassIds: [],
-      classes: {
+      // openAssignToClassModal loads the class list before it opens this pop-up.
+      classes: props.classes || {
         assigned_classes: [],
         unassigned_classes: []
       },
@@ -23,23 +39,6 @@ export default class AssignModal extends React.Component<any, any> {
     this.copyToClipboard = this.copyToClipboard.bind(this);
     this.updateClassList = this.updateClassList.bind(this);
     this.closeConfirmModal = this.closeConfirmModal.bind(this);
-  }
-
-  componentDidMount () {
-    if (!Portal.currentUser.isAnonymous) {
-      const data = {
-        material_id: this.props.material_id,
-        material_type: this.props.material_type
-      };
-      jQuery.post(Portal.API_V1.MATERIAL_UNASSIGNED_CLASSES, data).done(response => {
-        this.setState({ classes: response });
-      }).fail(function (err) {
-        if (err?.responseText) {
-          const response = jQuery.parseJSON(err.responseText);
-          this.setState({ errorMessage: "There was an error: " + response.message + ". Please try again." });
-        }
-      });
-    }
   }
 
   copyToClipboard (e: any) {
@@ -76,12 +75,7 @@ export default class AssignModal extends React.Component<any, any> {
           .done(response => {
             this.setState({ resourceAssigned: true, showModal: true });
           })
-          .fail(function (err) {
-            if (err?.responseText) {
-              const response = jQuery.parseJSON(err.responseText);
-              this.setState({ errorMessage: "There was an error: " + response.message + ". Please try again." });
-            }
-          });
+          .fail(err => this.setState({ errorMessage: requestErrorMessage(err) }));
       }
     }
   }

@@ -334,6 +334,7 @@ class API::V1::MaterialsController < API::APIController
         status = 403 # unauthorized
       end
       message = "#{prefix} #{params[:material_type]} with id of #{params[:material_id]} in class #{portal_clazz.id}"
+      message = with_learner_mode_tab_message(message) unless allow
     else
       message = "Missing assign parameter"
       status = 400 # bad request
@@ -343,6 +344,10 @@ class API::V1::MaterialsController < API::APIController
   end
 
   def unassigned_clazzes
+    unless current_visitor.portal_teacher
+      message = with_learner_mode_tab_message('You must be logged in as a teacher to assign materials')
+      return render json: { message: message }, status: 403
+    end
 
     @material = [ExternalActivity.find(params[:material_id])]
 

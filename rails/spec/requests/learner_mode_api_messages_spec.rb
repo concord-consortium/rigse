@@ -49,6 +49,37 @@ RSpec.describe 'Learner mode text in API refusals', type: :request do
       expect(response).to have_http_status(:bad_request)
       expect(message).to eq("You are not authorized to edit bookmarks for this class. #{to_learner_text}")
     end
+
+    describe 'in the assign pop-up' do
+      let(:material) { FactoryBot.create(:external_activity) }
+
+      it 'gets a refusal with the text, not an error, when listing classes' do
+        post api_v1_materials_unassigned_clazzes_path,
+             params: { material_id: material.id, material_type: 'ExternalActivity' }
+        expect(response).to have_http_status(:forbidden)
+        expect(message).to eq("You must be logged in as a teacher to assign materials. #{to_learner_text}")
+      end
+
+      it 'gets the text when assigning' do
+        post api_v1_materials_assign_to_class_path,
+             params: { assign: 1, class_id: clazz.id, material_id: material.id, material_type: 'ExternalActivity' }
+        expect(response).to have_http_status(:forbidden)
+        expect(message).to eq(
+          "You are not allowed to assign/remove ExternalActivity with id of #{material.id} in class #{clazz.id}. #{to_learner_text}"
+        )
+      end
+    end
+  end
+
+  describe 'a teacher in the assign pop-up' do
+    it 'still gets the class list' do
+      sign_in teacher.user
+      material = FactoryBot.create(:external_activity)
+      post api_v1_materials_unassigned_clazzes_path,
+           params: { material_id: material.id, material_type: 'ExternalActivity' }
+      expect(response).to have_http_status(:ok)
+      expect(JSON.parse(response.body)['unassigned_classes'].map { |c| c['id'] }).to eq([clazz.id])
+    end
   end
 
   describe 'joining a class as a teacher' do
