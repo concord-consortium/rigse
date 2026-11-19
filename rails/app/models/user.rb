@@ -737,7 +737,9 @@ end
     portal_teacher.lock!
     learner_user = teacher_learner_user
     return unless learner_user
-    learner_user.update!(first_name: first_name, last_name: last_name)
+    # Copy only the fields this save changed. Rails saves only changed columns, so the other
+    # field on this copy of the user can be older than the saved one.
+    learner_user.update!(saved_changes.slice('first_name', 'last_name').transform_values(&:last))
   end
 
   def make_activation_code

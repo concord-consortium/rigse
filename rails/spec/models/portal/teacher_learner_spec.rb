@@ -82,6 +82,25 @@ describe Portal::Teacher, 'learner account' do
       expect(learner_user.first_name).to eq('Janet')
     end
 
+    it 'copies only the changed name field, so a stale copy of the teacher does not undo another change' do
+      learner_user = teacher.find_or_create_teacher_learner!
+      first_copy = User.find(teacher_user.id)
+      second_copy = User.find(teacher_user.id)
+
+      first_copy.update!(first_name: 'Janet')
+      second_copy.update!(last_name: 'Roe')
+
+      learner_user.reload
+      expect([learner_user.first_name, learner_user.last_name]).to eq(['Janet', 'Roe'])
+    end
+
+    it 'copies both names when both change together' do
+      learner_user = teacher.find_or_create_teacher_learner!
+      teacher_user.reload.update!(first_name: 'Janet', last_name: 'Roe')
+      learner_user.reload
+      expect([learner_user.first_name, learner_user.last_name]).to eq(['Janet', 'Roe'])
+    end
+
     it 'does nothing for a teacher with no learner account' do
       expect { teacher_user.update!(first_name: 'Janet') }.not_to change(User, :count)
     end
