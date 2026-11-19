@@ -106,6 +106,24 @@ RSpec.describe 'Changes to a teacher learner account', type: :request do
       refused_with("You don't have permission")
     end
 
+    it 'cannot open its limited edit page' do
+      get limited_edit_user_path(learner_user)
+      refused_with("You don't have permission")
+    end
+
+    it 'cannot give it project researcher roles through limited_update' do
+      project = FactoryBot.create(:project)
+      admin_user = FactoryBot.generate(:admin_user)
+      admin_user.add_role_for_project('admin', project)
+      sign_in admin_user
+
+      patch limited_update_user_path(learner_user), params: {
+        user: { has_projects_in_form: '1', researcher_project_ids: [project.id.to_s] }
+      }
+      refused_with("You don't have permission")
+      expect(learner_user.reload.researcher_for_projects).to be_empty
+    end
+
     it 'can still view it' do
       get user_path(learner_user)
       expect(response).to have_http_status(:ok)

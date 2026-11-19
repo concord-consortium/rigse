@@ -22,16 +22,18 @@ class UserPolicy < ApplicationPolicy
     manager_or_project_admin?
   end
 
+  # Nobody can edit a teacher learner account, not even admins. Its name comes from its teacher,
+  # and nobody signs in to it with a login and password. This includes its project roles.
   def limited_edit?
+    return false if record_teacher_learner?
     admin_or_manager? || (project_admin? && record.portal_teacher)
   end
 
   def limited_update?
+    return false if record_teacher_learner?
     admin_or_manager? || (project_admin? && record.portal_teacher)
   end
 
-  # Nobody can edit a teacher learner account, not even admins. Its name comes from its teacher,
-  # and nobody signs in to it with a login and password.
   def edit?
     return false if record_teacher_learner?
     admin_or_project_admin_for_user?

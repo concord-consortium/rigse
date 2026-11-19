@@ -278,6 +278,8 @@ describe UserPolicy do
       it { is_expected.to permit(:show)                       }
       it { is_expected.not_to permit(:edit)                   }
       it { is_expected.not_to permit(:update)                 }
+      it { is_expected.not_to permit(:limited_edit)           }
+      it { is_expected.not_to permit(:limited_update)         }
     end
 
     context "acted on by a manager" do
@@ -287,6 +289,8 @@ describe UserPolicy do
       it { is_expected.to permit(:show)                       }
       it { is_expected.not_to permit(:edit)                   }
       it { is_expected.not_to permit(:update)                 }
+      it { is_expected.not_to permit(:limited_edit)           }
+      it { is_expected.not_to permit(:limited_update)         }
     end
 
     context "acted on by a project admin for its class's teacher" do
@@ -299,6 +303,8 @@ describe UserPolicy do
       it { is_expected.to permit(:show)                       }
       it { is_expected.not_to permit(:edit)                   }
       it { is_expected.not_to permit(:update)                 }
+      it { is_expected.not_to permit(:limited_edit)           }
+      it { is_expected.not_to permit(:limited_update)         }
     end
   end
 
