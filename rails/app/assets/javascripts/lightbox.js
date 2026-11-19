@@ -128,6 +128,7 @@
         var newInnerHeight = Math.max(innerHeight, Math.min(neededHeight, maxInnerHeight));
         if (neededHeight > newInnerHeight) {
             messageEl.setStyle({
+                boxSizing: 'border-box',
                 maxHeight: (newInnerHeight - buttonsEl.offsetHeight) + 'px',
                 overflowY: 'auto'
             });
