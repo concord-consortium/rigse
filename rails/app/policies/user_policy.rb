@@ -22,21 +22,27 @@ class UserPolicy < ApplicationPolicy
     manager_or_project_admin?
   end
 
+  # Nobody can edit a teacher learner account, not even admins. Its name comes from its teacher,
+  # and nobody signs in to it with a login and password. This includes its project roles.
   def limited_edit?
+    return false if record_teacher_learner?
     admin_or_manager? || (project_admin? && record.portal_teacher)
   end
 
   def limited_update?
+    return false if record_teacher_learner?
     admin_or_manager? || (project_admin? && record.portal_teacher)
   end
 
   def edit?
-    admin_or_manager? || (project_admin_for_user? && record_not_admin?)
+    return false if record_teacher_learner?
+    admin_or_project_admin_for_user?
   end
 
   def update?
-    # the preferences page uses the update action so the user needs to be able to update themselves
-    its_me? || admin_or_manager? || (project_admin_for_user? && record_not_admin?)
+    return false if record_teacher_learner?
+    # the preferences page uses the update action so the user needs to be able to update themselves.
+    its_me? || admin_or_project_admin_for_user?
   end
 
   def make_admin?
@@ -44,7 +50,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def show?
-    edit? || limited_edit?
+    admin_or_project_admin_for_user? || limited_edit?
   end
 
   def destroy?
@@ -62,6 +68,11 @@ class UserPolicy < ApplicationPolicy
   end
 
   def switch?
+    # A project admin must not reach a teacher they can't switch to, for example a teacher outside
+    # their cohorts or a teacher who is an admin, through "Switch back to teacher". So only a user
+    # who can switch to the teacher can switch to the teacher's learner account.
+    return switch_to_linked_teacher? if record_teacher_learner?
+
     (project_admin_for_user? && record_not_admin?) ||  admin_or_manager? || switching_back?
   end
 
@@ -70,7 +81,17 @@ class UserPolicy < ApplicationPolicy
   end
 
   def reset_password?
+    # Nobody can reset a teacher learner account's password. Nobody signs in to it with one, and
+    # the roles that could reset it can switch to it instead.
+    return false if record_teacher_learner?
     (project_admin_for_user? && record_not_admin?) || admin_or_manager? || am_teacher? || its_me?
+  end
+
+  # Setting your own password at /change_password/0 (PasswordsController). Users are sent there
+  # when they must set a new password, and any signed-in user can open it. A teacher learner
+  # account cannot use it.
+  def change_own_password?
+    its_me? && !record_teacher_learner?
   end
 
   def add_teachers_to_cohorts?
@@ -86,6 +107,11 @@ class UserPolicy < ApplicationPolicy
   end
 
   private
+
+  def admin_or_project_admin_for_user?
+    admin_or_manager? || (project_admin_for_user? && record_not_admin?)
+  end
+
   def project_admin_for_user?
     return false unless record.respond_to? :cohorts
     return false unless user
@@ -100,8 +126,21 @@ class UserPolicy < ApplicationPolicy
     record == user
   end
 
+  def record_teacher_learner?
+    !!record&.teacher_learner?
+  end
+
   def switching_back?
     record == original_user
+  end
+
+  def switch_to_linked_teacher?
+    teacher_user = record.linked_teacher_user
+    return false unless teacher_user
+
+    # This policy has the same user, original_user, request, and params readers as the context
+    # that Pundit gives, so it can be the context of the teacher's policy.
+    UserPolicy.new(self, teacher_user).switch?
   end
 
   def am_teacher?

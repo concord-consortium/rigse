@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import Navigation from "../../../../src/library/components/navigation/index";
 
 window.Portal = {
@@ -290,5 +290,50 @@ describe("When I try to render the navigation", () => {
       assertLinkOrder(navItems, "Classes", "Resources");
       assertLinkOrder(navItems, "Activities", "Resources");
     });
+  });
+});
+
+describe("A link with httpMethod post", () => {
+  const spec = {
+    ...NAV_SPEC,
+    links: [
+      { type: "LINK", sort: 2.5, id: "learner_mode", label: "Switch to learner mode", url: "/learner_mode/enter", httpMethod: "post" },
+      { type: "LINK", sort: 5, id: "/settings", label: "Settings", url: "/users/3566/preferences" },
+    ],
+  };
+  let submitSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    document.head.innerHTML = '<meta name="csrf-token" content="test-token">';
+    // jsdom does not send forms, so record the call instead.
+    submitSpy = jest.spyOn(HTMLFormElement.prototype, "submit").mockImplementation(() => undefined);
+    render(<Navigation {...spec} />);
+  });
+
+  afterEach(() => {
+    submitSpy.mockRestore();
+    document.head.innerHTML = "";
+    document.querySelectorAll("body > form").forEach((form) => form.remove());
+  });
+
+  it("sends a POST request with the form security token when clicked", () => {
+    fireEvent.click(screen.getByText("Switch to learner mode"));
+
+    expect(submitSpy).toHaveBeenCalledTimes(1);
+    const form = submitSpy.mock.instances[0] as unknown as HTMLFormElement;
+    expect(form.method).toBe("post");
+    expect(form.getAttribute("action")).toBe("/learner_mode/enter");
+    const token = form.querySelector('input[name="authenticity_token"]') as HTMLInputElement;
+    expect(token.value).toBe("test-token");
+  });
+
+  it("has no real address, so opening it in a new tab does not send a GET", () => {
+    expect(screen.getByText("Switch to learner mode").closest("a")).toHaveAttribute("href", "#");
+  });
+
+  it("leaves other links as normal links", () => {
+    fireEvent.click(screen.getByText("Settings"));
+    expect(submitSpy).not.toHaveBeenCalled();
+    expect(screen.getByText("Settings").closest("a")).toHaveAttribute("href", "/users/3566/preferences");
   });
 });

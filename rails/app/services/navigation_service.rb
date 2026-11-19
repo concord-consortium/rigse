@@ -5,6 +5,8 @@ class NavItem
   attr_accessor :type
   attr_accessor :onClick
   attr_accessor :popOut
+  # "post" makes the sidebar send a POST request with the form security token. Otherwise a GET.
+  attr_accessor :httpMethod
   attr_accessor :sort
   attr_accessor :selected
   attr_accessor :iconName

@@ -8,6 +8,17 @@ class HomePolicy < ApplicationPolicy
     teacher?
   end
 
+  # The student home page. It needs a student record.
+  def my_classes?
+    student?
+  end
+
+  # The teacher "Getting Started" page. Anyone can see it except a teacher learner account,
+  # which would otherwise see teacher instructions after a switch in another tab.
+  def getting_started?
+    !user&.teacher_learner?
+  end
+
   def authoring?
     teacher? || manager_or_project_admin?
   end

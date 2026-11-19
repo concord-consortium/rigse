@@ -1,11 +1,12 @@
 class SecurityQuestionPolicy < ApplicationPolicy
 
+  # A teacher learner account has no security questions: nobody can sign in to it directly.
   def edit?
-    student?
+    student? && !user.teacher_learner?
   end
 
   def update?
-    student?
+    student? && !user.teacher_learner?
   end
 
 end

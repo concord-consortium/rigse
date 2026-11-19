@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_09_28_120000) do
+ActiveRecord::Schema[8.0].define(version: 2026_11_17_120000) do
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
     t.string "access_token"
@@ -1426,6 +1426,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_28_120000) do
     t.integer "grade_level_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.boolean "is_teacher_learner", default: false, null: false
     t.index ["user_id"], name: "index_portal_students_on_user_id"
   end
 
@@ -1468,6 +1469,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_28_120000) do
     t.datetime "updated_at", precision: nil, null: false
     t.integer "offerings_count", default: 0
     t.integer "left_pane_submenu_item"
+    t.integer "teacher_learner_id"
+    t.index ["teacher_learner_id"], name: "index_portal_teachers_on_teacher_learner_id", unique: true
     t.index ["user_id"], name: "index_portal_teachers_on_user_id"
   end
 

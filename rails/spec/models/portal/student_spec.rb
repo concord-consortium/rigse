@@ -43,6 +43,24 @@ describe Portal::Student do
     expect(Portal::Student.generate_user_login(student.first_name, student.last_name)).to eq(student.user.login + "1")
   end
 
+  it "skips a login owned by a disabled user" do
+    FactoryBot.create(:confirmed_user, login: "jdoe").update_column(:state, "disabled")
+    expect(Portal::Student.generate_user_login("Jane", "Doe")).to eq("jdoe1")
+  end
+
+  describe "generating a login from a long name" do
+    let(:long_last_name) { "a" * 45 }
+
+    it "cuts the login to the allowed length" do
+      expect(Portal::Student.generate_user_login("Jane", long_last_name)).to eq("j" + "a" * 39)
+    end
+
+    it "keeps the allowed length when a number is added" do
+      FactoryBot.create(:confirmed_user, login: "j" + "a" * 39)
+      expect(Portal::Student.generate_user_login("Jane", long_last_name)).to eq("j" + "a" * 38 + "1")
+    end
+  end
+
   describe "when a permission form is added to a student" do
     let(:project) { FactoryBot.create(:project) }
     let(:permission_form) { FactoryBot.create(:permission_form, project: project) }

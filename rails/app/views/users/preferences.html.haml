@@ -1,5 +1,14 @@
+-# A teacher learner account's Settings are read-only for everyone, including admins. The server
+-# also refuses the changes (UserPolicy, PasswordsController, SecurityQuestionPolicy).
+- read_only = @user.teacher_learner?
 %h1
   User Preferences
+- if read_only
+  %p.learner-mode-settings-message
+    - if @user == current_visitor
+      You can't change these settings in learner mode.
+    - else
+      This is a teacher's learner account. Its settings can't be changed.
 = form_for @user do |form|
   = hidden_field(:user, :redirect_user_edit_form, :value => 'home')
   .item
@@ -9,27 +18,35 @@
           %ul
             - @user.errors.map(&:full_message).each do |msg|
               %li= msg
-        = render :partial => 'form', :locals => { :f => form }
+        -# A disabled fieldset disables every field inside it.
+        %fieldset#learner-mode-read-only{ :disabled => read_only }
+          = render :partial => 'form', :locals => { :f => form }
 
-        - if @user.portal_student && current_settings.use_student_security_questions
+        - if @user.portal_student && current_settings.use_student_security_questions && !read_only
           %fieldset
             %legend Security Questions
             = link_to "Click here", edit_user_security_questions_path(@user)
             to change the security questions you use to reset your password if you forget it.
 
-      %ul.menu_h
-        %li
-          = submit_tag 'Save'
-        %li
-          = submit_tag 'Cancel', :class => 'button secondary'
-        %li
-          - if @user.is_oauth_user?
-            = submit_tag "Change Password", :class => "secondary", :type => "button", :onclick => "javascript:Portal.confirm({message: 'You are logged in as a #{@user.authentications[0].provider} user. You cannot change your password here.', noCancel: true})"
-          - else
-            = link_to "Change Password", reset_password_user_path(@user), :class => "button secondary"
+      - unless read_only
+        %ul.menu_h
+          %li
+            = submit_tag 'Save'
+          %li
+            = submit_tag 'Cancel', :class => 'button secondary'
+          %li
+            - if @user.is_oauth_user?
+              = submit_tag "Change Password", :class => "secondary", :type => "button", :onclick => "javascript:Portal.confirm({message: 'You are logged in as a #{@user.authentications[0].provider} user. You cannot change your password here.', noCancel: true})"
+            - else
+              = link_to "Change Password", reset_password_user_path(@user), :class => "button secondary"
 
 
 :sass
+  // Only a wrapper for disabling the fields. It should not look like a box.
+  #learner-mode-read-only
+    border: none
+    margin: 0
+    padding: 0
   #flash
     position: absolute
     top: 535px
