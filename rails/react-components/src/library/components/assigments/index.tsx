@@ -5,6 +5,7 @@ import sortByName from "../../helpers/sort-by-name";
 import OfferingsTable from "./offerings-table";
 import { arrayMove } from "@dnd-kit/sortable";
 import { appendOfferingApiQueryParams } from "../../url-params";
+import { alertAfterRender, withServerMessage } from "../../helpers/request-error-message";
 
 const addQueryParam = (url: any, param: any, value: any) => {
   const urlObj = new URL(url);
@@ -117,8 +118,9 @@ export default class Assignments extends React.Component<any, any> {
           offerings: offeringsListMapping(data.offerings)
         });
       },
-      error: () => {
+      error: (jqXHR) => {
         console.error(`GET ${classDataUrl} failed, can't render Assignment page`);
+        window.alert(withServerMessage("Loading the class failed, please try to reload page and try again.", jqXHR));
       }
     });
   }
@@ -139,15 +141,34 @@ export default class Assignments extends React.Component<any, any> {
       data: {
         position: newIndex
       },
-      error: () => {
-        window.alert("Reordering failed, please try to reload page and try again.");
+      error: (jqXHR) => {
         this.setState({ offerings });
+        alertAfterRender(withServerMessage("Reordering failed, please try to reload page and try again.", jqXHR));
       }
     });
   }
 
   onOfferingUpdate (offering: any, prop: any, value: any) {
+    // Change the page only after the server agrees, so a refused request leaves it as it was.
+    jQuery.ajax({
+      type: "PUT",
+      url: offering.apiUrl,
+      data: {
+        [prop]: value
+      },
+      success: () => this.applyOfferingUpdate(offering.id, prop, value),
+      error: (jqXHR) => {
+        window.alert(withServerMessage("Offering update failed, please try to reload page and try again.", jqXHR));
+      }
+    });
+  }
+
+  applyOfferingUpdate (offeringId: any, prop: any, value: any) {
     const { offerings } = this.state;
+    const offering = offerings.find((o: any) => o.id === offeringId);
+    if (!offering) {
+      return;
+    }
     const newOffering = { ...offering, [prop]: value };
 
     // when setting active or locked, we also set all students in the offering to that value
@@ -171,17 +192,6 @@ export default class Assignments extends React.Component<any, any> {
     const newOfferings = offerings.slice();
     newOfferings.splice(offerings.indexOf(offering), 1, newOffering);
     this.setState({ offerings: newOfferings });
-
-    jQuery.ajax({
-      type: "PUT",
-      url: offering.apiUrl,
-      data: {
-        [prop]: value
-      },
-      error: () => {
-        window.alert("Offering update failed, please try to reload page and try again.");
-      }
-    });
   }
 
   onSetStudentOfferingMetadata (studentId: any, offeringId: any, metadata: any) {
@@ -217,7 +227,14 @@ export default class Assignments extends React.Component<any, any> {
         data.locked = locked;
       }
       if (allSameActive || allSameLocked) {
-        jQuery.ajax({type: "PUT", url: newOffering.apiUrl, data});
+        jQuery.ajax({
+          type: "PUT",
+          url: newOffering.apiUrl,
+          data,
+          error: (jqXHR) => {
+            window.alert(withServerMessage("Offering update failed, please try to reload page and try again.", jqXHR));
+          }
+        });
       }
 
       newOffering.metadata = newStudents.map((s: any) => ({
@@ -247,8 +264,8 @@ export default class Assignments extends React.Component<any, any> {
           offeringDetails: { ...offeringDetails, [offering.id]: newData }
         });
       },
-      error: () => {
-        window.alert("Offering details loading failed, please try to reload page and try again.");
+      error: (jqXHR) => {
+        window.alert(withServerMessage("Offering details loading failed, please try to reload page and try again.", jqXHR));
       }
     });
   }
