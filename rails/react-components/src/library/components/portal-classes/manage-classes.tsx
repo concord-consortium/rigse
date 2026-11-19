@@ -37,18 +37,16 @@ export default class ManageClasses extends React.Component<any, any> {
   }
 
   handleActiveToggle (clazz: any) {
-    const toggle = () => {
-      clazz.is_archived = !clazz.is_archived;
-      // This is conceptually broken, but affraid to touch it while converting source to TypeScript.
-      // eslint-disable-next-line react/no-access-state-in-setstate
-      this.setState({ classes: this.state.classes });
-    };
-
-    toggle();
-    this.apiCall("activeToggle", { clazz, data: { is_archived: clazz.is_archived } })
+    // Change the class only after the server agrees, so a refused request leaves the list as it was.
+    const isArchived = !clazz.is_archived;
+    this.apiCall("activeToggle", { clazz, data: { is_archived: isArchived } })
+      .then(() => {
+        clazz.is_archived = isArchived;
+        // This is conceptually broken, but affraid to touch it while converting source to TypeScript.
+        // eslint-disable-next-line react/no-access-state-in-setstate
+        this.setState({ classes: this.state.classes });
+      })
       .catch(err => {
-        // retoggle back on error
-        toggle();
         this.showError(err, "Unable to toggle archived state of the class!");
       });
   }
@@ -64,8 +62,10 @@ export default class ManageClasses extends React.Component<any, any> {
     const ids = classes.map((c: any) => c.id);
     this.apiCall("sort", { data: { ids } })
       .catch(err => {
-        this.setState({ classes: arrayMove(classes, newIndex, oldIndex) });
-        this.showError(err, "Unable to save class sort order!");
+        // The alert stops the page from drawing, so show it after the old order is on screen.
+        this.setState({ classes: arrayMove(classes, newIndex, oldIndex) }, () => {
+          requestAnimationFrame(() => setTimeout(() => this.showError(err, "Unable to save class sort order!")));
+        });
       });
   }
 
@@ -90,7 +90,9 @@ export default class ManageClasses extends React.Component<any, any> {
       activeToggle: { url: `${classesBasePath}/${clazz.id}/set_is_archived`, type: "POST" }
     } as any)[action];
 
-    return Promise.resolve(
+    // Reject the promise instead of throwing in the jQuery callbacks. A throw there stops jQuery,
+    // so the promise never settles and the callers' error handlers never run.
+    return new Promise((resolve, reject) => {
       jQuery.ajax({
         url,
         data: JSON.stringify(data),
@@ -99,11 +101,12 @@ export default class ManageClasses extends React.Component<any, any> {
         contentType: "application/json",
         success: json => {
           if (!json.success) {
-            throw json;
+            reject(json);
           } else {
             if (onSuccess) {
               onSuccess(json.data);
             }
+            resolve(json.data);
           }
         },
         error: (jqXHR, textStatus, error) => {
@@ -112,10 +115,10 @@ export default class ManageClasses extends React.Component<any, any> {
           } catch (e) {
             // noop
           }
-          throw error;
+          reject(error);
         }
-      })
-    );
+      });
+    });
   }
 
   render () {
