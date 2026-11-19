@@ -1,6 +1,7 @@
 import React from "react";
 import css from "./style.scss";
 import Component from "../../helpers/component";
+import { withServerMessage } from "../../helpers/request-error-message";
 
 const Collaborator = Component({
 
@@ -42,8 +43,8 @@ const RunWithCollaborators = Component({
       success: (data) => {
         this.setState({ availableCollaborators: data });
       },
-      error () {
-        window.alert("Error loading available collaborators");
+      error: (jqXHR) => {
+        window.alert(withServerMessage("Error loading available collaborators", jqXHR));
       }
     });
   },
@@ -105,8 +106,9 @@ const RunWithCollaborators = Component({
           window.location.href = data.external_activity_url;
         });
       },
-      error () {
-        window.alert("Error creating collaboration");
+      error: (jqXHR) => {
+        this.setState({ runStarted: false });
+        window.alert(withServerMessage("Error creating collaboration", jqXHR));
       }
     });
   },
