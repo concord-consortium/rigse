@@ -1,6 +1,7 @@
 import React from "react";
 import { arrayMove } from "@dnd-kit/sortable";
 import SortableBookmarks from "./sortable-bookmarks";
+import { alertAfterRender, withMessage } from "../../helpers/request-error-message";
 
 export class EditBookmarks extends React.Component<any, any> {
   constructor (props: any) {
@@ -29,7 +30,7 @@ export class EditBookmarks extends React.Component<any, any> {
       this.sortBookmarks(bookmarks);
       this.setState({ bookmarks });
     } })
-      .catch(err => this.showError(err, "Unable to create link!"));
+      .catch(err => window.alert(withMessage("Unable to create link!", err?.message)));
   }
 
   handleUpdate (bookmark: any, fields: any) {
@@ -48,7 +49,7 @@ export class EditBookmarks extends React.Component<any, any> {
       .catch(err => {
         // reset the bookmark on error
         update(oldName, oldUrl);
-        this.showErrorAfterRender(err, "Unable to update link!");
+        alertAfterRender(withMessage("Unable to update link!", err?.message));
       });
   }
 
@@ -61,7 +62,7 @@ export class EditBookmarks extends React.Component<any, any> {
           bookmarks.splice(bookmarks.indexOf(bookmark), 1);
           this.setState({ bookmarks });
         })
-        .catch(err => this.showError(err, "Unable to delete link!"));
+        .catch(err => window.alert(withMessage("Unable to delete link!", err?.message)));
     }
   }
 
@@ -75,7 +76,7 @@ export class EditBookmarks extends React.Component<any, any> {
         // eslint-disable-next-line react/no-access-state-in-setstate
         this.setState({ bookmarks: this.state.bookmarks });
       })
-      .catch(err => this.showError(err, "Unable to toggle visibility of link!"));
+      .catch(err => window.alert(withMessage("Unable to toggle visibility of link!", err?.message)));
   }
 
   handleSortEnd ({
@@ -90,21 +91,8 @@ export class EditBookmarks extends React.Component<any, any> {
     this.apiCall("sort", { data: { ids } })
       .catch(err => {
         this.setState({ bookmarks: arrayMove(bookmarks, newIndex, oldIndex) });
-        this.showErrorAfterRender(err, "Unable to save link sort order!");
+        alertAfterRender(withMessage("Unable to save link sort order!", err?.message));
       });
-  }
-
-  showError (err: any, message: any) {
-    if (err.message) {
-      window.alert(`${message}\n${err.message}`);
-    } else {
-      window.alert(message);
-    }
-  }
-
-  // The alert stops the page from drawing, so show it after the undone change is on screen.
-  showErrorAfterRender (err: any, message: any) {
-    requestAnimationFrame(() => setTimeout(() => this.showError(err, message)));
   }
 
   apiCall (action: any, options: any) {

@@ -2,6 +2,7 @@ import React from "react";
 import { arrayMove } from "@dnd-kit/sortable";
 import SortableClasses from "./sortable-classes";
 import CopyDialog from "./copy-dialog";
+import { alertAfterRender, withMessage } from "../../helpers/request-error-message";
 
 import css from "./style.scss";
 
@@ -30,7 +31,7 @@ export default class ManageClasses extends React.Component<any, any> {
     this.setState({ saving: true }, () => {
       this.apiCall("copy", { clazz: this.state.copyClazz, data: values, onSuccess })
         .catch(err => {
-          this.showError(err, "Unable to copy the class!");
+          window.alert(withMessage("Unable to copy the class!", err?.message));
           this.setState({ saving: false });
         });
     });
@@ -47,7 +48,7 @@ export default class ManageClasses extends React.Component<any, any> {
         this.setState({ classes: this.state.classes });
       })
       .catch(err => {
-        this.showError(err, "Unable to toggle archived state of the class!");
+        window.alert(withMessage("Unable to toggle archived state of the class!", err?.message));
       });
   }
 
@@ -64,17 +65,9 @@ export default class ManageClasses extends React.Component<any, any> {
       .catch(err => {
         // The alert stops the page from drawing, so show it after the old order is on screen.
         this.setState({ classes: arrayMove(classes, newIndex, oldIndex) }, () => {
-          requestAnimationFrame(() => setTimeout(() => this.showError(err, "Unable to save class sort order!")));
+          alertAfterRender(withMessage("Unable to save class sort order!", err?.message));
         });
       });
-  }
-
-  showError (err: any, message: any) {
-    if (err.message) {
-      window.alert(`${message}\n${err.message}`);
-    } else {
-      window.alert(message);
-    }
   }
 
   apiCall (action: any, options: any) {
