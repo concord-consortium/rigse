@@ -1,4 +1,5 @@
 import React from "react";
+import { withServerMessage } from "../../helpers/request-error-message";
 
 export default class SMaterialIcon extends React.Component<any, any> {
   constructor (props: any) {
@@ -39,8 +40,8 @@ export default class SMaterialIcon extends React.Component<any, any> {
         material.is_favorite = !material.is_favorite;
         material.favorite_id = data.favorite_id;
       },
-      error: (jqXHR, textStatus, errorThrown) => {
-        console.error("ERROR", jqXHR.responseText, jqXHR);
+      error: (jqXHR) => {
+        window.alert(withServerMessage("Unable to update favorite.", jqXHR));
       }
     });
   }

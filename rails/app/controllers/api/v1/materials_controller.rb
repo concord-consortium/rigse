@@ -147,7 +147,8 @@ class API::V1::MaterialsController < API::APIController
     end
 
     if favorite.user != current_user
-      render json: {:message => "Cannot delete favorite not owned by current user."}, :status => 400
+      message = with_learner_mode_tab_message('Cannot delete favorite not owned by current user.')
+      render json: {:message => message}, :status => 400
       return
     end
 
@@ -175,6 +176,11 @@ class API::V1::MaterialsController < API::APIController
       render json: {:message => "Cannot add favorite for non-logged in user."},
                     :status => 400
       return
+    end
+
+    unless current_user.portal_teacher
+      message = with_learner_mode_tab_message('You must be logged in as a teacher to favorite material')
+      return render json: { message: message }, status: 403
     end
 
     favorite_id = -1

@@ -71,6 +71,35 @@ RSpec.describe 'Learner mode text in API refusals', type: :request do
         )
       end
     end
+
+    describe 'with favorites' do
+      let(:material) { FactoryBot.create(:external_activity) }
+
+      it 'gets a refusal with the text, and no favorite, when adding a favorite' do
+        expect {
+          post api_v1_materials_add_favorite_path, params: { id: material.id, material_type: 'external_activity' }
+        }.not_to change { Favorite.count }
+        expect(response).to have_http_status(:forbidden)
+        expect(message).to eq("You must be logged in as a teacher to favorite material. #{to_learner_text}")
+      end
+
+      it "gets the text when removing the teacher's favorite" do
+        favorite = teacher.user.favorites.create!(favoritable: material)
+        post api_v1_materials_remove_favorite_path, params: { favorite_id: favorite.id }
+        expect(response).to have_http_status(:bad_request)
+        expect(message).to eq("Cannot delete favorite not owned by current user. #{to_learner_text}")
+      end
+    end
+  end
+
+  describe 'a teacher with favorites' do
+    it 'can still add a favorite' do
+      sign_in teacher.user
+      material = FactoryBot.create(:external_activity)
+      post api_v1_materials_add_favorite_path, params: { id: material.id, material_type: 'external_activity' }
+      expect(response).to have_http_status(:ok)
+      expect(teacher.user.favorites.map(&:favoritable)).to eq([material])
+    end
   end
 
   describe 'a teacher in the assign pop-up' do
