@@ -317,7 +317,7 @@ describe("A link with httpMethod post", () => {
   });
 
   it("sends a POST request with the form security token when clicked", () => {
-    fireEvent.click(screen.getByText("Switch to learner mode"));
+    fireEvent.click(screen.getByRole("button", { name: "Switch to learner mode" }));
 
     expect(submitSpy).toHaveBeenCalledTimes(1);
     const form = submitSpy.mock.instances[0] as unknown as HTMLFormElement;
@@ -327,13 +327,15 @@ describe("A link with httpMethod post", () => {
     expect(token.value).toBe("test-token");
   });
 
-  it("has no real address, so opening it in a new tab does not send a GET", () => {
-    expect(screen.getByText("Switch to learner mode").closest("a")).toHaveAttribute("href", "#");
+  it("is a button, not a link, so it does not offer to open in a new tab", () => {
+    expect(screen.getByRole("button", { name: "Switch to learner mode" })).toHaveAttribute("type", "button");
+    expect(screen.queryByRole("link", { name: "Switch to learner mode" })).not.toBeInTheDocument();
   });
 
   it("leaves other links as normal links", () => {
     fireEvent.click(screen.getByText("Settings"));
     expect(submitSpy).not.toHaveBeenCalled();
     expect(screen.getByText("Settings").closest("a")).toHaveAttribute("href", "/users/3566/preferences");
+    expect(screen.queryByRole("button", { name: "Settings" })).not.toBeInTheDocument();
   });
 });
