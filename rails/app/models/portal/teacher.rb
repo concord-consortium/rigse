@@ -47,8 +47,7 @@ class Portal::Teacher < ApplicationRecord
   after_create :add_to_default_cohort
   # Deleting a teacher deletes their learner account. User#destroy reaches this through
   # User's `has_one :portal_teacher, dependent: :destroy`.
-  # `lock!` waits for find_or_create_teacher_learner! and reloads, so the link is fresh.
-  before_destroy :lock!
+  before_destroy :find_teacher_learner_user_to_destroy
   after_destroy :destroy_teacher_learner_user
 
   # Returns the User of this teacher's learner account (used for learner mode),
@@ -228,8 +227,14 @@ class Portal::Teacher < ApplicationRecord
     learner_user
   end
 
+  # Lock a fresh copy of this row, because `lock!` raises on a record with unsaved changes. The
+  # lock waits for find_or_create_teacher_learner!, so the link read here is fresh.
+  def find_teacher_learner_user_to_destroy
+    @teacher_learner_user_to_destroy = Portal::Teacher.lock.find(id).teacher_learner&.user
+  end
+
   def destroy_teacher_learner_user
-    teacher_learner&.user&.destroy
+    @teacher_learner_user_to_destroy&.destroy
   end
 
 end

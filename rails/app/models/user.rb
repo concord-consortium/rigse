@@ -732,10 +732,11 @@ end
   def copy_name_to_teacher_learner
     return unless portal_teacher
     # Lock the same teacher row as Portal::Teacher#find_or_create_teacher_learner!, so a learner
-    # account being created at the same time gets the new name. `lock!` also reloads, so the
-    # link check below is fresh.
-    portal_teacher.lock!
-    learner_user = teacher_learner_user
+    # account being created at the same time gets the new name. Lock a fresh copy of the row,
+    # because `lock!` raises on a record with unsaved changes. The fresh copy also has the
+    # current link.
+    locked_teacher = Portal::Teacher.lock.find(portal_teacher.id)
+    learner_user = locked_teacher.teacher_learner&.user
     return unless learner_user
     # Copy only the fields this save changed. Rails saves only changed columns, so the other
     # field on this copy of the user can be older than the saved one.

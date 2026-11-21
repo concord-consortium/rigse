@@ -105,16 +105,31 @@ describe Portal::Teacher, 'learner account' do
       expect { teacher_user.update!(first_name: 'Janet') }.not_to change(User, :count)
     end
 
+    # `lock!` raises on a record with unsaved changes, so the rename must not lock this copy.
+    it 'works when the teacher record has an unsaved change' do
+      learner_user = teacher.find_or_create_teacher_learner!
+      teacher_user.reload
+      teacher_user.portal_teacher.left_pane_submenu_item = 1
+
+      teacher_user.update!(first_name: 'Janet')
+
+      expect(learner_user.reload.first_name).to eq('Janet')
+    end
+
     # See the note on the creation lock test above.
     it 'locks the teacher row before it checks the link' do
-      teacher.find_or_create_teacher_learner!
+      student_id = teacher.find_or_create_teacher_learner!.portal_student.id
       teacher_user.reload
-      portal_teacher = teacher_user.portal_teacher
-      calls = []
-      allow(portal_teacher).to receive(:lock!).and_wrap_original { |m, *args| calls << :lock; m.call(*args) }
-      allow(portal_teacher).to receive(:teacher_learner).and_wrap_original { |m, *args| calls << :check; m.call(*args) }
-      teacher_user.update!(first_name: 'Janet')
-      expect(calls.first(2)).to eq([:lock, :check])
+      queries = []
+      record = ->(*, payload) { queries << payload[:sql] }
+      ActiveSupport::Notifications.subscribed(record, 'sql.active_record') do
+        teacher_user.update!(first_name: 'Janet')
+      end
+      lock_index = queries.index { |sql| sql.match?(/FROM `portal_teachers`.*FOR UPDATE/) }
+      check_index = queries.index { |sql| sql.match?(/FROM `portal_students` WHERE `portal_students`.`id` = #{student_id}/) }
+      expect(lock_index).not_to be_nil
+      expect(check_index).not_to be_nil
+      expect(lock_index).to be < check_index
     end
   end
 
@@ -150,6 +165,15 @@ describe Portal::Teacher, 'learner account' do
 
       expect(User.where(id: learner_user.id)).to be_empty
       expect(Portal::Student.where(id: student_id)).to be_empty
+    end
+
+    it 'works when the teacher record has an unsaved change' do
+      learner_user = teacher.find_or_create_teacher_learner!
+      teacher.left_pane_submenu_item = 1
+
+      teacher.destroy
+
+      expect(User.where(id: learner_user.id)).to be_empty
     end
 
     it 'works for a teacher with no learner account' do
