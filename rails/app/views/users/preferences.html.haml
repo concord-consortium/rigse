@@ -3,10 +3,10 @@
 - read_only = @user.teacher_learner?
 %h1
   User Preferences
-- if read_only
+- if @user.teacher_learner?
   %p.learner-mode-settings-message
     - if @user == current_visitor
-      You can't change these settings in learner mode.
+      You can't change these settings in learner mode. Your students can change these settings in their own accounts.
     - else
       This is a teacher's learner account. Its settings can't be changed.
 = form_for @user do |form|
