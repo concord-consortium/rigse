@@ -35,6 +35,17 @@ RSpec.describe 'Learner mode after an admin switch', type: :request do
     expect(controller.current_user).to eq(admin)
   end
 
+  # In learner mode, the sidebar shows both "Switch back" and "Switch back to teacher".
+  it 'switches back to the admin straight from learner mode' do
+    sign_in admin
+    put switch_user_path(teacher_user), params: { commit: 'Switch' }
+    post enter_learner_mode_path
+    expect(controller.current_user).to eq(learner_user)
+
+    post switch_back_user_path(learner_user)
+    expect(controller.current_user).to eq(admin)
+  end
+
   it 'does not set the admin switch values for a teacher who was not switched into' do
     sign_in teacher_user
 
