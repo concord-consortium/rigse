@@ -75,6 +75,11 @@ RSpec.describe HomePolicy do
       learner_user = teacher.find_or_create_teacher_learner!
       expect(described_class.new(learner_user, nil).getting_started?).to be false
     end
+
+    it 'refuses a student' do
+      student = FactoryBot.create(:full_portal_student)
+      expect(described_class.new(student.user, nil).getting_started?).to be false
+    end
   end
 
 end

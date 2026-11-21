@@ -13,10 +13,10 @@ class HomePolicy < ApplicationPolicy
     student?
   end
 
-  # The teacher "Getting Started" page. Anyone can see it except a teacher learner account,
-  # which would otherwise see teacher instructions after a switch in another tab.
+  # The teacher "Getting Started" page. It shows only teacher content, so students, including a
+  # teacher learner account, can't see it.
   def getting_started?
-    !user&.teacher_learner?
+    !student?
   end
 
   def authoring?
