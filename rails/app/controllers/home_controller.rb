@@ -341,12 +341,12 @@ class HomeController < ApplicationController
 
   protected
 
-  # A learner account on a teacher home page, or a teacher with a learner account on the student
-  # home page.
+  # A teacher preview student on a teacher home page, or a teacher with a teacher preview student
+  # on the student home page.
   def other_learner_mode_home_page?
     return false unless current_user
-    return %w[getting_started recent_activity].include?(action_name) if current_user.teacher_learner?
-    current_user.has_teacher_learner? && action_name == 'my_classes'
+    return %w[getting_started recent_activity].include?(action_name) if current_user.teacher_preview_student?
+    current_user.has_teacher_preview_student? && action_name == 'my_classes'
   end
 
   def load_featured_materials
