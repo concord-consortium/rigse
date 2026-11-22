@@ -144,8 +144,8 @@ class UsersController < ApplicationController
     redirect_to home_path
   end
 
-  # GET users/<id>/switch_back
-  # Doesn't require posting hidden form fields.
+  # POST users/<id>/switch_back
+  # POST, so the form security token protects it. The sidebar sends it as a form POST.
   def switch_back
     original_user_id = session[:original_user_id]
     if original_user_id

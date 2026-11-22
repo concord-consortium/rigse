@@ -888,23 +888,20 @@ protected
     end
   end
 
-  # TODO: auto-generated
-  describe '.login_exists?' do
-    it 'login_exists?' do
-      login = 'login'
-      result = described_class.login_exists?(login)
-
-      expect(result).not_to be_nil
+  describe '.login_exists? and .login_does_not_exist?' do
+    it 'finds an active user and no unused login' do
+      user = FactoryBot.create(:confirmed_user)
+      expect(described_class.login_exists?(user.login)).to be true
+      expect(described_class.login_does_not_exist?(user.login)).to be false
+      expect(described_class.login_exists?('unused-login')).to be false
+      expect(described_class.login_does_not_exist?('unused-login')).to be true
     end
-  end
 
-  # TODO: auto-generated
-  describe '.login_does_not_exist?' do
-    it 'login_does_not_exist?' do
-      login = double('login')
-      result = described_class.login_does_not_exist?(login)
-
-      expect(result).not_to be_nil
+    it 'counts a disabled user\'s login as used' do
+      user = FactoryBot.create(:confirmed_user)
+      user.update_column(:state, 'disabled')
+      expect(described_class.login_exists?(user.login)).to be true
+      expect(described_class.login_does_not_exist?(user.login)).to be false
     end
   end
 
@@ -1587,6 +1584,82 @@ protected
       result = user.projects
 
       expect(result).not_to be_nil
+    end
+  end
+
+  describe 'teacher preview student helpers' do
+    let(:teacher) { FactoryBot.create(:portal_teacher) }
+    let(:normal_student) { FactoryBot.create(:full_portal_student) }
+
+    context 'for a teacher with no learner account' do
+      it 'returns no learner account and is not a learner account' do
+        expect(teacher.user.teacher_preview_student?).to be false
+        expect(teacher.user.teacher_preview_student_user).to be_nil
+        expect(teacher.user.has_teacher_preview_student?).to be false
+        expect(teacher.user.previewing_teacher_user).to be_nil
+      end
+    end
+
+    context 'for a teacher with a learner account, and that learner account' do
+      let(:learner) { FactoryBot.create(:full_portal_student, is_teacher_preview_student: true) }
+
+      before do
+        teacher.update!(teacher_preview_student: learner)
+      end
+
+      it 'links the teacher to the learner account' do
+        expect(teacher.user.teacher_preview_student?).to be false
+        expect(teacher.user.teacher_preview_student_user).to eq(learner.user)
+        expect(teacher.user.has_teacher_preview_student?).to be true
+        expect(teacher.user.previewing_teacher_user).to be_nil
+      end
+
+      it 'links the learner account to the teacher' do
+        learner_user = User.find(learner.user_id)
+        expect(learner_user.teacher_preview_student?).to be true
+        expect(learner_user.previewing_teacher_user).to eq(teacher.user)
+        expect(learner_user.teacher_preview_student_user).to be_nil
+        expect(learner_user.has_teacher_preview_student?).to be false
+      end
+    end
+
+    context 'for a normal student' do
+      it 'is not a learner account and has no links' do
+        expect(normal_student.user.teacher_preview_student?).to be false
+        expect(normal_student.user.teacher_preview_student_user).to be_nil
+        expect(normal_student.user.has_teacher_preview_student?).to be false
+        expect(normal_student.user.previewing_teacher_user).to be_nil
+      end
+    end
+
+    context 'for a user with no teacher or student record' do
+      it 'is not a learner account and has no links' do
+        user = FactoryBot.create(:confirmed_user)
+        expect(user.teacher_preview_student?).to be false
+        expect(user.teacher_preview_student_user).to be_nil
+        expect(user.has_teacher_preview_student?).to be false
+        expect(user.previewing_teacher_user).to be_nil
+      end
+    end
+  end
+
+  describe '#display_name' do
+    let(:teacher) { FactoryBot.create(:portal_teacher, user: FactoryBot.create(:confirmed_user, first_name: 'Jane', last_name: 'Doe')) }
+
+    it 'is the name for a teacher' do
+      expect(teacher.user.display_name).to eq('Jane Doe')
+    end
+
+    it 'adds (Learner) for a learner account, without changing the stored name' do
+      learner_user = teacher.find_or_create_teacher_preview_student!
+      expect(learner_user.display_name).to eq('Jane Doe (Learner)')
+      expect(learner_user.name).to eq('Jane Doe')
+      expect(learner_user.reload.last_name).to eq('Doe')
+    end
+
+    it 'is the name for a normal student' do
+      student_user = FactoryBot.create(:full_portal_student).user
+      expect(student_user.display_name).to eq(student_user.name)
     end
   end
 

@@ -304,6 +304,53 @@ describe UsersController do
     end
   end
 
+  describe "GET preferences for a learner account" do
+    let(:teacher)      { FactoryBot.create(:portal_teacher) }
+    let(:learner_user) { teacher.find_or_create_teacher_preview_student! }
+    let(:message)      { "You can't change these settings in learner mode. Your students can change these settings in their own accounts." }
+
+    before(:each) do
+      generate_default_settings_with_mocks
+    end
+
+    it "shows the learner account its own settings read-only, with a message and no buttons" do
+      sign_in learner_user
+      get :preferences, params: { id: learner_user.id }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(message)
+      assert_select "fieldset#learner-mode-read-only[disabled]" do
+        assert_select "input#user_first_name"
+        assert_select "input#user_last_name"
+      end
+      assert_select "input[type=submit][value=Save]", false
+      assert_select "input[value='Change Password']", false
+      assert_select "a", { text: "Change Password", count: 0 }
+    end
+
+    it "shows a teacher their own settings as before" do
+      sign_in teacher.user
+      get :preferences, params: { id: teacher.user.id }
+
+      expect(response.body).not_to include(message)
+      assert_select "fieldset#learner-mode-read-only[disabled]", false
+      assert_select "input[type=submit][value=Save]"
+      assert_select "a", "Change Password"
+    end
+
+    it "shows an admin the learner account's settings read-only, with an admin message" do
+      login_admin
+      get :preferences, params: { id: learner_user.id }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).not_to include(message)
+      expect(response.body).to include("This is a teacher's learner account. Its settings can't be changed.")
+      assert_select "fieldset#learner-mode-read-only[disabled]"
+      assert_select "input[type=submit][value=Save]", false
+      assert_select "a", { text: "Change Password", count: 0 }
+    end
+  end
+
   def create_user(options = {})
     post :create, params: { :user => { :login => 'quire', :email => 'quire@example.com',
       :password => 'quire69', :password_confirmation => 'quire69' }.merge(options) }

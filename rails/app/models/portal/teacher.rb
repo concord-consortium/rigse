@@ -8,6 +8,8 @@ class Portal::Teacher < ApplicationRecord
   acts_as_taggable_on :subject_areas
 
   belongs_to :user, :class_name => "User", :foreign_key => "user_id", :inverse_of => :portal_teacher
+  # The teacher's learner account, used for learner mode. Nil until first use.
+  belongs_to :teacher_preview_student, :class_name => "Portal::Student", :optional => true, :inverse_of => :previewing_teacher
 
   has_many :grade_levels, :as => :has_grade_levels, :class_name => "Portal::GradeLevel"
   has_many :grades, :through => :grade_levels, :class_name => "Portal::Grade"
@@ -43,6 +45,27 @@ class Portal::Teacher < ApplicationRecord
   validates_presence_of :user,  :message => "user association not specified"
 
   after_create :add_to_default_cohort
+  # Deleting a teacher deletes their learner account. User#destroy reaches this through
+  # User's `has_one :portal_teacher, dependent: :destroy`.
+  before_destroy :find_teacher_preview_student_user_to_destroy
+  after_destroy :destroy_teacher_preview_student_user
+
+  # Returns the User of this teacher's learner account (used for learner mode),
+  # creating it on first use. Raises if the account cannot be created; nothing is
+  # saved in that case.
+  def find_or_create_teacher_preview_student!
+    transaction do
+      # Lock this teacher row before checking the link. Without the lock, two requests at
+      # the same time (for example a double click) could both see no link and each
+      # create a learner account. `lock!` also reloads, so the link check below is fresh.
+      lock!
+      if teacher_preview_student
+        teacher_preview_student.user
+      else
+        create_teacher_preview_student_user!
+      end
+    end
+  end
 
   # Added to force Teachers to belong to at least one school, virtual or otherwise.
   # There should be no Teachers without schools, but if there are any that predate this change,
@@ -174,6 +197,44 @@ class Portal::Teacher < ApplicationRecord
     if default_cohort
       self.cohorts << default_cohort
     end
+  end
+
+  # Called only by find_or_create_teacher_preview_student!, inside its transaction, with this row
+  # locked. Follows API::V1::StudentsController#register. There is no retry if the generated login
+  # is taken at the same moment: that is very rare, and the save then fails and rolls back.
+  def create_teacher_preview_student_user!
+    password = SecureRandom.hex(32)
+    learner_user = User.new(
+      first_name: user.first_name,
+      last_name: user.last_name,
+      login: Portal::Student.generate_user_login(user.first_name, user.last_name),
+      email: Portal::Student.generate_user_email,
+      # Nobody is told this password, so nobody can sign in to this account directly.
+      password: password,
+      password_confirmation: password,
+      require_password_reset: false,
+      asked_age: user.asked_age,
+      have_consent: user.have_consent,
+      of_consenting_age: user.of_consenting_age
+    )
+    learner_user.skip_notifications = true
+    learner_user.save!
+    # Devise does not sign in an unconfirmed user.
+    raise ActiveRecord::RecordNotSaved.new("Could not confirm the learner account", learner_user) unless learner_user.confirm
+
+    student = Portal::Student.create!(user: learner_user, is_teacher_preview_student: true)
+    update!(teacher_preview_student: student)
+    learner_user
+  end
+
+  # Lock a fresh copy of this row, because `lock!` raises on a record with unsaved changes. The
+  # lock waits for find_or_create_teacher_preview_student!, so the link read here is fresh.
+  def find_teacher_preview_student_user_to_destroy
+    @teacher_preview_student_user_to_destroy = Portal::Teacher.lock.find(id).teacher_preview_student&.user
+  end
+
+  def destroy_teacher_preview_student_user
+    @teacher_preview_student_user_to_destroy&.destroy
   end
 
 end

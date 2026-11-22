@@ -7,6 +7,12 @@ class HomeController < ApplicationController
     super({resource_type: 'page'})
   end
 
+  # Without this, the error message uses the action name as a verb, for example
+  # "You don't have permission to my classes this page".
+  def humanized_action(map={})
+    super({my_classes: 'view', recent_activity: 'view', getting_started: 'view'}.merge(map))
+  end
+
   public
 
   def index
@@ -28,6 +34,7 @@ class HomeController < ApplicationController
 
 
   def getting_started
+    authorize :home, :getting_started?
     @hide_signup_link = true
     notices_hash = Admin::SiteNotice.get_notices_for_user(current_visitor)
     @notices = notices_hash[:notices]
@@ -36,6 +43,7 @@ class HomeController < ApplicationController
   end
 
   def my_classes
+    authorize :home, :my_classes?
     @portal_student = current_visitor.portal_student
     @hide_signup_link = true
     render :my_classes

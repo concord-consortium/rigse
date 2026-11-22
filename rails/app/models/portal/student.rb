@@ -5,6 +5,11 @@ class Portal::Student < ApplicationRecord
 
   belongs_to :user, :class_name => "User", :foreign_key => "user_id", :inverse_of => :portal_student
   belongs_to :grade_level, :class_name => "Portal::GradeLevel", :foreign_key => "grade_level_id"
+  # For a teacher's learner account (is_teacher_preview_student), the teacher it belongs to.
+  # If the learner account is deleted on its own (for example by an admin), clear the
+  # teacher's link, so the next use of learner mode creates a new account.
+  has_one :previewing_teacher, :class_name => "Portal::Teacher", :foreign_key => "teacher_preview_student_id",
+    :inverse_of => :teacher_preview_student, :dependent => :nullify
 
   # because of has many polymorphs, we don't need the following relationships defined
   # TODO: Schools must be queried through clazzes.
@@ -49,7 +54,8 @@ class Portal::Student < ApplicationRecord
 
     suggested_login =   "#{first_name.downcase.gsub(/[^\p{L}\d]/,'')[0..0]}" +
                         "#{last_name.downcase.gsub(/[^\p{L}\d]/,'')}"
-
+    # Names can be longer than a login is allowed to be.
+    suggested_login = suggested_login[0, User::MAX_LOGIN_LENGTH]
 
     counter = 0
     generated_login = suggested_login
@@ -60,7 +66,8 @@ class Portal::Student < ApplicationRecord
     ApplicationRecord.uncached do
       while (User.login_exists? generated_login)
         counter = counter + 1
-        generated_login = "#{suggested_login}#{counter}"
+        suffix = counter.to_s
+        generated_login = "#{suggested_login[0, User::MAX_LOGIN_LENGTH - suffix.length]}#{suffix}"
       end
     end
 

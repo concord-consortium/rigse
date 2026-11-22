@@ -112,7 +112,7 @@ class API::APIController < ApplicationController
   def pundit_user_not_authorized(exception)
     render status: 403, json: {
       success: false,
-      message: 'Not authorized'
+      message: with_learner_mode_tab_message('Not authorized')
     }
   end
 

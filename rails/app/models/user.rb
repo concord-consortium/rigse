@@ -74,6 +74,10 @@ class User < ApplicationRecord
 
   before_validation :strip_spaces
 
+  # This must stay before `after_update :set_passive_users_as_pending`. That callback calls
+  # `reload`, which clears the record of which fields changed, so a later callback would never
+  # see the name change.
+  after_update :copy_name_to_teacher_preview_student, if: -> { saved_change_to_first_name? || saved_change_to_last_name? }
   after_update :set_passive_users_as_pending
   after_create :set_passive_users_as_pending
 
@@ -94,6 +98,8 @@ class User < ApplicationRecord
   end
 
   # Validations
+
+  MAX_LOGIN_LENGTH = 40
 
   @@login_regex     = /\A[\p{L}\d][\p{L}\d\.\-\+_@]+\z/ # ASCII and unicode
   bad_login_message = "use only letters, numbers, and +.-_@ please.".freeze
@@ -131,7 +137,7 @@ class User < ApplicationRecord
 
 
   validates_presence_of     :login
-  validates_length_of       :login,    :within => 1..40
+  validates_length_of       :login,    :within => 1..MAX_LOGIN_LENGTH
   validates_uniqueness_of   :login, :case_sensitive => false
   validates_format_of       :login,    :with => @@login_regex, :message => bad_login_message
 
@@ -170,12 +176,13 @@ class User < ApplicationRecord
       @@searchable_attributes
     end
 
+    # Disabled users still own their logins, so they are included here.
     def login_exists?(login)
-      User.where("`login` = '#{login}'").count >= 1
+      User.unscoped.where(login: login).exists?
     end
 
     def login_does_not_exist?(login)
-      User.where("`login` = '#{login}'").count == 0
+      !login_exists?(login)
     end
 
     def suggest_login(first,last)
@@ -294,8 +301,14 @@ class User < ApplicationRecord
     return access_grants.create!(access_token_expires_at: time.from_now + 1.second).access_token
   end
 
+  # Devise checks this on every request. A teacher preview student account also stops working when
+  # its teacher is suspended or deleted, so the teacher cannot keep using it.
   def active_for_authentication?
-    super && user_active?
+    super && user_active? && !teacher_preview_student_of_inactive_teacher?
+  end
+
+  def teacher_preview_student_of_inactive_teacher?
+    teacher_preview_student? && !previewing_teacher_user&.user_active?
   end
 
   def finish_enews_subscription
@@ -316,7 +329,7 @@ class User < ApplicationRecord
   end
 
   def inactive_message
-    user_active? ? super : "You cannot login since your account has been suspended."
+    user_active? && !teacher_preview_student_of_inactive_teacher? ? super : "You cannot login since your account has been suspended."
   end
 
   #
@@ -582,6 +595,38 @@ end
     updating_password
   end
 
+  # True for a teacher's learner account (the separate student account used in learner mode).
+  def teacher_preview_student?
+    !!portal_student&.is_teacher_preview_student
+  end
+
+  # Nobody can directly sign in to a teacher preview student account with a password, even if
+  # someone learns or sets one. Learner mode switches the teacher to it without a password.
+  def valid_password?(password)
+    !teacher_preview_student? && super
+  end
+
+  # The name to show people. Same as `name`, plus " (Learner)" for a teacher's learner account.
+  # The suffix is never stored. Do not use this where `name` is used as data (exports, matching).
+  def display_name
+    teacher_preview_student? ? "#{name} (Learner)" : name
+  end
+
+  # For a teacher, the User of their learner account, or nil if they have none yet.
+  def teacher_preview_student_user
+    portal_teacher&.teacher_preview_student&.user
+  end
+
+  def has_teacher_preview_student?
+    teacher_preview_student_user.present?
+  end
+
+  # For a learner account, the User of the teacher it belongs to. Nil for everyone else.
+  def previewing_teacher_user
+    return nil unless teacher_preview_student?
+    portal_student.previewing_teacher&.user
+  end
+
   def only_a_student?
     portal_student and !has_role?('admin', 'manager', 'researcher', 'author') and portal_teacher.nil?
   end
@@ -680,6 +725,22 @@ end
   def send_on_create_confirmation_instructions
     return if skip_notifications
     super
+  end
+
+  # A teacher's learner account keeps the teacher's stored name, because rosters, reports,
+  # and activity apps read the stored name.
+  def copy_name_to_teacher_preview_student
+    return unless portal_teacher
+    # Lock the same teacher row as Portal::Teacher#find_or_create_teacher_preview_student!, so a
+    # learner account being created at the same time gets the new name. Lock a fresh copy of the
+    # row, because `lock!` raises on a record with unsaved changes. The fresh copy also has the
+    # current link.
+    locked_teacher = Portal::Teacher.lock.find(portal_teacher.id)
+    learner_user = locked_teacher.teacher_preview_student&.user
+    return unless learner_user
+    # Copy only the fields this save changed. Rails saves only changed columns, so the other
+    # field on this copy of the user can be older than the saved one.
+    learner_user.update!(saved_changes.slice('first_name', 'last_name').transform_values(&:last))
   end
 
   def make_activation_code

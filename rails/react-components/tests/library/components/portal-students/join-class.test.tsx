@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import JoinClass from "../../../../src/library/components/portal-students/join-class";
-import { mockJqueryAjaxSuccess } from "../../helpers/mock-jquery";
+import { mockJquery, mockJqueryAjaxSuccess } from "../../helpers/mock-jquery";
 
 describe("When I try to render join class", () => {
   it("should render enter classword by default", () => {
@@ -35,6 +35,33 @@ describe("When I try to render join class", () => {
       fireEvent.submit(screen.getByRole("button", { name: "Submit" }));
 
       expect(await screen.findByText("Invalid class word!")).toBeInTheDocument();
+      expect(afterJoin).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("when the server refuses the join", () => {
+    // For example, a stale tab after the teacher switched back from learner mode in another tab.
+    const serverMessage = "You can't signup for a class while logged in as a teacher! You may have switched back to teacher in another tab. Use 'Switch to learner mode' in the sidebar to see this page.";
+
+    mockJquery({
+      ajax: jest.fn().mockImplementation((options) => {
+        if (options.url.endsWith("/confirm_class_word")) {
+          options.success({ success: true, data: { teacher_name: "Teacher Teacherson" } });
+        } else {
+          options.error({ responseText: JSON.stringify({ success: false, message: serverMessage }) }, "error", "Bad Request");
+        }
+      })
+    });
+
+    it("should show the server's message", async () => {
+      const afterJoin = jest.fn();
+      render(<JoinClass afterJoin={afterJoin} />);
+      fireEvent.change(screen.getByLabelText("New Class Word:"), { target: { value: "test" } });
+      fireEvent.submit(screen.getByRole("button", { name: "Submit" }));
+
+      fireEvent.submit(await screen.findByRole("button", { name: "Join" }));
+
+      expect(await screen.findByText(serverMessage)).toBeInTheDocument();
       expect(afterJoin).not.toHaveBeenCalled();
     });
   });

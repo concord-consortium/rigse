@@ -167,7 +167,7 @@ describe NavigationHelper, type: :helper  do
       let(:projects)     { [itsi_project] }
 
       it "should have several links" do
-        expect(subject.links.size).to eq(25)
+        expect(subject.links.size).to eq(26)
       end
       it "should have several sections" do
         expect(subject.sections.size).to eq(6)
@@ -180,13 +180,102 @@ describe NavigationHelper, type: :helper  do
     describe "Not in any Projects" do
       let(:projects)     { [] }
       it "should have several links" do
-        expect(subject.links.size).to eq(18)
+        expect(subject.links.size).to eq(19)
       end
       it "should have several sections" do
         expect(subject.sections.size).to eq(5)
       end
       it "should not have resources sections" do
         expect(subject.sections.keys).not_to include("/resources")
+      end
+    end
+  end
+
+  describe "learner mode links" do
+    subject { helper.navigation_service(params).to_hash }
+    let(:labels) { subject[:links].map { |link| link[:label] } }
+    let(:learner_user) { fake_teacher.find_or_create_teacher_preview_student! }
+    let(:admin) { FactoryBot.generate(:admin_user) }
+
+    describe "for a teacher" do
+      let(:fake_visitor) { fake_teacher.user }
+
+      it "shows 'Switch to learner mode' and not 'Switch back to teacher'" do
+        link = subject[:links].find { |l| l[:label] == "Switch to learner mode" }
+        # This teacher has no learner account yet, so the link is a GET to the explanation page.
+        expect(link).to include(url: learner_mode_path)
+        expect(link).not_to have_key(:httpMethod)
+        expect(labels).not_to include("Switch back to teacher")
+        expect(labels).not_to include("Switch back")
+      end
+
+      it "shows the name without the suffix" do
+        expect(subject[:name]).to eq(name)
+      end
+    end
+
+    describe "for a teacher with a learner account" do
+      let(:fake_visitor) { fake_teacher.user }
+
+      it "links 'Switch to learner mode' straight to the POST switch" do
+        learner_user
+        link = subject[:links].find { |l| l[:label] == "Switch to learner mode" }
+        expect(link).to include(url: enter_learner_mode_path, httpMethod: "post")
+      end
+    end
+
+    describe "for a learner account" do
+      let(:fake_visitor) { learner_user }
+
+      it "shows 'Switch back to teacher' and not 'Switch to learner mode'" do
+        link = subject[:links].find { |l| l[:label] == "Switch back to teacher" }
+        expect(link).to include(url: exit_learner_mode_path, httpMethod: "post")
+        expect(labels).not_to include("Switch to learner mode")
+        expect(labels).not_to include("Switch back")
+      end
+
+      it "shows the name with the (Learner) suffix" do
+        expect(subject[:name]).to eq("#{name} (Learner)")
+      end
+    end
+
+    describe "for a normal student" do
+      let(:fake_visitor) { fake_student.user }
+
+      it "shows no learner mode link" do
+        expect(labels).not_to include("Switch to learner mode", "Switch back to teacher")
+      end
+    end
+
+    describe "for an admin who switched into a normal student" do
+      let(:fake_visitor) { fake_student.user }
+      before(:each) { assign(:original_user, admin) }
+
+      it "shows only 'Switch back'" do
+        expect(labels).to include("Switch back")
+        link = subject[:links].find { |l| l[:label] == "Switch back" }
+        expect(link).to include(url: switch_back_user_path(fake_visitor), httpMethod: "post")
+        expect(labels).not_to include("Switch to learner mode", "Switch back to teacher")
+      end
+    end
+
+    describe "for an admin who switched into a teacher" do
+      let(:fake_visitor) { fake_teacher.user }
+      before(:each) { assign(:original_user, admin) }
+
+      it "shows 'Switch back' and then 'Switch to learner mode'" do
+        expect(labels).to include("Switch back", "Switch to learner mode")
+        expect(labels.index("Switch back")).to be < labels.index("Switch to learner mode")
+      end
+    end
+
+    describe "for an admin who switched into a teacher who then entered learner mode" do
+      let(:fake_visitor) { learner_user }
+      before(:each) { assign(:original_user, admin) }
+
+      it "shows 'Switch back' and then 'Switch back to teacher'" do
+        expect(labels).to include("Switch back", "Switch back to teacher")
+        expect(labels.index("Switch back")).to be < labels.index("Switch back to teacher")
       end
     end
   end
