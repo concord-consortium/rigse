@@ -34,9 +34,9 @@ class HomeController < ApplicationController
 
 
   def getting_started
-    # The other learner mode account's home page, for example after a reload in a tab left open
-    # from before a switch. Go home with no message: the earlier message already explained it.
-    return redirect_to(view_context.current_user_home_path) if other_learner_mode_home_page?
+    # A teacher page. A student who opens it, for example from an old link or from a tab left open
+    # from before a learner mode switch, goes to My Classes with no message.
+    return redirect_to(my_classes_path) if current_user&.portal_student
 
     authorize :home, :getting_started?
     @hide_signup_link = true
@@ -345,7 +345,7 @@ class HomeController < ApplicationController
   # on the student home page.
   def other_learner_mode_home_page?
     return false unless current_user
-    return %w[getting_started recent_activity].include?(action_name) if current_user.teacher_preview_student?
+    return action_name == 'recent_activity' if current_user.teacher_preview_student?
     current_user.has_teacher_preview_student? && action_name == 'my_classes'
   end
 

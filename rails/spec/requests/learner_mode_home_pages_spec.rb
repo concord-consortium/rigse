@@ -51,6 +51,13 @@ RSpec.describe 'Home pages after a learner mode switch', type: :request do
       expect(flash['alert']).to be_nil
     end
 
+    it 'sends a normal student home with no message' do
+      sign_in FactoryBot.create(:full_portal_student).user
+      get getting_started_path
+      expect(response).to redirect_to(my_classes_path)
+      expect(flash['alert']).to be_nil
+    end
+
     it 'still shows the page to a teacher' do
       sign_in teacher.user
       get getting_started_path
