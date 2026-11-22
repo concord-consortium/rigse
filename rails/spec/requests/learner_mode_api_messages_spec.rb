@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 # API refusals that a stale tab can hit after a switch add the learner mode text, but only for a
-# teacher learner user or a teacher user with a linked teacher learner.
+# teacher preview student user or a teacher user with a linked teacher preview student.
 RSpec.describe 'Learner mode text in API refusals', type: :request do
   include Devise::Test::IntegrationHelpers
   # See learner_account_changes_spec.rb.
@@ -12,7 +12,7 @@ RSpec.describe 'Learner mode text in API refusals', type: :request do
 
   let(:teacher)       { FactoryBot.create(:portal_teacher) }
   let(:clazz)         { teacher.clazzes.first }
-  let(:learner_user)  { teacher.find_or_create_teacher_learner! }
+  let(:learner_user)  { teacher.find_or_create_teacher_preview_student! }
   let(:other_student) { FactoryBot.create(:full_portal_student) }
   let(:student_clazz) { other_student.student_clazzes.create!(clazz: clazz) }
 

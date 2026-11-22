@@ -7,16 +7,16 @@ describe Portal::Teacher, 'learner account' do
   end
   let!(:teacher) { FactoryBot.create(:portal_teacher, user: teacher_user) }
 
-  describe '#find_or_create_teacher_learner!' do
+  describe '#find_or_create_teacher_preview_student!' do
     it 'creates exactly one learner account, linked to the teacher' do
       learner_user = nil
       expect {
-        learner_user = teacher.find_or_create_teacher_learner!
+        learner_user = teacher.find_or_create_teacher_preview_student!
       }.to change(User, :count).by(1).and change(Portal::Student, :count).by(1)
 
       student = learner_user.portal_student
-      expect(student.is_teacher_learner).to be true
-      expect(teacher.reload.teacher_learner).to eq(student)
+      expect(student.is_teacher_preview_student).to be true
+      expect(teacher.reload.teacher_preview_student).to eq(student)
 
       expect(learner_user.first_name).to eq('Jane')
       expect(learner_user.last_name).to eq('Doe')
@@ -31,11 +31,11 @@ describe Portal::Teacher, 'learner account' do
     end
 
     it 'returns the same account on a second call and creates nothing' do
-      first = teacher.find_or_create_teacher_learner!
+      first = teacher.find_or_create_teacher_preview_student!
       expect {
-        expect(teacher.find_or_create_teacher_learner!).to eq(first)
+        expect(teacher.find_or_create_teacher_preview_student!).to eq(first)
       }.not_to change(User, :count)
-      expect(Portal::Student.where(is_teacher_learner: true).count).to eq(1)
+      expect(Portal::Student.where(is_teacher_preview_student: true).count).to eq(1)
     end
 
     # A real two-thread test is not possible here: spec_helper_common.rb makes all threads
@@ -43,36 +43,36 @@ describe Portal::Teacher, 'learner account' do
     it 'locks the teacher row before it checks the link' do
       calls = []
       allow(teacher).to receive(:lock!).and_wrap_original { |m, *args| calls << :lock; m.call(*args) }
-      allow(teacher).to receive(:teacher_learner).and_wrap_original { |m, *args| calls << :check; m.call(*args) }
-      teacher.find_or_create_teacher_learner!
+      allow(teacher).to receive(:teacher_preview_student).and_wrap_original { |m, *args| calls << :check; m.call(*args) }
+      teacher.find_or_create_teacher_preview_student!
       expect(calls.first(2)).to eq([:lock, :check])
     end
 
     it 'works for a teacher whose last name is longer than a login can be' do
       teacher_user.update!(last_name: 'L' * 45)
-      learner_user = teacher.reload.find_or_create_teacher_learner!
+      learner_user = teacher.reload.find_or_create_teacher_preview_student!
       expect(learner_user.login.length).to eq(User::MAX_LOGIN_LENGTH)
     end
 
     it 'works when a disabled user owns the login it would generate' do
       login = Portal::Student.generate_user_login(teacher_user.first_name, teacher_user.last_name)
       FactoryBot.create(:confirmed_user, login: login).update_column(:state, 'disabled')
-      learner_user = teacher.find_or_create_teacher_learner!
+      learner_user = teacher.find_or_create_teacher_preview_student!
       expect(learner_user.login).not_to eq(login)
     end
 
     it 'saves nothing when creation fails' do
       allow(Portal::Student).to receive(:create!).and_raise(ActiveRecord::RecordInvalid.new(Portal::Student.new))
       expect {
-        expect { teacher.find_or_create_teacher_learner! }.to raise_error(ActiveRecord::RecordInvalid)
+        expect { teacher.find_or_create_teacher_preview_student! }.to raise_error(ActiveRecord::RecordInvalid)
       }.not_to change(User, :count)
-      expect(teacher.reload.teacher_learner_id).to be_nil
+      expect(teacher.reload.teacher_preview_student_id).to be_nil
     end
   end
 
   describe 'renaming the teacher' do
     it 'copies a new first or last name to the learner account' do
-      learner_user = teacher.find_or_create_teacher_learner!
+      learner_user = teacher.find_or_create_teacher_preview_student!
 
       teacher_user.reload.update!(first_name: 'Janet')
       expect(learner_user.reload.first_name).to eq('Janet')
@@ -83,7 +83,7 @@ describe Portal::Teacher, 'learner account' do
     end
 
     it 'copies only the changed name field, so a stale copy of the teacher does not undo another change' do
-      learner_user = teacher.find_or_create_teacher_learner!
+      learner_user = teacher.find_or_create_teacher_preview_student!
       first_copy = User.find(teacher_user.id)
       second_copy = User.find(teacher_user.id)
 
@@ -95,7 +95,7 @@ describe Portal::Teacher, 'learner account' do
     end
 
     it 'copies both names when both change together' do
-      learner_user = teacher.find_or_create_teacher_learner!
+      learner_user = teacher.find_or_create_teacher_preview_student!
       teacher_user.reload.update!(first_name: 'Janet', last_name: 'Roe')
       learner_user.reload
       expect([learner_user.first_name, learner_user.last_name]).to eq(['Janet', 'Roe'])
@@ -107,7 +107,7 @@ describe Portal::Teacher, 'learner account' do
 
     # `lock!` raises on a record with unsaved changes, so the rename must not lock this copy.
     it 'works when the teacher record has an unsaved change' do
-      learner_user = teacher.find_or_create_teacher_learner!
+      learner_user = teacher.find_or_create_teacher_preview_student!
       teacher_user.reload
       teacher_user.portal_teacher.left_pane_submenu_item = 1
 
@@ -118,7 +118,7 @@ describe Portal::Teacher, 'learner account' do
 
     # See the note on the creation lock test above.
     it 'locks the teacher row before it checks the link' do
-      student_id = teacher.find_or_create_teacher_learner!.portal_student.id
+      student_id = teacher.find_or_create_teacher_preview_student!.portal_student.id
       teacher_user.reload
       queries = []
       record = ->(*, payload) { queries << payload[:sql] }
@@ -135,7 +135,7 @@ describe Portal::Teacher, 'learner account' do
 
   describe 'deleting' do
     it "destroys the learner account when the teacher's user is destroyed" do
-      learner_user = teacher.find_or_create_teacher_learner!
+      learner_user = teacher.find_or_create_teacher_preview_student!
       student_id = learner_user.portal_student.id
 
       teacher_user.reload.destroy
@@ -145,20 +145,20 @@ describe Portal::Teacher, 'learner account' do
     end
 
     it "clears the teacher's link when the learner account's user is destroyed on its own" do
-      learner_user = teacher.find_or_create_teacher_learner!
+      learner_user = teacher.find_or_create_teacher_preview_student!
 
       User.find(learner_user.id).destroy
 
       expect(User.where(id: teacher_user.id)).to exist
-      expect(teacher.reload.teacher_learner_id).to be_nil
-      new_learner_user = teacher.find_or_create_teacher_learner!
+      expect(teacher.reload.teacher_preview_student_id).to be_nil
+      new_learner_user = teacher.find_or_create_teacher_preview_student!
       expect(new_learner_user.id).not_to eq(learner_user.id)
-      expect(teacher.reload.teacher_learner.user).to eq(new_learner_user)
+      expect(teacher.reload.teacher_preview_student.user).to eq(new_learner_user)
     end
 
     it 'destroys a learner account that was created after the teacher was loaded' do
       stale_teacher = Portal::Teacher.find(teacher.id)
-      learner_user = Portal::Teacher.find(teacher.id).find_or_create_teacher_learner!
+      learner_user = Portal::Teacher.find(teacher.id).find_or_create_teacher_preview_student!
       student_id = learner_user.portal_student.id
 
       stale_teacher.destroy
@@ -168,7 +168,7 @@ describe Portal::Teacher, 'learner account' do
     end
 
     it 'works when the teacher record has an unsaved change' do
-      learner_user = teacher.find_or_create_teacher_learner!
+      learner_user = teacher.find_or_create_teacher_preview_student!
       teacher.left_pane_submenu_item = 1
 
       teacher.destroy

@@ -71,8 +71,8 @@ RSpec.describe HomePolicy do
       expect(described_class.new(nil, nil).getting_started?).to be true
     end
 
-    it 'refuses a teacher learner account' do
-      learner_user = teacher.find_or_create_teacher_learner!
+    it 'refuses a teacher preview student account' do
+      learner_user = teacher.find_or_create_teacher_preview_student!
       expect(described_class.new(learner_user, nil).getting_started?).to be false
     end
 

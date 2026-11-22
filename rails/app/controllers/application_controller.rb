@@ -195,10 +195,10 @@ class ApplicationController < ActionController::Base
   # unless the signed-in user is a teacher with a learner account, or a learner account.
   def learner_mode_tab_message
     return nil unless current_user
-    if current_user.teacher_learner? && current_user.linked_teacher_user
+    if current_user.teacher_preview_student? && current_user.previewing_teacher_user
       # A learner account. Another tab may have switched to learner mode.
       SWITCHED_TO_LEARNER_TEXT
-    elsif current_user.has_teacher_learner?
+    elsif current_user.has_teacher_preview_student?
       # A teacher with a learner account. Another tab may have switched back to teacher.
       SWITCHED_TO_TEACHER_TEXT
     end
@@ -291,10 +291,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # A teacher learner account skips these two checks. It has no security questions, and its
+  # A teacher preview student account skips these two checks. It has no security questions, and its
   # consent values are copied from its teacher.
   def check_student_security_questions_ok
-    if request.format && request.format.html? && current_settings && current_settings.use_student_security_questions && !current_visitor.portal_student.nil? && !current_visitor.teacher_learner? && current_visitor.security_questions.size < 3
+    if request.format && request.format.html? && current_settings && current_settings.use_student_security_questions && !current_visitor.portal_student.nil? && !current_visitor.teacher_preview_student? && current_visitor.security_questions.size < 3
       unless session_sensitive_path
         flash.keep
         redirect_to(edit_user_security_questions_path(current_visitor))
@@ -303,7 +303,7 @@ class ApplicationController < ActionController::Base
   end
 
   def check_student_consent
-    if request.format && request.format.html? && current_settings && current_settings.require_user_consent? && !current_visitor.portal_student.nil? && !current_visitor.teacher_learner? && !current_visitor.asked_age?
+    if request.format && request.format.html? && current_settings && current_settings.require_user_consent? && !current_visitor.portal_student.nil? && !current_visitor.teacher_preview_student? && !current_visitor.asked_age?
       unless session_sensitive_path
         flash.keep
         redirect_to(ask_consent_portal_student_path(current_visitor.portal_student))

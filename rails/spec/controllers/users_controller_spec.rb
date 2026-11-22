@@ -306,7 +306,7 @@ describe UsersController do
 
   describe "GET preferences for a learner account" do
     let(:teacher)      { FactoryBot.create(:portal_teacher) }
-    let(:learner_user) { teacher.find_or_create_teacher_learner! }
+    let(:learner_user) { teacher.find_or_create_teacher_preview_student! }
     let(:message)      { "You can't change these settings in learner mode. Your students can change these settings in their own accounts." }
 
     before(:each) do

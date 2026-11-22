@@ -1587,58 +1587,58 @@ protected
     end
   end
 
-  describe 'teacher learner helpers' do
+  describe 'teacher preview student helpers' do
     let(:teacher) { FactoryBot.create(:portal_teacher) }
     let(:normal_student) { FactoryBot.create(:full_portal_student) }
 
     context 'for a teacher with no learner account' do
       it 'returns no learner account and is not a learner account' do
-        expect(teacher.user.teacher_learner?).to be false
-        expect(teacher.user.teacher_learner_user).to be_nil
-        expect(teacher.user.has_teacher_learner?).to be false
-        expect(teacher.user.linked_teacher_user).to be_nil
+        expect(teacher.user.teacher_preview_student?).to be false
+        expect(teacher.user.teacher_preview_student_user).to be_nil
+        expect(teacher.user.has_teacher_preview_student?).to be false
+        expect(teacher.user.previewing_teacher_user).to be_nil
       end
     end
 
     context 'for a teacher with a learner account, and that learner account' do
-      let(:learner) { FactoryBot.create(:full_portal_student, is_teacher_learner: true) }
+      let(:learner) { FactoryBot.create(:full_portal_student, is_teacher_preview_student: true) }
 
       before do
-        teacher.update!(teacher_learner: learner)
+        teacher.update!(teacher_preview_student: learner)
       end
 
       it 'links the teacher to the learner account' do
-        expect(teacher.user.teacher_learner?).to be false
-        expect(teacher.user.teacher_learner_user).to eq(learner.user)
-        expect(teacher.user.has_teacher_learner?).to be true
-        expect(teacher.user.linked_teacher_user).to be_nil
+        expect(teacher.user.teacher_preview_student?).to be false
+        expect(teacher.user.teacher_preview_student_user).to eq(learner.user)
+        expect(teacher.user.has_teacher_preview_student?).to be true
+        expect(teacher.user.previewing_teacher_user).to be_nil
       end
 
       it 'links the learner account to the teacher' do
         learner_user = User.find(learner.user_id)
-        expect(learner_user.teacher_learner?).to be true
-        expect(learner_user.linked_teacher_user).to eq(teacher.user)
-        expect(learner_user.teacher_learner_user).to be_nil
-        expect(learner_user.has_teacher_learner?).to be false
+        expect(learner_user.teacher_preview_student?).to be true
+        expect(learner_user.previewing_teacher_user).to eq(teacher.user)
+        expect(learner_user.teacher_preview_student_user).to be_nil
+        expect(learner_user.has_teacher_preview_student?).to be false
       end
     end
 
     context 'for a normal student' do
       it 'is not a learner account and has no links' do
-        expect(normal_student.user.teacher_learner?).to be false
-        expect(normal_student.user.teacher_learner_user).to be_nil
-        expect(normal_student.user.has_teacher_learner?).to be false
-        expect(normal_student.user.linked_teacher_user).to be_nil
+        expect(normal_student.user.teacher_preview_student?).to be false
+        expect(normal_student.user.teacher_preview_student_user).to be_nil
+        expect(normal_student.user.has_teacher_preview_student?).to be false
+        expect(normal_student.user.previewing_teacher_user).to be_nil
       end
     end
 
     context 'for a user with no teacher or student record' do
       it 'is not a learner account and has no links' do
         user = FactoryBot.create(:confirmed_user)
-        expect(user.teacher_learner?).to be false
-        expect(user.teacher_learner_user).to be_nil
-        expect(user.has_teacher_learner?).to be false
-        expect(user.linked_teacher_user).to be_nil
+        expect(user.teacher_preview_student?).to be false
+        expect(user.teacher_preview_student_user).to be_nil
+        expect(user.has_teacher_preview_student?).to be false
+        expect(user.previewing_teacher_user).to be_nil
       end
     end
   end
@@ -1651,7 +1651,7 @@ protected
     end
 
     it 'adds (Learner) for a learner account, without changing the stored name' do
-      learner_user = teacher.find_or_create_teacher_learner!
+      learner_user = teacher.find_or_create_teacher_preview_student!
       expect(learner_user.display_name).to eq('Jane Doe (Learner)')
       expect(learner_user.name).to eq('Jane Doe')
       expect(learner_user.reload.last_name).to eq('Doe')

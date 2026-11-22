@@ -25,11 +25,11 @@ class LearnerModeController < ApplicationController
     authorize :learner_mode, :enter_learner_mode?
 
     teacher = current_user.portal_teacher
-    learner_user = teacher.teacher_learner&.user
+    learner_user = teacher.teacher_preview_student&.user
 
     if learner_user.nil?
       begin
-        learner_user = teacher.find_or_create_teacher_learner!
+        learner_user = teacher.find_or_create_teacher_preview_student!
       rescue ActiveRecord::ActiveRecordError => e
         Rails.logger.error("Could not create learner account for teacher #{teacher.id}: #{e.class}: #{e.message}")
         flash['alert'] = "We couldn't start learner mode. Please try again."
@@ -43,16 +43,16 @@ class LearnerModeController < ApplicationController
   # POST /learner_mode/exit
   def exit_learner_mode
     # Already switched back, for example after a click in a stale tab. Go home with no error.
-    return redirect_to(view_context.current_user_home_path) if current_user&.has_teacher_learner?
+    return redirect_to(view_context.current_user_home_path) if current_user&.has_teacher_preview_student?
 
     authorize :learner_mode, :exit_learner_mode?
-    switch_to(current_user.linked_teacher_user)
+    switch_to(current_user.previewing_teacher_user)
   end
 
   private
 
   def in_learner_mode?
-    current_user.present? && current_user.teacher_learner? && current_user.linked_teacher_user.present?
+    current_user.present? && current_user.teacher_preview_student? && current_user.previewing_teacher_user.present?
   end
 
   # Like UsersController#switch, but it only keeps the admin switch values that are already

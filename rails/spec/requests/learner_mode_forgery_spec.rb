@@ -36,7 +36,7 @@ RSpec.describe 'Learner mode switches need a POST with the security token', type
   end
 
   it 'does not switch back on a GET to the exit address' do
-    learner_user = teacher.find_or_create_teacher_learner!
+    learner_user = teacher.find_or_create_teacher_preview_student!
     sign_in learner_user
     get '/learner_mode/exit'
     expect(response).to redirect_to('/')
@@ -46,7 +46,7 @@ RSpec.describe 'Learner mode switches need a POST with the security token', type
   it 'does not switch or create anything on a POST without the token' do
     get preferences_user_path(teacher.user)
     expect { post enter_learner_mode_path }.not_to change(User, :count)
-    expect(teacher.reload.teacher_learner_id).to be_nil
+    expect(teacher.reload.teacher_preview_student_id).to be_nil
     get preferences_user_path(teacher.user)
     expect(signed_in_user_id).to eq(teacher.user.id)
   end
@@ -54,6 +54,6 @@ RSpec.describe 'Learner mode switches need a POST with the security token', type
   it 'switches on a POST with the token' do
     token = page_token
     expect { post enter_learner_mode_path, params: { authenticity_token: token } }.to change(User, :count).by(1)
-    expect(signed_in_user_id).to eq(teacher.reload.teacher_learner.user_id)
+    expect(signed_in_user_id).to eq(teacher.reload.teacher_preview_student.user_id)
   end
 end

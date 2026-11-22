@@ -1,6 +1,6 @@
 require File.expand_path('../../spec_helper', __FILE__)
 
-# The student-only redirects to security questions and consent must skip a teacher learner
+# The student-only redirects to security questions and consent must skip a teacher preview student
 # account. Otherwise the teacher is stopped on the first page in learner mode.
 describe ApplicationController, type: :controller do
   controller do
@@ -10,7 +10,7 @@ describe ApplicationController, type: :controller do
   end
 
   let(:teacher)      { FactoryBot.create(:portal_teacher) }
-  let(:learner_user) { teacher.find_or_create_teacher_learner! }
+  let(:learner_user) { teacher.find_or_create_teacher_preview_student! }
   let(:student_user) { FactoryBot.create(:full_portal_student).user }
 
   before(:each) do
@@ -22,7 +22,7 @@ describe ApplicationController, type: :controller do
       allow(@mock_settings).to receive(:use_student_security_questions).and_return(true)
     end
 
-    it 'does not send a teacher learner account to its security questions' do
+    it 'does not send a teacher preview student account to its security questions' do
       sign_in learner_user
       get :index
       expect(response).to have_http_status(:ok)
@@ -40,7 +40,7 @@ describe ApplicationController, type: :controller do
       allow(@mock_settings).to receive(:require_user_consent?).and_return(true)
     end
 
-    it 'does not send a teacher learner account to the consent page' do
+    it 'does not send a teacher preview student account to the consent page' do
       expect(learner_user.asked_age).to be_falsey
       sign_in learner_user
       get :index
@@ -61,7 +61,7 @@ describe ApplicationController, type: :controller do
       allow(@mock_settings).to receive(:require_user_consent?).and_return(true)
     end
 
-    it 'does not redirect a teacher learner account' do
+    it 'does not redirect a teacher preview student account' do
       sign_in learner_user
       get :index
       expect(response).to have_http_status(:ok)

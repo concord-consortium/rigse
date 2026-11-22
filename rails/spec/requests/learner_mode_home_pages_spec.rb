@@ -12,7 +12,7 @@ RSpec.describe 'Home pages after a learner mode switch', type: :request do
   let(:to_teacher_text) { LearnerModeTextHelper::SWITCHED_TO_TEACHER_TEXT }
 
   let(:teacher)      { FactoryBot.create(:portal_teacher) }
-  let(:learner_user) { teacher.find_or_create_teacher_learner! }
+  let(:learner_user) { teacher.find_or_create_teacher_preview_student! }
 
   # The teacher's home page depends on a config setting (see current_user_home_path).
   let(:teacher_home_path) { APP_CONFIG[:recent_activity_on_login] ? recent_activity_path : getting_started_path }

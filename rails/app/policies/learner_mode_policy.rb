@@ -10,7 +10,7 @@ class LearnerModePolicy < ApplicationPolicy
 
   # Only a teacher's learner account can exit learner mode, and only if its teacher still exists.
   def exit_learner_mode?
-    user.present? && user.teacher_learner? && user.linked_teacher_user.present?
+    user.present? && user.teacher_preview_student? && user.previewing_teacher_user.present?
   end
 
 end

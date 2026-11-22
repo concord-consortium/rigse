@@ -1,14 +1,14 @@
 require 'spec_helper'
 
-# A teacher learner account cannot sign in with a password, even when the password is right.
-RSpec.describe 'Password sign-in for a teacher learner account', type: :request do
+# A teacher preview student account cannot sign in with a password, even when the password is right.
+RSpec.describe 'Password sign-in for a teacher preview student account', type: :request do
   # See learner_account_changes_spec.rb.
   before(:all) { Rails.application.reload_routes_unless_loaded }
 
   let(:password)     { 'a-known-password-1' }
   let(:teacher)      { FactoryBot.create(:portal_teacher) }
   let(:learner_user) do
-    teacher.find_or_create_teacher_learner!.tap do |user|
+    teacher.find_or_create_teacher_preview_student!.tap do |user|
       user.update!(password: password, password_confirmation: password)
     end
   end

@@ -83,8 +83,8 @@ class PasswordsController < ApplicationController
 
   protected
 
-  # reset_code "0" means "change my own password", and find_password_user then returns the
-  # current user with no other check. A teacher learner account must not change its own password.
+  # reset_code "0" means "change my own password", and find_password_user then returns the current
+  # user with no other check. A teacher preview student account must not change its own password.
   # Other reset codes are not checked here: an admin's reset (UsersController#reset_password)
   # creates a real reset code and comes through these same actions.
   def authorize_own_password_change

@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-# A teacher learner account must not get a login or password its teacher knows. These go through
-# the real pages, because the refusals live in several controllers and policies.
-RSpec.describe 'Changes to a teacher learner account', type: :request do
+# A teacher preview student account must not get a login or password its teacher knows. These go
+# through the real pages, because the refusals live in several controllers and policies.
+RSpec.describe 'Changes to a teacher preview student account', type: :request do
   include Devise::Test::IntegrationHelpers
   # Rails 8 draws routes lazily in test, and Devise registers its Warden strategies from
   # the routes' devise_for, so the first request of a process would otherwise be
@@ -10,7 +10,7 @@ RSpec.describe 'Changes to a teacher learner account', type: :request do
   before(:all) { Rails.application.reload_routes_unless_loaded }
 
   let(:teacher)      { FactoryBot.create(:portal_teacher) }
-  let(:learner_user) { teacher.find_or_create_teacher_learner! }
+  let(:learner_user) { teacher.find_or_create_teacher_preview_student! }
   let(:new_password) { 'a-new-password-1' }
   let(:password_params) do
     { user_reset_password: { password: new_password, password_confirmation: new_password }, commit: 'Save' }

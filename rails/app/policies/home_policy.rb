@@ -14,7 +14,7 @@ class HomePolicy < ApplicationPolicy
   end
 
   # The teacher "Getting Started" page. It shows only teacher content, so students, including a
-  # teacher learner account, can't see it.
+  # teacher preview student account, can't see it.
   def getting_started?
     !student?
   end

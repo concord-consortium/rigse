@@ -1,7 +1,7 @@
 require File.expand_path('../../spec_helper', __FILE__)
 
-# When a page is refused, both a teacher learner user and a teacher user with a linked teacher
-# learner get extra text. They may have switched accounts in another tab, because all tabs
+# When a page is refused, both a teacher preview student user and a teacher user with a linked
+# teacher preview student get extra text. They may have switched accounts in another tab, because all tabs
 # share one session.
 describe ApplicationController, type: :controller do
   controller do
@@ -14,7 +14,7 @@ describe ApplicationController, type: :controller do
   let(:to_teacher_text) { LearnerModeTextHelper::SWITCHED_TO_TEACHER_TEXT }
 
   let(:teacher)      { FactoryBot.create(:portal_teacher) }
-  let(:learner_user) { teacher.find_or_create_teacher_learner! }
+  let(:learner_user) { teacher.find_or_create_teacher_preview_student! }
   let(:student_user) { FactoryBot.create(:full_portal_student).user }
 
   before(:each) do

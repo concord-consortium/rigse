@@ -13,7 +13,7 @@ RSpec.describe 'Learner mode after an admin switch', type: :request do
   let(:admin)        { FactoryBot.generate(:admin_user) }
   let(:teacher)      { FactoryBot.create(:portal_teacher) }
   let(:teacher_user) { teacher.user }
-  let!(:learner_user) { teacher.find_or_create_teacher_learner! }
+  let!(:learner_user) { teacher.find_or_create_teacher_preview_student! }
 
   it 'keeps the admin switch values through enter and exit, and Switch back still returns to the admin' do
     sign_in admin

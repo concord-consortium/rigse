@@ -247,9 +247,9 @@ describe UserPolicy do
   end
 
 
-  describe "a teacher learner account" do
+  describe "a teacher preview student account" do
     let(:teacher)      { FactoryBot.create(:portal_teacher) }
-    let(:learner_user) { teacher.find_or_create_teacher_learner! }
+    let(:learner_user) { teacher.find_or_create_teacher_preview_student! }
     let(:user)         { learner_user }
 
     before(:each) do

@@ -16,7 +16,7 @@ describe LearnerModeController do
   end
 
   def learner_count
-    Portal::Student.where(is_teacher_learner: true).count
+    Portal::Student.where(is_teacher_preview_student: true).count
   end
 
   describe "GET explain_learner_mode" do
@@ -31,7 +31,7 @@ describe LearnerModeController do
     end
 
     it "sends a learner account home with no error, for example from a stale tab" do
-      learner_user = teacher.find_or_create_teacher_learner!
+      learner_user = teacher.find_or_create_teacher_preview_student!
       sign_in learner_user
       get :explain_learner_mode
       expect(response).to redirect_to(my_classes_path)
@@ -55,7 +55,7 @@ describe LearnerModeController do
           post :enter_learner_mode
         }.to change(User, :count).by(1)
 
-        learner_user = teacher.reload.teacher_learner.user
+        learner_user = teacher.reload.teacher_preview_student.user
         expect(controller.current_user).to eq(learner_user)
         expect(response).to redirect_to(my_classes_path)
       end
@@ -67,7 +67,7 @@ describe LearnerModeController do
           post :enter_learner_mode
         }.not_to change(User, :count)
 
-        expect(teacher.reload.teacher_learner_id).to be_nil
+        expect(teacher.reload.teacher_preview_student_id).to be_nil
         expect(controller.current_user).to eq(teacher_user)
         expect(flash['alert']).to eq("We couldn't start learner mode. Please try again.")
         expect(response).to redirect_to(teacher_home_path)
@@ -75,7 +75,7 @@ describe LearnerModeController do
     end
 
     context "as a teacher with a learner account" do
-      let!(:learner_user) { teacher.find_or_create_teacher_learner! }
+      let!(:learner_user) { teacher.find_or_create_teacher_preview_student! }
 
       before(:each) { sign_in teacher_user }
 
@@ -106,7 +106,7 @@ describe LearnerModeController do
     end
 
     it "sends a learner account home with no error, for example from a stale tab" do
-      learner_user = teacher.find_or_create_teacher_learner!
+      learner_user = teacher.find_or_create_teacher_preview_student!
       sign_in learner_user
       expect { post :enter_learner_mode }.not_to change(User, :count)
       expect(controller.current_user).to eq(learner_user)
@@ -122,7 +122,7 @@ describe LearnerModeController do
   end
 
   describe "POST exit_learner_mode" do
-    let!(:learner_user) { teacher.find_or_create_teacher_learner! }
+    let!(:learner_user) { teacher.find_or_create_teacher_preview_student! }
 
     it "signs in the teacher" do
       sign_in learner_user
@@ -169,7 +169,7 @@ describe LearnerModeController do
   end
 
   describe "when an admin switched into the teacher" do
-    let!(:learner_user) { teacher.find_or_create_teacher_learner! }
+    let!(:learner_user) { teacher.find_or_create_teacher_preview_student! }
 
     before(:each) do
       sign_in teacher_user

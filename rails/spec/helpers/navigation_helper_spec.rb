@@ -194,7 +194,7 @@ describe NavigationHelper, type: :helper  do
   describe "learner mode links" do
     subject { helper.navigation_service(params).to_hash }
     let(:labels) { subject[:links].map { |link| link[:label] } }
-    let(:learner_user) { fake_teacher.find_or_create_teacher_learner! }
+    let(:learner_user) { fake_teacher.find_or_create_teacher_preview_student! }
     let(:admin) { FactoryBot.generate(:admin_user) }
 
     describe "for a teacher" do

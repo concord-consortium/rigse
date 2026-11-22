@@ -1,9 +1,9 @@
--# A teacher learner account's Settings are read-only for everyone, including admins. The server
--# also refuses the changes (UserPolicy, PasswordsController, SecurityQuestionPolicy).
-- read_only = @user.teacher_learner?
+-# A teacher preview student account's Settings are read-only for everyone, including admins. The
+-# server also refuses the changes (UserPolicy, PasswordsController, SecurityQuestionPolicy).
+- read_only = @user.teacher_preview_student?
 %h1
   User Preferences
-- if @user.teacher_learner?
+- if @user.teacher_preview_student?
   %p.learner-mode-settings-message
     - if @user == current_visitor
       You can't change these settings in learner mode. Your students can change these settings in their own accounts.

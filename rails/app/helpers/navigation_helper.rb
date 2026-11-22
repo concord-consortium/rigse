@@ -325,9 +325,9 @@ module NavigationHelper
   # goes to the explanation page first, with a GET.
   def learner_mode_link
     link = { id: "learner_mode", sort: 2.5 }
-    if current_visitor.teacher_learner?
+    if current_visitor.teacher_preview_student?
       link.merge(label: nav_label('switch_back_to_teacher'), url: exit_learner_mode_path, httpMethod: "post")
-    elsif current_visitor.has_teacher_learner?
+    elsif current_visitor.has_teacher_preview_student?
       link.merge(label: nav_label('switch_to_learner_mode'), url: enter_learner_mode_path, httpMethod: "post")
     else
       link.merge(label: nav_label('switch_to_learner_mode'), url: learner_mode_path)

@@ -77,7 +77,7 @@ class User < ApplicationRecord
   # This must stay before `after_update :set_passive_users_as_pending`. That callback calls
   # `reload`, which clears the record of which fields changed, so a later callback would never
   # see the name change.
-  after_update :copy_name_to_teacher_learner, if: -> { saved_change_to_first_name? || saved_change_to_last_name? }
+  after_update :copy_name_to_teacher_preview_student, if: -> { saved_change_to_first_name? || saved_change_to_last_name? }
   after_update :set_passive_users_as_pending
   after_create :set_passive_users_as_pending
 
@@ -301,14 +301,14 @@ class User < ApplicationRecord
     return access_grants.create!(access_token_expires_at: time.from_now + 1.second).access_token
   end
 
-  # Devise checks this on every request. A teacher learner account also stops working when its
-  # teacher is suspended or deleted, so the teacher cannot keep using it.
+  # Devise checks this on every request. A teacher preview student account also stops working when
+  # its teacher is suspended or deleted, so the teacher cannot keep using it.
   def active_for_authentication?
-    super && user_active? && !teacher_learner_of_inactive_teacher?
+    super && user_active? && !teacher_preview_student_of_inactive_teacher?
   end
 
-  def teacher_learner_of_inactive_teacher?
-    teacher_learner? && !linked_teacher_user&.user_active?
+  def teacher_preview_student_of_inactive_teacher?
+    teacher_preview_student? && !previewing_teacher_user&.user_active?
   end
 
   def finish_enews_subscription
@@ -329,7 +329,7 @@ class User < ApplicationRecord
   end
 
   def inactive_message
-    user_active? && !teacher_learner_of_inactive_teacher? ? super : "You cannot login since your account has been suspended."
+    user_active? && !teacher_preview_student_of_inactive_teacher? ? super : "You cannot login since your account has been suspended."
   end
 
   #
@@ -596,35 +596,35 @@ end
   end
 
   # True for a teacher's learner account (the separate student account used in learner mode).
-  def teacher_learner?
-    !!portal_student&.is_teacher_learner
+  def teacher_preview_student?
+    !!portal_student&.is_teacher_preview_student
   end
 
-  # Nobody can directly sign in to a teacher learner account with a password, even if someone
-  # learns or sets one. Learner mode switches the teacher to it without a password.
+  # Nobody can directly sign in to a teacher preview student account with a password, even if
+  # someone learns or sets one. Learner mode switches the teacher to it without a password.
   def valid_password?(password)
-    !teacher_learner? && super
+    !teacher_preview_student? && super
   end
 
   # The name to show people. Same as `name`, plus " (Learner)" for a teacher's learner account.
   # The suffix is never stored. Do not use this where `name` is used as data (exports, matching).
   def display_name
-    teacher_learner? ? "#{name} (Learner)" : name
+    teacher_preview_student? ? "#{name} (Learner)" : name
   end
 
   # For a teacher, the User of their learner account, or nil if they have none yet.
-  def teacher_learner_user
-    portal_teacher&.teacher_learner&.user
+  def teacher_preview_student_user
+    portal_teacher&.teacher_preview_student&.user
   end
 
-  def has_teacher_learner?
-    teacher_learner_user.present?
+  def has_teacher_preview_student?
+    teacher_preview_student_user.present?
   end
 
   # For a learner account, the User of the teacher it belongs to. Nil for everyone else.
-  def linked_teacher_user
-    return nil unless teacher_learner?
-    portal_student.linked_teacher&.user
+  def previewing_teacher_user
+    return nil unless teacher_preview_student?
+    portal_student.previewing_teacher&.user
   end
 
   def only_a_student?
@@ -729,14 +729,14 @@ end
 
   # A teacher's learner account keeps the teacher's stored name, because rosters, reports,
   # and activity apps read the stored name.
-  def copy_name_to_teacher_learner
+  def copy_name_to_teacher_preview_student
     return unless portal_teacher
-    # Lock the same teacher row as Portal::Teacher#find_or_create_teacher_learner!, so a learner
-    # account being created at the same time gets the new name. Lock a fresh copy of the row,
-    # because `lock!` raises on a record with unsaved changes. The fresh copy also has the
+    # Lock the same teacher row as Portal::Teacher#find_or_create_teacher_preview_student!, so a
+    # learner account being created at the same time gets the new name. Lock a fresh copy of the
+    # row, because `lock!` raises on a record with unsaved changes. The fresh copy also has the
     # current link.
     locked_teacher = Portal::Teacher.lock.find(portal_teacher.id)
-    learner_user = locked_teacher.teacher_learner&.user
+    learner_user = locked_teacher.teacher_preview_student&.user
     return unless learner_user
     # Copy only the fields this save changed. Rails saves only changed columns, so the other
     # field on this copy of the user can be older than the saved one.
