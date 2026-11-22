@@ -59,7 +59,7 @@ describe("When a Class Assignments request is refused", () => {
     act(() => ref.current?.onOfferingsReorder({ oldIndex: 0, newIndex: 1 }));
 
     await waitFor(() => {
-      expect(window.alert).toHaveBeenCalledWith(`Reordering failed, please try to reload page and try again.\n${message}\n${hint}`);
+      expect(window.alert).toHaveBeenCalledWith(`Reordering failed, please try to reload page and try again.\n${message}.\n\n${hint}`);
     });
     expect(shownDuringAlert).toEqual(["Offering 1", "Offering 2"]);
   });
@@ -70,7 +70,7 @@ describe("When a Class Assignments request is refused", () => {
 
     fireEvent.click(screen.getAllByRole("checkbox")[0]);
 
-    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Offering update failed, please try to reload page and try again.\n${message}\n${hint}`));
+    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Offering update failed, please try to reload page and try again.\n${message}.\n\n${hint}`));
     expect(shownDuringAlert).toBe(true);
     expect((screen.getAllByRole("checkbox")[0] as HTMLInputElement).checked).toBe(true);
   });
@@ -81,7 +81,7 @@ describe("When a Class Assignments request is refused", () => {
     fireEvent.click(screen.getAllByText("+ SHOW DETAIL")[0]);
 
     await waitFor(() => {
-      expect(window.alert).toHaveBeenCalledWith(`Offering details loading failed, please try to reload page and try again.\n${message}\n${hint}`);
+      expect(window.alert).toHaveBeenCalledWith(`Offering details loading failed, please try to reload page and try again.\n${message}.\n\n${hint}`);
     });
   });
 
@@ -98,7 +98,7 @@ describe("When a Class Assignments request is refused", () => {
     fireEvent.click(screen.getAllByRole("checkbox")[0]);
 
     await waitFor(() => {
-      expect(window.alert).toHaveBeenCalledWith(`Student metadata update failed, please try to reload page and try again.\n${message}\n${hint}`);
+      expect(window.alert).toHaveBeenCalledWith(`Student metadata update failed, please try to reload page and try again.\n${message}.\n\n${hint}`);
     });
   });
 });

@@ -106,7 +106,7 @@ describe("When a Manage Classes request is refused", () => {
     fireEvent.click(screen.getAllByText("Archive")[0]);
 
     await waitFor(() => {
-      expect(window.alert).toHaveBeenCalledWith(`Unable to toggle archived state of the class!\n${message}\n${hint}`);
+      expect(window.alert).toHaveBeenCalledWith(`Unable to toggle archived state of the class!\n${message}.\n\n${hint}`);
     });
     expect(archiveButtonsDuringAlert).toBe(2);
     expect(screen.getAllByText("Archive")).toHaveLength(2);
@@ -119,7 +119,7 @@ describe("When a Manage Classes request is refused", () => {
     fireEvent.click(screen.getAllByText("Archive")[0]);
 
     await waitFor(() => {
-      expect(window.alert).toHaveBeenCalledWith(`Unable to toggle archived state of the class!\n${message}\n${hint}`);
+      expect(window.alert).toHaveBeenCalledWith(`Unable to toggle archived state of the class!\n${message}.\n\n${hint}`);
     });
   });
 
@@ -134,7 +134,7 @@ describe("When a Manage Classes request is refused", () => {
     act(() => ref.current?.handleSortEnd({ oldIndex: 0, newIndex: 1 }));
 
     await waitFor(() => {
-      expect(window.alert).toHaveBeenCalledWith(`Unable to save class sort order!\n${message}\n${hint}`);
+      expect(window.alert).toHaveBeenCalledWith(`Unable to save class sort order!\n${message}.\n\n${hint}`);
     });
     expect(namesDuringAlert).toEqual(["test class 1", "test class 2"]);
   });
@@ -146,7 +146,7 @@ describe("When a Manage Classes request is refused", () => {
     fireEvent.click(screen.getByText("Save"));
 
     await waitFor(() => {
-      expect(window.alert).toHaveBeenCalledWith(`Unable to copy the class!\n${message}\n${hint}`);
+      expect(window.alert).toHaveBeenCalledWith(`Unable to copy the class!\n${message}.\n\n${hint}`);
     });
     expect(screen.getByText("Save")).toBeEnabled();
   });

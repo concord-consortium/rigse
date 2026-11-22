@@ -91,7 +91,7 @@ describe("When I try to render a student roster", () => {
       render(<StudentRoster canEdit={true} clazz={{ name: "Class 1" }} students={students} otherStudents={otherStudents} />);
       fireEvent.click(screen.getAllByText("Remove Student")[0]);
 
-      expect(alertSpy).toHaveBeenCalledWith(`Unable to remove student!\n${serverMessage}\n${hint}`);
+      expect(alertSpy).toHaveBeenCalledWith(`Unable to remove student!\n${serverMessage}.\n\n${hint}`);
 
       jest.restoreAllMocks();
     });

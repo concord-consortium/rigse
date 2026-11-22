@@ -126,7 +126,7 @@ describe("When a favorite change is refused", () => {
 
     fireEvent.click(screen.getByText("☆"));
 
-    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Unable to update favorite.\n${message}\n${hint}`));
+    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Unable to update favorite.\n${message}.\n\n${hint}`));
     expect(material.is_favorite).toBe(false);
   });
 });

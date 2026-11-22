@@ -51,7 +51,7 @@ describe("When an assign request is refused in the pop-up", () => {
 
     const error = screen.getByText("There was an error:", { exact: false });
     expect(error.textContent)
-      .toBe(`There was an error: You are not allowed to assign/remove ExternalActivity with id of 1 in class 1.\n${hint}`);
+      .toBe(`There was an error: You are not allowed to assign/remove ExternalActivity with id of 1 in class 1.\n\n${hint}`);
   });
 
   it("adds a period to a server message that has none", () => {

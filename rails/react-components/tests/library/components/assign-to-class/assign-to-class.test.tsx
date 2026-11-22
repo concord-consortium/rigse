@@ -60,7 +60,7 @@ describe("openAssignToClassModal", () => {
       body: { responseText: JSON.stringify({ message: "You must be logged in as a teacher to assign materials", learner_mode_hint: hint }) },
     };
     openAssignToClassModal({ material_id: 1, material_type: "ExternalActivity" });
-    expect(window.alert).toHaveBeenCalledWith(`There was an error: You must be logged in as a teacher to assign materials.\n${hint}`);
+    expect(window.alert).toHaveBeenCalledWith(`There was an error: You must be logged in as a teacher to assign materials.\n\n${hint}`);
     expect(render).not.toHaveBeenCalled();
   });
 

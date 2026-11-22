@@ -63,7 +63,7 @@ describe("When I try to render join class", () => {
       fireEvent.submit(await screen.findByRole("button", { name: "Join" }));
 
       const error = await screen.findByText(serverMessage, { exact: false });
-      expect(error.textContent).toBe(`${serverMessage}\n${hint}`);
+      expect(error.textContent).toBe(`${serverMessage}\n\n${hint}`);
       expect(afterJoin).not.toHaveBeenCalled();
     });
   });

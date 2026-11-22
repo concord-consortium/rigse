@@ -41,7 +41,7 @@ describe("When a Run with collaborators request is refused", () => {
     fireEvent.click(screen.getByText("Add"));
     fireEvent.click(screen.getByRole("button", { name: "Run with others" }));
 
-    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Error creating collaboration\n${message}\n${hint}`));
+    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Error creating collaboration\n${message}.\n\n${hint}`));
     expect(container.querySelector(".fa-spinner")).toBeNull();
     expect(screen.getByRole("button", { name: "Run with others" })).toBeEnabled();
   });
@@ -50,6 +50,6 @@ describe("When a Run with collaborators request is refused", () => {
     answers["/available_collaborators"] = (options) => options.error(refused);
     render(<RunWithCollaborators offeringId={1} label="Run with others" href="#" />);
 
-    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Error loading available collaborators\n${message}\n${hint}`));
+    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Error loading available collaborators\n${message}.\n\n${hint}`));
   });
 });

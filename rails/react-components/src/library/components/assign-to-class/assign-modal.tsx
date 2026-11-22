@@ -1,6 +1,6 @@
 import React from "react";
 import ReactModal from "react-modal";
-import { withMessage } from "../../helpers/request-error-message";
+import { serverMessage } from "../../helpers/request-error-message";
 
 import css from "./style.scss";
 
@@ -13,10 +13,9 @@ export const requestErrorMessage = (err: any) => {
   } catch (e) {
     // noop
   }
-  const message = body?.message;
+  const message = serverMessage(body);
   if (message) {
-    // After a learner mode switch in another tab, a learner mode hint goes on a new line.
-    return withMessage("There was an error: " + message + (message.endsWith(".") ? "" : "."), body.learner_mode_hint);
+    return "There was an error: " + message;
   }
   return "There was an error. Please try again.";
 };

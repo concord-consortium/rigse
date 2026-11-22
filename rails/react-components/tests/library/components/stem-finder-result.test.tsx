@@ -51,7 +51,7 @@ describe("When a favorite change on a finder card is refused", () => {
 
     star.click();
 
-    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Unable to update favorite.\n${message}\n${hint}`));
+    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Unable to update favorite.\n${message}\n\n${hint}`));
     expect(resource.is_favorite).toBe(isFavorite);
     expect(star.className).toBe(starClass);
   });
