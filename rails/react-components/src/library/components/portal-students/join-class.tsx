@@ -1,4 +1,5 @@
 import React from "react";
+import { serverMessage } from "../../helpers/request-error-message";
 
 import css from "./style.scss";
 
@@ -34,7 +35,7 @@ export class JoinClass extends React.Component<any, any> {
     let { formState, classWord } = this.state;
 
     const onError = (err: any) => {
-      this.setState({ error: err.message || "Unable to join class!" });
+      this.setState({ error: serverMessage(err) || "Unable to join class!" });
       this.setState({ formState: ENTER_CLASS_WORD });
     };
 
@@ -59,7 +60,7 @@ export class JoinClass extends React.Component<any, any> {
   }
 
   showError (err: any, message: any) {
-    this.setState({ error: err.message || message });
+    this.setState({ error: serverMessage(err) || message });
   }
 
   apiCall (action: any, options: any) {

@@ -75,7 +75,7 @@ class API::V1::StudentsController < API::APIController
     end
 
     if current_visitor.portal_teacher
-      return error(with_learner_mode_tab_message("You can't signup for a class while logged in as a teacher!"))
+      return error("You can't signup for a class while logged in as a teacher!", learner_mode_hint: learner_mode_hint)
     end
 
     student = current_visitor.portal_student
@@ -127,7 +127,8 @@ class API::V1::StudentsController < API::APIController
 
     portal_clazz = result[:portal_clazz]
     if !portal_clazz.is_teacher?(current_user)
-      return error(with_learner_mode_tab_message("You must be a teacher of the class to register and add students"))
+      return error("You must be a teacher of the class to register and add students",
+                   learner_mode_hint: learner_mode_hint)
     end
 
     grade_level = view_context.find_grade_level(params)

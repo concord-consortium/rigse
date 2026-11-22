@@ -199,10 +199,10 @@ class ApplicationController < ActionController::Base
 
   # Extra text for an error that may come from switching to or from learner mode in another
   # tab. All tabs share one session, so a tab can show a page for the other account. Returns nil
-  # unless the signed-in user is a teacher with a learner account, or a learner account.
-  def learner_mode_tab_message
+  # unless the signed-in user is a teacher with a learner account, or a learner account. A
+  # background request gets the text that says to reload, not the one that names a sidebar link.
+  def learner_mode_tab_message(background: request.xhr? || request.format.json?)
     return nil unless current_user
-    background = request.xhr? || request.format.json?
     if current_user.teacher_preview_student? && current_user.previewing_teacher_user
       # A learner account. Another tab may have switched to learner mode.
       background ? SWITCHED_TO_LEARNER_BACKGROUND_TEXT : SWITCHED_TO_LEARNER_TEXT

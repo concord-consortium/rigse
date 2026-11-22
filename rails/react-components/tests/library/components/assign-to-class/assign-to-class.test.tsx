@@ -5,7 +5,7 @@ import { mockJquery } from "../../helpers/mock-jquery";
 jest.mock("../../../../src/library/helpers/react-render", () => ({ render: jest.fn(), unmount: jest.fn() }));
 jest.mock("../../../../src/library/helpers/modal", () => ({ showModal: jest.fn(), hideModal: jest.fn() }));
 
-const learnerText = "You may have switched to learner mode in another tab.";
+const hint = "You may have switched to learner mode in another tab, so this page is out of date. Reload the page to continue.";
 const material = { name: "Material 1", preview_url: "http://example.com/1", material_type: "Activity", saves_student_data: true };
 const classList = { assigned_classes: [], unassigned_classes: [{ id: 1, name: "Class 1" }] };
 
@@ -57,10 +57,10 @@ describe("openAssignToClassModal", () => {
   it("shows only an alert with the server's message when the class list is refused", () => {
     answers["/unassigned_clazzes"] = {
       ok: false,
-      body: { responseText: JSON.stringify({ message: `You must be logged in as a teacher to assign materials. ${learnerText}` }) },
+      body: { responseText: JSON.stringify({ message: "You must be logged in as a teacher to assign materials", learner_mode_hint: hint }) },
     };
     openAssignToClassModal({ material_id: 1, material_type: "ExternalActivity" });
-    expect(window.alert).toHaveBeenCalledWith(`There was an error: You must be logged in as a teacher to assign materials. ${learnerText}`);
+    expect(window.alert).toHaveBeenCalledWith(`There was an error: You must be logged in as a teacher to assign materials.\n${hint}`);
     expect(render).not.toHaveBeenCalled();
   });
 

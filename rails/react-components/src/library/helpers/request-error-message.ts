@@ -1,16 +1,24 @@
 // The alert text: the page's own text, then the message on a new line when there is one.
 export const withMessage = (text: string, message?: string) => message ? `${text}\n${message}` : text;
 
+// The server's message from a parsed JSON error response, or undefined if there is none. After a
+// learner mode switch in another tab, the response can also have a learner_mode_hint. It goes on
+// a new line after the message.
+export const serverMessage = (body: any): string | undefined => {
+  const parts = [body?.message, body?.learner_mode_hint].filter(part => typeof part === "string" && part);
+  return parts.length > 0 ? parts.join("\n") : undefined;
+};
+
 // The alert text for a failed jQuery request: the page's own text, then the server's message on
 // a new line when the response has one.
 export const withServerMessage = (text: string, jqXHR: any) => {
-  let message;
+  let body;
   try {
-    message = JSON.parse(jqXHR?.responseText).message;
+    body = JSON.parse(jqXHR?.responseText);
   } catch (e) {
     // The response is not JSON, for example a server error page.
   }
-  return withMessage(text, message);
+  return withMessage(text, serverMessage(body));
 };
 
 // The alert stops the page from drawing, so call this after an undone change to show the alert

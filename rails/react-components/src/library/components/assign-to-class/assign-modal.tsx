@@ -1,19 +1,22 @@
 import React from "react";
 import ReactModal from "react-modal";
+import { withMessage } from "../../helpers/request-error-message";
 
 import css from "./style.scss";
 
 // The text to show when an assign request fails: the server's message, or a general one if the
 // response has none (for example a server error page).
 export const requestErrorMessage = (err: any) => {
-  let message;
+  let body;
   try {
-    message = JSON.parse(err?.responseText).message;
+    body = JSON.parse(err?.responseText);
   } catch (e) {
     // noop
   }
+  const message = body?.message;
   if (message) {
-    return "There was an error: " + message + (message.endsWith(".") ? "" : ".");
+    // After a learner mode switch in another tab, a learner mode hint goes on a new line.
+    return withMessage("There was an error: " + message + (message.endsWith(".") ? "" : "."), body.learner_mode_hint);
   }
   return "There was an error. Please try again.";
 };

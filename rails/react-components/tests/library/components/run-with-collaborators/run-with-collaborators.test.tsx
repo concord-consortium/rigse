@@ -7,8 +7,10 @@ window.Portal = {
   API_V1: { AVAILABLE_COLLABORATORS: "/available_collaborators", COLLABORATIONS: "/collaborations" },
 };
 
-const message = "Not authorized. You may have switched back to teacher in another tab.";
-const refused = { responseText: JSON.stringify({ success: false, message }) };
+const message = "Not authorized";
+
+const hint = "You may have switched back to teacher in another tab, so this page is out of date. Reload the page to continue.";
+const refused = { responseText: JSON.stringify({ success: false, message, learner_mode_hint: hint }) };
 
 let answers: Record<string, (options: any) => void>;
 
@@ -39,7 +41,7 @@ describe("When a Run with collaborators request is refused", () => {
     fireEvent.click(screen.getByText("Add"));
     fireEvent.click(screen.getByRole("button", { name: "Run with others" }));
 
-    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Error creating collaboration\n${message}`));
+    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Error creating collaboration\n${message}\n${hint}`));
     expect(container.querySelector(".fa-spinner")).toBeNull();
     expect(screen.getByRole("button", { name: "Run with others" })).toBeEnabled();
   });
@@ -48,6 +50,6 @@ describe("When a Run with collaborators request is refused", () => {
     answers["/available_collaborators"] = (options) => options.error(refused);
     render(<RunWithCollaborators offeringId={1} label="Run with others" href="#" />);
 
-    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Error loading available collaborators\n${message}`));
+    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Error loading available collaborators\n${message}\n${hint}`));
   });
 });

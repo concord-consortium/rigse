@@ -1,7 +1,7 @@
 import React from "react";
 import { arrayMove } from "@dnd-kit/sortable";
 import SortableBookmarks from "./sortable-bookmarks";
-import { alertAfterRender, withMessage } from "../../helpers/request-error-message";
+import { alertAfterRender, serverMessage, withMessage } from "../../helpers/request-error-message";
 
 export class EditBookmarks extends React.Component<any, any> {
   constructor (props: any) {
@@ -30,7 +30,7 @@ export class EditBookmarks extends React.Component<any, any> {
       this.sortBookmarks(bookmarks);
       this.setState({ bookmarks });
     } })
-      .catch(err => window.alert(withMessage("Unable to create link!", err?.message)));
+      .catch(err => window.alert(withMessage("Unable to create link!", serverMessage(err))));
   }
 
   handleUpdate (bookmark: any, fields: any) {
@@ -49,7 +49,7 @@ export class EditBookmarks extends React.Component<any, any> {
       .catch(err => {
         // reset the bookmark on error
         update(oldName, oldUrl);
-        alertAfterRender(withMessage("Unable to update link!", err?.message));
+        alertAfterRender(withMessage("Unable to update link!", serverMessage(err)));
       });
   }
 
@@ -62,7 +62,7 @@ export class EditBookmarks extends React.Component<any, any> {
           bookmarks.splice(bookmarks.indexOf(bookmark), 1);
           this.setState({ bookmarks });
         })
-        .catch(err => window.alert(withMessage("Unable to delete link!", err?.message)));
+        .catch(err => window.alert(withMessage("Unable to delete link!", serverMessage(err))));
     }
   }
 
@@ -76,7 +76,7 @@ export class EditBookmarks extends React.Component<any, any> {
         // eslint-disable-next-line react/no-access-state-in-setstate
         this.setState({ bookmarks: this.state.bookmarks });
       })
-      .catch(err => window.alert(withMessage("Unable to toggle visibility of link!", err?.message)));
+      .catch(err => window.alert(withMessage("Unable to toggle visibility of link!", serverMessage(err))));
   }
 
   handleSortEnd ({
@@ -91,7 +91,7 @@ export class EditBookmarks extends React.Component<any, any> {
     this.apiCall("sort", { data: { ids } })
       .catch(err => {
         this.setState({ bookmarks: arrayMove(bookmarks, newIndex, oldIndex) });
-        alertAfterRender(withMessage("Unable to save link sort order!", err?.message));
+        alertAfterRender(withMessage("Unable to save link sort order!", serverMessage(err)));
       });
   }
 

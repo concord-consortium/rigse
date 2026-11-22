@@ -1,10 +1,11 @@
 require 'spec_helper'
 
-# API refusals that a stale tab can hit after a switch add the learner mode text, but only for a
-# teacher preview student user or a teacher user with a linked teacher preview student. These are
-# background requests, so they get the text that says to reload, not the one that names a sidebar
-# link.
-RSpec.describe 'Learner mode text in API refusals', type: :request do
+# API refusals that a stale tab can hit after a switch add the learner mode text in a separate
+# learner_mode_hint field, but only for a teacher preview student user or a teacher user with a
+# linked teacher preview student. The message stays the same, because API clients may match on it.
+# These are background requests, so they get the text that says to reload, not the one that names a
+# sidebar link.
+RSpec.describe 'Learner mode hint in API refusals', type: :request do
   include Devise::Test::IntegrationHelpers
   # See learner_account_changes_spec.rb.
   before(:all) { Rails.application.reload_routes_unless_loaded }
@@ -22,72 +23,84 @@ RSpec.describe 'Learner mode text in API refusals', type: :request do
     JSON.parse(response.body)['message']
   end
 
+  def hint
+    JSON.parse(response.body)['learner_mode_hint']
+  end
+
   describe 'a learner account on teacher endpoints' do
     before(:each) { sign_in learner_user }
 
-    it 'gets the text from the API Pundit refusal' do
+    it 'gets the hint from the API Pundit refusal' do
       post remove_from_class_api_v1_students_path, params: { student_clazz_id: student_clazz.id }, as: :json
       expect(response).to have_http_status(:forbidden)
-      expect(message).to eq("Not authorized. #{to_learner_text}")
+      expect(message).to eq("Not authorized")
+      expect(hint).to eq(to_learner_text)
     end
 
-    it 'gets the text from the teacher classes API' do
+    it 'gets the hint from the teacher classes API' do
       post sort_api_v1_teacher_classes_path, params: { ids: [clazz.id] }, as: :json
       expect(response).to have_http_status(:bad_request)
-      expect(message).to eq("You must be logged in as a teacher to use this endpoint. #{to_learner_text}")
+      expect(message).to eq("You must be logged in as a teacher to use this endpoint")
+      expect(hint).to eq(to_learner_text)
     end
 
-    it 'gets the text when registering a student' do
+    it 'gets the hint when registering a student' do
       post register_api_v1_students_path, params: {
         clazz_id: clazz.id,
         user: { first_name: 'A', last_name: 'B', password: 'password1', password_confirmation: 'password1' }
       }, as: :json
       expect(response).to have_http_status(:bad_request)
-      expect(message).to eq("You must be a teacher of the class to register and add students. #{to_learner_text}")
+      expect(message).to eq("You must be a teacher of the class to register and add students")
+      expect(hint).to eq(to_learner_text)
     end
 
-    it 'gets the text from the bookmarks API' do
+    it 'gets the hint from the bookmarks API' do
       post sort_api_v1_bookmarks_path, params: { clazz_id: clazz.id, ids: [] }, as: :json
       expect(response).to have_http_status(:bad_request)
-      expect(message).to eq("You are not authorized to edit bookmarks for this class. #{to_learner_text}")
+      expect(message).to eq("You are not authorized to edit bookmarks for this class")
+      expect(hint).to eq(to_learner_text)
     end
 
     describe 'in the assign pop-up' do
       let(:material) { FactoryBot.create(:external_activity) }
 
-      it 'gets a refusal with the text, not an error, when listing classes' do
+      it 'gets a refusal with the hint, not an error, when listing classes' do
         post api_v1_materials_unassigned_clazzes_path,
              params: { material_id: material.id, material_type: 'ExternalActivity' }
         expect(response).to have_http_status(:forbidden)
-        expect(message).to eq("You must be logged in as a teacher to assign materials. #{to_learner_text}")
+        expect(message).to eq("You must be logged in as a teacher to assign materials")
+        expect(hint).to eq(to_learner_text)
       end
 
-      it 'gets the text when assigning' do
+      it 'gets the hint when assigning' do
         post api_v1_materials_assign_to_class_path,
              params: { assign: 1, class_id: clazz.id, material_id: material.id, material_type: 'ExternalActivity' }
         expect(response).to have_http_status(:forbidden)
         expect(message).to eq(
-          "You are not allowed to assign/remove ExternalActivity with id of #{material.id} in class #{clazz.id}. #{to_learner_text}"
+          "You are not allowed to assign/remove ExternalActivity with id of #{material.id} in class #{clazz.id}"
         )
+        expect(hint).to eq(to_learner_text)
       end
     end
 
     describe 'with favorites' do
       let(:material) { FactoryBot.create(:external_activity) }
 
-      it 'gets a refusal with the text, and no favorite, when adding a favorite' do
+      it 'gets a refusal with the hint, and no favorite, when adding a favorite' do
         expect {
           post api_v1_materials_add_favorite_path, params: { id: material.id, material_type: 'external_activity' }
         }.not_to change { Favorite.count }
         expect(response).to have_http_status(:forbidden)
-        expect(message).to eq("You must be logged in as a teacher to favorite material. #{to_learner_text}")
+        expect(message).to eq("You must be logged in as a teacher to favorite material")
+        expect(hint).to eq(to_learner_text)
       end
 
-      it "gets the text when removing the teacher's favorite" do
+      it "gets the hint when removing the teacher's favorite" do
         favorite = teacher.user.favorites.create!(favoritable: material)
         post api_v1_materials_remove_favorite_path, params: { favorite_id: favorite.id }
         expect(response).to have_http_status(:bad_request)
-        expect(message).to eq("Cannot delete favorite not owned by current user. #{to_learner_text}")
+        expect(message).to eq("Cannot delete favorite not owned by current user.")
+        expect(hint).to eq(to_learner_text)
       end
     end
   end
@@ -114,25 +127,37 @@ RSpec.describe 'Learner mode text in API refusals', type: :request do
   end
 
   describe 'joining a class as a teacher' do
-    it 'adds the text for a teacher with a learner account' do
+    it 'adds the hint for a teacher with a learner account' do
       learner_user
       sign_in teacher.user
       post join_class_api_v1_students_path, params: { class_word: clazz.class_word }, as: :json
       expect(response).to have_http_status(:bad_request)
-      expect(message).to eq("You can't signup for a class while logged in as a teacher! #{to_teacher_text}")
+      expect(message).to eq("You can't signup for a class while logged in as a teacher!")
+      expect(hint).to eq(to_teacher_text)
     end
 
-    it 'does not add the text for a teacher with no learner account' do
+    it 'does not add the hint for a teacher with no learner account' do
       sign_in teacher.user
       post join_class_api_v1_students_path, params: { class_word: clazz.class_word }, as: :json
       expect(message).to eq("You can't signup for a class while logged in as a teacher!")
+      expect(hint).to be_nil
     end
   end
 
-  it 'does not add the text for a normal student' do
+  it 'does not add the hint for a normal student' do
     sign_in FactoryBot.create(:full_portal_student).user
     post remove_from_class_api_v1_students_path, params: { student_clazz_id: student_clazz.id }, as: :json
     expect(response).to have_http_status(:forbidden)
     expect(message).to eq('Not authorized')
+    expect(hint).to be_nil
+  end
+
+  # A token request does not come from a browser tab, so it gets no hint.
+  it 'does not add the hint to a token request' do
+    token = PortalTokenHelper.unmarked_portal_api_token(learner_user)
+    get api_v1_teacher_class_path(clazz.id), headers: { 'Authorization' => "Bearer #{token}" }
+    expect(response).to have_http_status(:bad_request)
+    expect(message).to eq('You must be logged in as a teacher to use this endpoint')
+    expect(hint).to be_nil
   end
 end

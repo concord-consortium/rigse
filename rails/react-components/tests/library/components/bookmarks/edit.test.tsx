@@ -155,8 +155,9 @@ describe("When I try to create bookmarks", () => {
 });
 
 describe("When a Links request is refused", () => {
-  const message = "You are not authorized to edit bookmarks for this class. You may have switched to learner mode in another tab.";
-  const refusal = { success: false, message };
+  const message = "You are not authorized to edit bookmarks for this class";
+  const hint = "You may have switched to learner mode in another tab, so this page is out of date. Reload the page to continue.";
+  const refusal = { success: false, message, learner_mode_hint: hint };
   let respond: (options: any) => void;
   let alertSpy: jest.SpyInstance;
 
@@ -192,7 +193,7 @@ describe("When a Links request is refused", () => {
 
     fireEvent.click(screen.getByText("Create Link"));
 
-    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Unable to create link!\n${message}`));
+    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Unable to create link!\n${message}\n${hint}`));
     expect(screen.queryByPlaceholderText("Name")).not.toBeInTheDocument();
   });
 
@@ -202,7 +203,7 @@ describe("When a Links request is refused", () => {
 
     fireEvent.click(screen.getByText("Create Link"));
 
-    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Unable to create link!\n${message}`));
+    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Unable to create link!\n${message}\n${hint}`));
   });
 
   it("puts the old name back, then shows the server's message when editing fails", async () => {
@@ -213,7 +214,7 @@ describe("When a Links request is refused", () => {
     fireEvent.change(screen.getByPlaceholderText("Name"), { target: { value: "Changed" } });
     fireEvent.click(screen.getByText("Save"));
 
-    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Unable to update link!\n${message}`));
+    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Unable to update link!\n${message}\n${hint}`));
     expect(shownDuringAlert).toEqual(["Link 1", "Link 2"]);
   });
 
@@ -223,7 +224,7 @@ describe("When a Links request is refused", () => {
 
     fireEvent.click(screen.getAllByText("Hide")[0]);
 
-    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Unable to toggle visibility of link!\n${message}`));
+    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Unable to toggle visibility of link!\n${message}\n${hint}`));
     expect(shownDuringAlert).toBe(2);
   });
 
@@ -233,7 +234,7 @@ describe("When a Links request is refused", () => {
 
     fireEvent.click(screen.getAllByText("Delete")[0]);
 
-    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Unable to delete link!\n${message}`));
+    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Unable to delete link!\n${message}\n${hint}`));
     expect(shownDuringAlert).toEqual(["Link 1", "Link 2"]);
   });
 
@@ -244,7 +245,7 @@ describe("When a Links request is refused", () => {
 
     act(() => ref.current?.handleSortEnd({ oldIndex: 0, newIndex: 1 }));
 
-    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Unable to save link sort order!\n${message}`));
+    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Unable to save link sort order!\n${message}\n${hint}`));
     expect(shownDuringAlert).toEqual(["Link 1", "Link 2"]);
   });
 });

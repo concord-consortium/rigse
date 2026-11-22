@@ -12,7 +12,7 @@ window.Portal = {
   },
 };
 
-const learnerText = "You may have switched to learner mode in another tab.";
+const hint = "You may have switched to learner mode in another tab, so this page is out of date. Reload the page to continue.";
 const classList = { assigned_classes: [], unassigned_classes: [{ id: 1, name: "Class 1" }] };
 
 // Each request answers at once, with a success (done) or a failure (fail), like a jQuery promise.
@@ -26,7 +26,8 @@ const fakeRequest = (url: string) => {
   };
   return request;
 };
-const refusal = (message: string) => ({ ok: false, body: { responseText: JSON.stringify({ message }) } });
+const refusal = (message: string, learnerModeHint?: string) =>
+  ({ ok: false, body: { responseText: JSON.stringify({ message, learner_mode_hint: learnerModeHint }) } });
 
 describe("When an assign request is refused in the pop-up", () => {
   mockJquery(Object.assign(() => ({ attr: () => "token" }), { post: jest.fn(fakeRequest) }));
@@ -42,14 +43,15 @@ describe("When an assign request is refused in the pop-up", () => {
   );
 
   it("shows the server's message when assigning is refused", () => {
-    answers["/assign_to_class"] = refusal(`You are not allowed to assign/remove ExternalActivity with id of 1 in class 1. ${learnerText}`);
+    answers["/assign_to_class"] = refusal("You are not allowed to assign/remove ExternalActivity with id of 1 in class 1", hint);
     renderModal();
 
     fireEvent.click(screen.getByLabelText("Class 1"));
     fireEvent.click(screen.getByText("Save"));
 
-    expect(screen.getByText(`There was an error: You are not allowed to assign/remove ExternalActivity with id of 1 in class 1. ${learnerText}`))
-      .toBeInTheDocument();
+    const error = screen.getByText("There was an error:", { exact: false });
+    expect(error.textContent)
+      .toBe(`There was an error: You are not allowed to assign/remove ExternalActivity with id of 1 in class 1.\n${hint}`);
   });
 
   it("adds a period to a server message that has none", () => {

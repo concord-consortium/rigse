@@ -75,11 +75,12 @@ describe("When I try to render a student roster", () => {
 
   describe("when the server refuses to remove a student", () => {
     // For example, a stale tab after the teacher switched to learner mode in another tab.
-    const serverMessage = "Not authorized. You may have switched to learner mode in another tab, so this page is out of date. Reload the page to continue.";
+    const serverMessage = "Not authorized";
+    const hint = "You may have switched to learner mode in another tab, so this page is out of date. Reload the page to continue.";
 
     mockJquery({
       ajax: jest.fn().mockImplementation((options) => {
-        options.error({ responseText: JSON.stringify({ success: false, message: serverMessage }) }, "error", "Forbidden");
+        options.error({ responseText: JSON.stringify({ success: false, message: serverMessage, learner_mode_hint: hint }) }, "error", "Forbidden");
       })
     });
 
@@ -90,7 +91,7 @@ describe("When I try to render a student roster", () => {
       render(<StudentRoster canEdit={true} clazz={{ name: "Class 1" }} students={students} otherStudents={otherStudents} />);
       fireEvent.click(screen.getAllByText("Remove Student")[0]);
 
-      expect(alertSpy).toHaveBeenCalledWith(`Unable to remove student!\n${serverMessage}`);
+      expect(alertSpy).toHaveBeenCalledWith(`Unable to remove student!\n${serverMessage}\n${hint}`);
 
       jest.restoreAllMocks();
     });

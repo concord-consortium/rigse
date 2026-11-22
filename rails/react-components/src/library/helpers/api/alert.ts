@@ -1,10 +1,7 @@
+import { withMessage, serverMessage } from "../request-error-message";
+
 const apiAlert = (err: any, message: any) => {
-  message = message || "Unable to call API!";
-  if (err.message) {
-    window.alert(`${message}\n${err.message}`);
-  } else {
-    window.alert(message);
-  }
+  window.alert(withMessage(message || "Unable to call API!", serverMessage(err)));
 };
 
 export default apiAlert;

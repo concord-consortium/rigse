@@ -4,8 +4,10 @@ import Assignments from "../../../../src/library/components/assigments";
 import ProgressTableRow from "../../../../src/library/components/common/offering-progress/offering-progress-row";
 import { mockJquery } from "../../helpers/mock-jquery";
 
-const message = "Not authorized. You may have switched to learner mode in another tab.";
-const refused = { responseText: JSON.stringify({ success: false, message }) };
+const message = "Not authorized";
+
+const hint = "You may have switched to learner mode in another tab, so this page is out of date. Reload the page to continue.";
+const refused = { responseText: JSON.stringify({ success: false, message, learner_mode_hint: hint }) };
 
 window.Portal = {
   API_V1: { GET_TEACHER_PROJECT_VIEWS: "/project_views" },
@@ -57,7 +59,7 @@ describe("When a Class Assignments request is refused", () => {
     act(() => ref.current?.onOfferingsReorder({ oldIndex: 0, newIndex: 1 }));
 
     await waitFor(() => {
-      expect(window.alert).toHaveBeenCalledWith(`Reordering failed, please try to reload page and try again.\n${message}`);
+      expect(window.alert).toHaveBeenCalledWith(`Reordering failed, please try to reload page and try again.\n${message}\n${hint}`);
     });
     expect(shownDuringAlert).toEqual(["Offering 1", "Offering 2"]);
   });
@@ -68,7 +70,7 @@ describe("When a Class Assignments request is refused", () => {
 
     fireEvent.click(screen.getAllByRole("checkbox")[0]);
 
-    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Offering update failed, please try to reload page and try again.\n${message}`));
+    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Offering update failed, please try to reload page and try again.\n${message}\n${hint}`));
     expect(shownDuringAlert).toBe(true);
     expect((screen.getAllByRole("checkbox")[0] as HTMLInputElement).checked).toBe(true);
   });
@@ -79,7 +81,7 @@ describe("When a Class Assignments request is refused", () => {
     fireEvent.click(screen.getAllByText("+ SHOW DETAIL")[0]);
 
     await waitFor(() => {
-      expect(window.alert).toHaveBeenCalledWith(`Offering details loading failed, please try to reload page and try again.\n${message}`);
+      expect(window.alert).toHaveBeenCalledWith(`Offering details loading failed, please try to reload page and try again.\n${message}\n${hint}`);
     });
   });
 
@@ -96,7 +98,7 @@ describe("When a Class Assignments request is refused", () => {
     fireEvent.click(screen.getAllByRole("checkbox")[0]);
 
     await waitFor(() => {
-      expect(window.alert).toHaveBeenCalledWith(`Student metadata update failed, please try to reload page and try again.\n${message}`);
+      expect(window.alert).toHaveBeenCalledWith(`Student metadata update failed, please try to reload page and try again.\n${message}\n${hint}`);
     });
   });
 });

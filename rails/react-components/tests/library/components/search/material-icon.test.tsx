@@ -94,7 +94,8 @@ describe("When I try to render search material icon", () => {
 });
 
 describe("When a favorite change is refused", () => {
-  const message = "You must be logged in as a teacher to favorite material. You may have switched to learner mode in another tab.";
+  const message = "You must be logged in as a teacher to favorite material";
+  const hint = "You may have switched to learner mode in another tab, so this page is out of date. Reload the page to continue.";
   const configuration = {
     enableFavorites: true,
     favoriteClassMap: { true: "legacy-favorite-active", false: "legacy-favorite" },
@@ -103,7 +104,7 @@ describe("When a favorite change is refused", () => {
 
   mockJquery({
     ajax: jest.fn().mockImplementation((options) => {
-      setTimeout(() => options.error({ responseText: JSON.stringify({ message }) }));
+      setTimeout(() => options.error({ responseText: JSON.stringify({ message, learner_mode_hint: hint }) }));
     })
   });
 
@@ -125,7 +126,7 @@ describe("When a favorite change is refused", () => {
 
     fireEvent.click(screen.getByText("☆"));
 
-    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Unable to update favorite.\n${message}`));
+    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Unable to update favorite.\n${message}\n${hint}`));
     expect(material.is_favorite).toBe(false);
   });
 });

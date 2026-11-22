@@ -147,8 +147,8 @@ class API::V1::MaterialsController < API::APIController
     end
 
     if favorite.user != current_user
-      message = with_learner_mode_tab_message('Cannot delete favorite not owned by current user.')
-      render json: {:message => message}, :status => 400
+      render json: {:message => "Cannot delete favorite not owned by current user.",
+                    :learner_mode_hint => learner_mode_hint}.compact, :status => 400
       return
     end
 
@@ -179,8 +179,8 @@ class API::V1::MaterialsController < API::APIController
     end
 
     unless current_user.portal_teacher
-      message = with_learner_mode_tab_message('You must be logged in as a teacher to favorite material')
-      return render json: { message: message }, status: 403
+      message = 'You must be logged in as a teacher to favorite material'
+      return render json: { message: message, learner_mode_hint: learner_mode_hint }.compact, status: 403
     end
 
     favorite_id = -1
@@ -340,19 +340,19 @@ class API::V1::MaterialsController < API::APIController
         status = 403 # unauthorized
       end
       message = "#{prefix} #{params[:material_type]} with id of #{params[:material_id]} in class #{portal_clazz.id}"
-      message = with_learner_mode_tab_message(message) unless allow
+      hint = learner_mode_hint unless allow
     else
       message = "Missing assign parameter"
       status = 400 # bad request
     end
 
-    render json: {:message => message}, :status => status
+    render json: {:message => message, :learner_mode_hint => hint}.compact, :status => status
   end
 
   def unassigned_clazzes
     unless current_visitor.portal_teacher
-      message = with_learner_mode_tab_message('You must be logged in as a teacher to assign materials')
-      return render json: { message: message }, status: 403
+      message = 'You must be logged in as a teacher to assign materials'
+      return render json: { message: message, learner_mode_hint: learner_mode_hint }.compact, status: 403
     end
 
     @material = [ExternalActivity.find(params[:material_id])]

@@ -4,11 +4,12 @@ import StemFinderResult from "../../../src/library/components/stem-finder-result
 import { mockJquery } from "../helpers/mock-jquery";
 
 describe("When a favorite change on a finder card is refused", () => {
-  const message = "Cannot delete favorite not owned by current user. You may have switched to learner mode in another tab.";
+  const message = "Cannot delete favorite not owned by current user.";
+  const hint = "You may have switched to learner mode in another tab, so this page is out of date. Reload the page to continue.";
 
   mockJquery({
     post: jest.fn().mockImplementation(() => ({
-      fail: (callback: any) => setTimeout(() => callback({ responseText: JSON.stringify({ message }) }))
+      fail: (callback: any) => setTimeout(() => callback({ responseText: JSON.stringify({ message, learner_mode_hint: hint }) }))
     }))
   });
 
@@ -50,7 +51,7 @@ describe("When a favorite change on a finder card is refused", () => {
 
     star.click();
 
-    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Unable to update favorite.\n${message}`));
+    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Unable to update favorite.\n${message}\n${hint}`));
     expect(resource.is_favorite).toBe(isFavorite);
     expect(star.className).toBe(starClass);
   });

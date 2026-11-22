@@ -5,7 +5,7 @@ class API::V1::BookmarksController < API::APIController
   # POST api/v1/bookmarks
   def create
     auth = authorize_class_teacher!(params)
-    return error(auth[:error]) if auth[:error]
+    return error(auth[:error], learner_mode_hint: auth[:learner_mode_hint]) if auth[:error]
 
     name = params[:name] || 'My bookmark'
     url = params[:url] || 'http://concord.org'
@@ -25,7 +25,7 @@ class API::V1::BookmarksController < API::APIController
   # PUT api/v1/bookmarks
   def update
     auth = authorize_class_teacher!(params)
-    return error(auth[:error]) if auth[:error]
+    return error(auth[:error], learner_mode_hint: auth[:learner_mode_hint]) if auth[:error]
 
     bookmark = Portal::Bookmark.find_by_id(params['id'])
     if !bookmark
@@ -51,7 +51,7 @@ class API::V1::BookmarksController < API::APIController
   # DELETE api/v1/bookmarks
   def destroy
     auth = authorize_class_teacher!(params)
-    return error(auth[:error]) if auth[:error]
+    return error(auth[:error], learner_mode_hint: auth[:learner_mode_hint]) if auth[:error]
 
     bookmark = Portal::Bookmark.find_by_id(params['id'])
     if !bookmark
@@ -71,7 +71,7 @@ class API::V1::BookmarksController < API::APIController
   # POST api/v1/bookmarks/sort
   def sort
     auth = authorize_class_teacher!(params)
-    return error(auth[:error]) if auth[:error]
+    return error(auth[:error], learner_mode_hint: auth[:learner_mode_hint]) if auth[:error]
 
     ids = params['ids']
     if !ids
@@ -120,7 +120,7 @@ class API::V1::BookmarksController < API::APIController
     end
 
     if !current_user.portal_teacher || !current_user.portal_teacher.has_clazz?(portal_class)
-      return {error: with_learner_mode_tab_message('You are not authorized to edit bookmarks for this class')}
+      return {error: 'You are not authorized to edit bookmarks for this class', learner_mode_hint: learner_mode_hint}
     end
 
     return {portal_class: portal_class, error: nil}
