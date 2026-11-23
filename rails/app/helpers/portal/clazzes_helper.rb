@@ -37,6 +37,8 @@ module Portal::ClazzesHelper
       other_students = other_clazzes.map { |c| c.students}.flatten.uniq
       other_students = other_students - portal_clazz.students
       other_students.reject! { |s| s.user.nil?}
+      # A teacher's learner mode account must not be added to other teachers' classes.
+      other_students.reject! { |s| s.is_teacher_preview_student }
       other_students.compact!
       other_students = other_students.sort { |a,b| (a.user.last_name.upcase <=> b.user.last_name.upcase) }
       other_students = other_students.map { |s| {id: s.id, name: "#{s.user.last_name }, #{s.user.first_name}", username: s.user.login } }
