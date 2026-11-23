@@ -37,6 +37,14 @@ RSpec.describe 'Home pages after a learner mode switch', type: :request do
       expect(response).to redirect_to(auth_login_path(after_sign_in_path: my_classes_path))
     end
 
+    it 'shows the page to a teacher with a learner account who is also a student' do
+      learner_user
+      FactoryBot.create(:portal_student, user: teacher.user)
+      sign_in teacher.user
+      get my_classes_path
+      expect(response).to have_http_status(:ok)
+    end
+
     it 'still shows the page to a learner account' do
       sign_in learner_user
       get my_classes_path

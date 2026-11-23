@@ -349,10 +349,12 @@ class HomeController < ApplicationController
   end
 
   # A teacher preview student on a teacher home page, or a teacher with a teacher preview student
-  # on the student home page.
+  # on the student home page. A user who is also a student has My Classes as their home page, so
+  # they stay on it.
   def other_learner_mode_home_page?
     return false unless current_user
     return action_name == 'recent_activity' if current_user.teacher_preview_student?
+    return false if current_user.portal_student
     current_user.has_teacher_preview_student? && action_name == 'my_classes'
   end
 
