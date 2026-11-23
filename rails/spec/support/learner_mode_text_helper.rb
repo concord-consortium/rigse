@@ -6,7 +6,7 @@ module LearnerModeTextHelper
     "Use 'Switch back to teacher' in the sidebar to go back."
   SWITCHED_TO_TEACHER_TEXT = "That page or action isn't available to your teacher account. " \
     "You may have switched back to teacher in another tab. " \
-    "Use 'Switch to learner mode' in the sidebar to go back."
+    "Use 'Switch to Learner Mode (LM)' in the sidebar to go back."
   SWITCHED_TO_LEARNER_BACKGROUND_TEXT = "You may have switched to learner mode in another tab, " \
     "so this page is out of date. Reload the page to continue."
   SWITCHED_TO_TEACHER_BACKGROUND_TEXT = "You may have switched back to teacher in another tab, " \
