@@ -135,6 +135,32 @@ describe API::V1::OfferingsController do
         expect(student2["detailed_progress"]).to eq nil
       end
 
+      describe "when a student is a teacher preview student" do
+        before(:each) do
+          student_b.update!(is_teacher_preview_student: true)
+        end
+
+        it "returns is_teacher_preview_student for each student and keeps the names" do
+          get :show, params: { id: offering.id }
+          students = JSON.parse(response.body)["students"]
+          learner_json = students.find { |s| s["user_id"] == student_b.user.id }
+          other_json = students.find { |s| s["user_id"] == student_a.user.id }
+          expect(learner_json["is_teacher_preview_student"]).to eq true
+          expect(learner_json["name"]).to eq student_b.user.name
+          expect(other_json["is_teacher_preview_student"]).to eq false
+        end
+
+        it "returns is_teacher_preview_student when names are anonymized" do
+          get :show, params: { id: offering.id, researcher: true }
+          students = JSON.parse(response.body)["students"]
+          learner_json = students.find { |s| s["user_id"] == student_b.user.id }
+          other_json = students.find { |s| s["user_id"] == student_a.user.id }
+          expect(learner_json["is_teacher_preview_student"]).to eq true
+          expect(learner_json["name"]).to eq "Student #{student_b.id}"
+          expect(other_json["is_teacher_preview_student"]).to eq false
+        end
+      end
+
       describe "when offering is locked" do
         let(:locked) { true }
 

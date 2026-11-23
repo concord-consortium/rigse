@@ -22,7 +22,8 @@ module Portal::ClazzesHelper
         can_remove: can_edit,
         can_reset_password: policy(roster_row.student.user).reset_password?,
         is_oauth_user: is_oauth_user,
-        oauth_provider: is_oauth_user ? roster_row.student.user.authentications[0].provider : "n/a"
+        oauth_provider: is_oauth_user ? roster_row.student.user.authentications[0].provider : "n/a",
+        is_teacher_preview_student: roster_row.student.is_teacher_preview_student
       })
     end
 

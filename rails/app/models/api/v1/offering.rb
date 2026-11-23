@@ -29,6 +29,7 @@ class API::V1::Offering
     attribute :detailed_progress, Array
     attribute :active, Boolean
     attribute :locked, Boolean
+    attribute :is_teacher_preview_student, Boolean
 
     def initialize(student, offering, protocol, host_with_port, anonymize = false)
       self.name = anonymize ? "#{student.anonymized_first_name} #{student.anonymized_last_name}" : student.user.name
@@ -36,6 +37,7 @@ class API::V1::Offering
       self.last_name = anonymize ? student.anonymized_last_name : student.user.last_name
       self.username = student.user.login
       self.user_id = student.user.id
+      self.is_teacher_preview_student = student.is_teacher_preview_student
       learner = offering.learners.find { |l| l.student_id === student.id }
       # Learner object is available only if student has started the activity.
       self.started_activity = learner ? true : false

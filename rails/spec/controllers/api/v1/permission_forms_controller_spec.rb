@@ -140,10 +140,18 @@ RSpec.describe API::V1::PermissionFormsController, type: :controller do
       get :class_permission_forms, params: { class_id: clazz.id }
       expect(response).to have_http_status(:ok)
       expect(JSON.parse(response.body)).to match([
-        hash_including('id' => student.id, 'name' => student.user.name, 'login' => student.user.login, 'permission_forms' => [
+        hash_including('id' => student.id, 'name' => student.user.name, 'login' => student.user.login, 'is_teacher_preview_student' => false, 'permission_forms' => [
           hash_including('id' => permission_form.id, 'name' => permission_form.name, 'url' => permission_form.url, 'project_id' => permission_form.project_id, 'is_archived' => false),
           hash_including('id' => another_permission_form.id, 'name' => another_permission_form.name, 'url' => another_permission_form.url, 'project_id' => another_permission_form.project_id, 'is_archived' => false)
         ])
+      ])
+    end
+
+    it 'sets is_teacher_preview_student for a teacher preview student and keeps the name' do
+      student.update!(is_teacher_preview_student: true)
+      get :class_permission_forms, params: { class_id: clazz.id }
+      expect(JSON.parse(response.body)).to match([
+        hash_including('id' => student.id, 'name' => student.user.name, 'is_teacher_preview_student' => true)
       ])
     end
   end

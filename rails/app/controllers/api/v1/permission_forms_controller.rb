@@ -106,6 +106,7 @@ class API::V1::PermissionFormsController < API::APIController
         id: student.id,
         name: student.user.name,
         login: student.user.login,
+        is_teacher_preview_student: student.is_teacher_preview_student,
         permission_forms: management_policy_scope(student.permission_forms).map do |form|
           permission_form_hash(form)
         end

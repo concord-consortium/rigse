@@ -59,6 +59,16 @@ describe API::V1::ClassesController do
         expect(JSON.parse(response.body)["students"].length).to eq 1
         expect(JSON.parse(response.body)["students"][0]["first_name"]).to eq learner.student.first_name
         expect(JSON.parse(response.body)["students"][0]["last_name"]).to eq learner.student.last_name
+        expect(JSON.parse(response.body)["students"][0]["is_teacher_preview_student"]).to be false
+      end
+
+      it "sets is_teacher_preview_student for a teacher preview student and keeps the name" do
+        learner.student.update!(is_teacher_preview_student: true)
+        get :show, params: { id: clazz.id }
+        student_json = JSON.parse(response.body)["students"][0]
+        expect(student_json["is_teacher_preview_student"]).to be true
+        expect(student_json["first_name"]).to eq learner.student.first_name
+        expect(student_json["last_name"]).to eq learner.student.last_name
       end
 
       it "returns only non archived offerings" do
@@ -86,6 +96,16 @@ describe API::V1::ClassesController do
         expect(JSON.parse(response.body)["students"].length).to eq 1
         expect(JSON.parse(response.body)["students"][0]["first_name"]).to eq "Student"
         expect(JSON.parse(response.body)["students"][0]["last_name"]).to eq "#{learner.student.id}"
+        expect(JSON.parse(response.body)["students"][0]["is_teacher_preview_student"]).to be false
+      end
+
+      it "sets is_teacher_preview_student for a teacher preview student with anonymized student info" do
+        learner.student.update!(is_teacher_preview_student: true)
+        get :show, params: { id: clazz.id }
+        student_json = JSON.parse(response.body)["students"][0]
+        expect(student_json["is_teacher_preview_student"]).to be true
+        expect(student_json["first_name"]).to eq "Student"
+        expect(student_json["last_name"]).to eq "#{learner.student.id}"
       end
     end
   end
