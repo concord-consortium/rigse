@@ -251,7 +251,7 @@ export default class Assignments extends React.Component<any, any> {
     });
   }
 
-  requestOfferingDetails (offering: any) {
+  requestOfferingDetails (offering: any, onFailure: () => void) {
     const { researcher } = this.props;
 
     jQuery.ajax({
@@ -265,7 +265,8 @@ export default class Assignments extends React.Component<any, any> {
         });
       },
       error: (jqXHR) => {
-        window.alert(withServerMessage("Offering details loading failed, please try to reload page and try again.", jqXHR));
+        onFailure();
+        alertAfterRender(withServerMessage("Offering details loading failed, please try to reload page and try again.", jqXHR));
       }
     });
   }

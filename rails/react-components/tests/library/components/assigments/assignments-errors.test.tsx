@@ -75,7 +75,8 @@ describe("When a Class Assignments request is refused", () => {
     expect((screen.getAllByRole("checkbox")[0] as HTMLInputElement).checked).toBe(true);
   });
 
-  it("shows the server's message when loading the offering details fails", async () => {
+  it("shows the server's message and closes the row when loading the offering details fails", async () => {
+    recordDuringAlert(() => screen.queryAllByText("- HIDE DETAIL").length);
     render(<Assignments initialClassData={makeClassData()} />);
 
     fireEvent.click(screen.getAllByText("+ SHOW DETAIL")[0]);
@@ -83,6 +84,7 @@ describe("When a Class Assignments request is refused", () => {
     await waitFor(() => {
       expect(window.alert).toHaveBeenCalledWith(`Offering details loading failed, please try to reload page and try again.\n${message}.\n\n${hint}`);
     });
+    expect(shownDuringAlert).toBe(0);
   });
 
   it("shows the server's message when a student update fails", async () => {
