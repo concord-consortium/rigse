@@ -428,6 +428,20 @@ RSpec.describe API::V1::StudentsController, type: :controller do
 
       expect(response).to have_http_status(:bad_request)
     end
+
+    it 'refuses a signed-in teacher with the message for the class word field' do
+      sign_in teacher.user
+      post :create
+      expect(response).to have_http_status(:bad_request)
+      expect(JSON.parse(response.body)['message']).to eq('class_word' => I18n.t('Registration.ErrorLoggedInAsTeacher'))
+    end
+
+    it 'refuses a signed-in student with the message for the class word field' do
+      sign_in student.user
+      post :create
+      expect(response).to have_http_status(:bad_request)
+      expect(JSON.parse(response.body)['message']).to eq('class_word' => I18n.t('Registration.ErrorLoggedInAsStudent'))
+    end
   end
 
   # TODO: auto-generated
