@@ -1,14 +1,14 @@
 // The alert text: the page's own text, then the message on a new line when there is one.
 export const withMessage = (text: string, message?: string) => message ? `${text}\n${message}` : text;
 
-const text = (value: any) => typeof value === "string" && value ? value : undefined;
+const nonEmptyString = (value: any) => typeof value === "string" && value ? value : undefined;
 
 // The server's message from a parsed JSON error response, with a period added if it has no end
 // punctuation, or undefined if there is none. After a learner mode switch in another tab, the
 // response can also have a learner_mode_hint. It goes after a blank line.
 export const serverMessage = (body: any): string | undefined => {
-  let message = text(body?.message);
-  const hint = text(body?.learner_mode_hint);
+  let message = nonEmptyString(body?.message);
+  const hint = nonEmptyString(body?.learner_mode_hint);
   if (message && !/[.!?]$/.test(message)) {
     message = `${message}.`;
   }
