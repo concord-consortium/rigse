@@ -73,6 +73,7 @@ describe("When a Class Assignments request is refused", () => {
     await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Offering update failed, please try to reload page and try again.\n${message}.\n\n${hint}`));
     expect(shownDuringAlert).toBe(true);
     expect((screen.getAllByRole("checkbox")[0] as HTMLInputElement).checked).toBe(true);
+    expect((screen.getAllByRole("checkbox")[0] as HTMLInputElement).disabled).toBe(false);
   });
 
   it("shows the server's message and closes the row when loading the offering details fails", async () => {
@@ -120,5 +121,28 @@ describe("When a Class Assignments offering update succeeds", () => {
     fireEvent.click(screen.getAllByRole("checkbox")[0]);
 
     await waitFor(() => expect((screen.getAllByRole("checkbox")[0] as HTMLInputElement).checked).toBe(false));
+  });
+
+  it("disables the offering's checkboxes until the server answers", async () => {
+    render(<Assignments initialClassData={makeClassData()} />);
+    const disabled = () => screen.getAllByRole("checkbox").map(el => (el as HTMLInputElement).disabled);
+
+    fireEvent.click(screen.getAllByRole("checkbox")[1]);
+
+    expect(disabled()).toEqual([true, true, false, false]);
+    await waitFor(() => expect(disabled()).toEqual([false, false, false, false]));
+  });
+
+  it("disables the student checkboxes while an offering update waits for the server", () => {
+    const student = { id: 5, name: "Student 5", active: true, locked: false, startedActivity: false };
+    render(
+      <table>
+        <tbody>
+          <ProgressTableRow student={student} offering={{ id: 1, updatePending: true }} offeringDetails={{ id: 1 }} onSetStudentOfferingMetadata={jest.fn()} />
+        </tbody>
+      </table>
+    );
+
+    expect(screen.getAllByRole("checkbox").map(el => (el as HTMLInputElement).disabled)).toEqual([true, true]);
   });
 });

@@ -150,6 +150,9 @@ export default class Assignments extends React.Component<any, any> {
 
   onOfferingUpdate (offering: any, prop: any, value: any) {
     // Change the page only after the server agrees, so a refused request leaves it as it was.
+    // Until then, the offering's checkboxes and its students' checkboxes are disabled, so a later
+    // change can't be overwritten when this answer arrives.
+    this.setOfferingUpdatePending(offering.id, true);
     jQuery.ajax({
       type: "PUT",
       url: offering.apiUrl,
@@ -158,9 +161,16 @@ export default class Assignments extends React.Component<any, any> {
       },
       success: () => this.applyOfferingUpdate(offering.id, prop, value),
       error: (jqXHR) => {
-        window.alert(withServerMessage("Offering update failed, please try to reload page and try again.", jqXHR));
+        this.setOfferingUpdatePending(offering.id, false);
+        alertAfterRender(withServerMessage("Offering update failed, please try to reload page and try again.", jqXHR));
       }
     });
+  }
+
+  setOfferingUpdatePending (offeringId: any, updatePending: boolean) {
+    this.setState((prevState: any) => ({
+      offerings: prevState.offerings.map((o: any) => o.id === offeringId ? { ...o, updatePending } : o)
+    }));
   }
 
   applyOfferingUpdate (offeringId: any, prop: any, value: any) {
@@ -169,7 +179,7 @@ export default class Assignments extends React.Component<any, any> {
     if (!offering) {
       return;
     }
-    const newOffering = { ...offering, [prop]: value };
+    const newOffering = { ...offering, [prop]: value, updatePending: false };
 
     // when setting active or locked, we also set all students in the offering to that value
     // overriding any previous values
