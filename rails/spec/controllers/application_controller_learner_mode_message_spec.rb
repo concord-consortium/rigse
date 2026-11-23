@@ -1,8 +1,8 @@
 require File.expand_path('../../spec_helper', __FILE__)
 
 # When a page is refused, both a teacher preview student user and a teacher user with a linked
-# teacher preview student get extra text. They may have switched accounts in another tab, because all tabs
-# share one session.
+# teacher preview student get the learner mode text. They may have switched accounts in another
+# tab, because all tabs share one session. On a page load, the text replaces the usual message.
 describe ApplicationController, type: :controller do
   controller do
     def index
@@ -30,13 +30,13 @@ describe ApplicationController, type: :controller do
   end
 
   describe 'on a page load' do
-    it 'adds the text for a learner account' do
-      expect(refusal_message(learner_user)).to eq("You don't have permission to list this resource. #{to_learner_text}")
+    it 'uses only the learner mode text for a learner account' do
+      expect(refusal_message(learner_user)).to eq(to_learner_text)
     end
 
-    it 'adds the text for a teacher with a learner account' do
+    it 'uses only the learner mode text for a teacher with a learner account' do
       learner_user
-      expect(refusal_message(teacher.user)).to eq("You don't have permission to list this resource. #{to_teacher_text}")
+      expect(refusal_message(teacher.user)).to eq(to_teacher_text)
     end
 
     it 'does not add the text for a teacher with no learner account' do

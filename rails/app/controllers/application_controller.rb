@@ -77,10 +77,13 @@ class ApplicationController < ActionController::Base
     # strong enough.
     response.headers['Cache-Control'] = 'no-store'
 
-    error_message = with_learner_mode_tab_message(not_authorized_error_message)
     if request.xhr?
+      error_message = with_learner_mode_tab_message(not_authorized_error_message)
       render :html => helpers.tag.div(error_message, :class => 'flash_error'), :status => 403
     else
+      # The user goes to another page, so for a learner mode user the learner mode text replaces
+      # the usual message, which names the refused page's action.
+      error_message = learner_mode_tab_message(background: false) || not_authorized_error_message
       if current_user
         # only show the error alert if we are not redirecting after signing in
         # An error on redirecting after signing in should only happen in two cases:
@@ -185,10 +188,13 @@ class ApplicationController < ActionController::Base
     name.humanize
   end
 
-  SWITCHED_TO_LEARNER_TEXT = "You may have switched to learner mode in another tab. " \
-    "Use 'Switch back to teacher' in the sidebar to see this page."
-  SWITCHED_TO_TEACHER_TEXT = "You may have switched back to teacher in another tab. " \
-    "Use 'Switch to learner mode' in the sidebar to see this page."
+  # The whole message when a page or form is refused and the user goes to their home page.
+  SWITCHED_TO_LEARNER_TEXT = "That page or action isn't available in learner mode. " \
+    "You may have switched to learner mode in another tab. " \
+    "Use 'Switch back to teacher' in the sidebar to go back."
+  SWITCHED_TO_TEACHER_TEXT = "That page or action isn't available to your teacher account. " \
+    "You may have switched back to teacher in another tab. " \
+    "Use 'Switch to learner mode' in the sidebar to go back."
   # For a background request. The page that sent it still shows the old sidebar, so do not name
   # a sidebar link. A reload shows the page for the current account, or the home page with the
   # message above.
