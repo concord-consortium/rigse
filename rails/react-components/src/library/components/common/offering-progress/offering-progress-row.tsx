@@ -1,6 +1,7 @@
 import React from "react";
 
 import TriStateCheckbox from "../tri-state-checkbox";
+import StudentName from "../student-name";
 import { withServerMessage } from "../../../helpers/request-error-message";
 
 import css from "./style.scss";
@@ -44,7 +45,7 @@ export default class ProgressTableRow extends React.Component<any, any> {
   }
 
   renderStudentName (student: any) {
-    const name = <span className={css.name}>{ student.name }</span>;
+    const name = <span className={css.name}><StudentName name={student.name} isTeacherPreviewStudent={student.isTeacherPreviewStudent} /></span>;
     return student.reportUrl && student.totalProgress > 0
       ? <a href={student.reportUrl} target="_blank" title={`Open report for ${student.name}`} rel="noreferrer">{ name }</a>
       : name;

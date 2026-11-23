@@ -7,6 +7,7 @@ import { CurrentSelectedProject, IPermissionForm, IStudent } from "./types";
 import { EditStudentPermissionsForm } from "./edit-student-permissions-form";
 import { filteredByProject, formsOfStudent, nonArchived } from "../common/permission-utils";
 import ModalDialog from "../../shared/modal-dialog";
+import StudentName from "../../common/student-name";
 
 import css from "./students-table.scss";
 
@@ -184,7 +185,7 @@ export const StudentsTable = ({ classId, currentSelectedProject }: IProps) => {
                   <td className={css.checkboxColumn}>
                     <input type="checkbox" name={studentInfo.id.toString()} checked={isStudentSelected[studentInfo.id] ?? false} onChange={handleStudentSelectedToggle} />
                   </td>
-                  <td>{ studentInfo.name }</td>
+                  <td><StudentName name={studentInfo.name} isTeacherPreviewStudent={studentInfo.is_teacher_preview_student} /></td>
                   <td>{ studentInfo.login }</td>
                   <td className={css.permissionFormsColumn}>
                     {

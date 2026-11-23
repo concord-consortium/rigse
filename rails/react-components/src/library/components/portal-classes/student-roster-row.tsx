@@ -1,5 +1,6 @@
 import React from "react";
 import TriStateCheckbox from "../common/tri-state-checkbox";
+import StudentName from "../common/student-name";
 
 import css from "./student-roster.scss";
 
@@ -25,14 +26,14 @@ export default class StudentRosterRow extends React.Component<any, any> {
 
   render () {
     const { student, canEdit, canManageStudents, studentCheckboxChecked } = this.props;
-    const { name, username, last_login: lastLogin, assignments_started: assignmentsStarted } = student;
+    const { name, username, last_login: lastLogin, assignments_started: assignmentsStarted, is_teacher_preview_student: isTeacherPreviewStudent } = student;
 
     return (
       <tr>
         { canManageStudents &&
           <td><TriStateCheckbox checked={studentCheckboxChecked} onChange={this.handleStudentCheckboxChange} /></td>
         }
-        <td>{ name }</td>
+        <td><StudentName name={name} isTeacherPreviewStudent={isTeacherPreviewStudent} /></td>
         <td>{ username }</td>
         <td>{ lastLogin }</td>
         <td>{ assignmentsStarted }</td>

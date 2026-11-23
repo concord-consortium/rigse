@@ -13,6 +13,7 @@ export interface IStudent {
   id: number;
   name: string;
   login: string;
+  is_teacher_preview_student?: boolean;
   permission_forms: IPermissionForm[];
 }
 
