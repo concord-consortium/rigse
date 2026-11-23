@@ -250,6 +250,24 @@ describe("When a Links request is refused", () => {
     await waitFor(() => expect(linkNames()).toEqual(["Link 2"]));
   });
 
+  it("keeps a link deleted while a sort waits gone when the sort fails", async () => {
+    const pending: any[] = [];
+    respond = (options) => pending.push(options);
+    const bookmarks = [...makeBookmarks(), { id: 3, is_visible: true, name: "Link 3", position: 2, url: "http://example.com/3" }];
+    const ref = React.createRef<EditBookmarks>();
+    render(<EditBookmarks ref={ref} classId={1} bookmarks={bookmarks} />);
+
+    fireEvent.click(screen.getAllByText("Delete")[2]);
+    act(() => ref.current?.handleSortEnd({ oldIndex: 0, newIndex: 1 }));
+    const [deleteRequest, sortRequest] = pending;
+    act(() => deleteRequest.success({ success: true }));
+    await waitFor(() => expect(linkNames()).toEqual(["Link 2", "Link 1"]));
+    act(() => sortRequest.error({ responseText: JSON.stringify(refusal) }, "error", "Bad Request"));
+
+    await waitFor(() => expect(window.alert).toHaveBeenCalled());
+    expect(linkNames()).toEqual(["Link 1", "Link 2"]);
+  });
+
   it("puts the old order back, then shows the server's message when sorting fails", async () => {
     recordDuringAlert(linkNames);
     const ref = React.createRef<EditBookmarks>();

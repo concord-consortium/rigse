@@ -83,14 +83,23 @@ export class EditBookmarks extends React.Component<any, any> {
     oldIndex,
     newIndex
   }: any) {
-    let { bookmarks } = this.state;
-    bookmarks = arrayMove(bookmarks, oldIndex, newIndex);
+    const { bookmarks: oldBookmarks } = this.state;
+    const oldIds = oldBookmarks.map((bookmark: any) => bookmark.id);
+    const bookmarks = arrayMove(oldBookmarks, oldIndex, newIndex);
     this.setState({ bookmarks });
 
     const ids = bookmarks.map((bookmark: any) => bookmark.id);
     this.apiCall("sort", { data: { ids } })
       .catch(err => {
-        this.setState({ bookmarks: arrayMove(bookmarks, newIndex, oldIndex) });
+        // Put the current links back in the old order. A link deleted while the sort waited stays
+        // gone, and a link created then goes at the end.
+        const oldPosition = (bookmark: any) => {
+          const index = oldIds.indexOf(bookmark.id);
+          return index === -1 ? oldIds.length : index;
+        };
+        this.setState((prevState: any) => ({
+          bookmarks: [...prevState.bookmarks].sort((a: any, b: any) => oldPosition(a) - oldPosition(b))
+        }));
         alertAfterRender(withMessage("Unable to save link sort order!", serverMessage(err)));
       });
   }
