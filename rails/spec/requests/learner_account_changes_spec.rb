@@ -26,7 +26,7 @@ RSpec.describe 'Changes to a teacher preview student account', type: :request do
 
     it 'cannot update itself' do
       put user_path(learner_user), params: { user: { first_name: 'Changed', login: 'known-login' } }
-      refused_with("You don't have permission")
+      refused_with(LearnerModeTextHelper::SWITCHED_TO_LEARNER_TEXT)
       learner_user.reload
       expect(learner_user.first_name).not_to eq('Changed')
       expect(learner_user.login).not_to eq('known-login')
@@ -34,7 +34,7 @@ RSpec.describe 'Changes to a teacher preview student account', type: :request do
 
     it 'cannot open the change password page at /change_password/0' do
       get change_password_path(reset_code: '0')
-      refused_with("You don't have permission to change this password")
+      refused_with(LearnerModeTextHelper::SWITCHED_TO_LEARNER_TEXT)
     end
 
     it 'cannot change its password through /change_password/0' do
@@ -42,26 +42,26 @@ RSpec.describe 'Changes to a teacher preview student account', type: :request do
       expect {
         post '/passwords/update_users_password', params: password_params.merge(reset_code: '0')
       }.not_to change { learner_user.reload.encrypted_password }
-      refused_with("You don't have permission to change this password")
+      refused_with(LearnerModeTextHelper::SWITCHED_TO_LEARNER_TEXT)
     end
 
     it 'cannot reset its password through users#reset_password' do
       expect {
         get reset_password_user_path(learner_user)
       }.not_to change(Password, :count)
-      refused_with("You don't have permission")
+      refused_with(LearnerModeTextHelper::SWITCHED_TO_LEARNER_TEXT)
     end
 
     it 'cannot edit its security questions' do
       get edit_user_security_questions_path(learner_user)
-      refused_with("You don't have permission")
+      refused_with(LearnerModeTextHelper::SWITCHED_TO_LEARNER_TEXT)
     end
 
     it 'cannot update its security questions' do
       put user_security_questions_path(learner_user), params: {
         security_questions: (0..2).to_h { |i| ["question#{i}", { question_idx: i.to_s, answer: "answer #{i}" }] }
       }
-      refused_with("You don't have permission")
+      refused_with(LearnerModeTextHelper::SWITCHED_TO_LEARNER_TEXT)
       expect(learner_user.reload.security_questions).to be_empty
     end
   end
@@ -80,7 +80,7 @@ RSpec.describe 'Changes to a teacher preview student account', type: :request do
     expect {
       get reset_password_user_path(learner_user)
     }.not_to change(Password, :count)
-    refused_with("You don't have permission")
+    refused_with(LearnerModeTextHelper::SWITCHED_TO_TEACHER_TEXT)
   end
 
   it 'an admin cannot reset its password' do

@@ -34,6 +34,10 @@ class HomeController < ApplicationController
 
 
   def getting_started
+    # A teacher page. A student who opens it, for example from an old link or from a tab left open
+    # from before a learner mode switch, goes to My Classes with no message.
+    return redirect_no_store(my_classes_path) if current_user&.portal_student
+
     authorize :home, :getting_started?
     @hide_signup_link = true
     notices_hash = Admin::SiteNotice.get_notices_for_user(current_visitor)
@@ -43,6 +47,10 @@ class HomeController < ApplicationController
   end
 
   def my_classes
+    # The other learner mode account's home page, for example after a reload in a tab left open
+    # from before a switch. Go home with no message: the earlier message already explained it.
+    return redirect_no_store(view_context.current_user_home_path) if other_learner_mode_home_page?
+
     authorize :home, :my_classes?
     @portal_student = current_visitor.portal_student
     @hide_signup_link = true
@@ -201,6 +209,10 @@ class HomeController < ApplicationController
   # end
 
   def recent_activity
+    # The other learner mode account's home page, for example after a reload in a tab left open
+    # from before a switch. Go home with no message: the earlier message already explained it.
+    return redirect_no_store(view_context.current_user_home_path) if other_learner_mode_home_page?
+
     authorize :home, :recent_activity?
 
     notices_hash = Admin::SiteNotice.get_notices_for_user(current_visitor)
@@ -328,6 +340,23 @@ class HomeController < ApplicationController
   end
 
   protected
+
+  # The target depends on the signed-in account, so the browser must not cache this redirect. See
+  # ApplicationController#pundit_user_not_authorized.
+  def redirect_no_store(path)
+    response.headers['Cache-Control'] = 'no-store'
+    redirect_to(path)
+  end
+
+  # A teacher preview student on a teacher home page, or a teacher with a teacher preview student
+  # on the student home page. A user who is also a student has My Classes as their home page, so
+  # they stay on it.
+  def other_learner_mode_home_page?
+    return false unless current_user
+    return action_name == 'recent_activity' if current_user.teacher_preview_student?
+    return false if current_user.portal_student
+    current_user.has_teacher_preview_student? && action_name == 'my_classes'
+  end
 
   def load_featured_materials
     @show_featured_materials = true

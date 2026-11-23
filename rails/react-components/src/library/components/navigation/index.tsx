@@ -103,18 +103,23 @@ export default class Navigation extends React.Component<any, any> {
         onClick(e);
       }
       if (httpMethod === "post") {
-        e.preventDefault();
         this.submitPost(url);
       }
       return true;
     };
+    const content = (
+      <>
+        { icon ? <div className={css.icon}><i className={icon} /></div> : null }
+        { label }
+      </>
+    );
     return (
       <li className={linkStyles} onClick={clickHandler} key={linkDef.id}>
-        {/* A POST link has no real address: opening it in a new tab would send a GET. */}
-        <a href={httpMethod === "post" ? "#" : url} target={target}>
-          { icon ? <div className={css.icon}><i className={icon} /></div> : null }
-          { label }
-        </a>
+        {/* A POST item is a button: a link would offer "open in new tab", which would send a GET. */}
+        { httpMethod === "post"
+          ? <button type="button" className={css.linkButton}>{ content }</button>
+          : <a href={url} target={target}>{ content }</a>
+        }
       </li>
     );
   }

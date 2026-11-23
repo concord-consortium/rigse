@@ -1,6 +1,7 @@
 import React from "react";
 
 import TriStateCheckbox from "../tri-state-checkbox";
+import { withServerMessage } from "../../../helpers/request-error-message";
 
 import css from "./style.scss";
 
@@ -26,8 +27,8 @@ export default class ProgressTableRow extends React.Component<any, any> {
         const metadata = { active, locked };
         onSetStudentOfferingMetadata(student.id, offeringDetails.id, metadata);
       },
-      error: () => {
-        window.alert("Student metadata update failed, please try to reload page and try again.");
+      error: (jqXHR) => {
+        window.alert(withServerMessage("Student metadata update failed, please try to reload page and try again.", jqXHR));
       }
     });
   }
@@ -60,8 +61,8 @@ export default class ProgressTableRow extends React.Component<any, any> {
         <td className={css.status}>
           { student.startedActivity ? "Started" : "Not Started" }
         </td>
-        {offering && <td className={css.centered}><TriStateCheckbox checked={student.active} onChange={this.onActiveUpdate} /></td>}
-        {offering && <td className={css.centered}><TriStateCheckbox checked={student.locked} onChange={this.onLockedUpdate} /></td>}
+        {offering && <td className={css.centered}><TriStateCheckbox checked={student.active} disabled={offering.updatePending} onChange={this.onActiveUpdate} /></td>}
+        {offering && <td className={css.centered}><TriStateCheckbox checked={student.locked} disabled={offering.updatePending} onChange={this.onLockedUpdate} /></td>}
       </tr>
     );
   }

@@ -36,7 +36,7 @@ export default class OfferingRow extends React.Component<any, any> {
     const newValue = !detailsVisible;
     this.setState({ detailsVisible: newValue });
     if (!offeringDetails) {
-      requestOfferingDetails(offering);
+      requestOfferingDetails(offering, (afterRender: () => void) => this.setState({ detailsVisible: false }, afterRender));
     }
   }
 
@@ -74,7 +74,7 @@ export default class OfferingRow extends React.Component<any, any> {
           <span className={css.activityNameCell}>{ offering.name }</span>
           <span className={css.checkboxCell}>
             <TriStateCheckbox
-              disabled={readOnly}
+              disabled={readOnly || offering.updatePending}
               checked={offering.active}
               partiallyChecked={partiallyActive}
               partiallyCheckedMessage={this.partiallyCheckedMessage("visible")}
@@ -83,7 +83,7 @@ export default class OfferingRow extends React.Component<any, any> {
           </span>
           <span className={css.checkboxCell}>
             <TriStateCheckbox
-              disabled={readOnly}
+              disabled={readOnly || offering.updatePending}
               checked={offering.locked}
               partiallyChecked={partiallyLocked}
               partiallyCheckedMessage={this.partiallyCheckedMessage("locked")}

@@ -5,6 +5,7 @@ import GradeLevels from "./grade-levels";
 import { ResourceTypeTag } from "./resource-type-tag";
 import StemFinderResultStandards from "./stem-finder-result-standards";
 import RelatedResourceResult from "./related-resource-result";
+import { withServerMessage } from "../helpers/request-error-message";
 
 import css from "./stem-finder-result.scss";
 
@@ -90,14 +91,15 @@ const StemFinderResult = Component({
       resource.is_favorite = !resource.is_favorite;
       this.setState({ favorited: resource.is_favorite });
     }.bind(this);
+    const fail = (jqXHR: any) => window.alert(withServerMessage("Unable to update favorite.", jqXHR));
     if (resource.is_favorite) {
-      jQuery.post("/api/v1/materials/remove_favorite", { favorite_id: resource.favorite_id }, done);
+      jQuery.post("/api/v1/materials/remove_favorite", { favorite_id: resource.favorite_id }, done).fail(fail);
       gtag("event", "click", {
         "category": "Favorite Button",
         "resource": `${resource.name} removed from favorites`
       });
     } else {
-      jQuery.post("/api/v1/materials/add_favorite", { id: resource.id, material_type: resource.class_name_underscored }, done);
+      jQuery.post("/api/v1/materials/add_favorite", { id: resource.id, material_type: resource.class_name_underscored }, done).fail(fail);
       gtag("event", "click", {
         "category": "Favorite Button",
         "resource": `${resource.name} added to favorites`

@@ -24,7 +24,7 @@ RSpec.describe 'Admin switches to a different user', type: :system do
     expect(page).to have_content("Joe Switchuser")
     expect(page).not_to have_content("joe user")
 
-    click_link "Switch back"
+    click_button "Switch back"
 
     expect(page).to have_content("Welcome,")
     expect(page).to have_content("joe user")

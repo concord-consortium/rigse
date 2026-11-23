@@ -41,14 +41,15 @@ describe("When I try to render join class", () => {
 
   describe("when the server refuses the join", () => {
     // For example, a stale tab after the teacher switched back from learner mode in another tab.
-    const serverMessage = "You can't signup for a class while logged in as a teacher! You may have switched back to teacher in another tab. Use 'Switch to learner mode' in the sidebar to see this page.";
+    const serverMessage = "You can't signup for a class while logged in as a teacher!";
+    const hint = "You may have switched back to teacher in another tab, so this page is out of date. Reload the page to continue.";
 
     mockJquery({
       ajax: jest.fn().mockImplementation((options) => {
         if (options.url.endsWith("/confirm_class_word")) {
           options.success({ success: true, data: { teacher_name: "Teacher Teacherson" } });
         } else {
-          options.error({ responseText: JSON.stringify({ success: false, message: serverMessage }) }, "error", "Bad Request");
+          options.error({ responseText: JSON.stringify({ success: false, message: serverMessage, learner_mode_hint: hint }) }, "error", "Bad Request");
         }
       })
     });
@@ -61,7 +62,8 @@ describe("When I try to render join class", () => {
 
       fireEvent.submit(await screen.findByRole("button", { name: "Join" }));
 
-      expect(await screen.findByText(serverMessage)).toBeInTheDocument();
+      const error = await screen.findByText(serverMessage, { exact: false });
+      expect(error.textContent).toBe(`${serverMessage}\n\n${hint}`);
       expect(afterJoin).not.toHaveBeenCalled();
     });
   });

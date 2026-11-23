@@ -2,11 +2,15 @@ import React from "react";
 import { arrayMove } from "@dnd-kit/sortable";
 import SortableClasses from "./sortable-classes";
 import CopyDialog from "./copy-dialog";
+import { alertAfterRender, serverMessage, withMessage } from "../../helpers/request-error-message";
+import restoreOrder from "../../helpers/restore-order";
 
 import css from "./style.scss";
 
 export default class ManageClasses extends React.Component<any, any> {
   handleCopyCancel: any;
+  sortPending = false;
+
   constructor (props: any) {
     super(props);
     this.state = {
@@ -30,26 +34,24 @@ export default class ManageClasses extends React.Component<any, any> {
     this.setState({ saving: true }, () => {
       this.apiCall("copy", { clazz: this.state.copyClazz, data: values, onSuccess })
         .catch(err => {
-          this.showError(err, "Unable to copy the class!");
+          window.alert(withMessage("Unable to copy the class!", serverMessage(err)));
           this.setState({ saving: false });
         });
     });
   }
 
   handleActiveToggle (clazz: any) {
-    const toggle = () => {
-      clazz.is_archived = !clazz.is_archived;
-      // This is conceptually broken, but affraid to touch it while converting source to TypeScript.
-      // eslint-disable-next-line react/no-access-state-in-setstate
-      this.setState({ classes: this.state.classes });
-    };
-
-    toggle();
-    this.apiCall("activeToggle", { clazz, data: { is_archived: clazz.is_archived } })
+    // Change the class only after the server agrees, so a refused request leaves the list as it was.
+    const isArchived = !clazz.is_archived;
+    this.apiCall("activeToggle", { clazz, data: { is_archived: isArchived } })
+      .then(() => {
+        clazz.is_archived = isArchived;
+        // This is conceptually broken, but affraid to touch it while converting source to TypeScript.
+        // eslint-disable-next-line react/no-access-state-in-setstate
+        this.setState({ classes: this.state.classes });
+      })
       .catch(err => {
-        // retoggle back on error
-        toggle();
-        this.showError(err, "Unable to toggle archived state of the class!");
+        window.alert(withMessage("Unable to toggle archived state of the class!", serverMessage(err)));
       });
   }
 
@@ -57,24 +59,26 @@ export default class ManageClasses extends React.Component<any, any> {
     oldIndex,
     newIndex
   }: any) {
-    let { classes } = this.state;
-    classes = arrayMove(classes, oldIndex, newIndex);
+    // One sort at a time, so a late failure can't undo a later sort. A drag in the meantime does
+    // nothing.
+    if (this.sortPending) {
+      return;
+    }
+    const { classes: oldClasses } = this.state;
+    const oldIds = oldClasses.map((c: any) => c.id);
+    const classes = arrayMove(oldClasses, oldIndex, newIndex);
     this.setState({ classes });
 
     const ids = classes.map((c: any) => c.id);
+    this.sortPending = true;
     this.apiCall("sort", { data: { ids } })
       .catch(err => {
-        this.setState({ classes: arrayMove(classes, newIndex, oldIndex) });
-        this.showError(err, "Unable to save class sort order!");
-      });
-  }
-
-  showError (err: any, message: any) {
-    if (err.message) {
-      window.alert(`${message}\n${err.message}`);
-    } else {
-      window.alert(message);
-    }
+        this.setState(
+          (prevState: any) => ({ classes: restoreOrder(prevState.classes, oldIds) }),
+          () => alertAfterRender(withMessage("Unable to save class sort order!", serverMessage(err)))
+        );
+      })
+      .finally(() => { this.sortPending = false; });
   }
 
   apiCall (action: any, options: any) {
@@ -90,7 +94,9 @@ export default class ManageClasses extends React.Component<any, any> {
       activeToggle: { url: `${classesBasePath}/${clazz.id}/set_is_archived`, type: "POST" }
     } as any)[action];
 
-    return Promise.resolve(
+    // Reject the promise instead of throwing in the jQuery callbacks. A throw there stops jQuery,
+    // so the promise never settles and the callers' error handlers never run.
+    return new Promise((resolve, reject) => {
       jQuery.ajax({
         url,
         data: JSON.stringify(data),
@@ -99,11 +105,12 @@ export default class ManageClasses extends React.Component<any, any> {
         contentType: "application/json",
         success: json => {
           if (!json.success) {
-            throw json;
+            reject(json);
           } else {
             if (onSuccess) {
               onSuccess(json.data);
             }
+            resolve(json.data);
           }
         },
         error: (jqXHR, textStatus, error) => {
@@ -112,10 +119,10 @@ export default class ManageClasses extends React.Component<any, any> {
           } catch (e) {
             // noop
           }
-          throw error;
+          reject(error);
         }
-      })
-    );
+      });
+    });
   }
 
   render () {

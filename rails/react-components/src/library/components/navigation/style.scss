@@ -9,7 +9,17 @@
   width: 100%;
   padding: 0 0 30px;
 
-  a {
+  /* A sidebar item that sends a POST request. It looks the same as the links. */
+  .linkButton {
+    background: none;
+    border: 0;
+    cursor: pointer;
+    font: inherit;
+    text-align: left;
+    text-transform: inherit;
+  }
+
+  a, .linkButton {
     color: #ea6d2f;
     display: inline-block;
     margin: 0;
@@ -76,7 +86,7 @@
       background: #eee;
       color: #ea6d2f;
 
-      li, a {
+      li, a, .linkButton {
         color: #ea6d2f;
 
         &.open, &.selected {
@@ -107,7 +117,7 @@
         color: #fff !important;
       }
 
-      a {
+      a, .linkButton {
         color: #fff !important;
       }
 

@@ -1,8 +1,12 @@
 import React from "react";
 import { arrayMove } from "@dnd-kit/sortable";
 import SortableBookmarks from "./sortable-bookmarks";
+import { alertAfterRender, serverMessage, withMessage } from "../../helpers/request-error-message";
+import restoreOrder from "../../helpers/restore-order";
 
 export class EditBookmarks extends React.Component<any, any> {
+  sortPending = false;
+
   constructor (props: any) {
     super(props);
     this.state = {
@@ -29,85 +33,78 @@ export class EditBookmarks extends React.Component<any, any> {
       this.sortBookmarks(bookmarks);
       this.setState({ bookmarks });
     } })
-      .catch(err => this.showError(err, "Unable to create link!"));
+      .catch(err => window.alert(withMessage("Unable to create link!", serverMessage(err))));
   }
 
   handleUpdate (bookmark: any, fields: any) {
     const { name, url } = fields;
     const { name: oldName, url: oldUrl } = bookmark;
 
-    const update = (newName: any, newUrl: any) => {
+    const update = (newName: any, newUrl: any, afterRender?: () => void) => {
       bookmark.name = newName;
       bookmark.url = newUrl;
       // eslint-disable-next-line react/no-access-state-in-setstate
-      this.setState({ bookmarks: this.state.bookmarks });
+      this.setState({ bookmarks: this.state.bookmarks }, afterRender);
     };
 
     update(name, url);
     this.apiCall("update", { bookmark, data: { name, url } })
       .catch(err => {
         // reset the bookmark on error
-        update(oldName, oldUrl);
-        this.showError(err, "Unable to update link!");
+        update(oldName, oldUrl, () => alertAfterRender(withMessage("Unable to update link!", serverMessage(err))));
       });
   }
 
   handleDelete (bookmark: any) {
     if (window.confirm(`Are you sure you want to delete this link?\n\n${bookmark.name} -> ${bookmark.url}`)) {
-      const { bookmarks } = this.state;
-      const index = bookmarks.indexOf(bookmark);
-      bookmarks.splice(index, 1);
-      this.setState({ bookmarks });
-
+      // Remove the link only after the server agrees, so a refused request leaves the list as it was.
       this.apiCall("delete", { bookmark })
-        .catch(err => {
-          // add the bookmark back on error
-          bookmarks.splice(index, 0, bookmark);
-          this.setState({ bookmarks });
-          this.showError(err, "Unable to delete link!");
-        });
+        .then(() => {
+          this.setState((prevState: any) => ({
+            bookmarks: prevState.bookmarks.filter((b: any) => b.id !== bookmark.id)
+          }));
+        })
+        .catch(err => window.alert(withMessage("Unable to delete link!", serverMessage(err))));
     }
   }
 
   handleVisibilityToggle (bookmark: any) {
-    const toggle = () => {
-      bookmark.is_visible = !bookmark.is_visible;
-      // This is conceptually broken, but maybe it somehow works (?)
-      // eslint-disable-next-line react/no-access-state-in-setstate
-      this.setState({ bookmarks: this.state.bookmarks });
-    };
-
-    toggle();
-    this.apiCall("visibilityToggle", { bookmark, data: { is_visible: bookmark.is_visible } })
-      .catch(err => {
-        // retoggle back on error
-        toggle();
-        this.showError(err, "Unable to toggle visibility of link!");
-      });
+    // Change the link only after the server agrees, so a refused request leaves the list as it was.
+    const isVisible = !bookmark.is_visible;
+    this.apiCall("visibilityToggle", { bookmark, data: { is_visible: isVisible } })
+      .then(() => {
+        bookmark.is_visible = isVisible;
+        // This is conceptually broken, but maybe it somehow works (?)
+        // eslint-disable-next-line react/no-access-state-in-setstate
+        this.setState({ bookmarks: this.state.bookmarks });
+      })
+      .catch(err => window.alert(withMessage("Unable to toggle visibility of link!", serverMessage(err))));
   }
 
   handleSortEnd ({
     oldIndex,
     newIndex
   }: any) {
-    let { bookmarks } = this.state;
-    bookmarks = arrayMove(bookmarks, oldIndex, newIndex);
+    // One sort at a time, so a late failure can't undo a later sort. A drag in the meantime does
+    // nothing.
+    if (this.sortPending) {
+      return;
+    }
+    const { bookmarks: oldBookmarks } = this.state;
+    const oldIds = oldBookmarks.map((bookmark: any) => bookmark.id);
+    const bookmarks = arrayMove(oldBookmarks, oldIndex, newIndex);
     this.setState({ bookmarks });
 
     const ids = bookmarks.map((bookmark: any) => bookmark.id);
+    this.sortPending = true;
     this.apiCall("sort", { data: { ids } })
       .catch(err => {
-        this.setState({ bookmarks: arrayMove(bookmarks, newIndex, oldIndex) });
-        this.showError(err, "Unable to save link sort order!");
-      });
-  }
-
-  showError (err: any, message: any) {
-    if (err.message) {
-      window.alert(`${message}\n${err.message}`);
-    } else {
-      window.alert(message);
-    }
+        this.setState(
+          (prevState: any) => ({ bookmarks: restoreOrder(prevState.bookmarks, oldIds) }),
+          () => alertAfterRender(withMessage("Unable to save link sort order!", serverMessage(err)))
+        );
+      })
+      .finally(() => { this.sortPending = false; });
   }
 
   apiCall (action: any, options: any) {
@@ -136,8 +133,10 @@ export class EditBookmarks extends React.Component<any, any> {
         dataType: "json",
         contentType: "application/json",
         success: json => {
+          // Reject instead of throwing. A throw here stops jQuery, so the promise never settles.
           if (!json.success) {
-            throw new Error(json.message);
+            reject(json);
+            return;
           }
           if (onSuccess) {
             onSuccess(json.data);
@@ -145,6 +144,12 @@ export class EditBookmarks extends React.Component<any, any> {
           resolve(json.data);
         },
         error: (jqXHR, textStatus, error) => {
+          // Use the server's JSON, which has its message, when there is one.
+          try {
+            error = JSON.parse(jqXHR.responseText);
+          } catch (e) {
+            // noop
+          }
           reject(error);
         }
       });

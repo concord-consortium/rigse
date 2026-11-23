@@ -97,7 +97,7 @@ describe API::V1::MaterialsController do
         it 'GET add_favorite' do
           get :add_favorite
 
-          expect(response).to have_http_status(:bad_request)
+          expect(response).to have_http_status(:forbidden)
         end
       end
 

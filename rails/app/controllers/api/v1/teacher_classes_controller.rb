@@ -75,7 +75,7 @@ class API::V1::TeacherClassesController < API::APIController
 
   def require_teacher!
     unless current_user.portal_teacher
-      error(with_learner_mode_tab_message('You must be logged in as a teacher to use this endpoint'))
+      error('You must be logged in as a teacher to use this endpoint', learner_mode_hint: learner_mode_hint)
     end
   end
 

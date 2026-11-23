@@ -1,7 +1,7 @@
 import React from "react";
 import { render, unmount } from "../../helpers/react-render";
 import Modal from "../../helpers/modal";
-import AssignModal from "./assign-modal";
+import AssignModal, { requestErrorMessage } from "./assign-modal";
 
 import css from "./style.scss";
 
@@ -52,7 +52,22 @@ export default function openAssignToClassModal (properties: any) {
       properties.previewUrl = response.preview_url;
       properties.resourceType = response.material_type.toLowerCase();
       properties.savesStudentData = response.saves_student_data;
-      openModal(AssignModal, properties);
+      if (Portal.currentUser.isAnonymous) {
+        openModal(AssignModal, properties);
+        return;
+      }
+      // Load the class list first. If the server refuses, for example because this tab is now in
+      // learner mode, show only the message and not the pop-up.
+      const classesData = {
+        material_id: properties.material_id,
+        material_type: properties.material_type
+      };
+      jQuery.post(Portal.API_V1.MATERIAL_UNASSIGNED_CLASSES, classesData)
+        .done(classes => {
+          properties.classes = classes;
+          openModal(AssignModal, properties);
+        })
+        .fail(err => window.alert(requestErrorMessage(err)));
     })
     .fail(function (err) {
       if (err?.responseText) {

@@ -1,7 +1,7 @@
 import React from "react";
-import { render, fireEvent, screen } from "@testing-library/react";
+import { render, fireEvent, screen, waitFor, act } from "@testing-library/react";
 import EditBookmarks from "../../../../src/library/components/bookmarks/edit";
-import { mockJqueryAjaxSuccess } from "../../helpers/mock-jquery";
+import { mockJquery, mockJqueryAjaxSuccess } from "../../helpers/mock-jquery";
 
 describe("When I try to render sortable bookmarks", () => {
   const clone = (obj: any) => JSON.parse(JSON.stringify(obj));
@@ -97,22 +97,22 @@ describe("When I try to render sortable bookmarks", () => {
     expect(updatedLink).toHaveAttribute("href", "http://example.com/updated");
   });
 
-  it("should handle toggle to hide -> unhide -> hide", () => {
+  it("should handle toggle to hide -> unhide -> hide", async () => {
     render(<EditBookmarks classId={1} bookmarks={clone(singleBookmark)} />);
 
     const hideButton = screen.getByText("Hide");
     fireEvent.click(hideButton);
 
-    expect(screen.getByText("Show")).toBeInTheDocument();
+    expect(await screen.findByText("Show")).toBeInTheDocument();
 
     fireEvent.click(screen.getByText("Show"));
-    expect(screen.getByText("Hide")).toBeInTheDocument();
+    expect(await screen.findByText("Hide")).toBeInTheDocument();
 
     fireEvent.click(screen.getByText("Hide"));
-    expect(screen.getByText("Show")).toBeInTheDocument();
+    expect(await screen.findByText("Show")).toBeInTheDocument();
   });
 
-  it("should handle the delete button", () => {
+  it("should handle the delete button", async () => {
     render(<EditBookmarks classId={1} bookmarks={clone(singleBookmark)} />);
     const deleteButton = screen.getByText("Delete");
 
@@ -125,7 +125,7 @@ describe("When I try to render sortable bookmarks", () => {
 
     window.confirm = jest.fn(() => true);
     fireEvent.click(deleteButton);
-    expect(screen.queryByText("Link 1")).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByText("Link 1")).not.toBeInTheDocument());
   });
 });
 
@@ -151,5 +151,150 @@ describe("When I try to create bookmarks", () => {
 
     expect(screen.getByPlaceholderText("Name")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("URL")).toBeInTheDocument();
+  });
+});
+
+describe("When a Links request is refused", () => {
+  const message = "You are not authorized to edit bookmarks for this class";
+  const hint = "You may have switched to learner mode in another tab, so this page is out of date. Reload the page to continue.";
+  const refusal = { success: false, message, learner_mode_hint: hint };
+  let respond: (options: any) => void;
+  let alertSpy: jest.SpyInstance;
+
+  mockJquery({
+    ajax: jest.fn().mockImplementation((options) => respond(options))
+  });
+
+  const makeBookmarks = () => [
+    { id: 1, is_visible: true, name: "Link 1", position: 0, url: "http://example.com/1" },
+    { id: 2, is_visible: true, name: "Link 2", position: 1, url: "http://example.com/2" },
+  ];
+  const linkNames = () => screen.queryAllByText(/^Link \d$/).map(el => el.textContent);
+
+  // Records what the page shows while the alert is open.
+  let shownDuringAlert: any;
+  const recordDuringAlert = (read: () => any) => {
+    alertSpy.mockImplementation(() => { shownDuringAlert = read(); });
+  };
+
+  beforeEach(() => {
+    respond = (options) => options.error({ responseText: JSON.stringify(refusal) }, "error", "Bad Request");
+    alertSpy = jest.spyOn(window, "alert").mockImplementation(() => undefined);
+    window.confirm = jest.fn(() => true);
+    shownDuringAlert = undefined;
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it("shows the server's message when creating fails", async () => {
+    render(<EditBookmarks classId={1} bookmarks={makeBookmarks()} />);
+
+    fireEvent.click(screen.getByText("Create Link"));
+
+    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Unable to create link!\n${message}.\n\n${hint}`));
+    expect(screen.queryByPlaceholderText("Name")).not.toBeInTheDocument();
+  });
+
+  it("shows the server's message when the response is not successful", async () => {
+    respond = (options) => options.success(refusal);
+    render(<EditBookmarks classId={1} bookmarks={makeBookmarks()} />);
+
+    fireEvent.click(screen.getByText("Create Link"));
+
+    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Unable to create link!\n${message}.\n\n${hint}`));
+  });
+
+  it("puts the old name back, then shows the server's message when editing fails", async () => {
+    recordDuringAlert(linkNames);
+    render(<EditBookmarks classId={1} bookmarks={makeBookmarks()} />);
+
+    fireEvent.click(screen.getAllByText("Edit")[0]);
+    fireEvent.change(screen.getByPlaceholderText("Name"), { target: { value: "Changed" } });
+    fireEvent.click(screen.getByText("Save"));
+
+    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Unable to update link!\n${message}.\n\n${hint}`));
+    expect(shownDuringAlert).toEqual(["Link 1", "Link 2"]);
+  });
+
+  it("shows the server's message and does not change the link when hiding fails", async () => {
+    recordDuringAlert(() => screen.queryAllByText("Hide").length);
+    render(<EditBookmarks classId={1} bookmarks={makeBookmarks()} />);
+
+    fireEvent.click(screen.getAllByText("Hide")[0]);
+
+    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Unable to toggle visibility of link!\n${message}.\n\n${hint}`));
+    expect(shownDuringAlert).toBe(2);
+  });
+
+  it("shows the server's message and keeps the link when deleting fails", async () => {
+    recordDuringAlert(linkNames);
+    render(<EditBookmarks classId={1} bookmarks={makeBookmarks()} />);
+
+    fireEvent.click(screen.getAllByText("Delete")[0]);
+
+    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Unable to delete link!\n${message}.\n\n${hint}`));
+    expect(shownDuringAlert).toEqual(["Link 1", "Link 2"]);
+  });
+
+  it("removes only the deleted link when two deletes of it both succeed", async () => {
+    const pending: any[] = [];
+    respond = (options) => pending.push(options);
+    render(<EditBookmarks classId={1} bookmarks={makeBookmarks()} />);
+
+    fireEvent.click(screen.getAllByText("Delete")[0]);
+    fireEvent.click(screen.getAllByText("Delete")[0]);
+    act(() => pending.forEach(options => options.success({ success: true })));
+
+    await waitFor(() => expect(linkNames()).toEqual(["Link 2"]));
+  });
+
+  it("keeps a link deleted while a sort waits gone when the sort fails", async () => {
+    const pending: any[] = [];
+    respond = (options) => pending.push(options);
+    const bookmarks = [...makeBookmarks(), { id: 3, is_visible: true, name: "Link 3", position: 2, url: "http://example.com/3" }];
+    const ref = React.createRef<EditBookmarks>();
+    render(<EditBookmarks ref={ref} classId={1} bookmarks={bookmarks} />);
+
+    fireEvent.click(screen.getAllByText("Delete")[2]);
+    act(() => ref.current?.handleSortEnd({ oldIndex: 0, newIndex: 1 }));
+    const [deleteRequest, sortRequest] = pending;
+    act(() => deleteRequest.success({ success: true }));
+    await waitFor(() => expect(linkNames()).toEqual(["Link 2", "Link 1"]));
+    act(() => sortRequest.error({ responseText: JSON.stringify(refusal) }, "error", "Bad Request"));
+
+    await waitFor(() => expect(window.alert).toHaveBeenCalled());
+    expect(linkNames()).toEqual(["Link 1", "Link 2"]);
+  });
+
+  it("ignores a second drag while a sort waits for the server", async () => {
+    const pending: any[] = [];
+    respond = (options) => pending.push(options);
+    const ref = React.createRef<EditBookmarks>();
+    render(<EditBookmarks ref={ref} classId={1} bookmarks={makeBookmarks()} />);
+
+    act(() => ref.current?.handleSortEnd({ oldIndex: 0, newIndex: 1 }));
+    act(() => ref.current?.handleSortEnd({ oldIndex: 0, newIndex: 1 }));
+
+    expect(pending).toHaveLength(1);
+    expect(linkNames()).toEqual(["Link 2", "Link 1"]);
+
+    act(() => pending[0].error({ responseText: JSON.stringify(refusal) }, "error", "Bad Request"));
+    await waitFor(() => expect(linkNames()).toEqual(["Link 1", "Link 2"]));
+
+    act(() => ref.current?.handleSortEnd({ oldIndex: 0, newIndex: 1 }));
+    expect(pending).toHaveLength(2);
+  });
+
+  it("puts the old order back, then shows the server's message when sorting fails", async () => {
+    recordDuringAlert(linkNames);
+    const ref = React.createRef<EditBookmarks>();
+    render(<EditBookmarks ref={ref} classId={1} bookmarks={makeBookmarks()} />);
+
+    act(() => ref.current?.handleSortEnd({ oldIndex: 0, newIndex: 1 }));
+
+    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Unable to save link sort order!\n${message}.\n\n${hint}`));
+    expect(shownDuringAlert).toEqual(["Link 1", "Link 2"]);
   });
 });

@@ -93,13 +93,14 @@ class API::APIController < ApplicationController
   # NOTE: this approach requires you to return from the
   # method to prevent a double render problem. An easy way to do this:
   #  return error(...)
-  def error(message, status = 400, details = nil)
+  def error(message, status = 400, details = nil, learner_mode_hint: nil)
     error_body = {
       :success => false,
       :response_type => "ERROR",
       :message => message,
     }
     error_body[:details] = details if details
+    error_body[:learner_mode_hint] = learner_mode_hint if learner_mode_hint
     render :json => error_body, :status => status
   end
 
@@ -112,8 +113,18 @@ class API::APIController < ApplicationController
   def pundit_user_not_authorized(exception)
     render status: 403, json: {
       success: false,
-      message: with_learner_mode_tab_message('Not authorized')
-    }
+      message: 'Not authorized',
+      learner_mode_hint: learner_mode_hint
+    }.compact
+  end
+
+  # For a refusal that a tab left open from before a learner mode switch can get. Returns the text
+  # for the learner_mode_hint field of the error JSON, or nil. The message itself stays the same,
+  # because API clients may match on it. A token request gets no hint, because it does not come
+  # from a browser tab.
+  def learner_mode_hint
+    return nil if request.headers['Authorization'].present?
+    learner_mode_tab_message(background: true)
   end
 
   def parameter_missing(exception)

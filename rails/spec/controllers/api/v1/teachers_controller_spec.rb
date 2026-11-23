@@ -119,6 +119,22 @@ RSpec.describe API::V1::TeachersController, type: :controller do
         end
       end
     end
+
+    context "when the user is already signed in" do
+      it "refuses a teacher with the message for the school field" do
+        sign_in FactoryBot.create(:portal_teacher).user
+        post :create, params: teacher_params
+        expect(response).to have_http_status(:bad_request)
+        expect(JSON.parse(response.body)['message']).to eq('school_id' => I18n.t('Registration.ErrorLoggedInAsTeacher'))
+      end
+
+      it "refuses a student with the message for the school field" do
+        sign_in FactoryBot.create(:full_portal_student).user
+        post :create, params: teacher_params
+        expect(response).to have_http_status(:bad_request)
+        expect(JSON.parse(response.body)['message']).to eq('school_id' => I18n.t('Registration.ErrorLoggedInAsStudent'))
+      end
+    end
   end
 
   describe '#get_teacher_project_views' do

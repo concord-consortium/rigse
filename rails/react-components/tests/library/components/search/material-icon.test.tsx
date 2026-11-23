@@ -1,6 +1,7 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import SMaterialIcon from "../../../../src/library/components/search/material-icon";
+import { mockJquery } from "../../helpers/mock-jquery";
 
 describe("When I try to render search material icon", () => {
 
@@ -90,4 +91,42 @@ describe("When I try to render search material icon", () => {
     expect(favorite).toHaveClass("legacy-favorite legacy-favorite-active");
   });
 
+});
+
+describe("When a favorite change is refused", () => {
+  const message = "You must be logged in as a teacher to favorite material";
+  const hint = "You may have switched to learner mode in another tab, so this page is out of date. Reload the page to continue.";
+  const configuration = {
+    enableFavorites: true,
+    favoriteClassMap: { true: "legacy-favorite-active", false: "legacy-favorite" },
+    favoriteOutlineClass: "legacy-favorite-outline"
+  };
+
+  mockJquery({
+    ajax: jest.fn().mockImplementation((options) => {
+      setTimeout(() => options.error({ responseText: JSON.stringify({ message, learner_mode_hint: hint }) }));
+    })
+  });
+
+  beforeEach(() => {
+    window.Portal = {
+      currentUser: { isTeacher: true },
+      API_V1: { MATERIALS_ADD_FAVORITE: "/add_favorite", MATERIALS_REMOVE_FAVORITE: "/remove_favorite" }
+    };
+    jest.spyOn(window, "alert").mockImplementation(() => undefined);
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it("shows the server's message and does not change the favorite", async () => {
+    const material = { id: 1, icon: { url: "http://example.com/icon" }, links: {}, is_favorite: false };
+    render(<SMaterialIcon material={material} configuration={configuration} />);
+
+    fireEvent.click(screen.getByText("☆"));
+
+    await waitFor(() => expect(window.alert).toHaveBeenCalledWith(`Unable to update favorite.\n${message}.\n\n${hint}`));
+    expect(material.is_favorite).toBe(false);
+  });
 });
