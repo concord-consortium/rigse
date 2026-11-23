@@ -36,7 +36,7 @@ export default class OfferingRow extends React.Component<any, any> {
     const newValue = !detailsVisible;
     this.setState({ detailsVisible: newValue });
     if (!offeringDetails) {
-      requestOfferingDetails(offering, () => this.setState({ detailsVisible: false }));
+      requestOfferingDetails(offering, (afterRender: () => void) => this.setState({ detailsVisible: false }, afterRender));
     }
   }
 

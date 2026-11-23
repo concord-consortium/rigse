@@ -27,8 +27,9 @@ export const withServerMessage = (text: string, jqXHR: any) => {
   return withMessage(text, serverMessage(body));
 };
 
-// The alert stops the page from drawing, so call this after an undone change to show the alert
-// only after the change is off the screen.
+// The alert stops the page from drawing. To show it only after an undone change is off the
+// screen, call this from the setState callback of that change. React runs the callback after it
+// applies the change, and this then waits for the browser to draw it.
 export const alertAfterRender = (text: string) => {
   requestAnimationFrame(() => setTimeout(() => window.alert(text)));
 };

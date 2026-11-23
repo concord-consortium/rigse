@@ -40,19 +40,18 @@ export class EditBookmarks extends React.Component<any, any> {
     const { name, url } = fields;
     const { name: oldName, url: oldUrl } = bookmark;
 
-    const update = (newName: any, newUrl: any) => {
+    const update = (newName: any, newUrl: any, afterRender?: () => void) => {
       bookmark.name = newName;
       bookmark.url = newUrl;
       // eslint-disable-next-line react/no-access-state-in-setstate
-      this.setState({ bookmarks: this.state.bookmarks });
+      this.setState({ bookmarks: this.state.bookmarks }, afterRender);
     };
 
     update(name, url);
     this.apiCall("update", { bookmark, data: { name, url } })
       .catch(err => {
         // reset the bookmark on error
-        update(oldName, oldUrl);
-        alertAfterRender(withMessage("Unable to update link!", serverMessage(err)));
+        update(oldName, oldUrl, () => alertAfterRender(withMessage("Unable to update link!", serverMessage(err))));
       });
   }
 
@@ -100,8 +99,10 @@ export class EditBookmarks extends React.Component<any, any> {
     this.sortPending = true;
     this.apiCall("sort", { data: { ids } })
       .catch(err => {
-        this.setState((prevState: any) => ({ bookmarks: restoreOrder(prevState.bookmarks, oldIds) }));
-        alertAfterRender(withMessage("Unable to save link sort order!", serverMessage(err)));
+        this.setState(
+          (prevState: any) => ({ bookmarks: restoreOrder(prevState.bookmarks, oldIds) }),
+          () => alertAfterRender(withMessage("Unable to save link sort order!", serverMessage(err)))
+        );
       })
       .finally(() => { this.sortPending = false; });
   }

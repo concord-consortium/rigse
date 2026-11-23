@@ -156,8 +156,10 @@ export default class Assignments extends React.Component<any, any> {
       },
       error: (jqXHR) => {
         this.reorderPending = false;
-        this.setState((prevState: any) => ({ offerings: restoreOrder(prevState.offerings, oldIds) }));
-        alertAfterRender(withServerMessage("Reordering failed, please try to reload page and try again.", jqXHR));
+        this.setState(
+          (prevState: any) => ({ offerings: restoreOrder(prevState.offerings, oldIds) }),
+          () => alertAfterRender(withServerMessage("Reordering failed, please try to reload page and try again.", jqXHR))
+        );
       }
     });
   }
@@ -175,16 +177,17 @@ export default class Assignments extends React.Component<any, any> {
       },
       success: () => this.applyOfferingUpdate(offering.id, prop, value),
       error: (jqXHR) => {
-        this.setOfferingUpdatePending(offering.id, false);
-        alertAfterRender(withServerMessage("Offering update failed, please try to reload page and try again.", jqXHR));
+        this.setOfferingUpdatePending(offering.id, false, () => {
+          alertAfterRender(withServerMessage("Offering update failed, please try to reload page and try again.", jqXHR));
+        });
       }
     });
   }
 
-  setOfferingUpdatePending (offeringId: any, updatePending: boolean) {
+  setOfferingUpdatePending (offeringId: any, updatePending: boolean, afterRender?: () => void) {
     this.setState((prevState: any) => ({
       offerings: prevState.offerings.map((o: any) => o.id === offeringId ? { ...o, updatePending } : o)
-    }));
+    }), afterRender);
   }
 
   applyOfferingUpdate (offeringId: any, prop: any, value: any) {
@@ -275,7 +278,7 @@ export default class Assignments extends React.Component<any, any> {
     });
   }
 
-  requestOfferingDetails (offering: any, onFailure: () => void) {
+  requestOfferingDetails (offering: any, onFailure: (afterRender: () => void) => void) {
     const { researcher } = this.props;
 
     jQuery.ajax({
@@ -289,8 +292,9 @@ export default class Assignments extends React.Component<any, any> {
         });
       },
       error: (jqXHR) => {
-        onFailure();
-        alertAfterRender(withServerMessage("Offering details loading failed, please try to reload page and try again.", jqXHR));
+        onFailure(() => {
+          alertAfterRender(withServerMessage("Offering details loading failed, please try to reload page and try again.", jqXHR));
+        });
       }
     });
   }

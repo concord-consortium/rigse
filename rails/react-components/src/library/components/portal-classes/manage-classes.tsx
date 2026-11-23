@@ -73,8 +73,10 @@ export default class ManageClasses extends React.Component<any, any> {
     this.sortPending = true;
     this.apiCall("sort", { data: { ids } })
       .catch(err => {
-        this.setState((prevState: any) => ({ classes: restoreOrder(prevState.classes, oldIds) }));
-        alertAfterRender(withMessage("Unable to save class sort order!", serverMessage(err)));
+        this.setState(
+          (prevState: any) => ({ classes: restoreOrder(prevState.classes, oldIds) }),
+          () => alertAfterRender(withMessage("Unable to save class sort order!", serverMessage(err)))
+        );
       })
       .finally(() => { this.sortPending = false; });
   }
