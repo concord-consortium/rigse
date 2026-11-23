@@ -238,6 +238,18 @@ describe("When a Links request is refused", () => {
     expect(shownDuringAlert).toEqual(["Link 1", "Link 2"]);
   });
 
+  it("removes only the deleted link when two deletes of it both succeed", async () => {
+    const pending: any[] = [];
+    respond = (options) => pending.push(options);
+    render(<EditBookmarks classId={1} bookmarks={makeBookmarks()} />);
+
+    fireEvent.click(screen.getAllByText("Delete")[0]);
+    fireEvent.click(screen.getAllByText("Delete")[0]);
+    act(() => pending.forEach(options => options.success({ success: true })));
+
+    await waitFor(() => expect(linkNames()).toEqual(["Link 2"]));
+  });
+
   it("puts the old order back, then shows the server's message when sorting fails", async () => {
     recordDuringAlert(linkNames);
     const ref = React.createRef<EditBookmarks>();

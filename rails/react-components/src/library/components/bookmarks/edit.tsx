@@ -58,9 +58,9 @@ export class EditBookmarks extends React.Component<any, any> {
       // Remove the link only after the server agrees, so a refused request leaves the list as it was.
       this.apiCall("delete", { bookmark })
         .then(() => {
-          const { bookmarks } = this.state;
-          bookmarks.splice(bookmarks.indexOf(bookmark), 1);
-          this.setState({ bookmarks });
+          this.setState((prevState: any) => ({
+            bookmarks: prevState.bookmarks.filter((b: any) => b.id !== bookmark.id)
+          }));
         })
         .catch(err => window.alert(withMessage("Unable to delete link!", serverMessage(err))));
     }
