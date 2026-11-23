@@ -191,35 +191,31 @@ export default class Assignments extends React.Component<any, any> {
   }
 
   applyOfferingUpdate (offeringId: any, prop: any, value: any) {
-    const { offerings } = this.state;
-    const offering = offerings.find((o: any) => o.id === offeringId);
-    if (!offering) {
-      return;
-    }
-    const newOffering = { ...offering, [prop]: value, updatePending: false };
-
-    // when setting active or locked, we also set all students in the offering to that value
-    // overriding any previous values
-    if (["active", "locked"].includes(prop)) {
-      newOffering.metadata = newOffering.metadata.map((m: any) => {
-        m[prop] = value;
-        return m;
-      });
-
-      const offeringDetails = this.state.offeringDetails[offering.id];
-      if (offeringDetails) {
-        const newStudents = offeringDetails.students.map((s: any) => ({ ...s, [prop]: value }));
-        const newOfferingDetails = { ...offeringDetails, students: newStudents };
-        this.setState((prevState: any) => ({
-          offeringDetails: { ...prevState.offeringDetails, [offering.id]: newOfferingDetails }
-        }));
+    this.setState((prevState: any) => {
+      const offering = prevState.offerings.find((o: any) => o.id === offeringId);
+      if (!offering) {
+        return null;
       }
-    }
+      const newOffering = { ...offering, [prop]: value, updatePending: false };
+      const newState: any = {
+        offerings: prevState.offerings.map((o: any) => o === offering ? newOffering : o)
+      };
 
-    const newOfferings = offerings.slice();
-    newOfferings.splice(offerings.indexOf(offering), 1, newOffering);
-    this.setState({ offerings: newOfferings });
+      // when setting active or locked, we also set all students in the offering to that value
+      // overriding any previous values
+      if (["active", "locked"].includes(prop)) {
+        newOffering.metadata = offering.metadata.map((m: any) => ({ ...m, [prop]: value }));
+
+        const offeringDetails = prevState.offeringDetails[offeringId];
+        if (offeringDetails) {
+          const students = offeringDetails.students.map((s: any) => ({ ...s, [prop]: value }));
+          newState.offeringDetails = { ...prevState.offeringDetails, [offeringId]: { ...offeringDetails, students } };
+        }
+      }
+      return newState;
+    });
   }
+
 
   onSetStudentOfferingMetadata (studentId: any, offeringId: any, metadata: any) {
     this.setState((prevState: any) => {

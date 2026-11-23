@@ -194,4 +194,21 @@ describe("When a Class Assignments reorder waits for the server", () => {
     expect(screen.getAllByText(/^Offering \d$/).map(el => el.textContent)).toEqual(["Offering 1", "Offering 2"]);
     expect(checked()).toEqual([true, false, false, false]);
   });
+
+  it("keeps the restored order when an offering update succeeds at the same moment", async () => {
+    const ref = React.createRef<Assignments>();
+    render(<Assignments ref={ref} initialClassData={makeClassData()} />);
+
+    act(() => ref.current?.onOfferingsReorder({ oldIndex: 0, newIndex: 1 }));
+    fireEvent.click(screen.getAllByRole("checkbox")[0]);
+    const [reorderRequest, updateRequest] = pending;
+    act(() => {
+      reorderRequest.error(refused);
+      updateRequest.success({});
+    });
+
+    await waitFor(() => expect(window.alert).toHaveBeenCalled());
+    expect(screen.getAllByText(/^Offering \d$/).map(el => el.textContent)).toEqual(["Offering 1", "Offering 2"]);
+    expect(checked()).toEqual([true, false, false, false]);
+  });
 });
