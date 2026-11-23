@@ -36,7 +36,7 @@ class HomeController < ApplicationController
   def getting_started
     # A teacher page. A student who opens it, for example from an old link or from a tab left open
     # from before a learner mode switch, goes to My Classes with no message.
-    return redirect_to(my_classes_path) if current_user&.portal_student
+    return redirect_no_store(my_classes_path) if current_user&.portal_student
 
     authorize :home, :getting_started?
     @hide_signup_link = true
@@ -49,7 +49,7 @@ class HomeController < ApplicationController
   def my_classes
     # The other learner mode account's home page, for example after a reload in a tab left open
     # from before a switch. Go home with no message: the earlier message already explained it.
-    return redirect_to(view_context.current_user_home_path) if other_learner_mode_home_page?
+    return redirect_no_store(view_context.current_user_home_path) if other_learner_mode_home_page?
 
     authorize :home, :my_classes?
     @portal_student = current_visitor.portal_student
@@ -211,7 +211,7 @@ class HomeController < ApplicationController
   def recent_activity
     # The other learner mode account's home page, for example after a reload in a tab left open
     # from before a switch. Go home with no message: the earlier message already explained it.
-    return redirect_to(view_context.current_user_home_path) if other_learner_mode_home_page?
+    return redirect_no_store(view_context.current_user_home_path) if other_learner_mode_home_page?
 
     authorize :home, :recent_activity?
 
@@ -340,6 +340,13 @@ class HomeController < ApplicationController
   end
 
   protected
+
+  # The target depends on the signed-in account, so the browser must not cache this redirect. See
+  # ApplicationController#pundit_user_not_authorized.
+  def redirect_no_store(path)
+    response.headers['Cache-Control'] = 'no-store'
+    redirect_to(path)
+  end
 
   # A teacher preview student on a teacher home page, or a teacher with a teacher preview student
   # on the student home page.

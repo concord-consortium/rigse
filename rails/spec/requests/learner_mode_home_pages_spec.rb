@@ -22,6 +22,7 @@ RSpec.describe 'Home pages after a learner mode switch', type: :request do
       get my_classes_path
       expect(response).to redirect_to(teacher_home_path)
       expect(flash['alert']).to be_nil
+      expect(response.headers['Cache-Control']).to eq('no-store')
     end
 
     it 'sends a teacher with no learner account home with the usual message' do
@@ -49,6 +50,7 @@ RSpec.describe 'Home pages after a learner mode switch', type: :request do
       get getting_started_path
       expect(response).to redirect_to(my_classes_path)
       expect(flash['alert']).to be_nil
+      expect(response.headers['Cache-Control']).to eq('no-store')
     end
 
     it 'sends a normal student home with no message' do
@@ -56,6 +58,7 @@ RSpec.describe 'Home pages after a learner mode switch', type: :request do
       get getting_started_path
       expect(response).to redirect_to(my_classes_path)
       expect(flash['alert']).to be_nil
+      expect(response.headers['Cache-Control']).to eq('no-store')
     end
 
     it 'still shows the page to a teacher' do
@@ -71,6 +74,7 @@ RSpec.describe 'Home pages after a learner mode switch', type: :request do
       get recent_activity_path
       expect(response).to redirect_to(my_classes_path)
       expect(flash['alert']).to be_nil
+      expect(response.headers['Cache-Control']).to eq('no-store')
     end
 
     it 'uses "view" in the message for a normal student' do
