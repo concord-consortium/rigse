@@ -146,3 +146,52 @@ describe("When a Class Assignments offering update succeeds", () => {
     expect(screen.getAllByRole("checkbox").map(el => (el as HTMLInputElement).disabled)).toEqual([true, true]);
   });
 });
+
+describe("When a Class Assignments reorder waits for the server", () => {
+  let pending: any[];
+  mockJquery({
+    ajax: jest.fn().mockImplementation((options) => {
+      if (options.url !== "/project_views") {
+        pending.push(options);
+      }
+    })
+  });
+
+  const checked = () => screen.getAllByRole("checkbox").map(el => (el as HTMLInputElement).checked);
+
+  beforeEach(() => {
+    pending = [];
+    jest.spyOn(window, "alert").mockImplementation(() => undefined);
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it("ignores a second drag", () => {
+    const ref = React.createRef<Assignments>();
+    render(<Assignments ref={ref} initialClassData={makeClassData()} />);
+
+    act(() => ref.current?.onOfferingsReorder({ oldIndex: 0, newIndex: 1 }));
+    act(() => ref.current?.onOfferingsReorder({ oldIndex: 0, newIndex: 1 }));
+
+    expect(pending).toHaveLength(1);
+    expect(screen.getAllByText(/^Offering \d$/).map(el => el.textContent)).toEqual(["Offering 2", "Offering 1"]);
+  });
+
+  it("keeps a checkbox change made while the reorder waited when the reorder fails", async () => {
+    const ref = React.createRef<Assignments>();
+    render(<Assignments ref={ref} initialClassData={makeClassData()} />);
+
+    act(() => ref.current?.onOfferingsReorder({ oldIndex: 0, newIndex: 1 }));
+    // Offering 2 is now first. Hide it.
+    fireEvent.click(screen.getAllByRole("checkbox")[0]);
+    const [reorderRequest, updateRequest] = pending;
+    act(() => updateRequest.success({}));
+    act(() => reorderRequest.error(refused));
+
+    await waitFor(() => expect(window.alert).toHaveBeenCalled());
+    expect(screen.getAllByText(/^Offering \d$/).map(el => el.textContent)).toEqual(["Offering 1", "Offering 2"]);
+    expect(checked()).toEqual([true, false, false, false]);
+  });
+});

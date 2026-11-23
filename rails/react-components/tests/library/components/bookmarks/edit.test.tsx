@@ -268,6 +268,25 @@ describe("When a Links request is refused", () => {
     expect(linkNames()).toEqual(["Link 1", "Link 2"]);
   });
 
+  it("ignores a second drag while a sort waits for the server", async () => {
+    const pending: any[] = [];
+    respond = (options) => pending.push(options);
+    const ref = React.createRef<EditBookmarks>();
+    render(<EditBookmarks ref={ref} classId={1} bookmarks={makeBookmarks()} />);
+
+    act(() => ref.current?.handleSortEnd({ oldIndex: 0, newIndex: 1 }));
+    act(() => ref.current?.handleSortEnd({ oldIndex: 0, newIndex: 1 }));
+
+    expect(pending).toHaveLength(1);
+    expect(linkNames()).toEqual(["Link 2", "Link 1"]);
+
+    act(() => pending[0].error({ responseText: JSON.stringify(refusal) }, "error", "Bad Request"));
+    await waitFor(() => expect(linkNames()).toEqual(["Link 1", "Link 2"]));
+
+    act(() => ref.current?.handleSortEnd({ oldIndex: 0, newIndex: 1 }));
+    expect(pending).toHaveLength(2);
+  });
+
   it("puts the old order back, then shows the server's message when sorting fails", async () => {
     recordDuringAlert(linkNames);
     const ref = React.createRef<EditBookmarks>();

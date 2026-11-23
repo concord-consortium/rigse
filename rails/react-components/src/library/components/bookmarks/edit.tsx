@@ -2,8 +2,11 @@ import React from "react";
 import { arrayMove } from "@dnd-kit/sortable";
 import SortableBookmarks from "./sortable-bookmarks";
 import { alertAfterRender, serverMessage, withMessage } from "../../helpers/request-error-message";
+import restoreOrder from "../../helpers/restore-order";
 
 export class EditBookmarks extends React.Component<any, any> {
+  sortPending = false;
+
   constructor (props: any) {
     super(props);
     this.state = {
@@ -83,25 +86,24 @@ export class EditBookmarks extends React.Component<any, any> {
     oldIndex,
     newIndex
   }: any) {
+    // One sort at a time, so a late failure can't undo a later sort. A drag in the meantime does
+    // nothing.
+    if (this.sortPending) {
+      return;
+    }
     const { bookmarks: oldBookmarks } = this.state;
     const oldIds = oldBookmarks.map((bookmark: any) => bookmark.id);
     const bookmarks = arrayMove(oldBookmarks, oldIndex, newIndex);
     this.setState({ bookmarks });
 
     const ids = bookmarks.map((bookmark: any) => bookmark.id);
+    this.sortPending = true;
     this.apiCall("sort", { data: { ids } })
       .catch(err => {
-        // Put the current links back in the old order. A link deleted while the sort waited stays
-        // gone, and a link created then goes at the end.
-        const oldPosition = (bookmark: any) => {
-          const index = oldIds.indexOf(bookmark.id);
-          return index === -1 ? oldIds.length : index;
-        };
-        this.setState((prevState: any) => ({
-          bookmarks: [...prevState.bookmarks].sort((a: any, b: any) => oldPosition(a) - oldPosition(b))
-        }));
+        this.setState((prevState: any) => ({ bookmarks: restoreOrder(prevState.bookmarks, oldIds) }));
         alertAfterRender(withMessage("Unable to save link sort order!", serverMessage(err)));
-      });
+      })
+      .finally(() => { this.sortPending = false; });
   }
 
   apiCall (action: any, options: any) {

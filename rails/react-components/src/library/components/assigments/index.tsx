@@ -6,6 +6,7 @@ import OfferingsTable from "./offerings-table";
 import { arrayMove } from "@dnd-kit/sortable";
 import { appendOfferingApiQueryParams } from "../../url-params";
 import { alertAfterRender, withServerMessage } from "../../helpers/request-error-message";
+import restoreOrder from "../../helpers/restore-order";
 
 const addQueryParam = (url: any, param: any, value: any) => {
   const urlObj = new URL(url);
@@ -74,6 +75,8 @@ const offeringDetailsMapping = (data: any, researcher: any) => {
 };
 
 export default class Assignments extends React.Component<any, any> {
+  reorderPending = false;
+
   static defaultProps = {
     // classDataUrl is pretty much required. It can be set to any default value, as it depends on the current class.
     classDataUrl: null,
@@ -132,17 +135,28 @@ export default class Assignments extends React.Component<any, any> {
     if (oldIndex === newIndex) {
       return;
     }
+    // One reorder at a time, so a late failure can't undo a later reorder. A drag in the meantime
+    // does nothing.
+    if (this.reorderPending) {
+      return;
+    }
     const { offerings } = this.state;
+    const oldIds = offerings.map((o: any) => o.id);
     const offeringApiUrl = offerings[oldIndex].apiUrl;
     this.setState({ offerings: arrayMove(offerings, oldIndex, newIndex) });
+    this.reorderPending = true;
     jQuery.ajax({
       type: "PUT",
       url: offeringApiUrl,
       data: {
         position: newIndex
       },
+      success: () => {
+        this.reorderPending = false;
+      },
       error: (jqXHR) => {
-        this.setState({ offerings });
+        this.reorderPending = false;
+        this.setState((prevState: any) => ({ offerings: restoreOrder(prevState.offerings, oldIds) }));
         alertAfterRender(withServerMessage("Reordering failed, please try to reload page and try again.", jqXHR));
       }
     });

@@ -3,11 +3,14 @@ import { arrayMove } from "@dnd-kit/sortable";
 import SortableClasses from "./sortable-classes";
 import CopyDialog from "./copy-dialog";
 import { alertAfterRender, serverMessage, withMessage } from "../../helpers/request-error-message";
+import restoreOrder from "../../helpers/restore-order";
 
 import css from "./style.scss";
 
 export default class ManageClasses extends React.Component<any, any> {
   handleCopyCancel: any;
+  sortPending = false;
+
   constructor (props: any) {
     super(props);
     this.state = {
@@ -56,18 +59,24 @@ export default class ManageClasses extends React.Component<any, any> {
     oldIndex,
     newIndex
   }: any) {
-    let { classes } = this.state;
-    classes = arrayMove(classes, oldIndex, newIndex);
+    // One sort at a time, so a late failure can't undo a later sort. A drag in the meantime does
+    // nothing.
+    if (this.sortPending) {
+      return;
+    }
+    const { classes: oldClasses } = this.state;
+    const oldIds = oldClasses.map((c: any) => c.id);
+    const classes = arrayMove(oldClasses, oldIndex, newIndex);
     this.setState({ classes });
 
     const ids = classes.map((c: any) => c.id);
+    this.sortPending = true;
     this.apiCall("sort", { data: { ids } })
       .catch(err => {
-        // The alert stops the page from drawing, so show it after the old order is on screen.
-        this.setState({ classes: arrayMove(classes, newIndex, oldIndex) }, () => {
-          alertAfterRender(withMessage("Unable to save class sort order!", serverMessage(err)));
-        });
-      });
+        this.setState((prevState: any) => ({ classes: restoreOrder(prevState.classes, oldIds) }));
+        alertAfterRender(withMessage("Unable to save class sort order!", serverMessage(err)));
+      })
+      .finally(() => { this.sortPending = false; });
   }
 
   apiCall (action: any, options: any) {

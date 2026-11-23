@@ -139,6 +139,26 @@ describe("When a Manage Classes request is refused", () => {
     expect(namesDuringAlert).toEqual(["test class 1", "test class 2"]);
   });
 
+  it("ignores a second drag while a sort waits for the server", async () => {
+    const pending: any[] = [];
+    respond = (options) => pending.push(options);
+    const names = () => screen.getAllByText(/^test class \d$/).map(el => el.textContent);
+    const ref = React.createRef<ManageClasses>();
+    render(<ManageClasses ref={ref} classes={makeClasses()} />);
+
+    act(() => ref.current?.handleSortEnd({ oldIndex: 0, newIndex: 1 }));
+    act(() => ref.current?.handleSortEnd({ oldIndex: 0, newIndex: 1 }));
+
+    expect(pending).toHaveLength(1);
+    expect(names()).toEqual(["test class 2", "test class 1"]);
+
+    act(() => pending[0].error({ responseText: JSON.stringify(refusal) }, "error", "Forbidden"));
+    await waitFor(() => expect(names()).toEqual(["test class 1", "test class 2"]));
+
+    act(() => ref.current?.handleSortEnd({ oldIndex: 0, newIndex: 1 }));
+    expect(pending).toHaveLength(2);
+  });
+
   it("shows the server's message and stops saving the copy", async () => {
     render(<ManageClasses classes={makeClasses()} />);
 
