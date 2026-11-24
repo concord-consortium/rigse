@@ -69,8 +69,7 @@ describe("When I try to render a student roster row", () => {
   it("should mark a teacher preview student with (LM) and a tooltip", () => {
     const previewStudent = { ...student, name: "Teacher, Test", is_teacher_preview_student: true };
     render(<table><tbody><StudentRosterRow student={previewStudent} /></tbody></table>);
-    const nameCell = screen.getAllByRole("cell")[0];
-    expect(nameCell).toHaveTextContent(/^Teacher, Test \(LM\)$/);
+    expect(screen.getByRole("cell", { name: /^Teacher, Test/ })).toHaveTextContent(/^Teacher, Test \(LM\)$/);
     expect(screen.getByTitle("Learner Mode user")).toHaveTextContent(/^LM$/);
   });
 

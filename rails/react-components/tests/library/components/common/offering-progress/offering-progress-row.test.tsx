@@ -28,19 +28,19 @@ describe("studentMapping", () => {
 describe("ProgressTableRow", () => {
   it("does not mark a normal student", () => {
     renderRow(studentMapping({ ...apiStudent, is_teacher_preview_student: false }));
-    expect(screen.getAllByRole("cell")[0]).toHaveTextContent(/^Teacher, Test$/);
+    expect(screen.getByRole("cell", { name: "Teacher, Test" })).toBeInTheDocument();
     expect(screen.queryByTitle("Learner Mode user")).not.toBeInTheDocument();
   });
 
   it("marks a teacher preview student with (LM) and a tooltip", () => {
     renderRow(studentMapping({ ...apiStudent, is_teacher_preview_student: true }));
-    expect(screen.getAllByRole("cell")[0]).toHaveTextContent(/^Teacher, Test \(LM\)$/);
+    expect(screen.getByRole("cell", { name: /^Teacher, Test/ })).toHaveTextContent(/^Teacher, Test \(LM\)$/);
     expect(screen.getByTitle("Learner Mode user")).toHaveTextContent(/^LM$/);
   });
 
   it("marks a teacher preview student in the anonymized researcher view", () => {
     renderRow(studentMapping({ ...apiStudent, is_teacher_preview_student: true }, true));
-    expect(screen.getAllByRole("cell")[0]).toHaveTextContent(/^Student 123 \(LM\)$/);
+    expect(screen.getByRole("cell", { name: /^Student 123/ })).toHaveTextContent(/^Student 123 \(LM\)$/);
   });
 
   it("marks a teacher preview student whose name links to a report", () => {
