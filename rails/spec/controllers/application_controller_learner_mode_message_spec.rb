@@ -73,4 +73,18 @@ describe ApplicationController, type: :controller do
       expect(response.body).to eq('<div class="flash_error">Can&#39;t see &lt;b&gt;class&lt;/b&gt;</div>')
     end
   end
+
+  # The messages name sidebar links. These examples fail if a link label changes and the
+  # message does not.
+  describe 'the sidebar link names in the messages' do
+    it 'names the "switch back to teacher" link in the learner mode text' do
+      label = I18n.t('switch_back_to_teacher', scope: :Navigation)
+      expect(ApplicationController::SWITCHED_TO_LEARNER_TEXT).to include("'#{label}'")
+    end
+
+    it 'names the "switch to learner mode" link in the teacher text' do
+      label = I18n.t('switch_to_learner_mode', scope: :Navigation)
+      expect(ApplicationController::SWITCHED_TO_TEACHER_TEXT).to include("'#{label}'")
+    end
+  end
 end

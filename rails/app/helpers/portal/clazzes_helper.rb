@@ -22,23 +22,9 @@ module Portal::ClazzesHelper
         can_remove: can_edit,
         can_reset_password: policy(roster_row.student.user).reset_password?,
         is_oauth_user: is_oauth_user,
-        oauth_provider: is_oauth_user ? roster_row.student.user.authentications[0].provider : "n/a"
+        oauth_provider: is_oauth_user ? roster_row.student.user.authentications[0].provider : "n/a",
+        is_teacher_preview_student: roster_row.student.is_teacher_preview_student
       })
-    end
-
-    # adapted from old student_add_dropdown helper
-    # note this isn't currently provided to the react component
-    # For the new feature, we don't need this list because we are just going to be allowing the teacher to add
-    # students from the current class to other classes
-    other_students = []
-    if can_edit
-      other_clazzes = portal_clazz.school ? (portal_clazz.school.clazzes.includes(:students => :user) - [portal_clazz]) : []
-      other_students = other_clazzes.map { |c| c.students}.flatten.uniq
-      other_students = other_students - portal_clazz.students
-      other_students.reject! { |s| s.user.nil?}
-      other_students.compact!
-      other_students = other_students.sort { |a,b| (a.user.last_name.upcase <=> b.user.last_name.upcase) }
-      other_students = other_students.map { |s| {id: s.id, name: "#{s.user.last_name }, #{s.user.first_name}", username: s.user.login } }
     end
 
     return {

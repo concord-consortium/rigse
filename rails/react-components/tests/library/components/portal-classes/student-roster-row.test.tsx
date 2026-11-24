@@ -60,4 +60,17 @@ describe("When I try to render a student roster row", () => {
     expect(changePassword).toHaveBeenCalledWith(clonedStudent);
   });
 
+  it("should not mark a normal student", () => {
+    render(<table><tbody><StudentRosterRow student={{ ...student, is_teacher_preview_student: false }} /></tbody></table>);
+    expect(screen.getByText("Test Testerson")).toBeInTheDocument();
+    expect(screen.queryByTitle("Learner Mode user")).not.toBeInTheDocument();
+  });
+
+  it("should mark a teacher preview student with (LM) and a tooltip", () => {
+    const previewStudent = { ...student, name: "Teacher, Test", is_teacher_preview_student: true };
+    render(<table><tbody><StudentRosterRow student={previewStudent} /></tbody></table>);
+    expect(screen.getByRole("cell", { name: /^Teacher, Test/ })).toHaveTextContent(/^Teacher, Test \(LM\)$/);
+    expect(screen.getByTitle("Learner Mode user")).toHaveTextContent(/^LM$/);
+  });
+
 });

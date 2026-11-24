@@ -194,7 +194,7 @@ class ApplicationController < ActionController::Base
     "Use 'Switch back to teacher' in the sidebar to go back."
   SWITCHED_TO_TEACHER_TEXT = "That page or action isn't available to your teacher account. " \
     "You may have switched back to teacher in another tab. " \
-    "Use 'Switch to learner mode' in the sidebar to go back."
+    "Use 'Switch to Learner Mode (LM)' in the sidebar to go back."
   # For a background request. The page that sent it still shows the old sidebar, so do not name
   # a sidebar link. A reload shows the page for the current account, or the home page with the
   # message above.

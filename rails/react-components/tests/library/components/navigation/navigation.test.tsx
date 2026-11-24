@@ -297,7 +297,7 @@ describe("A link with httpMethod post", () => {
   const spec = {
     ...NAV_SPEC,
     links: [
-      { type: "LINK", sort: 2.5, id: "learner_mode", label: "Switch to learner mode", url: "/learner_mode/enter", httpMethod: "post" },
+      { type: "LINK", sort: 2.5, id: "learner_mode", label: "Switch to Learner Mode (LM)", url: "/learner_mode/enter", httpMethod: "post" },
       { type: "LINK", sort: 5, id: "/settings", label: "Settings", url: "/users/3566/preferences" },
     ],
   };
@@ -317,7 +317,7 @@ describe("A link with httpMethod post", () => {
   });
 
   it("sends a POST request with the form security token when clicked", () => {
-    fireEvent.click(screen.getByRole("button", { name: "Switch to learner mode" }));
+    fireEvent.click(screen.getByRole("button", { name: "Switch to Learner Mode (LM)" }));
 
     expect(submitSpy).toHaveBeenCalledTimes(1);
     const form = submitSpy.mock.instances[0] as unknown as HTMLFormElement;
@@ -328,8 +328,8 @@ describe("A link with httpMethod post", () => {
   });
 
   it("is a button, not a link, so it does not offer to open in a new tab", () => {
-    expect(screen.getByRole("button", { name: "Switch to learner mode" })).toHaveAttribute("type", "button");
-    expect(screen.queryByRole("link", { name: "Switch to learner mode" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Switch to Learner Mode (LM)" })).toHaveAttribute("type", "button");
+    expect(screen.queryByRole("link", { name: "Switch to Learner Mode (LM)" })).not.toBeInTheDocument();
   });
 
   it("leaves other links as normal links", () => {

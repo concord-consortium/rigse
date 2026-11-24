@@ -124,7 +124,8 @@ class API::V1::ClassesController < API::APIController
           :user_id => student.user.id,
           :email => student.user.email,
           :first_name => anonymize ? student.anonymized_first_name : student.user.first_name,
-          :last_name => anonymize ? student.anonymized_last_name : student.user.last_name
+          :last_name => anonymize ? student.anonymized_last_name : student.user.last_name,
+          :is_teacher_preview_student => student.is_teacher_preview_student
         }
       }
     end
