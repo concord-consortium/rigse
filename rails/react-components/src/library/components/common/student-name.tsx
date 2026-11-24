@@ -5,8 +5,7 @@ interface StudentNameProps {
   isTeacherPreviewStudent?: boolean;
 }
 
-// Shows a student's name. For a teacher's learner mode account, adds " (LM)" after the name.
-// The tooltip on "LM" tells the user what it means.
+// "LM" marks a teacher's learner mode (teacher preview) account.
 const StudentName: React.FC<StudentNameProps> = ({ name, isTeacherPreviewStudent }) => (
   <>
     { name }
