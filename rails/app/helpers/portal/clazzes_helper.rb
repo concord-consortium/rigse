@@ -27,23 +27,6 @@ module Portal::ClazzesHelper
       })
     end
 
-    # adapted from old student_add_dropdown helper
-    # note this isn't currently provided to the react component
-    # For the new feature, we don't need this list because we are just going to be allowing the teacher to add
-    # students from the current class to other classes
-    other_students = []
-    if can_edit
-      other_clazzes = portal_clazz.school ? (portal_clazz.school.clazzes.includes(:students => :user) - [portal_clazz]) : []
-      other_students = other_clazzes.map { |c| c.students}.flatten.uniq
-      other_students = other_students - portal_clazz.students
-      other_students.reject! { |s| s.user.nil?}
-      # A teacher's learner mode account must not be added to other teachers' classes.
-      other_students.reject! { |s| s.is_teacher_preview_student }
-      other_students.compact!
-      other_students = other_students.sort { |a,b| (a.user.last_name.upcase <=> b.user.last_name.upcase) }
-      other_students = other_students.map { |s| {id: s.id, name: "#{s.user.last_name }, #{s.user.first_name}", username: s.user.login } }
-    end
-
     return {
       canEdit: can_edit,
       canManageStudents: policy(portal_clazz).manage_students?,
