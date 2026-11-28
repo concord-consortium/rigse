@@ -1,9 +1,7 @@
 require 'capybara/selenium/driver'
 
-# Capybara's ChromeDriver#reset! clears cookies and local storage with Storage.clearDataForOrigin
-# for the origin "*", which Chrome 158 and later reject with "invalid argument: * is not a valid
-# URL" (https://github.com/teamcapybara/capybara/issues/2865). This module replaces that call: it
-# clears every cookie, then the local storage of each origin the tab visited.
+# Capybara's ChromeDriver#reset! passes origin "*" to Storage.clearDataForOrigin, which Chrome 158+
+# rejects (https://github.com/teamcapybara/capybara/issues/2865); clear cookies and visited origins here.
 module CapybaraChromeResetWithoutWildcardOrigin
   private
 

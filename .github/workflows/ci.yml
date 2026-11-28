@@ -71,9 +71,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '18.18.0'
-      # The tests run the runner image's Chromium at /usr/bin/chromium (see
-      # rails/spec/support/capybara_initializer.rb). The image's Chromium and Google Chrome share a
-      # version branch, and this installs the ChromeDriver for that Google Chrome.
+      # Tests run the image's Chromium (/usr/bin/chromium, see capybara_initializer.rb); this installs the matching ChromeDriver.
       - name: Install ChromeDriver
         uses: nanasess/setup-chromedriver@v2
       - run: cp -v ./config/database.github_actions.yml ./config/database.yml

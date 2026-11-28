@@ -1,6 +1,4 @@
-# Prints every failed step and hook with its scenario and full backtrace. The progress
-# formatter that CI uses never prints a failed hook's error, and the pretty formatter can
-# print it under the wrong scenario.
+# CI's progress formatter never prints a failed hook's error (and pretty misattributes it), so print every failure here.
 InstallPlugin do |config, _registry|
   test_case = nil
   config.on_event(:test_case_started) { |event| test_case = event.test_case }
