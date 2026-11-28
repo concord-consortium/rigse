@@ -23,6 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     #if: ${{ needs.changes.outputs.backend == 'true' }}
     strategy:
+      fail-fast: false
       matrix:
         include:
           - test_suite: spec_without_webdriver
@@ -121,7 +122,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: capybara-screenshots
+          name: capybara-screenshots-${{ matrix.test_suite }}
           path: /home/runner/work/rigse/rigse/rails/tmp/capybara/**
 
   test-react-components:
