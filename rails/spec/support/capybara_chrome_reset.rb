@@ -2,6 +2,7 @@ require 'capybara/selenium/driver'
 
 # Capybara's ChromeDriver#reset! passes origin "*" to Storage.clearDataForOrigin, which Chrome 158+
 # rejects (https://github.com/teamcapybara/capybara/issues/2865); clear cookies and visited origins here.
+# Only the surviving tab's history is read, so local storage set only in a tab reset! closed stays.
 module CapybaraChromeResetWithoutWildcardOrigin
   private
 
