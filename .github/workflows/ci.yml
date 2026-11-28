@@ -71,16 +71,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '18.18.0'
-      # Install ChromeDriver (wiping out whatever version was previously installed on Actions Runner)
+      # The tests run the runner image's Chromium at /usr/bin/chromium (see
+      # rails/spec/support/capybara_initializer.rb). The image's Chromium and Google Chrome share a
+      # version branch, and this installs the ChromeDriver for that Google Chrome.
       - name: Install ChromeDriver
         uses: nanasess/setup-chromedriver@v2
-      # Remove existing Google Chrome as ChromeDriver will default to it (setup-chrome installs under /opt/hostedtoolcache/setup-chrome/)
-      - name: Remove Existing Google Chrome (so ChromeDriver doesn't use it instead of manually installed version)
-        run: sudo apt-get remove google-chrome-stable
-      # Install Google Chrome browser (that matches ChromeDriver version from previous Actions step)
-      - name: Install Google Chrome
-        id: install-chrome
-        uses: browser-actions/setup-chrome@v1
       - run: cp -v ./config/database.github_actions.yml ./config/database.yml
       - run: cp -v ./config/app_environment_variables.sample.rb ./config/app_environment_variables.rb
       - run: cp -v ./config/settings.sample.yml ./config/settings.yml
